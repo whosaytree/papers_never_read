@@ -287,6 +287,52 @@
       },
       "status": "approved",
       "added_at": "2026-05-03"
+    },
+    {
+      "id": "on-the-direction-of-rlvr-updates-2603-22117",
+      "title": "On the Direction of RLVR Updates for LLM Reasoning: Identification and Exploitation",
+      "paper_url": "https://arxiv.org/abs/2603.22117",
+      "authors": [
+        "Kexin Huang",
+        "Haoming Meng",
+        "Junkang Wu",
+        "Jinda Lu",
+        "Chiyu Ma",
+        "Ziqian Chen",
+        "Xue Wang",
+        "Bolin Ding",
+        "Jiancan Wu",
+        "Xiang Wang",
+        "Xiangnan He",
+        "Guoyin Wang",
+        "Jingren Zhou"
+      ],
+      "venue": "arXiv / ICLR 2026 Poster",
+      "year": 2026,
+      "primary_area": "基础/前沿模型 (含LLM)",
+      "category": "推理与思维链",
+      "keywords": [
+        "RLVR",
+        "LLM reasoning",
+        "Δlog p",
+        "test-time extrapolation",
+        "training-time reweighting",
+        "token-level analysis"
+      ],
+      "code_url": "https://github.com/Hesse73/RLVR-Directions",
+      "note": "",
+      "tldr": "这篇论文认为，理解 RLVR 对推理模型的提升，关键不在“参数改了多少”，而在“朝哪个方向改”。作者用 base 与 RLVR 模型之间的有符号 token 级 Δlog p 来刻画这种方向性，并据此提出测试时外推和训练时重加权两种方法，进一步提升推理表现。",
+      "abstract": "Reinforcement learning with verifiable rewards (RLVR) has substantially improved the reasoning capabilities of large language models. While existing analyses identify that RLVR-induced changes are sparse, they primarily focus on the magnitude of these updates, largely overlooking their direction. In this work, we argue that the direction of updates is a more critical lens for understanding RLVR's effects, which can be captured by the signed, token-level log probability difference Δlog p between the base and final RLVR models. Through statistical analysis and token-replacement interventions, we demonstrate that Δlog p more effectively identifies sparse, yet reasoning-critical updates than magnitude-based metrics (e.g., divergence or entropy). Building on this insight, we propose two practical applications: (1) a test-time extrapolation method that amplifies the policy along the learned Δlog p direction to improve reasoning accuracy without further training; (2) a training-time reweighting method that focuses learning on low-probability (corresponding to higher Δlog p) tokens, which improves reasoning performance across models and benchmarks. Our work establishes the direction of change as a key principle for analyzing and improving RLVR.",
+      "summary_cn": {
+        "研究动机": "RLVR 已经显著提升了大模型推理能力，但已有分析大多只关注更新幅度，比如熵或分布差异，却忽略了更新方向。作者认为，仅看幅度无法解释模型究竟学会了什么，也难以定位真正关键的推理改动。",
+        "解决问题": "核心问题是：如何更准确识别 RLVR 带来的“稀疏但关键”的推理更新，并进一步把这些更新利用起来。论文试图找到一种比 magnitude-based 指标更有解释力的分析视角，并把它转化成可直接提升性能的方法。",
+        "现象分析": "作者指出，虽然 RLVR 的影响通常很稀疏，但幅度类指标在 base 和 RL 模型生成上的分布往往非常接近，因此只能说明“哪里变了”，却难以说明“变成了什么”。相比之下，有符号的 Δlog p 能更清楚地区分哪些 token 被系统性提升或抑制，也更贴近真正影响推理结果的位置。",
+        "主要方法": "论文将 RLVR 更新方向定义为 base 模型与最终 RLVR 模型之间的 signed token-level log-probability difference Δlog p。在此基础上，作者提出两类利用方式：一是在测试时沿 Δlog p 方向放大策略，做 reasoning extrapolation；二是在训练时对低概率、对应较高 Δlog p 的 token 进行重加权，使学习更聚焦于推理关键位置。",
+        "数据集与实验": "作者通过统计分析和 token replacement 干预实验验证，Δlog p 比 divergence 或 entropy 更有效地识别 reasoning-critical updates。进一步在多个模型和基准上验证，测试时外推和训练时重加权都能稳定提升推理性能。",
+        "主要贡献": "这篇论文的主要贡献是把 RLVR 的“更新方向”明确提出为理解和改进推理能力的核心原则，并给出了一套既可分析又可实用利用的框架。相比只看更新幅度，它提供了更细粒度的解释信号，也直接导出了无需额外训练或可改进训练过程的方法。"
+      },
+      "status": "approved",
+      "added_at": "2026-05-03"
     }
   ]
 }
