@@ -333,6 +333,48 @@
       },
       "status": "approved",
       "added_at": "2026-05-03"
+    },
+    {
+      "id": "the-past-is-not-past-2604-11297",
+      "title": "The Past Is Not Past: Memory-Enhanced Dynamic Reward Shaping",
+      "paper_url": "https://arxiv.org/abs/2604.11297",
+      "authors": [
+        "Yang Liu",
+        "Enxi Wang",
+        "Yufei Gao",
+        "Weixin Zhang",
+        "Bo Wang",
+        "Zhiyuan Zeng",
+        "Yikai Zhang",
+        "Yining Zheng",
+        "Xipeng Qiu"
+      ],
+      "venue": "arXiv",
+      "year": 2026,
+      "primary_area": "强化学习",
+      "category": "探索与奖励设计",
+      "keywords": [
+        "RL for LLMs",
+        "reward shaping",
+        "exploration",
+        "sampling diversity",
+        "memory",
+        "MEDS"
+      ],
+      "code_url": "https://github.com/Linxi000/MEDS",
+      "note": "",
+      "tldr": "这篇论文针对 LLM 的 RL 训练中“反复犯同一种错、采样多样性下降”的问题，提出 MEDS，用历史 rollout 的行为特征和聚类结果动态塑形奖励，对重复出现的错误模式施加更强惩罚，从而提升探索质量和推理性能。",
+      "abstract": "Despite the success of reinforcement learning for large language models, a common failure mode is reduced sampling diversity, where the policy repeatedly generates similar erroneous behaviors. Classical entropy regularization encourages randomness under the current policy, but does not explicitly discourage recurrent failure patterns across rollouts. We propose MEDS, a Memory-Enhanced Dynamic reward Shaping framework that incorporates historical behavioral signals into reward design. By storing and leveraging intermediate model representations, we capture features of past rollouts and use density-based clustering to identify frequently recurring error patterns. Rollouts assigned to more prevalent error clusters are penalized more heavily, encouraging broader exploration while reducing repeated mistakes. Across five datasets and three base models, MEDS consistently improves average performance over existing baselines, achieving gains of up to 4.13 pass@1 points and 4.37 pass@128 points. Additional analyses using both LLM-based annotations and quantitative diversity metrics show that MEDS increases behavioral diversity during sampling.",
+      "summary_cn": {
+        "研究动机": "作者观察到，尽管 RL 已显著提升大模型推理能力，但一个常见失败模式是策略会不断重复相似的错误行为。传统熵正则只鼓励当前策略下的随机性，却无法针对“重复犯过的老错误”做显式抑制。",
+        "解决问题": "论文要解决的是：如何让 RL 训练不只是鼓励随机探索，而是有针对性地避免模型一再落入同类失败轨迹。换句话说，作者想让奖励机制具备“记忆”，能识别过去反复出现的错误模式，并推动策略跳出这些局部陷阱。",
+        "现象分析": "作者认为，很多 reward design 实际上是 memoryless 的，只根据当前回答是否正确来打分，不关心某类错误是否已经多次重复出现。这样模型即使长时间训练，仍可能回到熟悉的错误路径，导致行为多样性下降、探索效率受限。",
+        "主要方法": "论文提出 MEDS（Memory-Enhanced Dynamic Reward Shaping）。它保存并利用 rollout 过程中间模型表征，将历史行为特征做密度聚类，识别高频重复的错误簇；随后对属于更常见错误簇的 rollout 施加更强惩罚，以此鼓励模型探索更广泛、更新颖的解题路径，并减少重复错误。",
+        "数据集与实验": "作者在 5 个数据集、3 个 base model 上评估 MEDS，相比现有基线都取得稳定提升，最高达到 +4.13 pass@1 和 +4.37 pass@128。额外的 LLM 标注分析和定量 diversity 指标也显示，MEDS 确实提升了采样过程中的行为多样性。",
+        "主要贡献": "这篇论文的主要贡献是把“历史错误模式”引入 reward shaping，使奖励从无记忆的即时反馈变成利用过去行为信息的动态机制。它说明，提升 RL for LLM 的关键不只是增加随机性，而是系统性地惩罚重复失败，从而改善探索和推理效果。"
+      },
+      "status": "approved",
+      "added_at": "2026-05-03"
     }
   ]
 }
