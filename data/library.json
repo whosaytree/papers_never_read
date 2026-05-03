@@ -375,6 +375,51 @@
       },
       "status": "approved",
       "added_at": "2026-05-03"
+    },
+    {
+      "id": "rlvr-implicitly-incentivizes-correct-reasoning-2506-14245",
+      "title": "Reinforcement Learning with Verifiable Rewards Implicitly Incentivizes Correct Reasoning in Base LLMs",
+      "paper_url": "https://arxiv.org/abs/2506.14245",
+      "authors": [
+        "Xumeng Wen",
+        "Zihan Liu",
+        "Shun Zheng",
+        "Shengyu Ye",
+        "Zhirong Wu",
+        "Yang Wang",
+        "Zhijian Xu",
+        "Xiao Liang",
+        "Junjie Li",
+        "Ziming Miao",
+        "Jiang Bian",
+        "Mao Yang"
+      ],
+      "venue": "arXiv / ICLR 2026 Poster",
+      "year": 2025,
+      "primary_area": "基础/前沿模型 (含LLM)",
+      "category": "推理与思维链",
+      "keywords": [
+        "RLVR",
+        "GRPO",
+        "CoT-Pass@K",
+        "LLM reasoning",
+        "Pass@K",
+        "chain-of-thought"
+      ],
+      "code_url": "",
+      "note": "",
+      "tldr": "这篇论文系统反驳了“RLVR 只是提升采样效率、并不真正增强推理能力”的观点，提出 CoT-Pass@K 这一更严格的评测指标，并从理论和训练动态两方面说明：即便奖励只看答案对错，RLVR 也会隐式鼓励更正确的推理链。",
+      "abstract": "Recent advancements in long chain-of-thought (CoT) reasoning, particularly through the Group Relative Policy Optimization algorithm used by DeepSeek-R1, have led to significant interest in the potential of Reinforcement Learning with Verifiable Rewards (RLVR) for Large Language Models (LLMs). While RLVR promises to improve reasoning by allowing models to learn from free exploration, there remains debate over whether it truly enhances reasoning abilities or simply boosts sampling efficiency. This paper systematically investigates the impact of RLVR on LLM reasoning. We revisit Pass@K experiments and demonstrate that RLVR can extend the reasoning boundary for both mathematical and coding tasks. This is supported by our introduction of a novel evaluation metric, CoT-Pass@K, which captures reasoning success by accounting for both the final answer and intermediate reasoning steps. Furthermore, we present a theoretical framework explaining RLVR’s incentive mechanism, demonstrating how it can encourage correct reasoning even when rewards are based solely on answer correctness. Our analysis of RLVR’s training dynamics reveals that it incentivizes correct reasoning early in the process, with substantial improvements in reasoning quality confirmed through extensive evaluations. These findings provide strong evidence of RLVR’s potential to enhance LLM reasoning, offering valuable insights into its mechanisms and performance improvements.",
+      "summary_cn": {
+        "研究动机": "围绕 RLVR 是否真的提升 LLM 推理能力，社区存在明显争议。一个核心现象是，RLVR 模型虽然常提升 Pass@1，却未必提升传统 Pass@K，这让不少工作怀疑它只是重新分配已有路径的采样概率，而没有真正学到新的推理能力。",
+        "解决问题": "论文要解决的是两个问题：一是如何更准确评估 RLVR 是否真的提升了“推理”而不只是“猜中答案”；二是从机制上解释，为什么只基于最终答案正确性的奖励，依然可能推动模型学习更正确的中间推理过程。",
+        "现象分析": "作者指出，传统 Pass@K 会把“推理过程不正确但最后刚好答对”的样本也算作成功，这会高估 base model 的真实推理能力，尤其在数学题上更明显。为此，作者提出 CoT-Pass@K，要求中间 CoT 和最终答案都正确，借此揭示 RLVR 后模型真实存在的推理能力边界扩展。",
+        "主要方法": "论文提出新的评测指标 CoT-Pass@K，并构建理论框架解释 RLVR 的隐式激励机制。核心观点是：只要预训练模型已经具备区分正确与错误 CoT 的知识和逻辑先验，GRPO 类 RLVR 梯度就会倾向于提高正确 CoT 的生成概率，从而在只有答案奖励的情况下也能促进正确推理。",
+        "数据集与实验": "作者重新审视了数学和代码任务上的 Pass@K 实验，并结合 CoT-Pass@K 观察到 RLVR 在两类任务上都能扩展 reasoning boundary。进一步的训练动态分析显示，这种对正确推理的激励在训练早期就开始出现，并且能平滑泛化到未见测试题上。",
+        "主要贡献": "这篇论文的主要贡献是为 RLVR 是否真正提升推理能力提供了更有力的评测与理论解释。它不仅指出传统 Pass@K 在 reasoning 场景下可能误导结论，还说明 RLVR 能在仅有答案级奖励时隐式促进正确 CoT 的形成，从而支持 RLVR 对 LLM reasoning 的真实增益。"
+      },
+      "status": "approved",
+      "added_at": "2026-05-03"
     }
   ]
 }
