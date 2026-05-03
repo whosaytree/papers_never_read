@@ -248,5 +248,45 @@
       ]
     }
   ],
-  "papers": []
+  "papers": [
+    {
+      "id": "too-correct-to-learn-2604-18493",
+      "title": "Too Correct to Learn: Reinforcement Learning on Saturated Reasoning Data",
+      "paper_url": "https://arxiv.org/abs/2604.18493",
+      "authors": [
+        "Zhenwen Liang",
+        "Yujun Zhou",
+        "Sidi Lu",
+        "Xiangliang Zhang",
+        "Haitao Mi",
+        "Dong Yu"
+      ],
+      "venue": "arXiv",
+      "year": 2026,
+      "primary_area": "基础/前沿模型 (含LLM)",
+      "category": "推理与思维链",
+      "keywords": [
+        "LLM reasoning",
+        "reinforcement learning",
+        "GRPO",
+        "reasoning data saturation",
+        "sampling diversity",
+        "CUTS"
+      ],
+      "code_url": "",
+      "note": "",
+      "tldr": "论文指出强推理模型在饱和训练集上做 RL 时会因为组内解法过于同质而失去优势信号，并用 CUTS / Mixed-CUTS 强制保留高概率语义流形内的探索性，从而提升难题与域外泛化表现。",
+      "abstract": "Reinforcement Learning (RL) enhances LLM reasoning, yet a paradox emerges as models scale: strong base models saturate standard benchmarks (e.g., MATH), yielding correct but homogeneous solutions. In such environments, the lack of failure cases causes the advantage signal in group-relative algorithms (e.g., GRPO) to vanish, driving policies into mode collapse. To address this, we propose Constrained Uniform Top-K Sampling (CUTS), a parameter-free decoding strategy enforcing structure-preserving exploration. Unlike standard sampling that follows model biases, CUTS flattens the local optimization landscape by sampling uniformly from constrained high-confidence candidates. We integrate this into Mixed-CUTS, a training framework synergizing exploitative and exploratory rollouts to amplify intra-group advantage variance. Experiments on Qwen3 models demonstrate that our approach prevents policy degeneration and significantly boosts out-of-domain generalization. Notably, Mixed-CUTS improves Pass@1 accuracy on the challenging AIME25 benchmark by up to 15.1% over standard GRPO, validating that maintaining diversity within the semantic manifold is critical for rigorous reasoning.",
+      "summary_cn": {
+        "研究动机": "论文关注推理型大模型在强化学习阶段出现的一个反直觉问题：基础模型越强、训练数据越饱和，标准 RL 反而越难继续带来提升。作者认为根因在于模型虽然经常答对，但解法过于单一，导致训练信号退化。",
+        "解决问题": "核心要解决的是在 group-relative 类算法如 GRPO 中，组内奖励方差趋近于零时优势信号消失、策略塌缩的问题。换言之，作者试图让模型在“已经很会做”的题上仍保持可学习性。",
+        "现象分析": "作者指出在 MATH 这类已被强模型基本吃透的数据上，rollout 往往都是高分且高度同质的正确答案，因此同组样本之间几乎没有可区分的优劣。这样会直接削弱 RL 的相对优势估计，使训练更像是在强化已有模式而不是继续探索。",
+        "主要方法": "论文提出 CUTS（Constrained Uniform Top-K Sampling），在满足高置信约束的前提下，从 top-K 候选中更均匀地采样，以注入结构保持的探索性。进一步地，作者用 Mixed-CUTS 混合利用偏 exploitation 的标准 rollout 和偏 exploration 的 CUTS rollout，以放大组内 advantage variance 并稳定训练。",
+        "数据集与实验": "实验主要基于 Qwen3 系列模型，在 MATH 上进行训练，并在 AIME24、AIME25、AMC、GPQA 等基准上评估泛化能力。结果显示该方法能防止策略退化，并在更难的推理测试上显著优于标准 GRPO，其中 AIME25 的 Pass@1 最高提升 15.1%。",
+        "主要贡献": "这篇论文的主要贡献是指出“too correct to learn”这一饱和推理数据上的 RL 失效机制，并提出一种无需额外参数的采样式探索方案来恢复有效学习信号。它强调，在高概率语义流形内部维持多样性，是继续提升推理能力和域外泛化的关键。"
+      },
+      "status": "approved",
+      "added_at": "2026-05-03"
+    }
+  ]
 }
