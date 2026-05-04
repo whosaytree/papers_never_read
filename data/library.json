@@ -800,6 +800,41 @@
       },
       "status": "approved",
       "added_at": "2026-05-04"
+    },
+    {
+      "id": "deepseek-v3-2-2512-02556",
+      "title": "DeepSeek-V3.2: Pushing the Frontier of Open Large Language Models",
+      "paper_url": "https://arxiv.org/abs/2512.02556",
+      "authors": [
+        "DeepSeek-AI et al."
+      ],
+      "venue": "arXiv",
+      "year": 2025,
+      "primary_area": "基础/前沿模型 (含LLM)",
+      "category": "模型架构",
+      "keywords": [
+        "sparse attention",
+        "RL post-training",
+        "agentic task synthesis",
+        "reasoning LLMs",
+        "long context",
+        "DeepSeek"
+      ],
+      "labels": [],
+      "code_url": "",
+      "note": "",
+      "tldr": "这篇论文把 DeepSeek-V3.2 的核心进展概括成三件事：更高效的 DeepSeek Sparse Attention (DSA)、可规模化的强化学习后训练框架，以及大规模 agentic task synthesis 流水线。整体目标是同时提升长上下文效率、推理能力和 agent 表现。",
+      "abstract": "We introduce DeepSeek-V3.2, a model that harmonizes high computational efficiency with superior reasoning and agent performance. The key technical breakthroughs of DeepSeek-V3.2 are as follows: (1) DeepSeek Sparse Attention (DSA): We introduce DSA, an efficient attention mechanism that substantially reduces computational complexity while preserving model performance in long-context scenarios. (2) Scalable Reinforcement Learning Framework: By implementing a robust reinforcement learning protocol and scaling post-training compute, DeepSeek-V3.2 performs comparably to GPT-5. Notably, our high-compute variant, DeepSeek-V3.2-Speciale, surpasses GPT-5 and exhibits reasoning proficiency on par with Gemini-3.0-Pro, achieving gold-medal performance in both the 2025 International Mathematical Olympiad (IMO) and the International Olympiad in Informatics (IOI). (3) Large-Scale Agentic Task Synthesis Pipeline: To integrate reasoning into tool-use scenarios, we developed a novel synthesis pipeline that systematically generates training data at scale. This methodology facilitates scalable agentic post-training, yielding substantial improvements in generalization and instruction-following robustness within complex, interactive environments.",
+      "summary_cn": {
+        "研究动机": "作者关注的是 open large language model 如何在保持高计算效率的同时继续提升 reasoning 与 agent 能力。传统路线往往在长上下文效率、后训练可扩展性和 agent 泛化上难以兼顾，因此需要一个更统一的系统方案。",
+        "解决问题": "论文要解决的是：如何把模型架构效率、RL 后训练规模和 agent 训练数据供给三件事同时做强。换句话说，它试图回答“如何把一个开放模型系统性推到 frontier 水平”，而不是只优化单个模块。",
+        "现象分析": "从论文摘要看，作者认为单独优化基础模型或单独扩大后训练都不够，因为长上下文、复杂推理和 tool-use 泛化是耦合问题。只有同时解决 attention 成本、RL scaling 和 agent 数据生成，模型才可能在多个方向一起抬升。",
+        "主要方法": "论文的关键技术包括三部分。第一，提出 DSA，通过稀疏注意力降低长上下文计算复杂度；第二，构建可扩展的 RL 后训练流程，并把 post-training compute 继续做大；第三，设计大规模 agentic task synthesis 管线，系统生成用于复杂交互任务训练的数据，把 reasoning 能力延伸到 tool-use 场景。",
+        "数据集与实验": "论文报告 DeepSeek-V3.2 在复杂推理任务上可比 GPT-5，并声称其高算力版本 DeepSeek-V3.2-Speciale 超过 GPT-5，且在 reasoning 上接近 Gemini-3.0-Pro。文中还提到其在 2025 IMO 和 IOI 上达到 gold-medal-level 表现，并在 agent 泛化和 instruction-following robustness 上显著增强。",
+        "主要贡献": "这篇论文的主要贡献不是一个单点技巧，而是给出了一整套“架构效率 + RL scaling + agent 数据合成”联合推进的 recipe。它代表的是一种系统工程式的 frontier open-model 训练范式，而不只是单篇算法改进。"
+      },
+      "status": "approved",
+      "added_at": "2026-05-04"
     }
   ]
 }
