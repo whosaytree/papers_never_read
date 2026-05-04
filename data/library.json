@@ -420,6 +420,49 @@
       },
       "status": "approved",
       "added_at": "2026-05-03"
+    },
+    {
+      "id": "implicitrm-2603-23184",
+      "title": "ImplicitRM: Unbiased Reward Modeling from Implicit Preference Data for LLM alignment",
+      "paper_url": "https://arxiv.org/abs/2603.23184",
+      "authors": [
+        "Hao Wang",
+        "Haocheng Yang",
+        "Licheng Pan",
+        "Lei Shen",
+        "Xiaoxi Li",
+        "Yinuo Wang",
+        "Zhichao Chen",
+        "Yuan Lu",
+        "Haoxuan Li",
+        "Zhouchen Lin"
+      ],
+      "venue": "arXiv",
+      "year": 2026,
+      "primary_area": "对齐/安全/公平性/隐私",
+      "category": "安全对齐",
+      "keywords": [
+        "implicit reward modeling",
+        "RLHF",
+        "LLM alignment",
+        "implicit feedback",
+        "preference bias",
+        "reward model"
+      ],
+      "code_url": "",
+      "note": "",
+      "tldr": "这篇论文研究如何用点击、复制这类隐式用户行为来训练 LLM 的 reward model，提出 ImplicitRM 来同时处理“没有明确负样本”和“不同回答更容易触发反馈”的偏置问题，从而在不依赖昂贵显式偏好标注的情况下学习无偏奖励模型。",
+      "abstract": "Reward modeling represents a long-standing challenge in reinforcement learning from human feedback (RLHF) for aligning language models. Current reward modeling is heavily contingent upon experimental feedback data with high collection costs. In this work, we study implicit reward modeling -- learning reward models from implicit human feedback (e.g., clicks and copies) -- as a cost-effective alternative. We identify two fundamental challenges in implicit reward modeling: (1) Implicit preference data lacks definitive negative samples, which makes standard positive-negative classification methods inapplicable; (2) Implicit preference data suffers from user preference bias, where different responses have different propensities to elicit user feedback actions, which exacerbates the difficulty of distinguishing definitive negative samples. To address these challenges, we propose ImplicitRM, which aims to learn unbiased reward models from implicit preference data. ImplicitRM stratifies training samples into four latent groups via a stratification model. Building on this, it derives a learning objective through likelihood maximization, which we prove is theoretically unbiased, effectively resolving both challenges. Experiments demonstrate that ImplicitRM learns accurate reward models across implicit preference datasets. Code is available on our project website.",
+      "summary_cn": {
+        "研究动机": "奖励建模一直是 RLHF 和 LLM 对齐里的高成本环节，因为传统方法依赖人工比较式显式偏好数据。作者希望找到一种更便宜、更贴近真实产品环境的替代方案，用用户自然产生的隐式反馈来训练奖励模型。",
+        "解决问题": "论文要解决两个核心难点。第一，隐式反馈里“没被点击/复制”并不等于负样本，因此标准二分类式奖励建模不成立；第二，不同回答天然触发用户反馈的概率不同，这种 propensity bias 会进一步污染学习信号。",
+        "现象分析": "作者指出，若直接把隐式反馈当成显式偏好来学，模型会把“没有反馈”误判成“质量差”，同时把用户行为偏好与真实回答质量混在一起。这样学到的 reward model 会系统性有偏，难以真实反映人类偏好。",
+        "主要方法": "论文提出 ImplicitRM，将每个样本的观测结果拆成“真实偏好”和“是否触发反馈动作”两个潜变量，并通过 stratification model 对样本属于四类 latent groups 的概率进行估计。基于这些软分层结果，作者进一步通过似然最大化推导出理论上无偏的学习目标，从而同时处理缺乏明确负样本和用户反馈偏置的问题。",
+        "数据集与实验": "作者在多种隐式偏好数据集上评估 ImplicitRM，结果显示它能比现有方法学到更准确的奖励模型。论文的实验重点不是下游 RL 效果，而是验证在隐式反馈场景下，reward estimation 本身是否更准确、更少偏。",
+        "主要贡献": "这篇论文的主要贡献是把“隐式奖励建模”系统化为一个独立问题，并给出一个有理论无偏保证的解决方案。它为更低成本、更真实世界化的 LLM 对齐数据来源提供了方法论基础。"
+      },
+      "status": "approved",
+      "added_at": "2026-05-04"
     }
   ]
 }
