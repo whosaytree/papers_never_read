@@ -681,6 +681,47 @@
       },
       "status": "approved",
       "added_at": "2026-05-04"
+    },
+    {
+      "id": "shuttleenv-2603-17324",
+      "title": "ShuttleEnv: An Interactive Data-Driven RL Environment for Badminton Strategy Modeling",
+      "paper_url": "https://arxiv.org/abs/2603.17324",
+      "authors": [
+        "Ang Li",
+        "Xinyang Gong",
+        "Bozhou Chen",
+        "Yunlong Lu",
+        "Jiaming Ji",
+        "Yongyi Wang",
+        "Yaodong Yang",
+        "Wenxin Li"
+      ],
+      "venue": "arXiv",
+      "year": 2026,
+      "primary_area": "强化学习",
+      "category": "应用型 RL",
+      "keywords": [
+        "RL environment",
+        "badminton strategy",
+        "sports analytics",
+        "interactive simulation",
+        "rally dynamics",
+        "adversarial games"
+      ],
+      "code_url": "",
+      "note": "",
+      "tldr": "这篇论文不是提出新的 RL 算法，而是构建了一个面向羽毛球策略建模的交互式数据驱动环境 ShuttleEnv。它用精英比赛数据和显式概率模型来模拟回合级对抗过程，让研究者能在不依赖物理仿真的前提下训练和分析羽毛球策略 agent。",
+      "abstract": "We present ShuttleEnv, an interactive and data-driven simulation environment for badminton, designed to support reinforcement learning and strategic behavior analysis in fast-paced adversarial sports. The environment is grounded in elite-player match data and employs explicit probabilistic models to simulate rally-level dynamics, enabling realistic and interpretable agent-opponent interactions without relying on physics-based simulation. In this demonstration, we showcase multiple trained agents within ShuttleEnv and provide live, step-by-step visualization of badminton rallies, allowing attendees to explore different play styles, observe emergent strategies, and interactively analyze decision-making behaviors.",
+      "summary_cn": {
+        "研究动机": "作者关注的是快节奏对抗运动中的策略建模问题，尤其是羽毛球这类高动态、强博弈性的场景。现有 RL 环境往往偏向通用控制或物理仿真，不够贴近真实比赛中的策略互动，也不够容易解释。",
+        "解决问题": "论文要解决的是：如何构建一个既真实、又可交互、还能支持 RL 和策略分析的羽毛球环境。目标不是单纯复现物理轨迹，而是更好地刻画回合中的战术选择、对手响应和风格差异。",
+        "现象分析": "作者认为，如果完全依赖 physics-based simulation，环境虽然可能更细，但构建和调试成本高，也不一定适合策略层分析。相反，基于真实比赛数据建模回合级动态，更容易在可解释性、可控性和研究效率之间取得平衡。",
+        "主要方法": "论文提出 ShuttleEnv，一个 interactive、data-driven 的 RL 环境。它以顶级选手比赛数据为基础，用显式概率模型来模拟 rally-level dynamics，并支持 agent 与 opponent 的可解释交互；同时配合逐步可视化回合过程，让用户能观察不同 play style 和 emergent strategy。",
+        "数据集与实验": "这篇论文更偏 environment / demo paper，重点在展示环境本身以及多个训练 agent 在其中的表现方式。实验和演示强调的是：用户可以实时查看回合过程、比较不同 agent 风格，并分析策略决策模式。",
+        "主要贡献": "这篇论文的主要贡献是为羽毛球策略建模提供了一个可交互、数据驱动、面向 RL 的专用环境。它把策略分析从通用 RL benchmark 推进到更具体的体育博弈场景中，也为后续 agent 训练和行为研究提供了基础平台。"
+      },
+      "status": "approved",
+      "added_at": "2026-05-04"
     }
   ]
 }
