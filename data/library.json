@@ -881,6 +881,44 @@
       },
       "status": "approved",
       "added_at": "2026-05-04"
+    },
+    {
+      "id": "second-order-rollout-2602-22765",
+      "title": "Towards Better RL Training Data Utilization via Second-Order Rollout",
+      "paper_url": "https://arxiv.org/abs/2602.22765",
+      "authors": [
+        "Zhe Yang",
+        "Yudong Wang",
+        "Rang Li",
+        "Zhifang Sui"
+      ],
+      "venue": "arXiv",
+      "year": 2026,
+      "primary_area": "强化学习",
+      "category": "基于偏好/反馈的 RL",
+      "keywords": [
+        "second-order rollout",
+        "critique training",
+        "RL for LLMs",
+        "data utilization",
+        "outcome reward noise",
+        "joint training"
+      ],
+      "labels": [],
+      "code_url": "",
+      "note": "本质上可以看作一种面向 RL rollout 结构的数据增强：把一阶回答扩展成“回答 + critique”的二阶训练信号。",
+      "tldr": "这篇论文认为传统 RL 只训练“生成答案”的一阶 rollout，没有训练模型“批判答案”的能力，因此没把训练数据吃干净。作者提出 second-order rollout，即对已有回答再生成多条 critique，并联合训练 generation 与 critique，从而更充分地利用 RL 训练信号。",
+      "abstract": "Reinforcement Learning (RL) has empowered Large Language Models (LLMs) with strong reasoning capabilities, but vanilla RL mainly focuses on generation capability improvement by training with only first-order rollout (generating multiple responses for a question), and we argue that this approach fails to fully exploit the potential of training data because of the neglect of critique capability training. To tackle this problem, we further introduce the concept of second-order rollout (generating multiple critiques for a response) and propose a unified framework for jointly training generation and critique capabilities. Extensive experiments across various models and datasets demonstrate that our approach can utilize training data more effectively than vanilla RL and achieve better performance under the same training data. Additionally, we uncover several insightful findings regarding second-order rollout and critique training, such as the importance of label balance in critique training and the noise problem of outcome-based rewards, which can be mitigated through sampling techniques. Our work offers a preliminary exploration of dynamic data augmentation and joint generation-critique training in RL, providing meaningful inspiration for the further advancement of RL training.",
+      "summary_cn": {
+        "研究动机": "作者观察到，RL for LLM 的主流流程基本都围绕 first-order rollout 展开，也就是“给问题，采样多个答案，再按 reward 更新”。这种方式虽然能提升生成能力，但忽视了一个重要维度：模型是否会判断自己或别人答案的好坏。",
+        "解决问题": "论文要解决的是：如何提升 RL 训练数据的利用率，而不只是继续堆同类 rollout。作者希望把训练目标从单一的 answer generation 扩展成 generation + critique 的联合学习，让同一份数据同时服务于两种能力提升。",
+        "现象分析": "作者认为，vanilla RL 实际上浪费了大量潜在监督信号，因为对一个回答本身还可以继续生成批评、分析其错误模式与优缺点。如果这些 critique 信号不被建模，那么训练只是在强化“会答”，而没有同步强化“会评”。",
+        "主要方法": "论文提出 second-order rollout：在 first-order rollout 生成回答之后，再对这些回答生成多个 critique，并把 critique training 与 generation training 放进同一个统一框架里联合优化。作者还分析了两个关键细节：其一是 critique 训练里的 label balance 很重要；其二是 outcome-based reward 会带来噪声，但可以通过采样策略缓解。",
+        "数据集与实验": "作者在多个模型和数据集上验证方法，结果显示 second-order rollout 比 vanilla RL 更能充分利用相同训练数据，并取得更好的最终性能。论文还特别强调，critique 训练带来的提升不只是附带现象，而是训练数据利用效率提高的核心来源之一。",
+        "主要贡献": "这篇论文的主要贡献是把 RL 训练中的“批判能力”显式纳入 rollout 设计，并提出二阶 rollout 这一视角。它说明，RL 后训练不一定只能围绕答案生成展开，围绕答案再生成 critique，也是一条重要的数据增益路径。"
+      },
+      "status": "approved",
+      "added_at": "2026-05-04"
     }
   ]
 }
