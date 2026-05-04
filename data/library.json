@@ -463,6 +463,48 @@
       },
       "status": "approved",
       "added_at": "2026-05-04"
+    },
+    {
+      "id": "dgo-2603-24093",
+      "title": "Towards Effective Experiential Learning: Dual Guidance for Utilization and Internalization",
+      "paper_url": "https://arxiv.org/abs/2603.24093",
+      "authors": [
+        "Fei Bai",
+        "Zhipeng Chen",
+        "Chuan Hao",
+        "Ming Yang",
+        "Ran Tao",
+        "Bryan Dai",
+        "Wayne Xin Zhao",
+        "Jian Yang",
+        "Hongteng Xu"
+      ],
+      "venue": "arXiv",
+      "year": 2026,
+      "primary_area": "基础/前沿模型 (含LLM)",
+      "category": "推理与思维链",
+      "keywords": [
+        "RLVR",
+        "experiential learning",
+        "DGO",
+        "experience bank",
+        "reasoning",
+        "internalization"
+      ],
+      "code_url": "",
+      "note": "通过历史轨迹构建经验库，并在训练闭环中把经验利用逐步转化为参数内化。垂域模型的“专家直觉”可以这样训。",
+      "tldr": "这篇论文提出 DGO，试图让 LLM 在 RLVR 训练中像人类一样同时“利用已有经验”和“把经验内化成稳定能力”。方法核心是建立经验库，用外部经验和模型内部知识共同引导探索，再把新轨迹反过来更新经验库和模型参数，形成闭环学习。",
+      "abstract": "Recently, reinforcement learning (RL) has become an important approach for improving the capabilities of large language models (LLMs). In particular, reinforcement learning from verifiable rewards (RLVR) has emerged as a promising paradigm for reasoning tasks. However, existing RL-based training still remains only a rough approximation to human learning. Human learners leverage both external and internal experience to guide exploration and gradually internalize useful trajectories into stable knowledge. Motivated by this gap, we ask: how can LLMs better utilize and internalize experience during RLVR training? To answer this question, we propose Dual Guidance Optimization (DGO), a unified framework that leverages external and internal experience to improve training effectiveness. Specifically, DGO first constructs an experience bank from previously explored trajectories. The policy then performs exploration under the joint guidance of the experience bank and the model's internal knowledge. The resulting trajectories are further used to refine the experience bank and optimize model parameters, forming a closed loop of experience utilization and internalization. Experiments show that DGO consistently outperforms baseline methods, suggesting that better utilization and internalization of experience lead to more effective reasoning.",
+      "summary_cn": {
+        "研究动机": "作者认为现有 RLVR 虽然在推理任务上有效，但仍只是对人类学习过程的粗糙近似。人类学习不仅会利用外部经验指导当前探索，还会把有用经验逐渐内化为长期知识，而现有方法通常只覆盖其中一部分。",
+        "解决问题": "论文要解决的是：在 RLVR 训练中，如何同时提高经验的即时利用效率与长期内化效果。换句话说，作者希望模型不只是“借助外部轨迹做对题”，而是逐渐把这些经验吸收到参数中，形成更稳定的推理能力。",
+        "现象分析": "作者隐含指出，很多已有 RL 方法要么更像检索式辅助，只提升当下轨迹质量；要么只依赖参数更新，难以充分利用历史探索经验。这样会导致经验利用和能力内化脱节，训练信号不能形成有效闭环。",
+        "主要方法": "论文提出 Dual Guidance Optimization (DGO)。它先从历史探索轨迹中构建一个经验库，然后在训练时让策略同时受两类信号引导：一类是经验库提供的外部经验，另一类是模型参数中已有的内部知识。新产生的轨迹再被用于精炼经验库并更新模型，从而把“经验利用”和“经验内化”统一到一个迭代闭环里。",
+        "数据集与实验": "论文在多个模型规模和多个推理基准上评估 DGO，结果显示它持续优于 RLVR 基线。实验结论表明，更有效地利用并内化经验，能带来更强的推理表现，而不仅仅是短期采样收益。",
+        "主要贡献": "这篇论文的主要贡献是提出了一个把外部经验利用和内部参数内化统一起来的 RLVR 框架。相比只做经验检索或只做参数更新的方案，它更强调“经验闭环”，把历史轨迹变成可复用、可吸收、可持续改进的训练资源。"
+      },
+      "status": "approved",
+      "added_at": "2026-05-04"
     }
   ]
 }
