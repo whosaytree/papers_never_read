@@ -763,6 +763,43 @@
       },
       "status": "approved",
       "added_at": "2026-05-04"
+    },
+    {
+      "id": "longrlvr-2603-02146",
+      "title": "LongRLVR: Long-Context Reinforcement Learning Requires Verifiable Context Rewards",
+      "paper_url": "https://arxiv.org/abs/2603.02146",
+      "authors": [
+        "Guanzheng Chen",
+        "Michael Qizhe Shieh",
+        "Lidong Bing"
+      ],
+      "venue": "arXiv / ICLR 2026",
+      "year": 2026,
+      "primary_area": "基础/前沿模型 (含LLM)",
+      "category": "长上下文",
+      "keywords": [
+        "long-context RL",
+        "RLVR",
+        "context grounding",
+        "dense reward",
+        "verifiable context reward",
+        "LongBench"
+      ],
+      "labels": [],
+      "code_url": "https://github.com/real-absolute-AI/LongRLVR",
+      "note": "",
+      "tldr": "这篇论文指出标准 RLVR 在长上下文任务上失败的关键，不是模型不会答，而是只有最终答案奖励时，模型几乎学不到“去哪里找证据”。为此作者提出 LongRLVR，在答案奖励之外加入一个可验证的 dense context reward，专门激励模型完成正确的上下文 grounding。",
+      "abstract": "Reinforcement Learning with Verifiable Rewards (RLVR) has significantly advanced the reasoning capabilities of Large Language Models (LLMs) by optimizing them against factual outcomes. However, this paradigm falters in long-context scenarios, as its reliance on internal parametric knowledge is ill-suited for tasks requiring contextual grounding--the ability to find and reason over externally provided information. We identify a key reason for this failure: a reward based solely on the final answer is too sparse to effectively guide the model for identifying relevant evidence. We formally prove that the outcome-only reward leads to significant vanishing gradients for the context grounding process, rendering learning intractable. To overcome this bottleneck, we introduce LongRLVR to augment the sparse answer reward with a dense and verifiable context reward. This auxiliary signal directly incentivizes the model for selecting the correct grounding information, providing a robust learning gradient that solves the underlying optimization challenge. We validate our method on challenging long-context benchmarks using Qwen and LLaMA models. LongRLVR consistently and significantly outperforms the standard RLVR across all models and benchmarks, e.g., boosting a 14B model's scores on RULER-QA from 73.17 to 88.90 and on LongBench v2 from 39.8 to 46.5. Our work demonstrates that explicitly rewarding the grounding process is a critical and effective strategy for unlocking the full reasoning potential of LLMs in long-context applications.",
+      "summary_cn": {
+        "研究动机": "RLVR 在数学和代码等任务上已经显著提升了 LLM 推理能力，但作者发现它迁移到长上下文场景时效果明显变差。根本原因在于，这类任务不只是“会不会推理”，而是还要求模型能在给定长文档里找到正确证据并据此作答。",
+        "解决问题": "论文要解决的是：如何让 RLVR 在 long-context setting 下真正学会 contextual grounding，而不是只依赖模型参数里的内部知识。作者试图补上标准 outcome-only reward 对“证据定位”几乎不给学习信号的问题。",
+        "现象分析": "作者正式论证了，仅基于最终答案的 reward 会导致 context grounding 过程中的梯度显著消失。也就是说，模型即使答错，也很难从稀疏的最终反馈中学到“刚才到底找错了哪段证据、为什么找错”，因此 long-context learning 会变得近乎不可行。",
+        "主要方法": "论文提出 LongRLVR，在原本稀疏的 answer reward 之外，额外加入一个 dense 且可验证的 context reward。具体做法是让模型在作答前先显式输出其选中的 grounding chunk identifiers，再把这些 identifier 与标准证据块进行自动比对并计算奖励；这样训练目标就从“只看最后答对没”扩展成“找对证据 + 答对问题”，从而为 context grounding 提供稳定梯度。",
+        "数据集与实验": "作者在多个长上下文 benchmark 上验证方法，覆盖 Qwen 和 LLaMA 系列模型。结果显示 LongRLVR 在所有模型和测试集上都显著优于标准 RLVR，例如 14B 模型在 RULER-QA 上从 73.17 提升到 88.90，在 LongBench v2 上从 39.8 提升到 46.5。",
+        "主要贡献": "这篇论文的主要贡献是指出：长上下文 RL 训练的关键不只是 reasoning reward，而是要显式奖励 grounding process。它把 long-context RL 的失败原因从一个经验现象上升成可解释的优化瓶颈，并给出了一种简单但有效的奖励修正方案。"
+      },
+      "status": "approved",
+      "added_at": "2026-05-04"
     }
   ]
 }
