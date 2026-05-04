@@ -505,6 +505,49 @@
       },
       "status": "approved",
       "added_at": "2026-05-04"
+    },
+    {
+      "id": "skill0-2604-02268",
+      "title": "SKILL0: In-Context Agentic Reinforcement Learning for Skill Internalization",
+      "paper_url": "https://arxiv.org/abs/2604.02268",
+      "authors": [
+        "Zhengxi Lu",
+        "Zhiyuan Yao",
+        "Jinyang Wu",
+        "Chengcheng Han",
+        "Qi Gu",
+        "Xunliang Cai",
+        "Weiming Lu",
+        "Jun Xiao",
+        "Yueting Zhuang",
+        "Yongliang Shen"
+      ],
+      "venue": "arXiv",
+      "year": 2026,
+      "primary_area": "基础/前沿模型 (含LLM)",
+      "category": "Agent 与工具使用",
+      "keywords": [
+        "agent skills",
+        "RL",
+        "skill internalization",
+        "dynamic curriculum",
+        "tool use",
+        "zero-shot agents"
+      ],
+      "code_url": "https://github.com/ZJU-REAL/SkillZero",
+      "note": "通过 skill 参与并塑造 RL 训练时的在线轨迹分布，再通过逐步撤除 skill 促使能力内化。很像把外部 skill 作为训练时脚手架，通过 RL 逐步蒸馏/内化进模型参数。",
+      "tldr": "这篇论文想解决 agent skill 只能在推理时外挂、无法真正学进模型参数的问题，提出 SKILL0：在训练时先给足 skill context，再通过动态课程逐步撤掉，让 agent 在 RL 过程中把技能从“会照着做”变成“零样本自己会做”。",
+      "abstract": "Agent skills, structured packages of procedural knowledge and executable resources that agents dynamically load at inference time, have become a reliable mechanism for augmenting LLM agents. Yet inference-time skill augmentation is fundamentally limited: retrieval noise introduces irrelevant guidance, injected skill content imposes substantial token overhead, and the model never truly acquires the knowledge it merely follows. We ask whether skills can instead be internalized into model parameters, enabling zero-shot autonomous behavior without any runtime skill retrieval. We introduce SKILL0, an in-context reinforcement learning framework designed for skill internalization. SKILL0 introduces a training-time curriculum that begins with full skill context and progressively withdraws it. Skills are grouped offline by category and rendered with interaction history into a compact visual context, teaching the model tool invocation and multi-turn task completion. A Dynamic Curriculum then evaluates each skill file's on-policy helpfulness, retaining only those from which the current policy still benefits within a linearly decaying budget, until the agent operates in a fully zero-shot setting. Extensive agentic experiments demonstrate that SKILL0 achieves substantial improvements over the standard RL baseline (+9.7% for ALFWorld and +6.6% for Search-QA), while maintaining a highly efficient context of fewer than 0.5k tokens per step.",
+      "summary_cn": {
+        "研究动机": "现有 agent skill 体系通常依赖推理时检索 skill 并把它们注入上下文，这虽然有效，但本质上只是“运行时辅助”。作者认为这种范式存在根本局限：检索噪声会带来无关指导，技能文本有明显 token 开销，而且模型并没有真正获得这些技能。",
+        "解决问题": "论文要解决的是：能否把本来依赖 inference-time retrieval 的技能，真正内化到模型参数里，使 agent 在没有技能检索和额外技能注入的情况下也能零样本完成任务。换句话说，目标是把“外挂技能”变成“内生能力”。",
+        "现象分析": "作者指出，传统 skill augmentation 的问题不是“技能没用”，而是它让模型长期依赖外部提示，学到的是 follow guidance 而不是 own the skill。这样既影响推理效率，也限制 agent 从多轮交互和工具调用中形成稳定能力。",
+        "主要方法": "论文提出 SKILL0，一种面向 skill internalization 的 in-context RL 框架。它不是先离线造轨迹再训练，而是让 skill 直接参与 RL 的在线 rollout，帮助模型生成更高质量的交互轨迹；随后再通过 Dynamic Curriculum 逐步撤掉这些 skill，使模型被迫把原本依赖外部 context 的能力迁移进参数中。可以把它理解成一种“用 skill 作为训练时脚手架，在 RL 过程中逐步蒸馏/内化能力”的方案。",
+        "数据集与实验": "作者在多个 agentic benchmark 上验证方法，包括 ALFWorld 和 Search-QA 等。结果显示，相比标准 RL baseline，SKILL0 在 ALFWorld 上提升约 +9.7%，在 Search-QA 上提升约 +6.6%，同时每步上下文长度仍控制在 0.5k tokens 以下。",
+        "主要贡献": "这篇论文的主要贡献是把“skill internalization”明确设定为一个训练目标，而不是默认停留在 inference-time augmentation。它提出了一个通过课程式撤除外部技能、促使能力向参数内转移的 RL 框架，为 agent 从“会调用技能”走向“自己拥有技能”提供了具体路径。"
+      },
+      "status": "approved",
+      "added_at": "2026-05-04"
     }
   ]
 }
