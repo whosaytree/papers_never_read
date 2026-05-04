@@ -548,6 +548,49 @@
       },
       "status": "approved",
       "added_at": "2026-05-04"
+    },
+    {
+      "id": "sortedrl-2603-23414",
+      "title": "SortedRL: Accelerating RL Training for LLMs through Online Length-Aware Scheduling",
+      "paper_url": "https://arxiv.org/abs/2603.23414",
+      "authors": [
+        "Yiqi Zhang",
+        "Huiqiang Jiang",
+        "Xufang Luo",
+        "Zhihe Yang",
+        "Chengruidong Zhang",
+        "Yifei Shen",
+        "Dongsheng Li",
+        "Yuqing Yang",
+        "Lili Qiu",
+        "Yang You"
+      ],
+      "venue": "arXiv",
+      "year": 2026,
+      "primary_area": "强化学习",
+      "category": "应用型 RL",
+      "keywords": [
+        "RL for LLMs",
+        "rollout scheduling",
+        "length-aware batching",
+        "training systems",
+        "bubble ratio",
+        "reasoning efficiency"
+      ],
+      "code_url": "",
+      "note": "",
+      "tldr": "这篇论文不直接改 RL 算法本身，而是优化 RL 训练流水线里的 rollout 调度：通过按输出长度在线重排样本、优先处理短样本并支持更灵活的 update batch，显著减少 rollout 和更新之间的“气泡时间”，从而在更高效率下拿到更好的推理训练效果。",
+      "abstract": "Scaling reinforcement learning (RL) has shown strong promise for enhancing the reasoning abilities of large language models (LLMs), particularly in tasks requiring long chain-of-thought generation. However, RL training efficiency is often bottlenecked by the rollout phase, which can account for up to 70% of total training time when generating long trajectories (e.g., 16k tokens), due to slow autoregressive generation and synchronization overhead between rollout and policy updates. We propose SortedRL, an online length-aware scheduling strategy designed to address this bottleneck by improving rollout efficiency and maintaining training stability. SortedRL reorders rollout samples based on output lengths, prioritizing short samples forming groups for early updates. This enables large rollout batches, flexible update batches, and near on-policy micro-curriculum construction simultaneously. To further accelerate the pipeline, SortedRL incorporates a mechanism to control the degree of off-policy training through a cache-based mechanism, and is supported by a dedicated RL infrastructure that manages rollout and update via a stateful controller and rollout buffer. Experiments using LLaMA-3.1-8B and Qwen-2.5-32B on diverse tasks, including logical puzzles, and math challenges like AIME 24, Math 500, and Minerval, show that SortedRL reduces RL training bubble ratios by over 50%, while attaining 3.9% to 18.4% superior performance over baseline given same amount of data.",
+      "summary_cn": {
+        "研究动机": "作者关注的核心问题不是 RL 是否有效，而是 RL for LLM 在长链推理场景下训练太慢。尤其当 rollout 生成很长时，autoregressive 解码和 rollout/update 同步开销会吞掉大部分训练时间，导致 RL scaling 很难做大。",
+        "解决问题": "论文要解决的是：如何在不破坏训练稳定性的前提下，提升 LLM 强化学习训练中的 rollout 效率。更具体地说，是减少因为样本长度差异和同步等待造成的硬件空转与训练“气泡”。",
+        "现象分析": "作者指出，在长轨迹 RL 训练中，rollout 阶段可能占到总时间的 70% 左右，而不同样本生成长度差异很大，会让系统一直等最慢的那批样本结束。结果就是更新端和生成端之间严重失配，造成大量算力浪费。",
+        "主要方法": "论文提出 SortedRL，一种在线的 length-aware scheduling 策略。它根据输出长度对 rollout 样本重排，让短样本优先成组并更早触发更新，同时支持更大的 rollout batch 和更灵活的 update batch；再配合基于 cache 的 off-policy 控制机制，以及专门管理 rollout / update 的 stateful controller 与 rollout buffer，一起提升训练吞吐并保持接近 on-policy 的稳定性。",
+        "数据集与实验": "实验基于 LLaMA-3.1-8B 和 Qwen-2.5-32B，在逻辑谜题、AIME24、Math500、Minerva 等任务上评估。结果显示，SortedRL 可将 RL training bubble ratio 降低 50% 以上，并在相同数据量下带来 3.9% 到 18.4% 的性能提升。",
+        "主要贡献": "这篇论文的主要贡献是把 RL for LLM 的效率瓶颈从“算法设计”扩展到“训练调度与系统协同”层面。它说明，对于长 CoT 推理模型，训练基础设施和在线调度策略本身就能显著影响最终效果和 scaling 上限。"
+      },
+      "status": "approved",
+      "added_at": "2026-05-04"
     }
   ]
 }
