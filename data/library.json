@@ -959,6 +959,50 @@
       },
       "status": "approved",
       "added_at": "2026-05-05"
+    },
+    {
+      "id": "composition-rl-2602-12036",
+      "title": "Composition-RL: Compose Your Verifiable Prompts for Reinforcement Learning of Large Language Models",
+      "paper_url": "https://arxiv.org/abs/2602.12036",
+      "authors": [
+        "Xin Xu",
+        "Clive Bai",
+        "Kai Yang",
+        "Tianhao Chen",
+        "Yangkun Chen",
+        "Weijie Liu",
+        "Hao Chen",
+        "Yang Wang",
+        "Saiyong Yang",
+        "Can Yang"
+      ],
+      "venue": "arXiv",
+      "year": 2026,
+      "primary_area": "强化学习",
+      "category": "探索与奖励设计",
+      "keywords": [
+        "Composition-RL",
+        "RLVR",
+        "verifiable prompts",
+        "compositional prompts",
+        "curriculum learning",
+        "cross-domain RL"
+      ],
+      "labels": [],
+      "code_url": "https://github.com/XinXU-USTC/Composition-RL",
+      "note": "本质上可以看作一种面向可验证问题的结构化数据增强：把多个简单题组合成新的困难题，持续为 RL 训练提供有效信号。",
+      "tldr": "这篇论文关注 RLVR 训练后期越来越多 prompt 变成 pass-rate = 1、几乎不再提供学习信号的问题，提出 Composition-RL：把多个可验证问题自动组合成一个更难但仍可验证的新问题，用组合题重新填充训练分布，从而持续制造有信息量的 RL 训练样本。",
+      "abstract": "Large-scale verifiable prompts underpin the success of Reinforcement Learning with Verifiable Rewards (RLVR), but they contain many uninformative examples and are costly to expand further. Recent studies focus on better exploiting limited training data by prioritizing hard prompts whose rollout pass rate is 0. However, easy prompts with a pass rate of 1 also become increasingly prevalent as training progresses, thereby reducing the effective data size. To mitigate this, we propose Composition-RL, a simple yet useful approach for better utilizing limited verifiable prompts targeting pass-rate-1 prompts. More specifically, Composition-RL automatically composes multiple problems into a new verifiable question and uses these compositional prompts for RL training. Extensive experiments across model sizes from 4B to 30B show that Composition-RL consistently improves reasoning capability over RL trained on the original dataset. Performance can be further boosted with a curriculum variant of Composition-RL that gradually increases compositional depth over training. Additionally, Composition-RL enables more effective cross-domain RL by composing prompts drawn from different domains. Codes, datasets, and models are available at https://github.com/XinXU-USTC/Composition-RL.",
+      "summary_cn": {
+        "研究动机": "大规模 verifiable prompts 是 RLVR 成功的基础，但它们并不总是同样有用。随着训练推进，模型会逐渐吃掉越来越多“容易题”，这些题虽然还能被采样，但因为几乎总能通过，已经不再产生有效训练信号。",
+        "解决问题": "论文要解决的是：当原始 RL 训练集里的大量 prompt 已经变得过于容易时，如何继续高效利用有限的 verifiable prompt 资源。作者希望不靠单纯扩充新数据，而是从已有数据中构造出新的、更有挑战性的训练样本。",
+        "现象分析": "先前一些工作主要关注 pass-rate = 0 的难题，认为它们更值得优先训练；但作者指出，训练后期 pass-rate = 1 的 easy prompt 同样是问题，因为它们会显著压缩有效数据规模。也就是说，RL 训练的不充分不只来自“太难学不会”，也来自“太容易没东西可学”。",
+        "主要方法": "论文提出 Composition-RL，自动把多个原始问题组合成一个新的 compositional prompt，并保证这个新问题仍然是可验证的。这样做等于把“已经被学会的简单题”重新拼成更复杂的训练任务；此外作者还提出 curriculum 版本，让组合深度随着训练逐步增加，并展示了跨领域组合 prompt 也能提升 cross-domain RL 效果。",
+        "数据集与实验": "实验覆盖 4B 到 30B 的不同模型规模，结果显示 Composition-RL consistently 优于直接在原始数据上做 RL。论文还报告 curriculum variant 能进一步增强效果，并公开了模型、数据集和训练资源，例如 MATH-Composition-199K。",
+        "主要贡献": "这篇论文的主要贡献是把“组合已有可验证问题”作为 RL 数据增益手段系统化。它说明，在 RLVR 中，训练样本的有效难度可以通过组合构造出来，而不一定非要依赖人工扩充或额外收集新题。"
+      },
+      "status": "approved",
+      "added_at": "2026-05-05"
     }
   ]
 }
