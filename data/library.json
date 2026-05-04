@@ -835,6 +835,52 @@
       },
       "status": "approved",
       "added_at": "2026-05-04"
+    },
+    {
+      "id": "rl-compositionality-jt7oCtYqHE",
+      "title": "From f(x) and g(x) to f(g(x)): LLMs Learn New Skills in RL by Composing Old Ones",
+      "paper_url": "https://openreview.net/forum?id=jt7oCtYqHE",
+      "authors": [
+        "Lifan Yuan",
+        "Weize Chen",
+        "Yuchen Zhang",
+        "Ganqu Cui",
+        "Hanbin Wang",
+        "Ziming You",
+        "Ning Ding",
+        "Zhiyuan Liu",
+        "Maosong Sun",
+        "Hao Peng"
+      ],
+      "venue": "ICLR 2026 Poster / arXiv",
+      "year": 2026,
+      "primary_area": "基础/前沿模型 (含LLM)",
+      "category": "推理与思维链",
+      "keywords": [
+        "RL",
+        "compositionality",
+        "skill composition",
+        "reasoning",
+        "atomic skills",
+        "transfer"
+      ],
+      "labels": [
+        "重点"
+      ],
+      "code_url": "https://github.com/PRIME-RL/RL-Compositionality",
+      "note": "",
+      "tldr": "这篇论文针对“RL 只是重排已有策略，还是能教会模型新能力”这个争议，给出较强证据说明：只要模型已经具备必要的 atomic skills，RL 可以进一步教会它把这些技能组合成新的、更复杂的能力，而且这种组合能力还能迁移到别的任务上。",
+      "abstract": "Does reinforcement learning (RL) teach large language models (LLMs) genuinely new skills, or does it merely activate existing ones? This question lies at the core of ongoing debates about the role of RL in LLM post-training. On one side, strong empirical results can be achieved with RL alone even without preceding supervised finetuning; on the other, critics argue that RL contributes little beyond reweighting existing reasoning strategies. This work provides concrete evidence that LLMs can acquire genuinely new skills during RL by composing existing ones, mirroring one of the central mechanisms by which humans acquire new cognitive skills. To mitigate data contamination and other confounding factors and to allow precise control over task complexity, we develop a synthetic framework for our investigation. Specifically, we define a skill as the ability to infer the output of a string transformation function f(x) given x. Once an LLM has already learned f and g prior to RL, our experiments reveal that RL enables it to learn unseen compositions of them h(x)=g(f(x)). Further, this compositional ability generalizes to more difficult problems such as compositions of >2 functions unseen during training. Our experiments provide surprising evidence that this compositional ability, acquired on the source task, transfers to a different target task. This transfer occurs even though the model has never trained with RL on any compositional problems in the target task, as long as it has acquired the target task's atomic skills prior to RL on the source task. Our qualitative analysis shows that RL fundamentally changes the reasoning behaviors of the models. In contrast, neither of the findings is observed in next-token prediction training with the same data. Our systematic experiments provide fresh insights into the learning behaviors of widely-used post-training approaches for LLMs. They suggest the value of building base models with the necessary basic skills, followed by RL with appropriate incentivization to acquire more advanced skills that generalize better to complex and out-of-domain problems.",
+      "summary_cn": {
+        "研究动机": "关于 RL 在 LLM 后训练中的作用，社区一直有分歧：一派认为 RL 能真正教出新能力，另一派则认为 RL 只是把模型本来就会的推理路径重新加权。作者希望在一个更可控、污染更少的设定里，直接测试 RL 是否能带来“技能组合式”的新能力获得。",
+        "解决问题": "论文要解决的是：RL 到底能不能让模型在已有基础技能之上学会新的 compositional skill，而不是只激活旧技能。作者尤其关注这种新能力是否能超出训练时见过的具体题型，并迁移到别的任务上。",
+        "现象分析": "作者构造了一个合成框架，把 skill 明确定义为“给定输入 x，推断字符串变换函数 f(x) 的输出”。实验发现，当模型已经先学会原子技能 f 和 g 后，RL 能让它进一步学会此前未见过的组合 g(f(x))；而用相同数据做 next-token prediction 训练，却不会得到同样的现象。",
+        "主要方法": "论文采用两阶段设计。先让模型在 pre-RL 阶段掌握 atomic skills，再在 RL 阶段只训练 compositional problems，并用 binary reward 基于最终答案是否正确进行优化；关键在于训练时不再显式暴露函数定义，而是要求模型自己把已学技能组合起来。作者还比较了 RL 与 RFT / next-token training，验证这种组合能力主要来自 RL 的探索与激励，而不是单纯的数据曝光。",
+        "数据集与实验": "实验基于一个可控的 synthetic compositional framework，并进一步测试更难的 >2 函数组合，以及 source task 上学到的 compositionality 能否迁移到 target task。结果显示，这种由 RL 学到的组合能力不仅能泛化到更高复杂度，还能在没有 target-task compositional RL 训练的前提下跨任务迁移，只要目标任务的 atomic skills 已经具备。",
+        "主要贡献": "这篇论文的主要贡献是为“RL 是否能教会 LLM 新技能”提供了更细粒度的正面证据：RL 至少能通过组合已有 atomic skills，催生新的 compositional reasoning ability。它把争论从“会不会新技能”推进到“新技能的来源机制是什么”，并支持一种更明确的观点：RL 的价值不只是 reranking，也可能是 skill composition。"
+      },
+      "status": "approved",
+      "added_at": "2026-05-04"
     }
   ]
 }
