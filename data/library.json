@@ -722,6 +722,47 @@
       },
       "status": "approved",
       "added_at": "2026-05-04"
+    },
+    {
+      "id": "trace-2510-01367",
+      "title": "Is It Thinking or Cheating? Detecting Implicit Reward Hacking by Measuring Reasoning Effort",
+      "paper_url": "https://arxiv.org/abs/2510.01367",
+      "authors": [
+        "Xinpeng Wang",
+        "Nitish Joshi",
+        "Barbara Plank",
+        "Rico Angell",
+        "He He"
+      ],
+      "venue": "arXiv",
+      "year": 2025,
+      "primary_area": "对齐/安全/公平性/隐私",
+      "category": "红队与评估",
+      "keywords": [
+        "reward hacking",
+        "CoT monitoring",
+        "reasoning effort",
+        "TRACE",
+        "verifier gaming",
+        "oversight"
+      ],
+      "labels": [
+        "重点"
+      ],
+      "code_url": "",
+      "note": "",
+      "tldr": "这篇论文研究 reasoning model 如何“表面正常、实际钻奖励漏洞”，提出 TRACE：通过截断 CoT 并测量“只用多短的推理就能拿到高 reward”，来检测隐式 reward hacking。核心直觉是，真正认真推理的模型需要足够“努力”，而走捷径的模型会过早拿到高分。",
+      "abstract": "Reward hacking, where a reasoning model exploits loopholes in a reward function to achieve high rewards without solving the intended task, poses a significant threat. This behavior may be explicit, i.e. verbalized in the model's chain-of-thought (CoT), or implicit, where the CoT appears benign thus bypasses CoT monitors. To detect implicit reward hacking, we propose TRACE (Truncated Reasoning AUC Evaluation). Our key observation is that hacking occurs when exploiting the loophole is easier than solving the actual task. This means that the model is using less 'effort' than required to achieve high reward. TRACE quantifies effort by measuring how early a model's reasoning becomes sufficient to obtain the reward. We progressively truncate a model's CoT at various lengths, force the model to answer, and estimate the expected reward at each cutoff. A hacking model, which takes a shortcut, will achieve a high expected reward with only a small fraction of its CoT, yielding a large area under the accuracy-vs-length curve. TRACE achieves over 65% gains over our strongest 72B CoT monitor in math reasoning, and over 30% gains over a 32B monitor in coding. We further show that TRACE can discover unknown loopholes during training. Overall, TRACE offers a scalable unsupervised approach for oversight where current monitoring methods prove ineffective.",
+      "summary_cn": {
+        "研究动机": "reward hacking 一直是 reasoning model 训练中的关键风险，尤其是在 verifier 或 reward function 存在漏洞时。作者关注的是更隐蔽的一类风险：模型可能没有在 CoT 里明确暴露作弊意图，因此常规 CoT monitor 看起来一切正常，却仍在利用漏洞。",
+        "解决问题": "论文要解决的是：如何检测“隐式 reward hacking”，也就是模型没有显式说自己在作弊，但实际上通过捷径拿到高 reward 的情况。作者希望找到一种不依赖已知漏洞模板、也不要求人工标注的大规模检测方法。",
+        "现象分析": "作者的核心观察是：如果模型在利用漏洞，那么获得高 reward 所需的“真实推理努力”通常会比正常解题少。也就是说，作弊模型往往能在很短的 CoT 前缀下就达到很高的 verifier-passing rate，而正常推理模型则需要更完整的 reasoning chain 才能稳定过关。",
+        "主要方法": "论文提出 TRACE (Truncated Reasoning AUC Evaluation)。具体做法是：对模型生成的 CoT 在不同长度处逐步截断，每次强制模型基于该前缀直接作答，并测量 reward / verifier 通过率；然后画出 accuracy-vs-length 曲线并计算面积。若模型在很短的前缀上就已获得高通过率，TRACE 分数就会偏高，这被视为隐式 reward hacking 的信号。",
+        "数据集与实验": "实验覆盖数学推理和代码任务。结果显示，TRACE 在数学上相比最强的 72B CoT monitor 提升超过 65%，在代码任务上相比 32B monitor 提升超过 30%；另外作者还展示了 TRACE 可以在训练过程中发现此前未知的 reward loophole。",
+        "主要贡献": "这篇论文的主要贡献是把“推理努力”本身变成一个可操作的监督信号，用于检测隐式 reward hacking。相比只看最终答案或只监控表面 CoT，它提供了一种更 scalable、无需标注、并且对未知漏洞也有效的 oversight 方法。"
+      },
+      "status": "approved",
+      "added_at": "2026-05-04"
     }
   ]
 }

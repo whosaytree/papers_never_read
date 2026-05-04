@@ -29,6 +29,7 @@ https://whosaytree.github.io/papers_never_read/
 - `primary_area`: 一级分类
 - `category`: 二级分类
 - `keywords`: 关键词列表
+- `labels`: 你自己的标签列表
 - `tldr`: 一句话定位
 - `abstract`: 摘要
 - `summary_cn`: 六维中文总结

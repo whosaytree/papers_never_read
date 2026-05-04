@@ -235,6 +235,10 @@ h3.sub-title{
   background:var(--surface-soft);
   color:var(--accent-deep);
 }
+.badge.label{
+  background:#ffe6d8;
+  color:#8a3b12;
+}
 .paper-tldr{
   background:var(--note);
   border-left:3px solid var(--note-line);
@@ -418,6 +422,7 @@ def search_blob(paper: dict) -> str:
         paper.get("primary_area", ""),
         paper.get("category", ""),
         " ".join(paper.get("keywords", [])),
+        " ".join(paper.get("labels", [])),
         paper.get("note", ""),
         paper.get("abstract", ""),
         paper.get("code_url", ""),
@@ -445,12 +450,14 @@ def paper_card(paper: dict) -> str:
     primary = escape(safe_text(paper.get("primary_area")))
     category = escape(safe_text(paper.get("category")))
     keywords = paper.get("keywords", [])
+    labels = paper.get("labels", [])
     note = safe_text(paper.get("note"), "暂无备注")
     code_url = (paper.get("code_url") or "").strip()
     abstract = escape(safe_text(paper.get("abstract"), "暂无摘要"))
     tldr = escape(safe_text(paper.get("tldr"), "待补充一句话定位"))
     summary = paper.get("summary_cn") or {}
     keyword_html = "".join(f'<span class="badge">{escape(item)}</span>' for item in keywords)
+    label_html = "".join(f'<span class="badge label">{escape(item)}</span>' for item in labels)
     code_html = (
         f'<a href="{escape(code_url)}" target="_blank" rel="noreferrer">{escape(code_url)}</a>'
         if code_url
@@ -467,6 +474,7 @@ def paper_card(paper: dict) -> str:
   <div class="paper-tldr"><b>TL;DR</b> {tldr}</div>
   {summary_html(summary)}
   <div class="paper-extra">
+    <div class="extra-row"><div class="label">标签</div><div class="value">{label_html or "暂无标签"}</div></div>
     <div class="extra-row"><div class="label">关键词</div><div class="value">{keyword_html or "暂无关键词"}</div></div>
     <div class="extra-row"><div class="label">代码仓库</div><div class="value">{code_html}</div></div>
     <div class="extra-row"><div class="label">我的备注</div><div class="value">{escape(note)}</div></div>
