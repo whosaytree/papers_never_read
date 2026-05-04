@@ -641,6 +641,46 @@
       },
       "status": "approved",
       "added_at": "2026-05-04"
+    },
+    {
+      "id": "v0-5-2603-10848",
+      "title": "V₀.₅: Generalist Value Model as a Prior for Sparse RL Rollouts",
+      "paper_url": "https://arxiv.org/abs/2603.10848",
+      "authors": [
+        "Yi-Kai Zhang",
+        "Yueqing Sun",
+        "Hongyan Hao",
+        "Qi Gu",
+        "Xunliang Cai",
+        "De-Chuan Zhan",
+        "Han-Jia Ye"
+      ],
+      "venue": "arXiv",
+      "year": 2026,
+      "primary_area": "强化学习",
+      "category": "基于偏好/反馈的 RL",
+      "keywords": [
+        "RLVR",
+        "value model",
+        "sparse rollouts",
+        "advantage baseline",
+        "statistical testing",
+        "dynamic budget allocation"
+      ],
+      "code_url": "",
+      "note": "",
+      "tldr": "这篇论文想解决 RLVR 里 rollout 太稀疏时 advantage baseline 方差过大的问题，提出 V₀.₅：把预训练 value model 的先验预测和稀疏 rollout 的经验均值自适应融合，并通过实时统计检验决定是否追加采样预算，从而在小 group size 下也能保持稳定高效的策略梯度。",
+      "abstract": "In Reinforcement Learning with Verifiable Rewards (RLVR), constructing a robust advantage baseline is critical for policy gradients, effectively guiding the policy model to reinforce desired behaviors. Recent research has introduced Generalist Value Models (such as V₀), which achieve pre-trained value estimation by explicitly encoding model capabilities in-context, eliminating the need to synchronously update the value model alongside the policy model. In this paper, we propose V₀.₅, which adaptively fuses the baseline predicted by such value model (acting as a prior) with the empirical mean derived from sparse rollouts. This constructs a robust baseline that balances computational efficiency with extremely low variance. Specifically, we introduce a real-time statistical testing and dynamic budget allocation. This balances the high variance caused by sparse sampling against the systematic bias (or hallucinations) inherent in the value model's prior. By constructing a hypothesis test to evaluate the prior's reliability in real-time, the system dynamically allocates additional rollout budget on demand. This mechanism minimizes the baseline estimator's Mean Squared Error (MSE), guaranteeing stable policy gradients, even under extreme sparsity with a group size of 4. Extensive evaluations across six mathematical reasoning benchmarks demonstrate that V₀.₅ significantly outperforms GRPO and DAPO, achieving faster convergence and over some 10% performance improvement.",
+      "summary_cn": {
+        "研究动机": "在 RLVR 中，advantage baseline 的质量直接决定策略梯度是否稳定。作者观察到，当 rollout 很稀疏时，纯经验均值基线方差过高；但如果完全依赖预训练 value model，又容易受系统性偏差或 hallucination 影响。",
+        "解决问题": "论文要解决的是：如何在极少 rollout 的条件下，构造一个既低方差又不太偏的 baseline。换句话说，作者想在“稀疏采样带来的高方差”和“value prior 带来的系统偏差”之间找到更好的平衡点。",
+        "现象分析": "作者指出，单纯增加 rollout 数量虽然能降方差，但代价很高；而像 V₀ 这样的 generalist value model 虽然便宜，却不能保证对当前样本一直可靠。真正的问题不只是“有没有 prior”，而是“什么时候该信 prior，什么时候该多采样”。",
+        "主要方法": "论文提出 V₀.₅，用预训练 generalist value model 的预测作为 prior，再与稀疏 rollout 得到的 empirical mean 自适应融合。核心机制包括：对 prior 的可靠性做实时假设检验，并根据检验结果动态分配额外 rollout budget；这样在 prior 靠谱时少采样、prior 可疑时多采样，从而最小化 baseline estimator 的均方误差并保持近似 on-policy 的稳定训练。",
+        "数据集与实验": "作者在 6 个数学推理 benchmark 上评估方法，重点比较在极端 sparse rollout 条件下的训练效率与性能。结果显示，V₀.₅ 相比 GRPO 和 DAPO 收敛更快，并带来超过 10% 的性能提升。",
+        "主要贡献": "这篇论文的主要贡献是把“预训练 value prior + 稀疏 rollout empirical estimate”系统地结合起来，并用统计检验驱动采样预算分配。它说明，在 RLVR 中，baseline 设计本身就是性能关键，而不仅仅是策略更新公式。"
+      },
+      "status": "approved",
+      "added_at": "2026-05-04"
     }
   ]
 }
