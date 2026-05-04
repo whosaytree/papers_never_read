@@ -919,6 +919,46 @@
       },
       "status": "approved",
       "added_at": "2026-05-04"
+    },
+    {
+      "id": "g-opd-2602-12125",
+      "title": "Learning beyond Teacher: Generalized On-Policy Distillation with Reward Extrapolation",
+      "paper_url": "https://arxiv.org/abs/2602.12125",
+      "authors": [
+        "Wenkai Yang",
+        "Weijie Liu",
+        "Ruobing Xie",
+        "Kai Yang",
+        "Saiyong Yang",
+        "Yankai Lin"
+      ],
+      "venue": "arXiv",
+      "year": 2026,
+      "primary_area": "基础/前沿模型 (含LLM)",
+      "category": "指令微调与对齐",
+      "keywords": [
+        "on-policy distillation",
+        "reward extrapolation",
+        "G-OPD",
+        "ExOPD",
+        "KL-constrained RL",
+        "multi-teacher distillation"
+      ],
+      "labels": [],
+      "code_url": "",
+      "note": "",
+      "tldr": "这篇论文把 on-policy distillation (OPD) 重新解释成一种 dense KL-constrained RL，并在此基础上提出更一般的 G-OPD。核心发现是：只要把 reward 相对 KL 的权重调到大于 1，也就是做 reward extrapolation，学生模型不但能蒸得更好，甚至在多教师融合场景下还能超过教师能力边界。",
+      "abstract": "On-policy distillation (OPD), which aligns the student with the teacher's logit distribution on student-generated trajectories, has demonstrated strong empirical gains in improving student performance and often outperforms off-policy distillation and reinforcement learning (RL) paradigms. In this work, we first theoretically show that OPD is a special case of dense KL-constrained RL where the reward function and the KL regularization are always weighted equally and the reference model can by any model. Then, we propose the Generalized On-Policy Distillation (G-OPD) framework, which extends the standard OPD objective by introducing a flexible reference model and a reward scaling factor that controls the relative weight of the reward term against the KL regularization. Through comprehensive experiments on math reasoning and code generation tasks, we derive two novel insights: (1) Setting the reward scaling factor to be greater than 1 (i.e., reward extrapolation), which we term ExOPD, consistently improves over standard OPD across a range of teacher-student size pairings. In particular, in the setting where we merge the knowledge from different domain experts, obtained by applying domain-specific RL to the same student model, back into the original student, ExOPD enables the student to even surpass the teacher's performance boundary and outperform the domain teachers. (2) Building on ExOPD, we further find that in the strong-to-weak distillation setting (i.e., distilling a smaller student from a larger teacher), performing reward correction by choosing the reference model as the teacher's base model before RL yields a more accurate reward signal and further improves distillation performance. However, this choice assumes access to the teacher's pre-RL variant and incurs more computational overhead. We hope our work offers new insights for future research on OPD.",
+      "summary_cn": {
+        "研究动机": "OPD 在实践中常常比 off-policy distillation 和部分 RL 方法更有效，但为什么有效、还能不能继续改，一直缺少统一理解。作者希望把 OPD 从经验技巧上升成更一般的优化框架，再从中找出真正影响性能的关键自由度。",
+        "解决问题": "论文要解决的是：如何让 on-policy distillation 更灵活、更强，并解释“学生为什么有时能学得比教师还好”。作者尤其关注两个问题：reward 和 KL 的相对权重能否调；以及 reference model 是否必须固定成标准设定。",
+        "现象分析": "作者指出，标准 OPD 实际上把 reward 和 KL regularization 的权重锁死在 1:1，这可能限制了学生的提升空间。换句话说，传统 OPD 更像是在安全地模仿教师，而不是主动沿教师信号继续往更优方向走。",
+        "主要方法": "论文把标准 OPD 统一改写为 dense KL-constrained RL，并指出其本质上默认将 reward 与 KL 正则的相对权重固定。基于此，作者提出 G-OPD，通过引入更灵活的 reference model 和显式 reward scaling factor 放开这一比例；其中 ExOPD 对应 reward scaling factor 大于 1，也就是沿教师给出的奖励方向做外推，而在 strong-to-weak distillation 中又可进一步通过选择教师 RL 前的 base model 作为 reference 来做 reward correction。",
+        "数据集与实验": "实验覆盖数学推理和代码生成任务，并比较多种 teacher-student 配对。结果显示，ExOPD 在多种设置下都优于标准 OPD；特别是在多领域专家知识融合场景下，统一学生模型不仅能吸收不同 domain teacher 的能力，还能整体超过这些领域教师。",
+        "主要贡献": "这篇论文的主要贡献是把 OPD 统一进更一般的 RL 视角，并指出“奖励外推”是突破教师边界的关键机制之一。它说明蒸馏不一定只是保真复制，适当放大学生对 reward 的追逐，也可以让学生学到比教师更强的策略。"
+      },
+      "status": "approved",
+      "added_at": "2026-05-05"
     }
   ]
 }
