@@ -591,6 +591,56 @@
       },
       "status": "approved",
       "added_at": "2026-05-04"
+    },
+    {
+      "id": "nemotron-cascade-2-2603-19220",
+      "title": "Nemotron-Cascade 2: Post-Training LLMs with Cascade RL and Multi-Domain On-Policy Distillation",
+      "paper_url": "https://arxiv.org/abs/2603.19220",
+      "authors": [
+        "Zhuolin Yang",
+        "Zihan Liu",
+        "Yang Chen",
+        "Wenliang Dai",
+        "Boxin Wang",
+        "Sheng-Chieh Lin",
+        "Chankyu Lee",
+        "Yangyi Chen",
+        "Dongfu Jiang",
+        "Jiafan He",
+        "Renjie Pi",
+        "Grace Lam",
+        "Nayeon Lee",
+        "Alexander Bukharin",
+        "Mohammad Shoeybi",
+        "Bryan Catanzaro",
+        "Wei Ping"
+      ],
+      "venue": "arXiv",
+      "year": 2026,
+      "primary_area": "基础/前沿模型 (含LLM)",
+      "category": "推理与思维链",
+      "keywords": [
+        "Cascade RL",
+        "on-policy distillation",
+        "multi-domain training",
+        "reasoning LLMs",
+        "agentic capabilities",
+        "MoE"
+      ],
+      "code_url": "https://research.nvidia.com/labs/nemotron/nemotron-cascade-2/",
+      "note": "在多域级联 RL 训练时，混合引入来自各阶段最强 teacher 的蒸馏信号，用来防止已习得能力回退。",
+      "tldr": "这篇论文是在 Nemotron-Cascade 1 的基础上继续放大 Cascade RL，并加入 multi-domain on-policy distillation，让模型在跨数学、代码、agent 等多个领域持续做 RL 时，能一边推进新能力，一边把前面阶段已经学到的强项稳住，不至于出现 benchmark regression。",
+      "abstract": "We introduce Nemotron-Cascade 2, an open 30B MoE model with 3B activated parameters that delivers best-in-class reasoning and strong agentic capabilities. Despite its compact size, its mathematical and coding reasoning performance approaches that of frontier open models. It is the second open-weight LLM, after DeepSeekV3.2-Speciale-671B-A37B, to achieve Gold Medal-level performance in the 2025 International Mathematical Olympiad (IMO), the International Olympiad in Informatics (IOI), and the ICPC World Finals, demonstrating remarkably high intelligence density with 20x fewer parameters. In contrast to Nemotron-Cascade 1, the key technical advancements are as follows. After SFT on a meticulously curated dataset, we substantially expand Cascade RL to cover a much broader spectrum of reasoning and agentic domains. Furthermore, we introduce multi-domain on-policy distillation from the strongest intermediate teacher models for each domain throughout the Cascade RL process, allowing us to efficiently recover benchmark regressions and sustain strong performance gains along the way. We release the collection of model checkpoint and training data.",
+      "summary_cn": {
+        "研究动机": "作者关注的问题不是单领域 RL 能不能做强，而是当后训练逐渐扩展到更多推理和 agent 领域时，模型往往会在新能力上升的同时牺牲旧能力。也就是说，跨领域 RL scaling 的一个核心难点是如何持续积累能力，而不是在不同 benchmark 之间来回拉扯。",
+        "解决问题": "论文要解决的是：如何把 Cascade RL 扩展到更广的多领域训练，同时尽量避免阶段切换带来的性能回退。作者希望模型在不断进入更复杂 RL 环境时，仍能保留先前域上最优阶段的知识和表现。",
+        "现象分析": "作者隐含指出，多阶段 RL 虽然有利于按领域逐步优化，但随着训练域越来越多，先前已经优化好的 benchmark 很容易回退。单纯继续 on-policy RL 会让模型偏向当前训练分布，因此缺少一种机制去“记住并回收”各阶段教师模型中已经形成的强能力。",
+        "主要方法": "论文提出 Nemotron-Cascade 2 的后训练流程：先做高质量 SFT，再把 Cascade RL 扩展到更广的 reasoning 与 agentic domain；与此同时，在 RL 过程中插入 multi-domain on-policy distillation，从各领域训练过程中表现最强的中间 teacher model 蒸馏知识回来。这样做的作用不是替代 RL，而是在持续 on-policy 优化时，动态恢复之前阶段可能退化的 benchmark，从而让多领域能力更平衡地累积。",
+        "数据集与实验": "论文报告该 30B MoE / 3B activated 参数模型在数学、代码推理、agentic 能力等多个方向都取得很强结果，并声称达到开源模型中的第一梯队。尤其在 IMO 2025、IOI 2025 和 ICPC World Finals 上达到 gold-medal-level 表现，同时在关键 benchmark 上优于若干同规模或更大规模开源模型。",
+        "主要贡献": "这篇论文的主要贡献是把“多领域 Cascade RL + 中间教师 on-policy distillation”结合成一个更稳的 post-training recipe。它强调，在大规模 reasoning post-training 里，持续扩域不是唯一目标，如何在扩域过程中抑制遗忘和回退，同样是决定最终模型质量的关键。"
+      },
+      "status": "approved",
+      "added_at": "2026-05-04"
     }
   ]
 }
