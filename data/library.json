@@ -1042,6 +1042,48 @@
       },
       "status": "approved",
       "added_at": "2026-05-05"
+    },
+    {
+      "id": "rloo-2402-14740",
+      "title": "Back to Basics: Revisiting REINFORCE Style Optimization for Learning from Human Feedback in LLMs",
+      "paper_url": "https://arxiv.org/abs/2402.14740",
+      "authors": [
+        "Arash Ahmadian",
+        "Chris Cremer",
+        "Matthias Gallé",
+        "Marzieh Fadaee",
+        "Julia Kreutzer",
+        "Olivier Pietquin",
+        "Ahmet Üstün",
+        "Sara Hooker"
+      ],
+      "venue": "arXiv",
+      "year": 2024,
+      "primary_area": "基础/前沿模型 (含LLM)",
+      "category": "指令微调与对齐",
+      "keywords": [
+        "RLOO",
+        "REINFORCE",
+        "RLHF",
+        "policy gradient",
+        "PPO alternative",
+        "variance reduction"
+      ],
+      "labels": [],
+      "code_url": "",
+      "note": "",
+      "tldr": "这篇论文重新审视 RLHF / RLVR 里常被默认使用的 PPO，指出在 LLM 场景下一个更简单的 REINFORCE-style 方法就足够强，甚至更稳更省。作者据此提出 RLOO，用 leave-one-out baseline 减方差，展示不依赖 value function 和 PPO clipping 也能得到有竞争力甚至更优的对齐效果。",
+      "abstract": "While the recent advancements in large language models have fueled a burst of interest in Reinforcement Learning from Human Feedback (RLHF) as a way to fine-tune models, there remains limited understanding about what RL algorithms and components work best in the LLM setting. We revisit the role of REINFORCE-style optimization and argue that simple policy gradient methods are surprisingly competitive when adapted appropriately. In particular, we introduce a REINFORCE Leave-One-Out (RLOO) baseline that uses the rewards of other samples from the same prompt as a variance-reducing control variate, eliminating the need for a learned value function. We demonstrate that such a simple method can achieve competitive or superior performance to PPO-style baselines while being simpler and more memory efficient.",
+      "summary_cn": {
+        "研究动机": "作者观察到，PPO 已经几乎成了 LLM 对齐训练的默认选择，但它本身包含很多为传统连续控制任务设计的复杂组件。论文的出发点是：这些复杂性在 LLM 场景里真的必要吗，还是我们已经过度工程化了 RLHF？",
+        "解决问题": "论文要解决的是：如何在不牺牲效果的前提下，简化 LLM 对齐中的 RL 优化过程。更具体地说，是寻找一种比 PPO 更简单、更省内存、更易扩展的替代方案，同时保持训练稳定和良好 reward 优化能力。",
+        "现象分析": "作者认为，PPO 在 LLM 上的成功不一定来自 clipping 或 critic 这类复杂机制本身，而可能主要来自更基本的 policy gradient 优化。与此同时，value function 带来的额外训练与内存开销，在大模型场景下代价很高，也未必总能换来成比例收益。",
+        "主要方法": "论文回到最基本的 REINFORCE 视角，并提出 RLOO (REINFORCE Leave-One-Out)：对同一 prompt 采样多条回答，用其余样本的平均 reward 作为当前样本的 baseline 来估计 advantage。这个 leave-one-out 设计既保留了 REINFORCE 的简单性，又显著降低了梯度方差，从而避免训练额外 value model，同时保持高效稳定的 on-policy 优化。",
+        "数据集与实验": "实验覆盖 sentiment control、summarization 和 RLHF/RLVR 类典型设定，并与 PPO 等主流方法比较。结果显示，RLOO 在效果上具有竞争力，同时显著降低内存需求和实现复杂度，因此特别适合大规模 LLM 后训练场景。",
+        "主要贡献": "这篇论文的主要贡献是提醒社区：LLM 对齐里的 RL 不一定需要从复杂算法开始，很多时候回到更简单的 policy gradient 基线反而更合理。它也推动了后续大量围绕 RLOO/REINFORCE-style RL 的工作，把“简化 RL 后训练”变成了一个重要方向。"
+      },
+      "status": "approved",
+      "added_at": "2026-05-05"
     }
   ]
 }
