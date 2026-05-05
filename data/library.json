@@ -1003,6 +1003,45 @@
       },
       "status": "approved",
       "added_at": "2026-05-05"
+    },
+    {
+      "id": "seeupo-2602-06554",
+      "title": "SeeUPO: Sequence-Level Agentic-RL with Convergence Guarantees",
+      "paper_url": "https://arxiv.org/abs/2602.06554",
+      "authors": [
+        "Tianyi Hu",
+        "Qingxu Fu",
+        "Yanxi Chen",
+        "Zhaoyang Liu",
+        "Bolin Ding"
+      ],
+      "venue": "arXiv",
+      "year": 2026,
+      "primary_area": "基础/前沿模型 (含LLM)",
+      "category": "Agent 与工具使用",
+      "keywords": [
+        "agentic RL",
+        "convergence guarantee",
+        "critic-free RL",
+        "sequence-level optimization",
+        "backward induction",
+        "multi-turn agents"
+      ],
+      "labels": [],
+      "code_url": "",
+      "note": "关键不是单纯 sequence-level PPO，而是通过逆序逐轮更新，把每次策略更新都约束成不退化的单调改进。",
+      "tldr": "这篇论文关注多轮 agent RL 中“能训起来但不一定收敛”的问题，提出 SeeUPO：把多轮 agent 交互重写成按顺序执行的多智能体 bandit 问题，并用逆序逐步更新策略，从而在 critic-free 条件下同时兼顾训练稳定性和理论收敛保证。",
+      "abstract": "Reinforcement learning (RL) has emerged as the predominant paradigm for training large language model (LLM)-based AI agents. However, existing backbone RL algorithms lack verified convergence guarantees in agentic scenarios, especially in multi-turn settings, which can lead to training instability and failure to converge to optimal policies. In this paper, we systematically analyze how different combinations of policy update mechanisms and advantage estimation methods affect convergence properties in single/multi-turn scenarios. We find that REINFORCE with Group Relative Advantage Estimation (GRAE) can converge to the globally optimal under undiscounted conditions, but the combination of PPO & GRAE breaks PPO's original monotonic improvement property. Furthermore, we demonstrate that mainstream backbone RL algorithms cannot simultaneously achieve both critic-free and convergence guarantees in multi-turn scenarios. To address this, we propose SeeUPO (Sequence-level Sequential Update Policy Optimization), a critic-free approach with convergence guarantees for multi-turn interactions. SeeUPO models multi-turn interaction as sequentially executed multi-agent bandit problems. Through turn-by-turn sequential policy updates in reverse execution order, it ensures monotonic improvement and convergence to global optimal solution via backward induction. Experiments on AppWorld and BFCL v4 demonstrate SeeUPO's substantial improvements over existing backbone algorithms: relative gains of 43.3%-54.6% on Qwen3-14B and 24.1%-41.9% on Qwen2.5-14B (averaged across benchmarks), along with superior training stability.",
+      "summary_cn": {
+        "研究动机": "作者指出，LLM agent 的 RL 训练已经很常见，但现有 backbone RL 算法大多是从单轮或普通 sequence 设定移植过来的，在多轮 agent 场景里缺乏严格的收敛保证。这会带来训练不稳定、难以收敛到优策略等问题。",
+        "解决问题": "论文要解决的是：在 multi-turn agent interaction 中，能否设计一种既不依赖 critic，又具有明确 convergence guarantee 的 RL 方法。作者特别想解决现有方法在多轮交互场景下“理论上说不清、实践上不稳定”的缺口。",
+        "现象分析": "作者系统分析了 policy update 机制和 advantage estimation 的组合对收敛性的影响，发现一些常见搭配并不成立。例如，PPO + GRAE 会破坏 PPO 原本的 monotonic improvement 性质；而主流 backbone RL 方法似乎无法在多轮场景里同时满足“critic-free”和“有收敛保证”这两个条件。",
+        "主要方法": "论文提出 SeeUPO (Sequence-level Sequential Update Policy Optimization)。核心思想是把多轮交互看成一串按执行顺序排列的多智能体 bandit 子问题，然后按照逆执行顺序逐轮更新策略；这种 backward-induction 式更新能保证单调改进，并在无折扣条件下收敛到全局最优。它因此不是简单套用 sequence-level PPO，而是显式利用 multi-turn structure 来设计更新次序。",
+        "数据集与实验": "实验在 AppWorld 和 BFCL v4 上进行，使用 Qwen3-14B 与 Qwen2.5-14B 作为基础模型。结果显示，SeeUPO 相对现有 backbone 算法带来明显提升：在 Qwen3-14B 上平均相对收益约 43.3%–54.6%，在 Qwen2.5-14B 上约 24.1%–41.9%，同时训练稳定性也更好。",
+        "主要贡献": "这篇论文的主要贡献是把多轮 agent RL 的“结构性顺序”真正用进优化算法里，并给出 critic-free 场景下较强的收敛保证。它说明，agent RL 的关键不只是 reward 设计或 rollout 规模，更新顺序本身也可能决定训练是否可靠。"
+      },
+      "status": "approved",
+      "added_at": "2026-05-05"
     }
   ]
 }
