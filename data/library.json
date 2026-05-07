@@ -1084,6 +1084,61 @@
       },
       "status": "approved",
       "added_at": "2026-05-05"
+    },
+    {
+      "id": "large-concept-models-2412-08821",
+      "title": "Large Concept Models: Language Modeling in a Sentence Representation Space",
+      "paper_url": "https://arxiv.org/abs/2412.08821",
+      "authors": [
+        "LCM team",
+        "Loïc Barrault",
+        "Paul-Ambroise Duquenne",
+        "Maha Elbayad",
+        "Artyom Kozhevnikov",
+        "Belen Alastruey",
+        "Pierre Andrews",
+        "Mariano Coria",
+        "Guillaume Couairon",
+        "Marta R. Costa-jussà",
+        "David Dale",
+        "Hady Elsahar",
+        "Kevin Heffernan",
+        "João Maria Janeiro",
+        "Tuan Tran",
+        "Christophe Ropers",
+        "Eduardo Sánchez",
+        "Robin San Roman",
+        "Alexandre Mourachko",
+        "Safiyyah Saleem",
+        "Holger Schwenk"
+      ],
+      "venue": "arXiv",
+      "year": 2024,
+      "primary_area": "基础/前沿模型 (含LLM)",
+      "category": "模型架构",
+      "keywords": [
+        "concept modeling",
+        "sentence embeddings",
+        "SONAR",
+        "diffusion generation",
+        "multilingual generalization",
+        "hierarchical language modeling"
+      ],
+      "labels": [],
+      "code_url": "https://github.com/facebookresearch/large_concept_model",
+      "note": "",
+      "tldr": "这篇论文不再把“token”当作唯一建模单位，而是提出 Large Concept Model (LCM)：直接在句子级语义表示空间里做自回归预测。核心想法是让模型在更高抽象层级上组织和生成内容，从而获得更好的长程规划、多语言迁移和跨模态泛化能力。",
+      "abstract": "LLMs have revolutionized the field of artificial intelligence and have emerged as the de-facto tool for many tasks. The current established technology of LLMs is to process input and generate output at the token level. This is in sharp contrast to humans who operate at multiple levels of abstraction, well beyond single words, to analyze information and to generate creative content. In this paper, we present an attempt at an architecture which operates on an explicit higher-level semantic representation, which we name a concept. Concepts are language- and modality-agnostic and represent a higher level idea or action in a flow. Hence, we build a \"Large Concept Model\". In this study, as proof of feasibility, we assume that a concept corresponds to a sentence, and use an existing sentence embedding space, SONAR, which supports up to 200 languages in both text and speech modalities. The Large Concept Model is trained to perform autoregressive sentence prediction in an embedding space. We explore multiple approaches, namely MSE regression, variants of diffusion-based generation, and models operating in a quantized SONAR space. These explorations are performed using 1.6B parameter models and training data in the order of 1.3T tokens. We then scale one architecture to a model size of 7B parameters and training data of about 2.7T tokens. We perform an experimental evaluation on several generative tasks, namely summarization and a new task of summary expansion. Finally, we show that our model exhibits impressive zero-shot generalization performance to many languages, outperforming existing LLMs of the same size. The training code of our models is freely available.",
+      "summary_cn": {
+        "研究动机": "作者认为当前 LLM 主要在 token level 上处理和生成文本，这和人类在更高抽象层级上思考与表达的方式存在明显差距。为此，论文尝试引入显式的“concept”层，把语言建模从词级推进到句子语义级。",
+        "解决问题": "论文要解决的是：能否在不依赖 token-by-token 建模的前提下，直接在更高层语义表示空间中完成生成。作者希望验证，这种句子级概念建模是否能提升生成质量、长程规划能力以及零样本跨语言泛化。",
+        "现象分析": "作者认为，token 级建模虽然强大，但在长程组织、高层语义一致性和模态无关表达上并不天然占优。若把建模单位上升到 language-agnostic 的句子 embedding，模型可能更容易学习“思想/动作流”而不是局部词序列。",
+        "主要方法": "论文提出 Large Concept Model，其中“concept”在这篇工作里具体近似为一个句子，并使用支持 200 种语言和语音/文本模态的 SONAR 表示空间来承载这些 concept。模型在 concept embedding space 上做自回归句子预测，作者探索了多种生成方式，包括直接回归、基于 diffusion 的生成以及量化后的离散空间建模，并把其中一种架构从 1.6B 扩展到 7B 参数规模。",
+        "数据集与实验": "实验覆盖 summarization、summary expansion 以及多语言零样本泛化等任务。结果显示，LCM 在多个语言和任务上展现出很强的 zero-shot generalization，甚至能在同规模下优于一些传统 token-level LLM。",
+        "主要贡献": "这篇论文的主要贡献是把“大模型建模单位”从 token 提升到 concept，并给出了大规模训练和评估的可行性证据。它不只是某个架构小改，而是在探索一种不同于传统 LLM 的语言建模范式。"
+      },
+      "status": "approved",
+      "added_at": "2026-05-05"
     }
   ]
 }
