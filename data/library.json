@@ -1139,6 +1139,52 @@
       },
       "status": "approved",
       "added_at": "2026-05-05"
+    },
+    {
+      "id": "rlfactory-2509-06980",
+      "title": "RLFactory: A Plug-and-Play Reinforcement Learning Post-Training Framework for LLM Multi-Turn Tool-Use",
+      "paper_url": "https://arxiv.org/abs/2509.06980",
+      "authors": [
+        "Jiajun Chai",
+        "Guojun Yin",
+        "Zekun Xu",
+        "Chuhuai Yue",
+        "Yi Jia",
+        "Siyu Xia",
+        "Xiaohan Wang",
+        "Jiwen Jiang",
+        "Xiaoguang Li",
+        "Chengqi Dong",
+        "Hang He",
+        "Wei Lin"
+      ],
+      "venue": "arXiv",
+      "year": 2025,
+      "primary_area": "基础/前沿模型 (含LLM)",
+      "category": "Agent 与工具使用",
+      "keywords": [
+        "agentic RL",
+        "tool use",
+        "asynchronous calling",
+        "post-training framework",
+        "reward design",
+        "Search-R1"
+      ],
+      "labels": [],
+      "code_url": "https://github.com/Simple-Efficient/RL-Factory",
+      "note": "",
+      "tldr": "这篇论文不是只改某个 RL 算法，而是搭了一个可插拔的多轮 tool-use RL 后训练框架 RLFactory。核心价值在于把工具调用、训练流程和奖励机制解耦，并用异步工具调用显著提高吞吐，使多轮 agent RL 训练更稳定、更容易落地。",
+      "abstract": "Large language models excel at basic reasoning but struggle with tasks that require interaction with external tools. We present RLFactory, a plug-and-play reinforcement learning post-training framework for multi-round tool use. RLFactory tackles (i) tool-call stability and adaptability amid tool heterogeneity and interface issues via an asyncio-based asynchronous caller and a decoupled tool/training architecture, and (ii) diverse evaluation needs via a reward layer supporting rule-based, model-judgment, and tool-verification signals. It reconstructs the MDP by introducing observation markers from tool feedback, closing the loop among model, tools, and environment, and implements a generate-parse-invoke-update workflow for dynamic policy optimization. On Search-R1 with Qwen3-4B, RLFactory achieves a 0.486 test score on the Natural Questions (NQ) dataset, surpassing larger models trained with similar techniques (e.g., Qwen2.5-7B-Instruct-GRPO at 0.473), and increases training throughput by 6.8x. RLFactory provides a low-barrier, highly adaptable framework for strengthening multi-round tool use of LLMs in real-world scenarios.",
+      "summary_cn": {
+        "研究动机": "作者关注的是：LLM 在基础推理上已经不错，但一到真实工具交互场景，训练和部署就会碰到很多工程问题。尤其是多轮 tool-use 里，工具接口异构、调用不稳定、训练吞吐低，往往成为 RL 后训练的主要瓶颈。",
+        "解决问题": "论文要解决的是：如何构建一个低门槛、可扩展、适配真实世界工具场景的 RL post-training framework。它不是单纯提升单个 benchmark 分数，而是希望把“多轮工具使用 RL”这件事做成一个通用训练基础设施。",
+        "现象分析": "作者指出，多轮 tool-use 任务的难点不只在策略学习，还在环境闭环能不能稳住。若工具调用、反馈解析和训练更新耦合得太紧，系统很容易因工具异构、阻塞等待或 reward 设计碎片化而变得难扩展、难复现。",
+        "主要方法": "论文提出 RLFactory，以 generate -> parse -> invoke -> update 为主循环，把模型、工具和环境重新闭环起来。核心设计包括：基于 asyncio 的异步工具调用器、解耦的 tool/training architecture，以及一个支持 rule-based、model-judgment 和 tool-verification 的 reward layer；同时通过 observation markers 重构 MDP，使工具反馈能够稳定进入策略优化过程。",
+        "数据集与实验": "实验基于 Search-R1 和 Qwen3-4B，在 Natural Questions (NQ) 上达到 0.486 测试分数，超过了一些更大模型的相似训练方案（如 Qwen2.5-7B-Instruct-GRPO 的 0.473）。此外论文还报告训练吞吐提升了 6.8x，说明框架层优化本身带来了很大收益。",
+        "主要贡献": "这篇论文的主要贡献是把多轮 tool-use RL 的工程问题系统化，并给出一个可插拔、异步、奖励灵活的后训练框架。它说明，在 agent RL 里，框架设计和训练基础设施本身就可能和算法创新同样重要。"
+      },
+      "status": "approved",
+      "added_at": "2026-05-07"
     }
   ]
 }
