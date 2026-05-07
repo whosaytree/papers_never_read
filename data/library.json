@@ -1185,6 +1185,50 @@
       },
       "status": "approved",
       "added_at": "2026-05-07"
+    },
+    {
+      "id": "video-r1-2503-21776",
+      "title": "Video-R1: Reinforcing Video Reasoning in MLLMs",
+      "paper_url": "https://arxiv.org/abs/2503.21776",
+      "authors": [
+        "Kaituo Feng",
+        "Kaixiong Gong",
+        "Bohao Li",
+        "Zonghao Guo",
+        "Yibing Wang",
+        "Tianshuo Peng",
+        "Junfei Wu",
+        "Xiaoying Zhang",
+        "Benyou Wang",
+        "Xiangyu Yue"
+      ],
+      "venue": "arXiv",
+      "year": 2025,
+      "primary_area": "应用：CV/音频/语言等",
+      "category": "视频理解",
+      "keywords": [
+        "video reasoning",
+        "MLLM",
+        "RL",
+        "GRPO",
+        "temporal modeling",
+        "multimodal reasoning"
+      ],
+      "labels": [],
+      "code_url": "https://github.com/tulerfeng/Video-R1",
+      "note": "",
+      "tldr": "这篇论文把 R1 / GRPO 式 RL 迁移到视频推理场景，提出 Video-R1。核心做法是用 T-GRPO 显式鼓励模型利用视频中的时间信息，并用高质量图像推理数据补足视频 reasoning 数据稀缺的问题，从而显著提升 MLLM 的视频推理能力。",
+      "abstract": "Inspired by DeepSeek-R1's success in eliciting reasoning abilities through rule-based reinforcement learning (RL), we introduce Video-R1 as the first attempt to systematically explore the R1 paradigm for eliciting video reasoning within multimodal large language models (MLLMs). However, directly applying RL training with the GRPO algorithm to video reasoning presents two primary challenges: (i) a lack of temporal modeling for video reasoning, and (ii) the scarcity of high-quality video-reasoning data. To address these issues, we first propose the T-GRPO algorithm, which encourages models to utilize temporal information in videos for reasoning. Additionally, instead of relying solely on video data, we incorporate high-quality image-reasoning data into the training process. We have constructed two datasets: Video-R1-CoT-165k for SFT cold start and Video-R1-260k for RL training, both comprising image and video data. Experimental results demonstrate that Video-R1 achieves significant improvements on video reasoning benchmarks such as VideoMMMU and VSI-Bench, as well as on general video benchmarks including MVBench and TempCompass, etc. Notably, Video-R1-7B attains a 35.8% accuracy on video spatial reasoning benchmark VSI-bench, surpassing the commercial proprietary model GPT-4o. All codes, models, data are released.",
+      "summary_cn": {
+        "研究动机": "作者认为，虽然 DeepSeek-R1 类方法已经证明 RL 能显著增强文本推理能力，但视频推理场景还没有被系统探索。问题在于，视频理解不仅要会 reasoning，还必须处理时间结构，而这和静态图像或纯文本不同。",
+        "解决问题": "论文要解决两个关键问题：第一，如何让 GRPO 类 RL 真正学到视频中的 temporal reasoning；第二，如何缓解高质量视频推理数据不足的问题。作者希望把 R1 范式从文本 reasoning 推广到视频 reasoning，而不是只做表面多模态迁移。",
+        "现象分析": "作者指出，若直接把标准 GRPO 用到视频推理上，模型往往无法充分利用时间信息，训练效果也会受限；与此同时，纯视频 reasoning 数据的规模和质量又不够支撑大规模 RL。也就是说，难点既在算法适配，也在训练数据供给。",
+        "主要方法": "论文提出 T-GRPO，在 RL 训练中显式鼓励模型利用视频的时间线索做推理；同时不是只依赖视频数据，而是把高质量图像推理数据一起纳入训练流程。作者还构建了两个数据集：Video-R1-CoT-165k 用于 SFT cold start，Video-R1-260k 用于后续 RL 训练，从而形成一条从 supervised cold start 到 RL reasoning enhancement 的完整 pipeline。",
+        "数据集与实验": "实验显示，Video-R1 在 VideoMMMU、VSI-Bench、MVBench、TempCompass 等多个 benchmark 上都有显著提升。尤其是 Video-R1-7B 在视频空间推理 benchmark VSI-Bench 上达到约 35.8% 准确率，超过了商业闭源模型 GPT-4o。",
+        "主要贡献": "这篇论文的主要贡献是首次系统性把 R1 范式用于视频推理 MLLM，并同时解决 temporal modeling 和数据稀缺两个现实瓶颈。它说明，多模态 reasoning 的 RL 增强不只是把文本方法照搬过去，而需要对时间建模和数据构造一起做适配。"
+      },
+      "status": "approved",
+      "added_at": "2026-05-07"
     }
   ]
 }
