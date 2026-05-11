@@ -1229,6 +1229,47 @@
       },
       "status": "approved",
       "added_at": "2026-05-07"
+    },
+    {
+      "id": "alfworld-2010-03768",
+      "title": "ALFWorld: Aligning Text and Embodied Environments for Interactive Learning",
+      "paper_url": "https://arxiv.org/abs/2010.03768",
+      "authors": [
+        "Mohit Shridhar",
+        "Xingdi Yuan",
+        "Marc-Alexandre Côté",
+        "Yonatan Bisk",
+        "Adam Trischler",
+        "Matthew Hausknecht"
+      ],
+      "venue": "ICLR 2021 Poster",
+      "year": 2021,
+      "primary_area": "应用：机器人/自动化/规划",
+      "category": "任务规划",
+      "keywords": [
+        "embodied agents",
+        "language grounding",
+        "TextWorld",
+        "ALFRED",
+        "interactive learning",
+        "imitation learning",
+        "generalization"
+      ],
+      "labels": [],
+      "code_url": "https://github.com/alfworld/alfworld",
+      "note": "这里的“自然语言思考”更准确地说是语言/符号层面的高层任务规划：模型先基于文本状态选择受限动作空间中的下一步文本动作，而不是生成开放式 CoT；随后系统再把该高层动作映射到具身环境中的具体执行。",
+      "tldr": "这篇论文提出 ALFWorld，把 TextWorld 中的抽象文本交互与 ALFRED 的具身视觉环境对齐。agent 先在语言/符号层面根据文本状态学习高层动作策略，再由具身模块把这些文本动作落到视觉环境中的导航、抓取和放置等具体操作，从而降低训练成本并提升泛化。",
+      "abstract": "Given a simple request (e.g., Put a washed apple in the kitchen fridge), humans can reason in purely abstract terms by imagining action sequences and scoring their likelihood of success, prototypicality, and efficiency, all without moving a muscle. Once we see the kitchen in question, we can update our abstract plans to fit the scene. Embodied agents require the same abilities, but existing work does not yet provide the infrastructure necessary for both reasoning abstractly and executing concretely. We address this limitation by introducing ALFWorld, a simulator that enables agents to learn abstract, text-based policies in TextWorld and then execute goals from the ALFRED benchmark in a rich visual environment. ALFWorld enables the creation of a new BUTLER agent whose abstract knowledge, learned in TextWorld, corresponds directly to concrete, visually grounded actions. In turn, this fosters better agent generalization than training only in the visually grounded environment. BUTLER's simple, modular design factors the problem to allow researchers to focus on models for improving every piece of the pipeline, including language understanding, planning, navigation, and visual scene understanding.",
+      "summary_cn": {
+        "研究动机": "论文关注具身智能中的一个核心断层：人类可以先用语言和常识做抽象规划，再根据具体房间和物体状态调整执行；但许多具身 agent 只能直接在高维视觉环境里学习，训练成本高，也难以形成可迁移的高层策略。",
+        "解决问题": "作者要解决的是如何把抽象语言推理和具体具身执行接起来。具体来说，agent 需要在文本环境中学到与真实感视觉环境一致的任务结构，使文本策略不是孤立的游戏能力，而能转化为 embodied task 中可执行的子目标。",
+        "现象分析": "论文指出，传统视觉语言导航或指令跟随数据通常依赖固定示范，缺少可大规模交互探索的语言反馈；而纯文本游戏虽然适合学习规划，却没有视觉和物理 grounding。二者之间如果没有共享的底层状态和动作语义，就很难让抽象策略迁移到具身环境。",
+        "主要方法": "论文提出 ALFWorld，将 ALFRED 任务映射成 TextWorld 中的文本交互环境，并用 PDDL 表示共享的潜在世界状态与动态。基于这个对齐环境，作者提出 BUTLER agent：它不是直接在像素级环境中端到端学完整控制，而是先在 TextWorld 中通过 imitation learning 学习一个从“文本状态 + 任务目标”到“下一步高层文本动作”的策略；迁移到 embodied world 时，这些文本动作再作为子目标交给低层视觉、导航和控制模块执行。",
+        "数据集与实验": "实验覆盖 ALFRED 中的六类家庭操作任务，包括 pick-and-place、clean-and-place、heat-and-place、cool-and-place 等。结果显示，先在 TextWorld 中训练的 BUTLER 能 zero-shot 迁移到 embodied world，在 seen 和 unseen 设置上比只在具身环境中训练或只依赖示范的方法更具泛化性，并且文本环境训练速度显著更快。",
+        "主要贡献": "这篇论文的主要贡献是提供了第一个系统对齐文本交互世界和具身视觉世界的环境 ALFWorld，并展示了从语言抽象策略到具身执行的可行迁移路径。它把 embodied AI 的学习问题拆成语言理解、规划、导航、视觉理解和低层控制等模块，为后续研究提供了可复用的基准与工程框架。"
+      },
+      "status": "approved",
+      "added_at": "2026-05-11"
     }
   ]
 }
