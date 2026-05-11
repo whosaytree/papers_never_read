@@ -1879,6 +1879,257 @@
       },
       "status": "approved",
       "added_at": "2026-05-11"
+    },
+    {
+      "id": "toolrl-2504-13958",
+      "title": "ToolRL: Reward is All Tool Learning Needs",
+      "paper_url": "https://arxiv.org/abs/2504.13958",
+      "authors": [
+        "Cheng Qian",
+        "Emre Can Acikgoz",
+        "Qi He",
+        "Hongru Wang",
+        "Xiusi Chen",
+        "Dilek Hakkani-Tür",
+        "Gokhan Tur",
+        "Heng Ji"
+      ],
+      "venue": "arXiv",
+      "year": 2025,
+      "primary_area": "基础/前沿模型 (含LLM)",
+      "category": "Agent 与工具使用",
+      "keywords": [
+        "ToolRL",
+        "tool-use RL",
+        "reward design",
+        "reward granularity",
+        "GRPO",
+        "tool selection",
+        "parameter filling",
+        "tool application"
+      ],
+      "labels": [
+        "Tool Use",
+        "Agentic RL",
+        "Reward Design"
+      ],
+      "code_url": "https://github.com/qiancheng0/ToolRL",
+      "note": "工具调用 RL 中 reward design 的核心参考。它把 reward type、scale、granularity 和 temporal dynamics 当作 tool learning 的关键变量；相比 Search-R1 的最终答案奖励，ToolRL 更强调工具选择、参数填写和工具应用等中间过程需要被奖励覆盖。",
+      "tldr": "ToolRL 认为工具调用 RL 的关键不只是模型能力，而是奖励能否覆盖工具选择、参数构造、工具执行和最终回答；论文系统研究 reward granularity/scale/type 对 GRPO 工具学习的影响。",
+      "abstract": "Tool learning empowers large language models (LLMs) to interact with external tools, expanding their capabilities beyond text generation. Recent advances in reasoning-focused reinforcement learning, such as DeepSeek-R1, suggest that reinforcement learning can enhance model reasoning and generalization. In this work, we investigate how to apply reinforcement learning to tool learning and argue that reward design is central to successful tool-use training. We study different reward types, scales, granularities, and temporal dynamics for tool-use tasks, and show that properly designed rewards can improve tool selection, parameter filling, tool application, and final answer quality. Experiments demonstrate that ToolRL improves over both base and supervised fine-tuned models, highlighting the importance of reward design for scalable and robust tool learning.",
+      "summary_cn": {
+        "研究动机": "工具调用让 LLM 能访问外部 API 和环境，但复杂工具任务中，SFT 往往泛化有限。DeepSeek-R1 等工作显示 RL 能提升推理和泛化，因此作者希望系统研究 RL 能否用于 tool learning，以及 reward design 在其中到底有多重要。",
+        "解决问题": "论文要解决的是工具调用 RL 的奖励设计问题。普通最终答案 reward 很难区分错误来自工具选择、参数填写、工具执行结果利用还是最终表达，因此中间工具动作的 credit assignment 容易不清。",
+        "现象分析": "工具调用轨迹比普通问答更复杂，包含 tool selection、parameter construction、tool application 和 final response 等多个阶段。若奖励过粗，模型可能学不到局部工具行为；若奖励尺度或时序处理不当，也会影响探索和训练稳定性。",
+        "主要方法": "ToolRL 使用 GRPO 训练工具使用策略，并系统比较 reward type、reward scale、reward granularity 和 temporal dynamics。核心思想是把工具调用过程拆开评价，让奖励覆盖工具选择、参数正确性、工具应用和最终答案。",
+        "数据集与实验": "论文在工具调用任务上比较 base model、SFT 和 RL 训练结果，报告 ToolRL 相对 base model 和 SFT 均有明显提升，并分析不同奖励设计对训练鲁棒性、可扩展性和复杂/未见工具泛化的影响。",
+        "主要贡献": "这篇论文的主要贡献是把 tool-use RL 的核心变量明确落到 reward design 上。它为搜索工具 RL 提供了重要参照：最终答案正确性不足以解释和优化中间工具行为，query、参数、工具调用结果利用都需要更细粒度的训练信号。"
+      },
+      "status": "approved",
+      "added_at": "2026-05-11"
+    },
+    {
+      "id": "active-rag-flare-2023-emnlp-main-495",
+      "title": "Active Retrieval Augmented Generation",
+      "paper_url": "https://aclanthology.org/2023.emnlp-main.495/",
+      "authors": [
+        "Zhengbao Jiang",
+        "Frank F. Xu",
+        "Luyu Gao",
+        "Zhiqing Sun",
+        "Qian Liu",
+        "Jane Dwivedi-Yu",
+        "Yiming Yang",
+        "Jamie Callan",
+        "Graham Neubig"
+      ],
+      "venue": "EMNLP 2023",
+      "year": 2023,
+      "primary_area": "应用：CV/音频/语言等",
+      "category": "自然语言处理",
+      "keywords": [
+        "Active RAG",
+        "FLARE",
+        "active retrieval",
+        "retrieval timing",
+        "query construction",
+        "low-confidence tokens",
+        "long-form generation"
+      ],
+      "labels": [
+        "RAG",
+        "Active Retrieval",
+        "Dynamic Retrieval"
+      ],
+      "code_url": "",
+      "note": "固定 RAG 到动态搜索/工具调用之间的关键过渡文献。FLARE 用 forward-looking query 和低置信 token 触发检索，说明检索时机和 query construction 本身就是决策变量；但它不是 RL，不涉及 reward、advantage 或训练稳定性。",
+      "tldr": "Active RAG / FLARE 反对生成前一次性固定检索，改为在生成过程中预测下一句、构造前瞻查询，并在低置信位置触发检索与重生成，是动态检索增强生成的重要代表。",
+      "abstract": "Despite the remarkable ability of large language models (LMs) to generate long-form texts, they still often hallucinate facts because of their reliance on parametric knowledge. Retrieval-augmented LMs have been shown to reduce hallucinations, but most existing methods retrieve documents only once based on the input and use them to generate the entire output. In this work, we propose Forward-Looking Active REtrieval augmented generation (FLARE), a generic retrieval-augmented generation method that actively decides when and what to retrieve throughout the generation process. FLARE iteratively uses a prediction of the upcoming sentence as a query to retrieve relevant documents, and regenerates the sentence when it contains low-confidence tokens. Experiments on four long-form knowledge-intensive generation tasks show that FLARE achieves superior or competitive performance compared with previous retrieval-augmented generation methods.",
+      "summary_cn": {
+        "研究动机": "长文本知识密集生成中，模型在不同生成阶段需要的证据不同。传统 RAG 通常只在生成前根据输入检索一次，难以持续满足后续生成过程中的动态知识需求，也容易造成幻觉或证据不足。",
+        "解决问题": "论文要解决的是动态检索问题：模型应该在生成过程中决定何时检索、检索什么，以及何时根据新检索到的文档重写当前句子，而不是只依赖固定输入检索结果。",
+        "现象分析": "一次性检索会把外部知识获取限制在输入阶段，而长文本生成的局部内容可能不断引入新实体、新事实和新约束。低置信 token 暴露了模型当前参数知识不足的位置，可以作为检索触发信号。",
+        "主要方法": "论文提出 FLARE：模型先预测即将生成的下一句，用这个 forward-looking sentence 构造 query 检索文档；如果当前句中存在低置信 token，则基于检索到的文档重新生成该句。这样检索时机和 query construction 被显式放入生成过程。",
+        "数据集与实验": "实验覆盖四个 long-form knowledge-intensive generation tasks。结果显示 FLARE 相比已有 retrieval-augmented generation 方法取得更优或有竞争力的表现，说明动态检索能改善长文本事实性和生成质量。",
+        "主要贡献": "这篇论文的主要贡献是把 RAG 从静态 retrieve-and-generate 推进到 active retrieval。它为 Search-R1 等搜索 RL 工作提供了前置背景：检索增强的关键不只是有无外部知识，还包括何时搜索、如何构造查询以及如何用检索结果修正生成。"
+      },
+      "status": "approved",
+      "added_at": "2026-05-11"
+    },
+    {
+      "id": "research-2503-19470",
+      "title": "ReSearch: Learning to Reason with Search for LLMs via Reinforcement Learning",
+      "paper_url": "https://arxiv.org/abs/2503.19470",
+      "authors": [
+        "Mingyang Chen",
+        "Linzhuang Sun",
+        "Tianpeng Li",
+        "Haoze Sun",
+        "Yijie Zhou",
+        "Chenzheng Zhu",
+        "Haofen Wang",
+        "Jeff Z. Pan",
+        "Wen Zhang",
+        "Huajun Chen",
+        "Fan Yang",
+        "Zenan Zhou",
+        "Weipeng Chen"
+      ],
+      "venue": "NeurIPS 2025 / arXiv",
+      "year": 2025,
+      "primary_area": "基础/前沿模型 (含LLM)",
+      "category": "Agent 与工具使用",
+      "keywords": [
+        "ReSearch",
+        "search-reasoning RL",
+        "GRPO",
+        "multi-hop QA",
+        "search operation",
+        "rule-based reward",
+        "search count",
+        "reasoning with search"
+      ],
+      "labels": [
+        "Search",
+        "Agentic RL",
+        "RAG"
+      ],
+      "code_url": "https://github.com/Agent-RL/ReSearch",
+      "note": "Search-R1 附近的核心 search-reasoning RL 文献。它用 `<think>/<search>/<result>/<answer>` 轨迹和 GRPO 学习搜索增强推理，并观察 response length、search count、training/validation reward 等动态；局限是中间 query/result utilization 仍主要靠最终答案和格式奖励间接驱动。",
+      "tldr": "ReSearch 将搜索操作显式作为推理链的一部分，用 GRPO 在没有人工 search trajectory 的情况下训练 LLM 学会何时搜索、如何搜索以及如何利用检索结果完成多跳问答。",
+      "abstract": "Retrieval-Augmented Generation (RAG) enhances Large Language Models (LLMs) by incorporating external knowledge, yet existing approaches often rely on static retrieval and fail to adaptively interleave reasoning with search. We introduce ReSearch, a reinforcement learning framework that trains LLMs to reason with search. ReSearch represents reasoning trajectories with explicit think, search, result, and answer steps, and uses group relative policy optimization with rule-based rewards to learn search-enhanced reasoning without supervised reasoning or search traces. Experiments on multi-hop question answering benchmarks demonstrate that ReSearch outperforms generation-only, naive RAG, and iterative retrieval-generation baselines, while analysis reveals emergent reflection and self-correction behaviors during training.",
+      "summary_cn": {
+        "研究动机": "复杂多跳问题通常不能靠一次性检索或纯内部推理解决，模型需要在推理过程中多次提出查询、读取外部证据并继续推理。作者希望让这种 search-reasoning 行为通过 RL 学出来，而不是依赖人工标注轨迹。",
+        "解决问题": "论文要解决的是如何在没有 supervised reasoning/search traces 的情况下训练模型 reason with search。核心挑战是把搜索动作、检索结果和后续推理放进同一条可优化的 rollout 中。",
+        "现象分析": "静态 RAG 把检索作为前处理，无法随推理状态变化调整查询；而多跳问答需要模型根据当前未解决的信息缺口决定下一次搜索。搜索次数、响应长度和格式正确性都会影响训练和最终表现。",
+        "主要方法": "ReSearch 使用 `<think>`、`<search>`、`<result>`、`<answer>` 组织搜索增强推理轨迹，模型在 rollout 中生成 search query 并接收检索结果。训练采用 GRPO 和 group rollout，并用 rule-based reward 约束最终答案 F1 与输出格式。",
+        "数据集与实验": "论文主要在多跳 QA 上实验，使用 MuSiQue 训练，并在 HotpotQA、2WikiMultiHopQA、MuSiQue、Bamboogle 等数据集上评估。结果优于 Naive Generation、Naive RAG、Iter-RetGen、IRCoT 等 baseline，并观察到 reflection 和 self-correction 行为。",
+        "主要贡献": "这篇论文的主要贡献是把搜索操作变成 reasoning chain 中的可学习动作，并证明 GRPO 可以在无人工轨迹标注下学习 search-reasoning policy。它也为训练动态分析提供了近邻指标：search count、response length、training reward 和 validation reward。"
+      },
+      "status": "approved",
+      "added_at": "2026-05-11"
+    },
+    {
+      "id": "retool-2504-11536",
+      "title": "ReTool: Reinforcement Learning for Strategic Tool Use in LLMs",
+      "paper_url": "https://arxiv.org/abs/2504.11536",
+      "authors": [
+        "Jiazhan Feng",
+        "Shijue Huang",
+        "Xingwei Qu",
+        "Ge Zhang",
+        "Yujia Qin",
+        "Baoquan Zhong",
+        "Chengquan Jiang",
+        "Jinxin Chi",
+        "Wanjun Zhong"
+      ],
+      "venue": "arXiv",
+      "year": 2025,
+      "primary_area": "基础/前沿模型 (含LLM)",
+      "category": "Agent 与工具使用",
+      "keywords": [
+        "ReTool",
+        "tool-use RL",
+        "code interpreter",
+        "real-time code execution",
+        "long-form reasoning",
+        "SFT cold start",
+        "outcome reward",
+        "AIME"
+      ],
+      "labels": [
+        "Tool Use",
+        "Agentic RL",
+        "Code Interpreter"
+      ],
+      "code_url": "https://retool-rl.github.io/",
+      "note": "工具调用 RL 的横向代表，不是搜索/RAG 主线。它说明外部工具可以是 code interpreter，核心问题同样包括何时调用工具、如何构造工具输入、如何利用 observation 和如何用最终结果奖励训练策略；但中间工具动作归因仍不细。",
+      "tldr": "ReTool 将实时代码执行纳入长链推理，通过 cold-start SFT 和 outcome-driven RL 训练模型策略性调用 code interpreter，在 AIME 等数学推理任务上提升性能和收敛效率。",
+      "abstract": "We introduce ReTool, a reinforcement learning framework for strategic tool use in large language models. ReTool augments long-form reasoning with real-time code execution, allowing models to dynamically insert executable code during natural language reasoning and use execution results to continue reasoning. The training pipeline first constructs synthetic cold-start data with code-augmented reasoning traces and fine-tunes the base model, then performs reinforcement learning where policy rollouts include multi-turn code execution and are optimized with task outcome rewards. Experiments on mathematical reasoning benchmarks show that ReTool significantly improves both accuracy and training efficiency over text-only reinforcement learning baselines, and leads to emergent behaviors such as code self-correction and adaptive tool use.",
+      "summary_cn": {
+        "研究动机": "工具调用 RL 不只适用于搜索。数学推理、几何推理和方程求解等任务中，code interpreter 可以提供精确计算和可执行验证，弥补纯文本推理的错误和低效。",
+        "解决问题": "论文要解决的是如何让模型在长链推理中策略性调用代码工具：何时写代码、写什么代码、如何读取执行结果，以及如何将工具反馈纳入后续自然语言推理。",
+        "现象分析": "纯文本 RL 在复杂数学任务中可能收敛慢、计算错误多；而直接给工具又不保证模型会合理使用。工具调用策略需要通过 cold-start 数据和后续 RL 共同塑形。",
+        "主要方法": "ReTool 先生成 code-augmented long-form reasoning traces 做 SFT cold start，再进行 RL。RL rollout 中允许多轮实时代码执行，模型可以在自然语言推理中动态插入代码，并用执行结果继续推理；优化信号主要来自最终任务 outcome reward。",
+        "数据集与实验": "论文主要在 AIME 等数学推理 benchmark 上评估。结果显示 ReTool 相比 text-only RL baseline 有更高准确率和训练效率，并出现 code self-correction、adaptive tool use 等行为。",
+        "主要贡献": "这篇论文的主要贡献是展示 code interpreter 也可以被纳入 tool-use RL 训练闭环。它提示搜索工具 RL 的问题具有一般性：外部 observation 一旦进入 rollout，就会带来工具调用时机、输入构造、结果利用和奖励归因问题。"
+      },
+      "status": "approved",
+      "added_at": "2026-05-11"
+    },
+    {
+      "id": "rag-gym-2502-13957",
+      "title": "RAG-Gym: Systematic Optimization of Language Agents for Retrieval-Augmented Generation",
+      "paper_url": "https://arxiv.org/abs/2502.13957",
+      "authors": [
+        "Guangzhi Xiong",
+        "Qiao Jin",
+        "Xiao Wang",
+        "Yin Fang",
+        "Haolin Liu",
+        "Yifan Yang",
+        "Fangyuan Chen",
+        "Zhixing Song",
+        "Dengyu Wang",
+        "Minjia Zhang",
+        "Zhiyong Lu",
+        "Aidong Zhang"
+      ],
+      "venue": "arXiv",
+      "year": 2025,
+      "primary_area": "基础/前沿模型 (含LLM)",
+      "category": "Agent 与工具使用",
+      "keywords": [
+        "RAG-Gym",
+        "agentic RAG",
+        "process supervision",
+        "Re2Search",
+        "actor tuning",
+        "critic training",
+        "DPO",
+        "PPO",
+        "search agent"
+      ],
+      "labels": [
+        "Agentic RAG",
+        "Search",
+        "Process Supervision"
+      ],
+      "code_url": "https://github.com/RAG-Gym/RAG-Gym",
+      "note": "agentic RAG 近邻核心文献。它从 prompt engineering、actor tuning、critic training 三个维度系统优化搜索增强 agent，强调 process supervision 和 state-action quality；但并不主攻 PPO/GRPO 的 entropy、KL、gradient 或 mask consistency 训练稳定性机制。",
+      "tldr": "RAG-Gym 为 agentic RAG 提供系统优化框架，结合 Re2Search、DPO/PPO/SFT actor tuning 和 critic action selection，用过程监督评价中间搜索与推理动作，而不是只看最终答案。",
+      "abstract": "Retrieval-Augmented Generation (RAG) has evolved toward agentic systems where language models iteratively reason, search, and refine answers. However, existing agentic RAG methods are often optimized with ad hoc prompting and outcome-level feedback. RAG-Gym provides a systematic framework for optimizing language agents for retrieval-augmented generation from three aspects: prompt engineering, actor tuning, and critic training. It introduces a reasoning-reflection-search agent that generates targeted queries based on unsupported reasoning statements, studies supervised fine-tuning, direct preference optimization, and reinforcement learning for actor tuning, and trains critics to evaluate state-action process quality for inference-time action selection. Experiments on multi-hop QA and medical QA benchmarks show that combining reflection-based search, actor tuning, and critic-guided action selection improves over strong retrieval and agentic RAG baselines.",
+      "summary_cn": {
+        "研究动机": "RAG 正从静态检索扩展到 agentic RAG，模型需要在多轮推理中持续搜索和修正答案。但许多方法仍依赖临时 prompt engineering 或最终答案反馈，缺少统一的过程优化框架。",
+        "解决问题": "论文要解决的是如何系统优化搜索增强 agent 的中间行为。仅看最终答案不足以评价中间 query 是否针对未验证信息、推理是否被证据支持、当前 action 是否能推进任务。",
+        "现象分析": "agentic RAG 的性能取决于中间状态和动作质量：搜索 query 是否围绕 unsupported statements，actor 是否学会合理的 search/reason 动作，critic 是否能可靠判断 state-action pair 的过程价值。",
+        "主要方法": "RAG-Gym 从 prompt engineering、actor tuning 和 critic training 三个维度优化。它提出 Re2Search，通过 reasoning reflection 找出缺少证据支持的陈述并生成针对性查询；比较 SFT、DPO、PPO 等 actor tuning；并训练 critic 在推理时为候选动作打分选择。",
+        "数据集与实验": "实验覆盖 HotpotQA、2WikiMultihopQA、Bamboogle、MedQA 等任务，并与 ReAct、Search-o1、Search-R1 等 baseline 比较。结果显示，结合 Re2Search、actor tuning 和 critic action selection 的系统能稳定提升 F1/EM 等指标。",
+        "主要贡献": "这篇论文的主要贡献是把 agentic RAG 的优化从 prompt 技巧推进到过程监督、actor tuning 和 critic 评估。它为本文主题提供直接 insight：搜索增强 agent 的训练与推理需要评价中间搜索/推理动作，而不应只依赖终端 outcome reward。"
+      },
+      "status": "approved",
+      "added_at": "2026-05-11"
     }
   ]
 }
