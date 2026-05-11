@@ -1319,6 +1319,57 @@
       },
       "status": "approved",
       "added_at": "2026-05-11"
+    },
+    {
+      "id": "lumos-2311-05657",
+      "title": "Lumos: Learning Agents with Unified Data, Modular Design, and Open-Source LLMs",
+      "paper_url": "https://arxiv.org/abs/2311.05657",
+      "authors": [
+        "Da Yin",
+        "Faeze Brahman",
+        "Abhilasha Ravichander",
+        "Khyathi Chandu",
+        "Kai-Wei Chang",
+        "Yejin Choi",
+        "Bill Yuchen Lin"
+      ],
+      "venue": "ACL 2024 / arXiv",
+      "year": 2024,
+      "primary_area": "基础/前沿模型 (含LLM)",
+      "category": "Agent 与工具使用",
+      "keywords": [
+        "Lumos",
+        "language agent",
+        "open-source LLM",
+        "Llama 2",
+        "planning",
+        "grounding",
+        "execution",
+        "unified data format",
+        "subgoal annotation",
+        "action annotation",
+        "agent training"
+      ],
+      "labels": [
+        "Agent",
+        "Open-source LLM",
+        "Modular Agent",
+        "Tool Use"
+      ],
+      "code_url": "https://github.com/allenai/lumos",
+      "note": "早期 open-source agent 训练代表工作。相比 AgentTuning 的混合 trajectory SFT，Lumos 更强调模块化拆分：planning / grounding / execution，并用统一格式的 subgoal/action 标注训练 agent。放到现在看，方法仍偏 SFT 和人工/LLM 转换标注，已被更大规模 agent 数据、GUI/Web 环境闭环训练、critical-step tuning 和 agentic RL 路线推进，但作为“模块化 agent 训练”的 baseline 仍有价值。",
+      "tldr": "Lumos 是一篇早期 open-source language agent 训练论文，核心是把 agent 拆成 planning、grounding、execution 三个模块，并用统一格式的多任务 subgoal/action 标注来微调开源 LLM，从而让 Llama 2 系列模型在复杂 QA、Web、数学、多模态等任务上获得更强的泛化 agent 能力。",
+      "abstract": "We introduce Lumos, a novel framework for training language agents that employs a unified data format and a modular architecture based on open-source large language models (LLMs). Lumos consists of three distinct modules: planning, grounding, and execution. The planning module breaks down a task into a series of high-level, tool-agnostic subgoals, which are then made specific by the grounding module through a set of low-level actions. These actions are subsequently executed by the execution module, utilizing a range of off-the-shelf tools and APIs. In order to train these modules effectively, high-quality annotations of subgoals and actions were collected and are made available for fine-tuning open-source LLMs for various tasks such as complex question answering, web tasks, and math problems. Leveraging this unified data and modular design, Lumos not only achieves comparable or superior performance to current, state-of-the-art agents, but also exhibits several key advantages: (1) Lumos surpasses GPT-4/3.5-based agents in complex question answering and web tasks, while equalling the performance of significantly larger LLM agents on math tasks; (2) Lumos outperforms open-source agents created through conventional training methods and those using chain-of-thoughts training; and (3) Lumos is capable of effectively generalizing to unseen interactive tasks, outperforming larger LLM-based agents and even exceeding performance of specialized agents.",
+      "summary_cn": {
+        "研究动机": "当时很多 language agent 依赖 GPT-3.5/GPT-4 这类闭源模型，虽然效果强，但成本、可控性、透明度和复现性都受限。作者希望探索：能否基于开源 LLM，通过系统化训练而不是只靠 prompt engineering，构建一个可泛化的 language agent 框架。",
+        "解决问题": "论文要解决的是开源 LLM 在 agent 场景中的能力不足，尤其是复杂任务分解、动作 grounding、工具/API 调用和跨任务泛化。它不只是训练单一任务 agent，而是试图把多类交互任务统一到同一种数据格式和模块化训练框架里。",
+        "现象分析": "已有 agent 方法通常把推理、行动和执行混在一个模型输出里，容易造成训练目标混杂，也不利于跨任务迁移。作者认为，agent 行为可以拆成更清晰的层次：先规划高层子目标，再把子目标 grounding 成可执行动作，最后由工具或环境执行；这种模块化结构更适合用开源模型学习。",
+        "主要方法": "Lumos 采用 planning、grounding、execution 三模块设计。Planning module 生成高层、工具无关的自然语言子目标；grounding module 把子目标转成低层可执行动作；execution module 调用 API、工具、神经模型或环境模拟器完成动作。训练上，作者把复杂 QA、Web、数学、多模态等任务转换成统一格式的 subgoal/action 标注，并分别训练 planning 和 grounding 模块。论文还提出 Lumos-OnePass 和 Lumos-Iterative 两种推理形式，分别对应一次性生成完整计划和根据环境反馈逐步规划。",
+        "数据集与实验": "Lumos 使用约 56K 条高质量 subgoal/action 标注，覆盖 complex QA、web agent、math、多模态等任务。实验表明，Lumos 在 Mind2Web、HotpotQA、数学任务等设置上可以达到或超过一些 GPT 系列 agent 或更大开源 agent 的表现；在 WebShop、InterCode_SQL 等未见任务上也展示了跨任务泛化能力。对比实验显示，模块化的 Lumos 训练方式优于普通 CoT training 和 integrated agent training。",
+        "主要贡献": "这篇论文的主要贡献是把开源 agent 训练做成了“统一数据格式 + 模块化架构 + 多任务 SFT”的系统框架。相比 AgentTuning 更偏混合 trajectory SFT，Lumos 更强调 agent 内部功能分解，把 planning 和 grounding 显式拆开，对后续 open-source agent 数据构造和模块化训练路线有参考价值。"
+      },
+      "status": "approved",
+      "added_at": "2026-05-11"
     }
   ]
 }
