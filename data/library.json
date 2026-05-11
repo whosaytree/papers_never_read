@@ -2130,6 +2130,249 @@
       },
       "status": "approved",
       "added_at": "2026-05-11"
+    },
+    {
+      "id": "deepresearcher-2025-emnlp-main-22",
+      "title": "DeepResearcher: Scaling Deep Research via Reinforcement Learning in Real-world Environments",
+      "paper_url": "https://aclanthology.org/2025.emnlp-main.22/",
+      "authors": [
+        "Yuxiang Zheng",
+        "Dayuan Fu",
+        "Xiangkun Hu",
+        "Xiaojie Cai",
+        "Lyumanshan Ye",
+        "Pengrui Lu",
+        "Pengfei Liu"
+      ],
+      "venue": "EMNLP 2025",
+      "year": 2025,
+      "primary_area": "基础/前沿模型 (含LLM)",
+      "category": "Agent 与工具使用",
+      "keywords": [
+        "DeepResearcher",
+        "deep research",
+        "real-world web",
+        "reinforcement learning",
+        "web search",
+        "multi-agent browsing",
+        "open-domain research"
+      ],
+      "labels": [
+        "Deep Research",
+        "Web Agent",
+        "Agentic RL"
+      ],
+      "code_url": "https://github.com/GAIR-NLP/DeepResearcher",
+      "note": "真实开放 Web 环境中的 deep research agent 代表工作。价值在于把搜索增强 RL 从固定语料/受控 RAG 推到 authentic web search interactions；适合支撑外部环境噪声、网页结构异质性和长程工具链会放大训练与评估复杂度。",
+      "tldr": "DeepResearcher 在真实开放 Web 环境中用端到端 RL 训练 deep research agent，并通过多代理浏览/抽取架构处理网页异质性，展示 planning、cross-validation、self-reflection 等研究行为。",
+      "abstract": "Large Language Models (LLMs) with web search capabilities have shown potential in deep research tasks requiring broad information access and multi-step reasoning. However, existing approaches based on prompt engineering or controlled RAG environments often fail to capture the complexity of real-world web interactions. DeepResearcher scales deep research via reinforcement learning in real-world environments, training agents through authentic web search and browsing interactions. It employs a specialized multi-agent architecture in which browsing agents extract relevant information from heterogeneous web pages, and end-to-end RL improves open-domain research performance. Experiments show substantial gains over prompt-engineering and RAG-based RL baselines, while qualitative analysis reveals emergent behaviors such as planning, cross-validation, self-reflection for research redirection, and honesty when evidence is insufficient.",
+      "summary_cn": {
+        "研究动机": "固定语料 RAG 和 prompt engineering 难以覆盖真实 Web 研究任务的复杂性。真实环境中的网页是开放、动态、异构且含噪的，deep research agent 需要在搜索、浏览、抽取和综合证据之间做长程决策。",
+        "解决问题": "论文要解决的是如何在真实 Web 环境中训练能够完成 open-domain deep research 的 agent，而不是只在受控检索库或静态 QA 数据上优化检索增强生成。",
+        "现象分析": "真实 Web 搜索不只是返回 top-k 文档，还包括网页结构解析、相关信息抽取、跨页面交叉验证和证据不足时的谨慎判断。外部环境的噪声和异构反馈会让工具调用轨迹更长，credit assignment 更复杂。",
+        "主要方法": "DeepResearcher 在真实开放 Web 中进行端到端 RL，使用 specialized multi-agent architecture，由 browsing agents 从不同网页结构中抽取相关信息，并让 agent 在真实搜索/浏览交互中学习研究策略。",
+        "数据集与实验": "论文在 open-domain research tasks 上评估，相比 prompt engineering baselines 和 RAG-based RL agents 均取得明显提升。定性分析显示 RL 后出现 planning、cross-validation、self-reflection for research redirection，以及证据不足时保持 honesty 等行为。",
+        "主要贡献": "这篇论文的主要贡献是把 deep research agent 训练推进到真实 Web 环境。它说明搜索工具 RL 的难点不仅是会不会搜索，还包括在噪声、动态、异构外部环境中稳定学习有效的研究轨迹。"
+      },
+      "status": "approved",
+      "added_at": "2026-05-11"
+    },
+    {
+      "id": "search-o1-2501-05366",
+      "title": "Search-o1: Agentic Search-Enhanced Large Reasoning Models",
+      "paper_url": "https://arxiv.org/abs/2501.05366",
+      "authors": [
+        "Xiaoxi Li",
+        "Guanting Dong",
+        "Jiajie Jin",
+        "Yuyao Zhang",
+        "Yujia Zhou",
+        "Yutao Zhu",
+        "Peitian Zhang",
+        "Zhicheng Dou"
+      ],
+      "venue": "EMNLP 2025 Oral / arXiv",
+      "year": 2025,
+      "primary_area": "基础/前沿模型 (含LLM)",
+      "category": "Agent 与工具使用",
+      "keywords": [
+        "Search-o1",
+        "large reasoning model",
+        "agentic RAG",
+        "search query",
+        "Reason-in-Documents",
+        "knowledge insufficiency",
+        "reasoning chain"
+      ],
+      "labels": [
+        "Search",
+        "Agentic RAG",
+        "Reasoning"
+      ],
+      "code_url": "https://github.com/sunnynexus/Search-o1",
+      "note": "搜索增强推理的重要 inference/framework 背景。它不是 RL 稳定性论文，但清楚指出 o1-like 长链推理会暴露 knowledge insufficiency，并把搜索 query、top-k 文档噪声、Reason-in-Documents 信息精炼和 reasoning coherence 变成关键问题。",
+      "tldr": "Search-o1 将 agentic RAG 嵌入 o1-like 长链推理，让模型在不确定知识点处自主生成搜索 query，并用 Reason-in-Documents 把检索文档精炼为与当前推理链一致的外部知识。",
+      "abstract": "Large reasoning models such as OpenAI-o1 and DeepSeek-R1 exhibit strong long-chain reasoning abilities, but their reliance on internal parametric knowledge can lead to knowledge insufficiency during complex reasoning. Search-o1 introduces an agentic search-enhanced framework that enables large reasoning models to autonomously generate search queries during the reasoning process. When a search query is detected, generation is paused and a search function retrieves top-k documents. Instead of directly inserting long retrieved documents into the reasoning chain, Search-o1 uses a Reason-in-Documents module to produce refined knowledge conditioned on the query, retrieved documents, and current reasoning chain, thereby preserving coherence while incorporating external evidence. The framework improves performance on complex reasoning and knowledge-intensive tasks and provides an efficient batch inference mechanism for multiple reasoning sequences.",
+      "summary_cn": {
+        "研究动机": "o1-like large reasoning models 通过长链推理提升复杂任务能力，但长推理也会暴露模型内部知识不足。某一步知识缺口如果没有外部补充，可能在后续推理链中持续传播错误。",
+        "解决问题": "论文要解决的是如何在推理过程中按需引入外部搜索，而不是只在输入前做一次静态 RAG。关键问题包括何时生成 search query、如何处理冗长检索文档、以及如何保持 reasoning chain 连贯。",
+        "现象分析": "直接把 retrieved documents 插入上下文会带来冗余、噪声和推理连贯性破坏。复杂推理中的知识需求是逐步出现的，一次性检索无法覆盖不同推理阶段的多样外部知识需求。",
+        "主要方法": "Search-o1 使用特殊 search query 标记让模型在推理中自主触发搜索；检测到 query 后暂停生成，调用搜索函数获取 top-k 文档。随后 Reason-in-Documents 模块根据当前 query、检索文档和已有 reasoning chain 生成 refined knowledge，再插回推理链继续生成。",
+        "数据集与实验": "论文在复杂推理、知识密集问答以及 open-domain QA 等任务上评估，并设计 batch inference mechanism 提升多条推理序列的搜索推理效率。实验显示 agentic search 能缓解 knowledge insufficiency。",
+        "主要贡献": "这篇论文的主要贡献是把搜索增强从固定 RAG 推进到长链推理中的主动知识补充。它为 Search-R1/ReSearch 这类 RL 方法提供了重要背景：搜索时机、query 质量、文档噪声和信息精炼都会影响搜索增强推理效果。"
+      },
+      "status": "approved",
+      "added_at": "2026-05-11"
+    },
+    {
+      "id": "webthinker-2504-21776",
+      "title": "WebThinker: Empowering Large Reasoning Models with Deep Research Capability",
+      "paper_url": "https://arxiv.org/abs/2504.21776",
+      "authors": [
+        "Xiaoxi Li",
+        "Jiajie Jin",
+        "Guanting Dong",
+        "Hongjin Qian",
+        "Yongkang Wu",
+        "Ji-Rong Wen",
+        "Yutao Zhu",
+        "Zhicheng Dou"
+      ],
+      "venue": "NeurIPS 2025 / arXiv",
+      "year": 2025,
+      "primary_area": "基础/前沿模型 (含LLM)",
+      "category": "Agent 与工具使用",
+      "keywords": [
+        "WebThinker",
+        "deep research",
+        "web search",
+        "page navigation",
+        "information extraction",
+        "online DPO",
+        "Think-Search-and-Draft"
+      ],
+      "labels": [
+        "Deep Research",
+        "Web Agent",
+        "Preference Optimization"
+      ],
+      "code_url": "https://github.com/RUC-NLPIR/WebThinker",
+      "note": "真实 deep research workflow 背景文献。相比 Search-o1 的搜索/文档精炼，WebThinker 扩展到 Web search、page navigation、information extraction、drafting，并用 iterative online DPO 增强工具利用；但不主攻 PPO/GRPO 稳定性诊断。",
+      "tldr": "WebThinker 为 large reasoning models 加入 deep Web Explorer 和 Autonomous Think-Search-and-Draft，使模型在搜索、网页导航、信息抽取和报告写作之间形成长链工具协作，并用 online DPO 提升 research tool utilization。",
+      "abstract": "Large reasoning models have shown strong performance on complex reasoning tasks, yet their static internal knowledge limits their ability to solve open-ended knowledge-intensive problems. WebThinker equips large reasoning models with deep research capability through dynamic web interaction. It introduces a Deep Web Explorer module for web search, page navigation, and information extraction, and an Autonomous Think-Search-and-Draft strategy that interleaves reasoning, information gathering, and report drafting. The model is further optimized with an iterative online Direct Preference Optimization procedure to improve research tool utilization. Experiments on benchmarks such as GPQA, GAIA, WebWalkerQA, HLE, and scientific report generation demonstrate improved deep research performance.",
+      "summary_cn": {
+        "研究动机": "Large reasoning models 在复杂推理上很强，但其内部知识是静态的，面对开放式、知识密集、需要跨网页证据整合的 deep research 任务时仍不够。",
+        "解决问题": "论文要解决的是如何让推理模型具备真实 Web deep research 能力，包括动态搜索、网页导航、信息抽取、证据整合和报告起草，而不是只回答单个静态问题。",
+        "现象分析": "deep research 的工具动作不只是 search query，还包括打开网页、浏览页面、抽取信息和写作草稿。任务链更长、observation 更复杂，偏好或奖励信号需要跨多个工具动作进行归因。",
+        "主要方法": "WebThinker 提出 Deep Web Explorer module，用于 Web search、page navigation 和 information extraction；同时提出 Autonomous Think-Search-and-Draft strategy，把 reasoning、information gathering 和 report drafting 交织在同一研究流程中。训练上使用 iterative online DPO 增强 research tool utilization。",
+        "数据集与实验": "实验覆盖 GPQA、GAIA、WebWalkerQA、HLE 和 scientific report generation 等任务，评估问答、网页导航和报告生成等 deep research 能力。结果显示动态 Web 交互和在线偏好优化能提升工具利用。",
+        "主要贡献": "这篇论文的主要贡献是把搜索增强推理扩展到完整 deep research workflow。它说明真实工具环境中的训练问题会随着工具动作类型和任务链长度增加而变得更复杂，特别是搜索、导航、抽取和写作之间的反馈归因。"
+      },
+      "status": "approved",
+      "added_at": "2026-05-11"
+    },
+    {
+      "id": "zerosearch-2505-04588",
+      "title": "ZeroSearch: Incentivize the Search Capability of LLMs without Searching",
+      "paper_url": "https://arxiv.org/abs/2505.04588",
+      "authors": [
+        "Hao Sun",
+        "Zile Qiao",
+        "Jiayan Guo",
+        "Xuanbo Fan",
+        "Yingyan Hou",
+        "Yong Jiang",
+        "Pengjun Xie",
+        "Yan Zhang",
+        "Fei Huang",
+        "Jingren Zhou"
+      ],
+      "venue": "arXiv",
+      "year": 2025,
+      "primary_area": "基础/前沿模型 (含LLM)",
+      "category": "Agent 与工具使用",
+      "keywords": [
+        "ZeroSearch",
+        "search RL",
+        "simulated search",
+        "retrieval module",
+        "document quality",
+        "API cost",
+        "curriculum rollout",
+        "retrieval noise"
+      ],
+      "labels": [
+        "Search",
+        "Agentic RL",
+        "Simulated Environment"
+      ],
+      "code_url": "",
+      "note": "搜索工具 RL 中 observation quality / API cost 的关键参考。它指出真实搜索引擎返回文档质量不可控，会引入训练噪声和不稳定；用 LLM retrieval module 模拟 useful/noisy documents，是控制检索环境难度和降低 rollout 成本的一条路线。",
+      "tldr": "ZeroSearch 不直接调用真实搜索引擎，而是训练一个 LLM retrieval module 模拟搜索环境，并用 curriculum 逐步降低文档质量，从而在可控噪声和低 API 成本下训练模型搜索能力。",
+      "abstract": "Reinforcement learning with search engines can improve the search capability of large language models, but frequent interaction with real search engines introduces two major bottlenecks: uncontrollable document quality and high API cost. ZeroSearch proposes to incentivize search capability without using a real search engine during RL training. It first converts a lightweight LLM into a retrieval module that generates useful and noisy documents conditioned on queries, then replaces real search calls with simulated searches. A curriculum-based rollout strategy gradually decreases generated document quality, exposing the policy to increasingly difficult retrieval scenarios. Experiments show that simulated search can effectively train search capability, reduce cost, and match or even surpass real-search training depending on retrieval module size.",
+      "summary_cn": {
+        "研究动机": "搜索 RL 通常需要频繁访问真实搜索引擎，但真实搜索返回的文档质量不可控，并且大规模 rollout 的 API 成本很高。这两个问题会限制搜索工具 RL 的可扩展性，也可能引入训练噪声。",
+        "解决问题": "论文要解决的是如何不依赖真实搜索引擎也能训练模型搜索能力。关键是构造一个可控的模拟检索环境，使文档质量、噪声强度和训练难度可以被系统调节。",
+        "现象分析": "真实搜索 observation quality 不稳定，可能返回有用文档、无关文档或噪声文档。RL 训练中的策略更新会受到这些外部 observation 影响，因此搜索环境本身就是训练稳定性的重要来源。",
+        "主要方法": "ZeroSearch 先用轻量 SFT 将一个 LLM 转换为 retrieval module，使其能根据 query 生成 useful/noisy documents。随后 RL 训练中用 simulated searches 替代真实搜索，并采用 curriculum-based rollout strategy，逐步降低生成文档质量，让模型适应更困难的检索场景。",
+        "数据集与实验": "论文比较不同大小 retrieval module 和真实搜索引擎训练效果，显示 3B 模拟检索模型已能有效训练搜索能力，7B 可接近真实搜索引擎，14B 甚至超过真实搜索引擎；方法可泛化到 base 和 instruction-tuned models，并兼容多种 RL algorithms。",
+        "主要贡献": "这篇论文的主要贡献是把搜索 RL 的瓶颈从策略学习扩展到检索环境控制。它说明外部 observation 的质量、噪声和成本本身会影响训练稳定性，为搜索工具 RL 的环境模拟和噪声课程训练提供了重要参考。"
+      },
+      "status": "approved",
+      "added_at": "2026-05-11"
+    },
+    {
+      "id": "webdancer-2505-22648",
+      "title": "WebDancer: Towards Autonomous Information Seeking Agency",
+      "paper_url": "https://arxiv.org/abs/2505.22648",
+      "authors": [
+        "Jialong Wu",
+        "Baixuan Li",
+        "Runnan Fang",
+        "Wenbiao Yin",
+        "Liwen Zhang",
+        "Zhengwei Tao",
+        "Dingchu Zhang",
+        "Zekun Xi",
+        "Gang Fu",
+        "Yong Jiang",
+        "Pengjun Xie",
+        "Fei Huang",
+        "Jingren Zhou"
+      ],
+      "venue": "NeurIPS 2025 / arXiv",
+      "year": 2025,
+      "primary_area": "基础/前沿模型 (含LLM)",
+      "category": "Agent 与工具使用",
+      "keywords": [
+        "WebDancer",
+        "autonomous information seeking",
+        "web agent",
+        "trajectory sampling",
+        "SFT cold start",
+        "reinforcement learning",
+        "GAIA",
+        "WebWalkerQA"
+      ],
+      "labels": [
+        "Web Agent",
+        "Deep Research",
+        "Agentic RL"
+      ],
+      "code_url": "https://github.com/Alibaba-NLP/DeepResearch",
+      "note": "autonomous information seeking / Web agent 训练范式代表。它强调 data construction、trajectory sampling、SFT cold start、RL generalization 四阶段，并讨论动态 Web 环境、decoding temperature、无效动作等对 agent stability/performance 的影响。",
+      "tldr": "WebDancer 面向复杂多步信息搜索任务，提出从浏览数据构造、轨迹采样、SFT cold start 到 RL 泛化增强的训练范式，让 Web agent 在开放环境中持续搜索、浏览、整合证据并推理。",
+      "abstract": "Autonomous information seeking requires agents to search, browse, integrate evidence, and reason over open web environments. WebDancer studies how to build such web agents through a staged training pipeline: agentic and browsing data construction, trajectory sampling, supervised fine-tuning for cold start, and reinforcement learning for enhanced generalization. Instantiated in a ReAct-style agent, WebDancer is evaluated on benchmarks such as GAIA and WebWalkerQA. The study analyzes how cold-start SFT, long-chain reasoning patterns, reinforcement learning, dynamic web environments, and decoding temperature affect agent stability and performance, showing that RL can induce longer reasoning and more complex agentic actions for autonomous information seeking.",
+      "summary_cn": {
+        "研究动机": "复杂信息搜索任务需要模型在开放 Web 中多步搜索、浏览、整合证据和推理，不是一次性检索或简单 QA 数据能覆盖的。作者希望构建真正的 autonomous information seeking agent。",
+        "解决问题": "论文要解决的是如何训练 Web agent 完成长程信息寻求任务。关键不只是模型是否会搜索，还包括数据构造、轨迹采样、冷启动、强化学习泛化和动态网页环境下的稳定行为。",
+        "现象分析": "开放 Web 环境会带来页面动态性、动作无效、证据分散和路径冗长等问题。训练阶段、decoding temperature、轨迹质量和 RL 探索都会影响 agent stability 与最终 performance。",
+        "主要方法": "WebDancer 提出四阶段范式：agentic/browsing data construction、trajectory sampling、supervised fine-tuning for cold start、reinforcement learning for enhanced generalization。系统以 ReAct 风格实现，让 agent 在搜索、浏览和回答之间形成多步轨迹。",
+        "数据集与实验": "论文在 GAIA 和 WebWalkerQA 等复杂信息搜索 benchmark 上评估，并分析 cold-start SFT 是否必要、Long-CoT reasoning pattern 是否能迁移、RL 是否诱导更长推理和更复杂 agentic action，以及动态 Web 环境对表现的影响。",
+        "主要贡献": "这篇论文的主要贡献是提供了 Web information seeking agent 的训练范式。它说明搜索工具 RL 的挑战还来自真实动态网页环境、无效动作率、长程轨迹、采样质量和 SFT/RL 阶段设计。"
+      },
+      "status": "approved",
+      "added_at": "2026-05-11"
     }
   ]
 }
