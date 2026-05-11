@@ -1615,6 +1615,270 @@
       },
       "status": "approved",
       "added_at": "2026-05-11"
+    },
+    {
+      "id": "agentbench-2308-03688",
+      "title": "AgentBench: Evaluating LLMs as Agents",
+      "paper_url": "https://arxiv.org/abs/2308.03688",
+      "authors": [
+        "Xiao Liu",
+        "Hao Yu",
+        "Hanchen Zhang",
+        "Yifan Xu",
+        "Xuanyu Lei",
+        "Hanyu Lai",
+        "Yu Gu",
+        "Hangliang Ding",
+        "Kaiwen Men",
+        "Kejuan Yang",
+        "Shudan Zhang",
+        "Xiang Deng",
+        "Aohan Zeng",
+        "Zhengxiao Du",
+        "Chenhui Zhang",
+        "Sheng Shen",
+        "Tianjun Zhang",
+        "Yu Su",
+        "Huan Sun",
+        "Minlie Huang",
+        "Yuxiao Dong",
+        "Jie Tang"
+      ],
+      "venue": "ICLR 2024 / arXiv",
+      "year": 2024,
+      "primary_area": "数据集与基准",
+      "category": "Agent / 工具使用评测",
+      "keywords": [
+        "AgentBench",
+        "LLM agents",
+        "multi-turn environments",
+        "agent evaluation",
+        "long-term reasoning",
+        "decision-making",
+        "instruction following"
+      ],
+      "labels": [
+        "Agent",
+        "Benchmark",
+        "Evaluation"
+      ],
+      "code_url": "https://github.com/THUDM/AgentBench",
+      "note": "LLM-as-Agent 评测背景文献，不是训练方法。适合用来说明多轮交互环境暴露了开源模型在 long-term reasoning、decision-making 和 instruction following 上的缺口；后续 agentic RL / tool-use RL 可以看作对这些能力缺口的训练回应。",
+      "tldr": "AgentBench 构建多维交互式 benchmark 来评估 LLM 作为 agent 的能力，显示强商业模型和开源模型在多轮决策、长期推理和指令跟随上仍有显著差距，是 agent/tool-use LLM 研究的重要背景评测。",
+      "abstract": "Large Language Models (LLMs) are becoming increasingly smart and autonomous, transforming from merely following users' instructions to powerful general agents that can complete challenging tasks through interactions with environments. In order to systematically evaluate the challenging yet essential ability of LLMs to behave as agents in a wide range of environments, we present AgentBench, a multi-dimensional evolving benchmark. AgentBench consists of 8 distinct environments to assess LLM-as-Agent's reasoning and decision-making abilities in a multi-turn open-ended generation setting. Our extensive test over 27 API-based and open-source LLMs shows that the top-tier models are able to achieve a high score on many tasks in AgentBench, indicating the promising future of LLMs as agents. However, we also find a significant disparity in performance between these top commercial LLMs and open-source competitors. We identify key challenges that limit the agent abilities of LLMs, including poor long-term reasoning and decision-making abilities and limited instruction following abilities. Furthermore, we demonstrate that multi-round alignment training can improve agent performance, while code training does not always have a positive impact on agent capabilities. We release our dataset, environments, and an integrated evaluation package for evaluating customized LLM-as-Agent at https://github.com/THUDM/AgentBench.",
+      "summary_cn": {
+        "研究动机": "随着 LLM 从被动文本生成走向环境交互式 agent，研究者需要系统评估模型在多轮任务中的推理、决策和指令跟随能力。单轮 QA 或静态 benchmark 无法充分反映 agent 在真实环境中的长期行为表现。",
+        "解决问题": "论文要解决的是如何统一评估 LLM-as-Agent 能力。它不是训练新模型，而是构建覆盖不同交互环境的 benchmark，衡量模型能否在 open-ended、多轮、动态反馈场景中完成任务。",
+        "现象分析": "实验显示，顶级商业模型在多个 agent 环境中表现较强，但开源模型与商业模型之间存在明显差距。失败主要来自长期推理、决策制定和指令跟随不足，这些问题会在多轮交互中持续放大。",
+        "主要方法": "AgentBench 设计了 8 个不同环境，用于评估 LLM agent 在多轮开放式生成设置下的 reasoning 和 decision-making。评估覆盖 API 模型和开源模型，并分析不同训练因素如 multi-round alignment data 与 code training 对 agent 能力的影响。",
+        "数据集与实验": "论文测试了 27 个 API-based 和 open-source LLM。结果表明，强商业模型在部分任务上已经具备较好 agent 能力，但许多开源模型尤其在长期规划和复杂交互中仍落后；multi-round alignment training 可以改善 agent performance。",
+        "主要贡献": "这篇论文的主要贡献是把 LLM agent 能力评估系统化，并明确指出多轮环境中的长期推理、决策和指令跟随是核心短板。它为后续通过 agentic RL、tool-use RL 和多轮环境反馈提升 agent 能力提供了评测背景。"
+      },
+      "status": "approved",
+      "added_at": "2026-05-11"
+    },
+    {
+      "id": "instructgpt-2203-02155",
+      "title": "Training language models to follow instructions with human feedback",
+      "paper_url": "https://arxiv.org/abs/2203.02155",
+      "authors": [
+        "Long Ouyang",
+        "Jeff Wu",
+        "Xu Jiang",
+        "Diogo Almeida",
+        "Carroll Wainwright",
+        "Pamela Mishkin",
+        "Chong Zhang",
+        "Sandhini Agarwal",
+        "Katarina Slama",
+        "Alex Ray",
+        "John Schulman",
+        "Jacob Hilton",
+        "Fraser Kelton",
+        "Luke Miller",
+        "Maddie Simens",
+        "Amanda Askell",
+        "Peter Welinder",
+        "Paul Christiano",
+        "Jan Leike",
+        "Ryan Lowe"
+      ],
+      "venue": "NeurIPS 2022 / arXiv",
+      "year": 2022,
+      "primary_area": "基础/前沿模型 (含LLM)",
+      "category": "指令微调与对齐",
+      "keywords": [
+        "InstructGPT",
+        "RLHF",
+        "instruction following",
+        "human feedback",
+        "reward model",
+        "PPO",
+        "alignment"
+      ],
+      "labels": [
+        "RLHF",
+        "Alignment",
+        "Post-training"
+      ],
+      "code_url": "",
+      "note": "RLHF / instruction-following 后训练基础文献。它给出了 demonstration -> reward model -> PPO 的经典路线；工具调用 RL 可以看作把反馈来源从人类偏好扩展到环境、搜索和工具执行结果，但会多出中间工具动作和多轮 credit assignment。",
+      "tldr": "InstructGPT 证明单纯扩大模型规模并不足以让模型更好遵循用户意图，通过人工示范、偏好奖励模型和 PPO/RLHF 后训练，可以显著提升 helpfulness、truthfulness 与 instruction following。",
+      "abstract": "Making language models bigger does not inherently make them better at following a user's intent. For example, large language models can generate outputs that are untruthful, toxic, or simply not helpful to the user. In other words, these models are not aligned with their users. In this paper, we show an avenue for aligning language models with user intent on a wide range of tasks by fine-tuning with human feedback. Starting with a set of labeler-written prompts and prompts submitted through the OpenAI API, we collect a dataset of labeler demonstrations of the desired model behavior, which we use to fine-tune GPT-3 using supervised learning. We then collect a dataset of rankings of model outputs, which we use to further fine-tune this supervised model using reinforcement learning from human feedback. We call the resulting models InstructGPT. In human evaluations on our prompt distribution, outputs from the 1.3B parameter InstructGPT model are preferred to outputs from the 175B GPT-3, despite having 100x fewer parameters. Moreover, InstructGPT models show improvements in truthfulness and reductions in toxic output generation while having minimal performance regressions on public NLP datasets. Even though InstructGPT still makes simple mistakes, our results show that fine-tuning with human feedback is a promising direction for aligning language models with human intent.",
+      "summary_cn": {
+        "研究动机": "GPT-3 等大模型展现了强 few-shot 能力，但模型规模变大并不自动带来更好的指令遵循、真实性或有用性。作者关注如何让预训练语言模型更符合用户意图，而不是只追求语言建模能力。",
+        "解决问题": "论文要解决的是 LLM alignment 和 instruction following：模型可能生成不真实、有害或无帮助的输出，因此需要通过后训练让模型行为贴近人类偏好和任务需求。",
+        "现象分析": "仅依赖预训练和 scale 的模型并不总是 aligned。人类偏好评估显示，更小但经过反馈训练的模型可以比更大的原始 GPT-3 更受用户偏好，这说明后训练目标对模型行为有决定性影响。",
+        "主要方法": "InstructGPT 采用三阶段流程：先用人工示范数据做 supervised fine-tuning；再收集模型输出排序训练 reward model；最后用 PPO 进行 RLHF 优化，使模型输出更符合人类偏好。",
+        "数据集与实验": "论文基于 labeler-written prompts 和 OpenAI API prompts 收集示范与偏好数据。人工评估显示，1.3B InstructGPT 输出相较 175B GPT-3 更受偏好，同时 truthfulness 提升、toxicity 下降，并且公开 NLP benchmark 上性能回撤较小。",
+        "主要贡献": "这篇论文奠定了现代 LLM 对齐后训练的经典范式。对于工具调用 RL，它提供了 RL 后训练的历史基础；但工具场景中的反馈来自环境和工具执行，中间动作归因比普通 RLHF 更复杂。"
+      },
+      "status": "approved",
+      "added_at": "2026-05-11"
+    },
+    {
+      "id": "toolformer-2302-04761",
+      "title": "Toolformer: Language Models Can Teach Themselves to Use Tools",
+      "paper_url": "https://arxiv.org/abs/2302.04761",
+      "authors": [
+        "Timo Schick",
+        "Jane Dwivedi-Yu",
+        "Roberto Dessì",
+        "Roberta Raileanu",
+        "Maria Lomeli",
+        "Eric Hambro",
+        "Luke Zettlemoyer",
+        "Nicola Cancedda",
+        "Thomas Scialom"
+      ],
+      "venue": "NeurIPS 2023 / arXiv",
+      "year": 2023,
+      "primary_area": "基础/前沿模型 (含LLM)",
+      "category": "Agent 与工具使用",
+      "keywords": [
+        "Toolformer",
+        "tool use",
+        "API calling",
+        "self-supervised learning",
+        "loss-based filtering",
+        "calculator",
+        "search engine",
+        "external tools"
+      ],
+      "labels": [
+        "Tool Use",
+        "Self-supervised Tool Learning",
+        "API"
+      ],
+      "code_url": "",
+      "note": "工具调用语言模型的早期核心论文。它定义了何时调用工具、调用哪个工具、传什么参数、如何使用返回结果这些基本问题；但训练主要是离线 self-supervised filtering，不涉及在线工具反馈、PPO/GRPO 或训练稳定性。",
+      "tldr": "Toolformer 用少量 API 示范和 loss-based filtering 自动构造工具调用数据，让语言模型学会调用 calculator、QA、search、translation、calendar 等工具，是 tool-use LLM 的基础背景工作。",
+      "abstract": "Language models (LMs) exhibit remarkable abilities to solve new tasks from just a few examples or textual instructions, especially at scale. They also, paradoxically, struggle with basic functionality, such as arithmetic or factual lookup, where much simpler and smaller models excel. In this paper, we show that LMs can teach themselves to use external tools via simple APIs and achieve the best of both worlds. We introduce Toolformer, a model trained to decide which APIs to call, when to call them, what arguments to pass, and how to best incorporate the results into future token prediction. This is done in a self-supervised way, requiring nothing more than a handful of demonstrations for each API. We incorporate a range of tools, including a calculator, a question answering system, a search engine, a translation system, and a calendar, and demonstrate improved zero-shot performance across a variety of downstream tasks, often matching the performance of much larger models, without sacrificing its core language modeling abilities.",
+      "summary_cn": {
+        "研究动机": "大语言模型具备强 few-shot 能力，但在算术、事实查询等基础功能上仍可能不如专门工具。作者希望让模型保留语言能力的同时，学会在需要时调用外部 API 来补足这些能力缺口。",
+        "解决问题": "论文要解决的是工具调用学习：模型需要决定何时调用工具、调用哪个 API、传入什么参数，以及如何把工具返回结果整合进后续生成。这些能力不能只靠模型参数知识解决。",
+        "现象分析": "工具调用可以看成文本生成过程中的特殊 span，但不是所有候选调用都有价值。只有能降低后续 token prediction loss、真正帮助生成的 API 调用，才应被保留下来作为训练信号。",
+        "主要方法": "Toolformer 从少量 API demonstrations 出发，在普通文本中采样候选 API 调用，执行这些调用并观察返回结果是否改善后续 token 预测。通过 loss-based filtering 保留有用调用，再用 API-augmented data 继续微调语言模型。",
+        "数据集与实验": "论文接入 calculator、question answering system、search engine、translation system、calendar 等工具，并在多个 zero-shot downstream tasks 上评估。结果显示模型工具调用后性能提升，同时基本保持原有语言建模能力。",
+        "主要贡献": "这篇论文的主要贡献是把工具调用以自监督方式纳入语言模型训练，奠定 tool-use LLM 的基本任务形式。后续 Search-R1、ToolRL 等工作可以看作把离线工具调用数据构造进一步推进到在线 RL rollout 和环境反馈优化。"
+      },
+      "status": "approved",
+      "added_at": "2026-05-11"
+    },
+    {
+      "id": "rag-survey-2312-10997",
+      "title": "Retrieval-Augmented Generation for Large Language Models: A Survey",
+      "paper_url": "https://arxiv.org/abs/2312.10997",
+      "authors": [
+        "Yunfan Gao",
+        "Yun Xiong",
+        "Xinyu Gao",
+        "Kangxiang Jia",
+        "Jinliu Pan",
+        "Yuxi Bi",
+        "Yi Dai",
+        "Jiawei Sun",
+        "Meng Wang",
+        "Haofen Wang"
+      ],
+      "venue": "arXiv",
+      "year": 2023,
+      "primary_area": "应用：CV/音频/语言等",
+      "category": "自然语言处理",
+      "keywords": [
+        "RAG",
+        "retrieval-augmented generation",
+        "Naive RAG",
+        "Advanced RAG",
+        "Modular RAG",
+        "retrieval",
+        "generation",
+        "augmentation"
+      ],
+      "labels": [
+        "Survey",
+        "RAG",
+        "Retrieval"
+      ],
+      "code_url": "",
+      "note": "RAG 背景综述，适合放在固定 RAG -> advanced/modular RAG -> Self-RAG/Search-R1 的脉络里。它不是训练稳定性论文，但能说明检索质量、上下文噪声、生成忠实性和 retrieval-generation alignment 是搜索工具 RL 的前置问题。",
+      "tldr": "这篇 survey 将 RAG 发展概括为 Naive RAG、Advanced RAG 和 Modular RAG，从 retrieval、generation、augmentation 三部分梳理技术路线，是理解 Self-RAG、Search-R1 和 agentic retrieval 的宏观背景。",
+      "abstract": "Large Language Models (LLMs) showcase remarkable capabilities but encounter challenges such as hallucination, outdated knowledge, and non-transparent, untraceable reasoning processes. Retrieval-Augmented Generation (RAG) has emerged as a promising solution by incorporating knowledge from external databases. It enhances the accuracy and credibility of the generated content, particularly for knowledge-intensive tasks, and allows for continuous knowledge updates and integration of domain-specific information. RAG synergistically merges LLMs' intrinsic knowledge with the vast, dynamic repositories of external databases. This paper comprehensively reviews the progress of RAG paradigms, covering Naive RAG, Advanced RAG, and Modular RAG. It then examines the three core components of RAG frameworks: retrieval, generation, and augmentation techniques. The paper also discusses RAG evaluation frameworks, existing benchmarks, and challenges and future research directions.",
+      "summary_cn": {
+        "研究动机": "LLM 面临幻觉、知识过时和推理过程不可追溯等问题。RAG 通过引入外部知识库缓解这些限制，尤其适合知识密集型任务和需要可更新知识的场景。",
+        "解决问题": "论文要解决的是对 RAG 技术脉络的系统整理：从早期简单检索拼接，到更复杂的查询重写、重排、过滤、模块化路由和评估框架，明确 RAG 系统的组成和挑战。",
+        "现象分析": "RAG 的难点不只是是否检索，而是检索内容是否相关、上下文噪声是否过多、生成是否忠实使用证据，以及检索与生成是否对齐。Naive RAG 往往容易受检索质量和无关上下文影响。",
+        "主要方法": "作为 survey，论文从 Naive RAG、Advanced RAG 和 Modular RAG 三类范式梳理已有工作，并围绕 retrieval、generation、augmentation 三个核心组件总结技术路线，同时讨论评价框架、benchmark 和未来挑战。",
+        "数据集与实验": "论文不提出新的单一实验系统，而是综述多个 RAG benchmark、评价维度和应用场景，包括 retrieval quality、generation quality、faithfulness、robustness、citation 和 traceability 等。",
+        "主要贡献": "这篇论文的主要贡献是提供 RAG 领域的宏观 taxonomy。对于搜索工具 RL，它说明 Search-R1 等工作不是凭空出现，而是从静态 RAG、Advanced RAG 和 Modular RAG 继续演化到主动搜索、多轮检索和 RL 优化。"
+      },
+      "status": "approved",
+      "added_at": "2026-05-11"
+    },
+    {
+      "id": "re2g-2022-naacl-main-194",
+      "title": "Re2G: Retrieve, Rerank, Generate",
+      "paper_url": "https://aclanthology.org/2022.naacl-main.194/",
+      "authors": [
+        "Michael Glass",
+        "Gaetano Rossiello",
+        "Md Faisal Mahbub Chowdhury",
+        "Ankita Naik",
+        "Pengshan Cai",
+        "Alfio Gliozzo"
+      ],
+      "venue": "NAACL 2022",
+      "year": 2022,
+      "primary_area": "应用：CV/音频/语言等",
+      "category": "自然语言处理",
+      "keywords": [
+        "Re2G",
+        "retrieve-rerank-generate",
+        "retrieval-augmented generation",
+        "reranking",
+        "BM25",
+        "neural retrieval",
+        "evidence ranking"
+      ],
+      "labels": [
+        "RAG",
+        "Retrieval",
+        "Reranking"
+      ],
+      "code_url": "https://github.com/IBM/kgi-slot-filling/tree/re2g",
+      "note": "早期 retrieve-rerank-generate pipeline 背景文献。和 Search-R1 的区别很清楚：Re2G 是生成前固定检索/重排/生成流程，Search-R1 则让模型在推理中主动搜索并用 RL 优化 search-reasoning trajectory。",
+      "tldr": "Re2G 是早期 Retrieve -> Rerank -> Generate 范式代表，在生成模型前串联检索器和重排器，并融合 BM25 与神经检索候选，为生成器提供更高质量外部证据。",
+      "abstract": "As demonstrated by GPT-3 and T5, transformers grow in capability as parameter spaces become larger and larger. However, for tasks that require a large amount of knowledge, non-parametric memory allows models to grow dramatically with a sub-linear increase in computational cost and GPU memory requirements. Recent models such as RAG and REALM have introduced retrieval into conditional generation. These models incorporate neural initial retrieval from a corpus of passages. We build on this line of research, proposing Re2G, which combines both neural initial retrieval and reranking into a BART-based sequence-to-sequence generation. Our reranking approach also permits merging retrieval results from sources with incomparable scores, enabling an ensemble of BM25 and neural initial retrieval. To train our system end-to-end, we introduce a novel variation of knowledge distillation to train the initial retrieval, reranker and generation using only ground truth on the target sequence output. We find large gains in four diverse tasks: zero-shot slot filling, question answering, fact checking and dialog, with relative gains of 9% to 34% over the previous state-of-the-art on the KILT leaderboard. We make our code available as open source.",
+      "summary_cn": {
+        "研究动机": "知识密集型生成需要外部证据，但简单 retrieve-and-generate pipeline 往往受初始检索质量影响。如果候选 passage 排序不佳，生成模型即使能力较强也可能基于低质量证据生成错误内容。",
+        "解决问题": "论文要解决的是如何在生成前提高证据质量：不仅要召回候选文档，还要对候选进行重排，并融合不同检索源，使生成器看到更可靠的外部证据。",
+        "现象分析": "初始检索器如 BM25 或神经检索器各有优势，原始分数也未必可直接比较。单纯把检索结果拼进生成器上下文，容易让生成受到无关或低质量 passage 干扰。",
+        "主要方法": "Re2G 构建 Retrieve -> Rerank -> Generate 流程：先从 passage corpus 召回候选文档，再用 reranker 重新排序并融合不同检索源，最后让 seq2seq generator 基于重排后的证据生成答案或文本。",
+        "数据集与实验": "论文在知识密集型生成任务上评估，包括 KILT 相关设置。结果显示，引入 reranking 和检索源融合可以提升端到端生成效果，说明证据排序和筛选是 RAG 系统的重要组成。",
+        "主要贡献": "这篇论文的主要贡献是明确强化了 RAG pipeline 中 evidence reranking 的作用。它适合作为传统检索增强生成背景，与后续 Self-RAG、Active RAG 和 Search-R1 形成从静态 pipeline 到动态/主动搜索的演进链条。"
+      },
+      "status": "approved",
+      "added_at": "2026-05-11"
     }
   ]
 }
