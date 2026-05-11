@@ -1370,6 +1370,251 @@
       },
       "status": "approved",
       "added_at": "2026-05-11"
+    },
+    {
+      "id": "search-r1-2503-09516",
+      "title": "Search-R1: Training LLMs to Reason and Leverage Search Engines with Reinforcement Learning",
+      "paper_url": "https://arxiv.org/abs/2503.09516",
+      "authors": [
+        "Bowen Jin",
+        "Hansi Zeng",
+        "Zhenrui Yue",
+        "Jinsung Yoon",
+        "Sercan Arik",
+        "Dong Wang",
+        "Hamed Zamani",
+        "Jiawei Han"
+      ],
+      "venue": "COLM 2025 / arXiv",
+      "year": 2025,
+      "primary_area": "基础/前沿模型 (含LLM)",
+      "category": "Agent 与工具使用",
+      "keywords": [
+        "Search-R1",
+        "search-augmented reasoning",
+        "reinforcement learning",
+        "GRPO",
+        "PPO",
+        "retrieved token masking",
+        "multi-turn search",
+        "open-domain QA"
+      ],
+      "labels": [
+        "Agentic RL",
+        "Search",
+        "Tool Use",
+        "RAG"
+      ],
+      "code_url": "https://github.com/PeterGriffinJin/Search-R1",
+      "note": "搜索工具 RL 主线核心基线。价值在于把搜索引擎放进 reasoning rollout，让模型自主生成 search query，并明确提出 retrieved token masking 这一稳定化设计；但它主要依赖最终答案 reward，工具级 credit assignment、搜索频率、检索噪声和 GRPO/PPO 稳定性机制仍需要更系统诊断。",
+      "tldr": "Search-R1 把搜索引擎接入强化学习推理轨迹，使模型在逐步思考中自主发起一次或多次搜索，并用 retrieved token masking 避免把外部检索文本错误纳入策略更新，是搜索增强 reasoning RL 的关键基线。",
+      "abstract": "Efficiently acquiring external knowledge and up-to-date information is essential for effective reasoning and text generation in large language models (LLMs). Prompting advanced LLMs with reasoning capabilities to use search engines during inference is often suboptimal, as the LLM might not fully possess the capability on how to interact optimally with the search engine. This paper introduces Search-R1, an extension of reinforcement learning (RL) for reasoning frameworks where the LLM learns to autonomously generate (multiple) search queries during step-by-step reasoning with real-time retrieval. Search-R1 optimizes LLM reasoning trajectories with multi-turn search interactions, leveraging retrieved token masking for stable RL training and a simple outcome-based reward function. Experiments on seven question-answering datasets show that Search-R1 improves performance by 41% (Qwen2.5-7B) and 20% (Qwen2.5-3B) over various RAG baselines under the same setting. This paper further provides empirical insights into RL optimization methods, LLM choices, and response length dynamics in retrieval-augmented reasoning. The code and model checkpoints are available at https://github.com/PeterGriffinJin/Search-R1.",
+      "summary_cn": {
+        "研究动机": "传统 RAG 通常把检索作为固定前处理，而强推理模型虽然可以被 prompt 成会搜索，但并不一定知道何时搜索、如何构造 query、如何在多轮推理中使用实时检索结果。作者希望让搜索行为成为可学习的策略，而不是静态 pipeline 或临时提示技巧。",
+        "解决问题": "论文要解决的是 search-augmented reasoning 的 RL 训练问题：模型不仅要生成答案，还要在推理过程中决定是否搜索、搜索什么、如何根据检索结果继续推理。同时，外部检索文本不是模型生成内容，若直接纳入 loss 会造成错误归因。",
+        "现象分析": "搜索工具把原本单段 reasoning 变成多轮 search-reasoning trajectory，引入了外部 observation、query 质量、检索噪声和工具调用频率等新变量。论文还观察到 PPO 与 GRPO 在速度和稳定性上存在差异，response length、检索设置和优化方法都会影响训练动态。",
+        "主要方法": "Search-R1 使用特殊标记组织推理、搜索、检索结果和最终答案，模型在 rollout 中自主生成 search query 并接收实时检索结果。训练上兼容 PPO/GRPO，采用最终答案正确性作为 outcome-based reward，并用 retrieved token masking 只更新模型生成的 token，不对外部返回的检索文本计算策略损失。",
+        "数据集与实验": "论文在七个问答数据集上评估，包括多种 open-domain QA 和多跳推理设置。实验显示，Search-R1 在相同设置下显著超过多种 RAG baseline，Qwen2.5-7B 相对提升约 41%，Qwen2.5-3B 相对提升约 20%，并分析了优化方法、模型选择和响应长度动态。",
+        "主要贡献": "这篇论文的主要贡献是把搜索引擎显式纳入 LLM 强化学习推理框架，并给出 retrieved token masking 这一关键归因边界处理。它为后续搜索工具 RL、agentic RAG 和多轮检索增强推理提供了基础问题设定和强基线。"
+      },
+      "status": "approved",
+      "added_at": "2026-05-11"
+    },
+    {
+      "id": "self-rag-2310-11511",
+      "title": "Self-RAG: Learning to Retrieve, Generate, and Critique through Self-Reflection",
+      "paper_url": "https://arxiv.org/abs/2310.11511",
+      "authors": [
+        "Akari Asai",
+        "Zeqiu Wu",
+        "Yizhong Wang",
+        "Avirup Sil",
+        "Hannaneh Hajishirzi"
+      ],
+      "venue": "arXiv",
+      "year": 2023,
+      "primary_area": "应用：CV/音频/语言等",
+      "category": "自然语言处理",
+      "keywords": [
+        "Self-RAG",
+        "retrieval-augmented generation",
+        "adaptive retrieval",
+        "reflection tokens",
+        "factuality",
+        "citation accuracy",
+        "retrieval necessity"
+      ],
+      "labels": [
+        "RAG",
+        "Adaptive Retrieval",
+        "Self-Reflection"
+      ],
+      "code_url": "",
+      "note": "不是 RL tool-use 论文，但很适合作为 Search-R1 之前的 adaptive retrieval 背景。核心价值是把是否检索、检索 passage 是否相关、生成是否被证据支持显式 token 化；局限是主要靠 critic 标注和 LM objective，不处理 PPO/GRPO、reward collapse 或多轮工具 credit assignment。",
+      "tldr": "Self-RAG 训练模型生成 reflection tokens，使其能按需检索、判断 passage 相关性、检查生成内容是否被证据支持，并提升事实性和引用质量，是从固定 RAG 走向可控自适应检索的重要代表。",
+      "abstract": "Despite their remarkable capabilities, large language models (LLMs) often produce responses containing factual inaccuracies due to their sole reliance on the parametric knowledge they encapsulate. Retrieval-Augmented Generation (RAG), an ad hoc approach that augments LMs with retrieval of relevant knowledge, decreases such issues. However, indiscriminately retrieving and incorporating a fixed number of retrieved passages, regardless of whether retrieval is necessary, or passages are relevant, diminishes LM versatility or can lead to unhelpful response generation. We introduce a new framework called Self-Reflective Retrieval-Augmented Generation (Self-RAG) that enhances an LM's quality and factuality through retrieval and self-reflection. Our framework trains a single arbitrary LM that adaptively retrieves passages on-demand, and generates and reflects on retrieved passages and its own generations using special tokens, called reflection tokens. Generating reflection tokens makes the LM controllable during the inference phase, enabling it to tailor its behavior to diverse task requirements. Experiments show that Self-RAG (7B and 13B parameters) significantly outperforms state-of-the-art LLMs and retrieval-augmented models on a diverse set of tasks. Specifically, Self-RAG outperforms ChatGPT and retrieval-augmented Llama2-chat on Open-domain QA, reasoning and fact verification tasks, and it shows significant gains in improving factuality and citation accuracy for long-form generations relative to these models.",
+      "summary_cn": {
+        "研究动机": "LLM 只依赖参数化知识时容易产生事实错误，而固定检索若干 passage 的 RAG 又会在不需要检索时引入噪声，或者把无关 passage 强行塞进上下文。作者希望让模型自己判断何时需要检索、检索结果是否有用以及生成内容是否被证据支持。",
+        "解决问题": "论文要解决的是传统 RAG 的无差别检索和不可控证据利用问题。检索增强不应只关心是否拿到外部文档，还要建模 retrieval necessity、passage relevance、answer support 和 answer utility。",
+        "现象分析": "固定检索会降低模型灵活性：对于不需要外部知识的问题，检索可能反而干扰生成；对于需要证据的问题，检索结果是否相关、生成是否忠实引用也没有被显式控制。这说明检索增强模型需要可诊断的中间控制信号。",
+        "主要方法": "Self-RAG 引入 reflection tokens，让模型在生成过程中输出是否检索、检索 passage 是否相关、生成内容是否被 passage 支持以及答案是否有用等控制信号。训练流程包括先训练 critic 产生 reflection token 标注，再将这些标注插入语料，用普通语言模型目标训练生成模型。",
+        "数据集与实验": "实验覆盖 open-domain QA、推理、事实验证和长文本生成等任务。结果显示，7B 和 13B 的 Self-RAG 能超过多种 LLM 和检索增强 baseline，并在长文本生成中提升事实性和 citation accuracy。",
+        "主要贡献": "这篇论文的主要贡献是把 RAG 从固定检索流程推进到按需检索和自我评价机制。它为后续 Search-R1 等搜索增强推理工作提供了重要前置背景：外部知识的价值取决于检索时机、证据质量和生成内容与证据之间的支持关系。"
+      },
+      "status": "approved",
+      "added_at": "2026-05-11"
+    },
+    {
+      "id": "deepseek-r1-2501-12948",
+      "title": "DeepSeek-R1: Incentivizing Reasoning Capability in LLMs via Reinforcement Learning",
+      "paper_url": "https://arxiv.org/abs/2501.12948",
+      "authors": [
+        "DeepSeek-AI",
+        "Daya Guo",
+        "Dejian Yang",
+        "Haowei Zhang",
+        "Junxiao Song",
+        "Peiyi Wang",
+        "Qihao Zhu",
+        "Runxin Xu",
+        "Ruoyu Zhang",
+        "Shirong Ma"
+      ],
+      "venue": "Nature 2025 / arXiv",
+      "year": 2025,
+      "primary_area": "基础/前沿模型 (含LLM)",
+      "category": "推理与思维链",
+      "keywords": [
+        "DeepSeek-R1",
+        "RLVR",
+        "reasoning",
+        "reinforcement learning",
+        "verifiable reward",
+        "self-reflection",
+        "GRPO",
+        "distillation"
+      ],
+      "labels": [
+        "Reasoning",
+        "RLVR",
+        "Post-training"
+      ],
+      "code_url": "https://github.com/deepseek-ai/DeepSeek-R1",
+      "note": "RL reasoning / RLVR 背景核心文献，不是工具调用论文。它证明可验证奖励下的大规模 RL 能激发长链推理、自我反思和验证行为；Search-R1、ReSearch、ToolRL 等工作可看作在这个 RL 后训练范式上加入搜索或工具 observation。",
+      "tldr": "DeepSeek-R1 展示了无需人工推理轨迹、仅用可验证奖励也能通过大规模 RL 激发 LLM 的长链推理、自我反思和验证能力，是后续 GRPO/RLVR 与搜索工具 RL 工作的重要背景。",
+      "abstract": "General reasoning represents a long-standing and formidable challenge in artificial intelligence. Recent breakthroughs, exemplified by large language models (LLMs) and chain-of-thought prompting, have achieved considerable success on foundational reasoning tasks. However, this success is heavily contingent upon extensive human-annotated demonstrations, and models' capabilities are still insufficient for more complex problems. Here we show that the reasoning abilities of LLMs can be incentivized through pure reinforcement learning (RL), obviating the need for human-labeled reasoning trajectories. The proposed RL framework facilitates the emergent development of advanced reasoning patterns, such as self-reflection, verification, and dynamic strategy adaptation. Consequently, the trained model achieves superior performance on verifiable tasks such as mathematics, coding competitions, and STEM fields, surpassing its counterparts trained via conventional supervised learning on human demonstrations. Moreover, the emergent reasoning patterns exhibited by these large-scale models can be systematically harnessed to guide and enhance the reasoning capabilities of smaller models.",
+      "summary_cn": {
+        "研究动机": "复杂推理长期依赖人工标注的 CoT 或示范数据，但这类数据成本高、覆盖有限，也未必能充分激发模型在难题上的自我探索和验证能力。作者希望验证，是否可以主要依靠可验证奖励和强化学习来激发 LLM 的推理能力。",
+        "解决问题": "论文要解决的是如何在无需大量人工推理轨迹的情况下提升模型在数学、代码和 STEM 等可验证任务上的复杂推理能力。它关注的是 reasoning behavior 是否能通过 RL 自发涌现，而不是仅模仿人类写好的推理链。",
+        "现象分析": "作者展示 DeepSeek-R1-Zero 直接从 base model 做 RL 时，会涌现长链推理、自我反思、验证和动态策略调整，但也会出现可读性差、语言混杂和格式不稳定等问题。这说明 RL 可以激发能力，但还需要 cold-start 和多阶段训练改善可控性。",
+        "主要方法": "DeepSeek-R1 系列采用可验证奖励驱动的大规模强化学习。R1-Zero 强调从基础模型直接 RL；完整 DeepSeek-R1 则加入 cold-start data、多阶段 RL 和蒸馏流程，在保持推理能力的同时提升输出可读性、语言一致性和格式可控性。",
+        "数据集与实验": "论文主要在数学、代码竞赛、STEM 等可验证推理任务上评估，并展示大模型通过 RL 获得强性能后，可以将推理模式蒸馏到较小模型中。Nature 版本进一步确认其作为 reasoning RL 代表工作的影响力。",
+        "主要贡献": "这篇论文的主要贡献是证明大规模 RL 后训练可以直接激发复杂推理行为，并推动 RLVR/GRPO 式 reasoning post-training 成为主流路线。它为搜索工具 RL 提供了算法范式基础，但工具调用场景还会额外引入外部 observation、查询生成和多轮 credit assignment。"
+      },
+      "status": "approved",
+      "added_at": "2026-05-11"
+    },
+    {
+      "id": "grounding-by-trying-2410-23214",
+      "title": "Grounding by Trying: LLMs with Reinforcement Learning-Enhanced Retrieval",
+      "paper_url": "https://arxiv.org/abs/2410.23214",
+      "authors": [
+        "Sheryl Hsu",
+        "Omar Khattab",
+        "Chelsea Finn",
+        "Archit Sharma"
+      ],
+      "venue": "arXiv",
+      "year": 2024,
+      "primary_area": "基础/前沿模型 (含LLM)",
+      "category": "Agent 与工具使用",
+      "keywords": [
+        "LeReT",
+        "query generation",
+        "reinforcement learning",
+        "retrieval",
+        "preference optimization",
+        "search query",
+        "multi-hop QA"
+      ],
+      "labels": [
+        "Search",
+        "RAG",
+        "Preference Optimization"
+      ],
+      "code_url": "",
+      "note": "Search-R1 前置背景中很有价值的一篇：它不训练完整 search-reasoning trajectory，而是聚焦 search query 本身，说明工具调用质量常常瓶颈在“搜什么”。可用于支撑 query quality、retrieval reward 和 observation quality 是搜索工具 RL 稳定性的关键变量。",
+      "tldr": "Grounding by Trying / LeReT 把搜索 query 生成视为可通过试错和偏好优化提升的策略：模型尝试多个 query，根据检索结果质量构造偏好信号，从而提升多跳检索和下游生成表现。",
+      "abstract": "The hallucinations of large language models (LLMs) are increasingly mitigated by allowing LLMs to search for information and to ground their answers in real sources. Unfortunately, LLMs often struggle with posing the right search queries, especially when dealing with complex or otherwise indirect topics. Observing that LLMs can learn to search for relevant facts by trying different queries and learning to up-weight queries that successfully produce relevant results, we introduce Learning to Retrieve by Trying (LeReT), a reinforcement learning framework that explores search queries and uses preference-based optimization to improve their quality. LeReT can improve the absolute retrieval accuracy by up to 29% and the downstream generator evaluations by 17%. The simplicity and flexibility of LeReT allows it to be applied to arbitrary off-the-shelf retrievers and makes it a promising technique for improving general LLM pipelines.",
+      "summary_cn": {
+        "研究动机": "让 LLM 接入搜索可以缓解幻觉，但复杂或间接问题中，模型往往不会提出有效 search query。作者认为，检索增强系统的瓶颈不只是检索器本身，也包括语言模型能否通过试错学会更好的查询表达。",
+        "解决问题": "论文要解决的是 query generation quality：在没有人工最优 query 标注的情况下，如何让模型通过检索反馈学习哪些 query 更能召回相关证据，并将这种偏好迁移到后续问题上。",
+        "现象分析": "同一个问题可以对应多个候选查询，而不同 query 返回的 evidence quality 差异很大。传统 prompting 或高温采样未必能稳定生成高质量查询；如果 query 质量差，后续 generator 即使很强也会受噪声或缺失证据限制。",
+        "主要方法": "LeReT 对同一问题采样多个候选 search query，使用 off-the-shelf retriever 执行检索，根据检索上下文质量计算 reward，并把高 reward 与低 reward query 构造成 preference pairs。随后通过 context distillation / SFT 和 IPO 等 preference optimization 方法训练 query generator。",
+        "数据集与实验": "论文在 HotpotQA、HoVer 等多跳问答任务上评估，使用 Llama 3 8B、Gemma 9B 等模型。结果显示 LeReT 可使 absolute retrieval accuracy 最高提升约 29%，downstream generator evaluation 最高提升约 17%，并能适配任意 off-the-shelf retriever。",
+        "主要贡献": "这篇论文的主要贡献是把 query 生成从 prompt 技巧转成可优化的策略学习问题。它为后续 Search-R1 类工作提供了重要 insight：搜索工具 RL 的效果很大程度取决于 query action 的质量和检索反馈信号，而不只是最终答案奖励。"
+      },
+      "status": "approved",
+      "added_at": "2026-05-11"
+    },
+    {
+      "id": "ragen-2504-20073",
+      "title": "RAGEN: Understanding Self-Evolution in LLM Agents via Multi-Turn Reinforcement Learning",
+      "paper_url": "https://arxiv.org/abs/2504.20073",
+      "authors": [
+        "Zihan Wang",
+        "Kangrui Wang",
+        "Qineng Wang",
+        "Pingyue Zhang",
+        "Linjie Li",
+        "Zhengyuan Yang",
+        "Xing Jin",
+        "Kefan Yu",
+        "Minh Nhat Nguyen",
+        "Licheng Liu",
+        "Eli Gottlieb",
+        "Yiping Lu",
+        "Kyunghyun Cho",
+        "Jiajun Wu",
+        "Li Fei-Fei",
+        "Lijuan Wang",
+        "Yejin Choi",
+        "Manling Li"
+      ],
+      "venue": "arXiv",
+      "year": 2025,
+      "primary_area": "强化学习",
+      "category": "应用型 RL",
+      "keywords": [
+        "RAGEN",
+        "StarPO",
+        "multi-turn agent RL",
+        "Echo Trap",
+        "reward variance",
+        "gradient spikes",
+        "trajectory filtering",
+        "critic",
+        "rollout diversity"
+      ],
+      "labels": [
+        "Agentic RL",
+        "Training Stability",
+        "Multi-turn RL"
+      ],
+      "code_url": "https://github.com/RAGEN-AI/RAGEN",
+      "note": "多轮 agent RL 稳定性主线高优先级文献。它不是搜索专门论文，但 Echo Trap、reward variance collapse、entropy drop、gradient spikes、rollout diversity/freshness 等诊断语言非常适合迁移到搜索工具 RL 的训练动态分析。",
+      "tldr": "RAGEN 系统研究多轮 LLM agent RL 的训练动态，提出 StarPO/StarPO-S，并揭示 Echo Trap：reward variance cliff、entropy drop 和 gradient spikes 可能让 agent 学到浅层策略而不是真正 reasoning。",
+      "abstract": "Training large language models (LLMs) as interactive agents presents unique challenges including long-horizon decision making and interacting with stochastic environment feedback. While reinforcement learning (RL) has enabled progress in static tasks, multi-turn agent RL training remains underexplored. We propose StarPO (State-Thinking-Actions-Reward Policy Optimization), a general framework for trajectory-level agent RL, and introduce RAGEN, a modular system for training and evaluating LLM agents. Our study on four stylized environments reveals three core findings. First, our agent RL training shows a recurring mode of Echo Trap where reward variance cliffs and gradient spikes; we address this with StarPO-S, a stabilized variant with trajectory filtering, critic incorporation, and gradient stabilization. Second, we find the shaping of RL rollouts would benefit from diverse initial states, medium interaction granularity and more frequent sampling. Third, we show that without fine-grained, reasoning-aware reward signals, agent reasoning hardly emerge through multi-turn RL and they may show shallow strategies or hallucinated thoughts. Code and environments are available at https://github.com/RAGEN-AI/RAGEN.",
+      "summary_cn": {
+        "研究动机": "静态 reasoning RL 已经取得进展，但 LLM 作为交互式 agent 时要面对长程决策、随机环境反馈和多轮状态变化。作者认为 multi-turn agent RL 的训练动态仍缺少系统理解，不能简单套用单步或静态任务上的结论。",
+        "解决问题": "论文要解决的是多轮 agent RL 中的自我演化与稳定性问题：agent 是否真的学会 reasoning，还是只是过拟合局部奖励模式；训练曲线中 reward、variance、entropy 和 gradient 的变化如何反映策略退化。",
+        "现象分析": "作者发现 Echo Trap 现象：agent 可能伴随 reward variance cliff、entropy drop 和 gradient spikes 进入浅层策略，看似获得局部 reward，却没有发展出真正的推理能力，甚至出现 hallucinated thoughts。这说明最终 reward 曲线不足以判断 agent RL 是否健康。",
+        "主要方法": "论文提出 StarPO，一个 trajectory-level agent RL 框架，并构建 RAGEN 模块化训练评估系统。为缓解 Echo Trap，作者提出 StarPO-S，引入 trajectory filtering、critic incorporation 和 gradient stabilization 等稳定化设计，同时分析初始状态多样性、交互粒度和采样频率对 rollout shaping 的影响。",
+        "数据集与实验": "实验在四个 stylized interactive environments 上展开，覆盖多轮交互、随机反馈和轨迹级奖励设置。论文系统观察 reward variance、entropy、gradient spikes、reasoning length、rollout diversity 等指标，并展示 StarPO-S 相比基础训练更稳定。",
+        "主要贡献": "这篇论文的主要贡献是为 multi-turn agent RL 提供了一套训练动态诊断语言和稳定化框架。对于搜索工具 RL，它提示我们不能只看最终答案 reward，还要观察 query/工具行为、rollout 多样性、策略熵、梯度尖峰和 reward variance 等中间动态。"
+      },
+      "status": "approved",
+      "added_at": "2026-05-11"
     }
   ]
 }
