@@ -3447,6 +3447,251 @@
       },
       "status": "approved",
       "added_at": "2026-05-12"
+    },
+    {
+      "id": "istar-implicit-step-rewards-ooROvpmxMV",
+      "title": "Agentic Reinforcement Learning with Implicit Step Rewards",
+      "paper_url": "https://openreview.net/forum?id=ooROvpmxMV",
+      "authors": [
+        "Xiaoqian Liu",
+        "Ke Wang",
+        "Yuchuan Wu",
+        "Fei Huang",
+        "Yongbin Li",
+        "Jianbin Jiao",
+        "Junge Zhang"
+      ],
+      "venue": "ICLR 2026 Poster / OpenReview",
+      "year": 2026,
+      "primary_area": "基础/前沿模型 (含LLM)",
+      "category": "Agent 与工具使用",
+      "keywords": [
+        "implicit step rewards",
+        "iSTAR",
+        "agentic RL",
+        "credit assignment",
+        "reward granularity",
+        "multi-turn agents",
+        "trajectory-level reward",
+        "sample efficiency"
+      ],
+      "labels": [
+        "Agentic RL",
+        "Credit Assignment",
+        "Reward Design"
+      ],
+      "code_url": "",
+      "note": "多轮 agent RL 奖励粒度的直接参考。它强调 trajectory-level outcome reward 太稀疏，而 token-level process reward 又过细且高方差；implicit step rewards 提供了介于二者之间的中间粒度。",
+      "tldr": "iSTAR 从 rollout 中估计 implicit step rewards，把最终反馈重新分配到 agent steps，兼顾 reward density 和方差控制，缓解多轮 agent 的 delayed reward 与 credit assignment 问题。",
+      "abstract": "Agentic Reinforcement Learning with Implicit Step Rewards targets the credit-assignment challenge in multi-turn agent tasks. Trajectory-level outcome rewards are sparse and provide weak guidance for intermediate decisions, while token-level process rewards can be noisy and high variance. The paper introduces implicit step rewards that infer step-level learning signals from trajectory outcomes, offering an intermediate granularity between coarse episode rewards and fine token rewards. This improves reward density, sample efficiency, and validation performance across multi-step agent settings while avoiding the variance amplification of overly fine process supervision.",
+      "summary_cn": {
+        "研究动机": "多轮 agent 任务通常只有最终结果奖励，中间动作缺少反馈；但如果把奖励细化到 token 级，又会放大方差并引入噪声。",
+        "解决问题": "论文要解决的是 agentic RL 中 reward granularity 与 credit assignment 的匹配问题，即如何在过粗的轨迹奖励和过细的 token 奖励之间找到稳定粒度。",
+        "现象分析": "trajectory-level reward 难以指导某一步搜索、规划或工具动作；token-level reward 虽然密集，却可能把开放式推理 token 的噪声放大。两者都会影响训练稳定性和样本效率。",
+        "主要方法": "iSTAR 估计 implicit step rewards，把最终成功或失败信号隐式分解到 agent interaction steps。这样每一步获得更可学习的中间反馈，同时避免显式 token-level process reward 的高方差。",
+        "数据集与实验": "论文在多步 agentic tasks 上评估 validation performance、sample efficiency、step-level reward dynamics、episode-level reward dynamics 和 episode length to success 等指标。",
+        "主要贡献": "这篇论文的主要贡献是提出 step-level implicit reward 作为 agentic RL 的中间粒度反馈。它为搜索/工具调用 RL 中 delayed reward 和步骤级归因提供了直接参考。"
+      },
+      "status": "approved",
+      "added_at": "2026-05-12"
+    },
+    {
+      "id": "tool-call-reward-model-LnBEASInVr",
+      "title": "Empowering LLM Tool Invocation with Tool-call Reward Model",
+      "paper_url": "https://openreview.net/forum?id=LnBEASInVr",
+      "authors": [
+        "Da Ma",
+        "Ziyue Yang",
+        "Hongshen Xu",
+        "Haotian Fang",
+        "Kai Yu",
+        "Lu Chen"
+      ],
+      "venue": "ICLR 2026 Poster / OpenReview",
+      "year": 2026,
+      "primary_area": "基础/前沿模型 (含LLM)",
+      "category": "Agent 与工具使用",
+      "keywords": [
+        "tool-call reward model",
+        "tool invocation",
+        "tool-use RL",
+        "credit assignment",
+        "gradient conflict",
+        "process reward",
+        "tool-call quality",
+        "reward hacking"
+      ],
+      "labels": [
+        "Tool Use",
+        "Reward Design",
+        "Credit Assignment"
+      ],
+      "code_url": "",
+      "note": "工具调用奖励与局部 credit assignment 的核心近邻文献。它指出 outcome-only reward 会把最终成功/失败错误归因到中间 tool calls；naive process reward 还可能诱导模型减少工具调用以规避惩罚。",
+      "tldr": "TRM 为中间 tool calls 训练局部奖励模型，缓解最终答案奖励和工具调用质量之间的错配，让正确工具调用不会因最终答案错被误罚，也避免错误工具调用因答案碰巧正确被误奖。",
+      "abstract": "Empowering LLM Tool Invocation with Tool-call Reward Model studies reinforcement learning for tool-use LLMs where final outcome rewards are insufficient for local tool-call quality. A correct tool call may be penalized when the final answer is wrong, while an incorrect tool call may be rewarded when the model succeeds despite it, creating gradient conflict. The paper introduces a Tool-call Reward Model (TRM), a specialized process reward model that evaluates each tool invocation. It establishes a TRM construction workflow and integrates TRM with PPO and GRPO via refined credit assignment and turn-level advantage estimation, avoiding naive adaptations that can cause reward hacking such as minimizing tool calls to avoid penalties.",
+      "summary_cn": {
+        "研究动机": "工具调用任务中，最终答案正确性和中间工具调用质量并不总是一致。只用 outcome reward 会把局部工具动作错误归因。",
+        "解决问题": "论文要解决的是工具调用层面的 credit assignment：如何评估某个 tool call 本身是否正确、有用，而不是只看最终答案。",
+        "现象分析": "正确 tool call 可能因为后续推理或答案生成错误而被惩罚；错误 tool call 也可能因为最终答案碰巧正确而被奖励。naive process reward 还可能让模型减少工具调用来规避局部惩罚。",
+        "主要方法": "论文训练 tool-call reward model，对中间工具调用给出局部奖励，并将该奖励与最终任务反馈结合，减少 final success 与 local tool-call correctness 的梯度冲突。",
+        "数据集与实验": "实验关注 tool-call quality、tool-call frequency、turn-level advantage、最终成功率与局部工具调用正确性之间的冲突，以及是否出现工具规避型 reward hacking。",
+        "主要贡献": "这篇论文的主要贡献是把工具调用 RL 的奖励从最终答案下沉到 tool-call 层。它直接支撑工具使用中存在局部动作与终端奖励错配这一不稳定来源。"
+      },
+      "status": "approved",
+      "added_at": "2026-05-12"
+    },
+    {
+      "id": "spear-2509-22601",
+      "title": "Learn the Ropes, Then Trust the Wins: Self-imitation with Progressive Exploration for Agentic Reinforcement Learning",
+      "paper_url": "https://arxiv.org/abs/2509.22601",
+      "authors": [
+        "Yulei Qin",
+        "Xiaoyu Tan",
+        "Zhengbao He",
+        "Gang Li",
+        "Haojia Lin",
+        "Zongyi Li",
+        "Zihan Xu",
+        "Yuchen Shi",
+        "Siqi Cai",
+        "Renting Rui",
+        "Shaofei Cai",
+        "Yuzheng Cai",
+        "Xuan Zhang",
+        "Sheng Ye",
+        "Ke Li",
+        "Xing Sun"
+      ],
+      "venue": "ICLR 2026 Poster / arXiv",
+      "year": 2026,
+      "primary_area": "基础/前沿模型 (含LLM)",
+      "category": "Agent 与工具使用",
+      "keywords": [
+        "SPEAR",
+        "self-imitation",
+        "progressive exploration",
+        "agentic RL",
+        "exploration-exploitation",
+        "entropy collapse",
+        "tool interaction frequency",
+        "successful trajectory replay"
+      ],
+      "labels": [
+        "Agentic RL",
+        "Exploration",
+        "Training Stability"
+      ],
+      "code_url": "https://github.com/TencentYoutuResearch/SPEAR",
+      "note": "agentic RL 探索调度的代表工作。它强调机械 entropy maximization 在多轮分布漂移下不稳定，探索不足会 entropy collapse，探索过度会 runaway divergence；工具交互频率需要阶段性调节。",
+      "tldr": "SPEAR 先让 agent 通过渐进探索学会基本交互，再用成功轨迹自模仿巩固有效策略，从而在 exploration 和 exploitation 之间动态切换，稳定多轮 agent RL。",
+      "abstract": "SPEAR studies exploration scheduling for agentic reinforcement learning. Multi-turn agents must explore tools and environment interactions, but naive entropy maximization can be unstable under distribution shift: insufficient exploration leads to entropy collapse, while excessive exploration causes divergence and inefficient tool use. SPEAR combines progressive exploration with self-imitation from successful trajectories. The agent first learns interaction skills under controlled exploration, then consolidates winning behaviors through replay and imitation, improving success rate, tool-interaction efficiency, and training stability across agentic tasks.",
+      "summary_cn": {
+        "研究动机": "agentic RL 需要探索工具和环境交互，但多轮任务中探索强度很难固定：太少会学不到有效工具策略，太多会导致策略发散。",
+        "解决问题": "论文要解决的是 exploration-exploitation 调度失败导致的训练不稳定，尤其是 entropy collapse、runaway divergence 和工具交互频率失控。",
+        "现象分析": "机械 entropy maximization 在 multi-turn distribution shift 下可能不稳定。早期需要更多探索来发现成功轨迹，后期则需要信任成功经验并收敛到有效策略。",
+        "主要方法": "SPEAR 结合 progressive exploration 和 self-imitation。训练早期逐步扩展探索范围，积累成功轨迹；随后通过 replay/self-imitation 强化 winning trajectories，完成从探索到利用的转换。",
+        "数据集与实验": "论文分析 policy entropy across stages、tool interaction frequency、success rate vs training stage、exploration-to-exploitation transition 和 replay buffer 中成功轨迹利用情况。",
+        "主要贡献": "这篇论文的主要贡献是把 agentic RL 稳定性和探索日程联系起来。对搜索工具 RL 来说，它提示 search frequency、重复搜索、乱搜与后期收敛需要随训练阶段共同诊断。"
+      },
+      "status": "approved",
+      "added_at": "2026-05-12"
+    },
+    {
+      "id": "t3-belief-deviation-r8hzDA3pUY",
+      "title": "Reducing Belief Deviation in Reinforcement Learning for Active Reasoning of LLM Agents",
+      "paper_url": "https://openreview.net/forum?id=r8hzDA3pUY",
+      "authors": [
+        "Deyu Zou",
+        "Yongqiang Chen",
+        "Jianxiang Wang",
+        "Garry Yang",
+        "Mufei Li",
+        "Qing Da",
+        "James Cheng",
+        "Pan Li",
+        "Yu Gong"
+      ],
+      "venue": "ICLR 2026 Oral / OpenReview",
+      "year": 2026,
+      "primary_area": "基础/前沿模型 (含LLM)",
+      "category": "Agent 与工具使用",
+      "keywords": [
+        "T3",
+        "belief deviation",
+        "trajectory truncation",
+        "active reasoning",
+        "LLM agents",
+        "partial observability",
+        "compounding errors",
+        "state tracking"
+      ],
+      "labels": [
+        "Agentic RL",
+        "Belief Tracking",
+        "Training Stability"
+      ],
+      "code_url": "https://github.com/daviddwlee84/T3",
+      "note": "外部 observation 与多轮状态跟踪带来的行为层不稳定参考。它强调早期 observation/action 诱发的错误 belief 会在后续决策中累积，并通过检测 belief deviation 后截断无信息尾部来保护有效前缀 credit。",
+      "tldr": "T3 跟踪 LLM agent 主动推理中的 belief deviation，当偏差过大时截断训练轨迹尾部，抑制无信息尾部对 credit assignment 的污染，减少多轮决策中的 compounding errors。",
+      "abstract": "Reducing Belief Deviation in Reinforcement Learning for Active Reasoning of LLM Agents studies how LLM agents accumulate incorrect internal beliefs during multi-step interaction. In partially observable settings, early observations or actions can induce belief deviation, and subsequent decisions may compound the error, producing uninformative or repetitive actions and misattributed credits. The paper proposes T3, which tracks excessive belief deviation and truncates training trajectories to suppress uninformative tail effects. This preserves credit for informative prefixes and improves policy optimization. Experiments across five challenging tasks show better training stability, performance gains, and lower token cost.",
+      "summary_cn": {
+        "研究动机": "多轮 LLM agent 不只是生成动作，还要维护对环境状态的内部 belief。外部 observation 不完整或误导时，belief 可能逐步偏离真实状态。",
+        "解决问题": "论文要解决的是 active reasoning 中 belief deviation 导致的 compounding decision errors 和 credit misattribution，让训练不要被无信息尾部动作污染。",
+        "现象分析": "早期错误 observation 或 action 会影响后续所有决策。模型一旦沿错误 belief 继续推理，后续动作可能变得重复或无信息，最终失败不一定来自最后一步，而是来自累积状态偏差。",
+        "主要方法": "T3 跟踪 belief deviation，当偏差过大时截断训练轨迹尾部，抑制 uninformative tail effects，并保留 informative prefixes 的有效 credit。",
+        "数据集与实验": "实验覆盖 5 个 challenging tasks，报告 training stability、performance gain 和 token cost。结果显示 T3 最高带来 30 点性能提升，并最多降低 34% token cost。",
+        "主要贡献": "这篇论文的主要贡献是把 agent 训练不稳定的一部分归因到 belief tracking 和轨迹尾部污染。对搜索工具 RL 来说，检索结果噪声、不完整证据和误导性 observation 都可能诱发类似 belief drift。"
+      },
+      "status": "approved",
+      "added_at": "2026-05-12"
+    },
+    {
+      "id": "rest-tool-use-gNZlaKRWki",
+      "title": "ResT: Reshaping Token-Level Policy Gradients for Tool-Use Large Language Models",
+      "paper_url": "https://openreview.net/forum?id=gNZlaKRWki",
+      "authors": [
+        "Zihan Lin",
+        "Xiaohan Wang",
+        "Jie Cao",
+        "Jiajun Chai",
+        "Guojun Yin",
+        "Wei Lin",
+        "Ran He"
+      ],
+      "venue": "ICLR 2026 Poster / OpenReview",
+      "year": 2026,
+      "primary_area": "基础/前沿模型 (含LLM)",
+      "category": "Agent 与工具使用",
+      "keywords": [
+        "ResT",
+        "tool-use LLM",
+        "token-level policy gradients",
+        "token heterogeneity",
+        "policy-gradient variance",
+        "tool tokens",
+        "reasoning tokens",
+        "BFCL"
+      ],
+      "labels": [
+        "Tool Use",
+        "Policy Optimization",
+        "Training Stability"
+      ],
+      "code_url": "https://github.com/1229095296/ResT_Tool_use_LLM",
+      "note": "工具调用轨迹 token heterogeneity 的核心参考。它指出结构化低熵 token 往往决定 reward，而推理 token 需要随训练阶段逐步获得更多权重；统一 token weighting 会放大方差并让结构正确性到语义推理的过渡不稳定。",
+      "tldr": "ResT 按 token 熵和训练阶段重塑 tool-use LLM 的 policy gradients，先稳住结构化工具调用正确性，再逐步上调 reasoning token 权重，实现从 structural correctness 到 semantic reasoning 的平滑过渡。",
+      "abstract": "ResT studies token-level policy-gradient instability in tool-use large language models. Tool-use trajectories are heterogeneous: structured low-entropy tokens such as tool names, arguments, and format tags are often primary determinants of rewards, while open-ended reasoning tokens are higher entropy and can dominate gradient variance. Uniform token weighting therefore ignores the particularity of tool-use tasks and slows convergence. ResT establishes a link between policy entropy and tool-use training stability, then reshapes token-level policy gradients through entropy-informed reweighting, progressively upweighting reasoning tokens as training proceeds. This stabilizes convergence and improves tool-use accuracy on BFCL and API-Bank.",
+      "summary_cn": {
+        "研究动机": "工具调用轨迹不是均质文本序列。工具名、参数、格式标签和自然语言推理 token 在结构、熵和奖励贡献上差异很大。",
+        "解决问题": "论文要解决的是统一 token-level policy gradient 对 tool-use LLM 不合适的问题：关键工具 token 的信号被稀释，高熵推理 token 又放大方差。",
+        "现象分析": "低熵结构化 token 可能直接决定工具调用是否成功；高熵 reasoning tokens 数量多、方差大，但在训练后期又必须承担语义推理能力。统一权重无法表达这种阶段性差异。",
+        "主要方法": "ResT 建立 policy entropy 与 tool-use training stability 的联系，并通过 entropy-informed token reweighting 重塑 policy gradients：训练早期强调结构正确性，随后逐步上调 reasoning tokens 权重。",
+        "数据集与实验": "实验在 BFCL、API-Bank 等 tool-use benchmark 上评估 token-level entropy、region-level entropy、policy-gradient variance contribution、收敛速度和工具调用准确率，报告相对强基线最高 8.76% 提升。",
+        "主要贡献": "这篇论文的主要贡献是指出工具调用 RL 的 token-region heterogeneity 和阶段性权重需求。它和 Search-R1 的 retrieved token masking、observation token 边界和 advantage 分配问题高度相关。"
+      },
+      "status": "approved",
+      "added_at": "2026-05-12"
     }
   ]
 }
