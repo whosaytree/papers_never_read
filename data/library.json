@@ -4377,6 +4377,270 @@
       },
       "status": "approved",
       "added_at": "2026-05-12"
+    },
+    {
+      "id": "math-reasoning-survey-2025-acm",
+      "title": "A Survey on Large Language Models for Mathematical Reasoning",
+      "paper_url": "https://arxiv.org/abs/2506.08446",
+      "authors": [
+        "Peng-Yuan Wang",
+        "Tian-Shuo Liu",
+        "Chenyang Wang",
+        "Yi-Di Wang",
+        "Shu Yan",
+        "Cheng-Xing Jia",
+        "Xu-Hui Liu",
+        "Xin-Wei Chen",
+        "Jia-Cheng Xu",
+        "Ziniu Li",
+        "Yang Yu"
+      ],
+      "venue": "ACM Computing Surveys / arXiv",
+      "year": 2025,
+      "primary_area": "基础/前沿模型 (含LLM)",
+      "category": "推理与思维链",
+      "keywords": [
+        "mathematical reasoning",
+        "LLM survey",
+        "Chain-of-Thought",
+        "supervised fine-tuning",
+        "reinforcement learning",
+        "test-time scaling",
+        "formal reasoning",
+        "knowledge augmentation"
+      ],
+      "labels": [
+        "Survey",
+        "Reasoning",
+        "Mathematics"
+      ],
+      "code_url": "",
+      "note": "数学推理 / reasoning LLM 的综述背景文献。它不直接讨论搜索工具调用，但能支撑 CoT、SFT、RL、extended CoT 和 test-time scaling 这条 reasoning enhancement 主线；Search-R1 类工作可以看作在这条主线之上再加入外部检索与多轮交互。",
+      "tldr": "这篇综述从理解与答案生成两个阶段梳理 LLM 数学推理能力，覆盖 prompting、CoT、SFT、RL、extended CoT、test-time scaling 和 formal reasoning。",
+      "abstract": "This survey reviews large language models for mathematical reasoning. It organizes the field around mathematical comprehension and answer generation, covering pretraining strategies, training-free prompting, Chain-of-Thought reasoning, supervised fine-tuning, reinforcement learning, extended CoT, test-time scaling, formal reasoning, knowledge augmentation, and generalization challenges. For tool-use RL work, it is mainly useful as background for the reasoning-RL lineage that later systems extend with search or other external tools.",
+      "summary_cn": {
+        "研究动机": "数学推理长期是评估 LLM 复杂推理能力的重要任务，需要系统梳理从 prompting 到 RL 与 test-time scaling 的方法演进。",
+        "解决问题": "综述要回答的是 LLM 数学推理能力如何被构建、增强和评估，以及当前方法在 capacity、efficiency 和 generalization 上还存在哪些限制。",
+        "现象分析": "数学推理能力并非只来自模型规模，还依赖 CoT、监督微调、强化学习、形式化推理、知识增强和推理时计算扩展等多种机制。",
+        "主要方法": "论文按 comprehension 和 answer generation 两个阶段组织已有工作，系统总结 prompting、CoT、SFT、RL、extended CoT、test-time scaling 和 formal reasoning 等路线。",
+        "数据集与实验": "作为 survey，论文不提出单一新 benchmark，而是总结数学推理任务、评测协议和已有方法在不同数学场景中的表现。",
+        "主要贡献": "这篇论文的主要贡献是提供 reasoning LLM 的宏观地图。对工具调用 RL 来说，它帮助说明 Search-R1 等方法是在 reasoning RL 之上引入外部检索和交互反馈。"
+      },
+      "status": "approved",
+      "added_at": "2026-05-12"
+    },
+    {
+      "id": "t1-2025-icml",
+      "title": "T1: Advancing Language Model Reasoning through Reinforcement Learning and Inference Scaling",
+      "paper_url": "https://proceedings.mlr.press/v267/hou25e.html",
+      "authors": [
+        "Zhenyu Hou",
+        "Xin Lv",
+        "Rui Lu",
+        "Jiajie Zhang",
+        "Yujiang Li",
+        "Zijun Yao",
+        "Juanzi Li",
+        "Jie Tang",
+        "Yuxiao Dong"
+      ],
+      "venue": "ICML 2025",
+      "year": 2025,
+      "primary_area": "基础/前沿模型 (含LLM)",
+      "category": "推理与思维链",
+      "keywords": [
+        "T1",
+        "reasoning RL",
+        "inference scaling",
+        "oversampling",
+        "entropy bonus",
+        "dynamic anchor",
+        "self-verification",
+        "test-time scaling",
+        "math reasoning"
+      ],
+      "labels": [
+        "Reasoning",
+        "RL",
+        "Inference Scaling"
+      ],
+      "code_url": "https://github.com/THUDM/T1",
+      "note": "RL reasoning / inference scaling 背景。它主要研究内部长链推理，不涉及搜索工具，但 oversampling、entropy bonus、dynamic anchor 和更长生成预算下的 scaling behavior 对理解后续工具调用 RL 的探索与长度演化很有用。",
+      "tldr": "T1 通过合成 CoT 冷启动、过采样增加探索、entropy bonus 和 dynamic anchor 做 RL reasoning，并展示更大推理预算带来的 inference scaling。",
+      "abstract": "T1 studies reinforcement learning for language-model reasoning and inference scaling. It initializes models with synthesized chain-of-thought data that includes trial-and-error and self-verification, then scales RL training by promoting sampling diversity through oversampling. The method also uses exploration-friendly regularization such as entropy bonus and dynamic anchoring. Experiments on challenging math reasoning benchmarks show that RL-trained T1 models benefit from increased inference budgets, making it a useful background work for reasoning RL before adding external tools.",
+      "summary_cn": {
+        "研究动机": "已有 reasoning model 很多依赖 imitation learning，推理时计算扩展能力不足；需要通过 RL 鼓励模型自探索并研究 inference scaling。",
+        "解决问题": "论文要解决的是如何让开源 LLM 通过 RL 获得更强数学推理能力，并在更长生成预算下持续受益。",
+        "现象分析": "复杂推理训练需要足够多样的 rollout；如果探索不足，RL 只能带来有限提升。entropy bonus、oversampling 和 anchor 约束会影响训练稳定性与长链推理行为。",
+        "主要方法": "T1 先用包含 trial-and-error 与 self-verification 的合成 CoT 数据冷启动，再通过 oversampling 增加采样多样性，并结合 entropy bonus 和 dynamic anchor 进行 RL。",
+        "数据集与实验": "论文在 MATH500、AIME2024、Omni-MATH 等数学推理 benchmark 上评估，并分析不同 inference budget 下的性能变化。",
+        "主要贡献": "这篇论文的主要贡献是把 RL reasoning 与 inference scaling 联系起来。对搜索工具 RL 来说，它提供了探索、熵、生成长度和测试时预算的前置背景。"
+      },
+      "status": "approved",
+      "added_at": "2026-05-12"
+    },
+    {
+      "id": "rl-techniques-llm-survey-2025-arxiv",
+      "title": "A Technical Survey of Reinforcement Learning Techniques for Large Language Models",
+      "paper_url": "https://arxiv.org/abs/2507.04136",
+      "authors": [
+        "Saksham Sahai Srivastava",
+        "Vaneet Aggarwal"
+      ],
+      "venue": "arXiv",
+      "year": 2025,
+      "primary_area": "基础/前沿模型 (含LLM)",
+      "category": "指令微调与对齐",
+      "keywords": [
+        "RL for LLMs",
+        "RLHF",
+        "RLAIF",
+        "PPO",
+        "DPO",
+        "GRPO",
+        "RLVR",
+        "reward modeling",
+        "reward hacking",
+        "tool-augmented reasoning"
+      ],
+      "labels": [
+        "Survey",
+        "RLHF",
+        "Policy Optimization"
+      ],
+      "code_url": "",
+      "note": "RL for LLMs 技术谱系综述。它适合作为 PPO、GRPO、RLHF/RLAIF、DPO、RLVR、reward modeling 和 reward hacking 的宏观背景；对工具调用只到概念层面，不提供搜索工具 RL 的细粒度训练动态诊断。",
+      "tldr": "这篇综述从反馈来源、奖励建模和优化策略角度梳理 RL for LLMs，覆盖 RLHF、RLAIF、DPO、PPO、GRPO、RLVR 和 reward hacking 等主题。",
+      "abstract": "This technical survey reviews reinforcement learning techniques for large language models. It covers classical RL foundations, RLHF, RLAIF, DPO-style preference optimization, PPO, GRPO, RL with verifiable rewards, reward modeling, feedback mechanisms, optimization strategies, reasoning, code generation, tool-augmented reasoning, and alignment challenges. For a tool-use RL bibliography, it provides the high-level RL4LLM vocabulary and method landscape, while leaving the search/tool-specific instability questions to more focused papers.",
+      "summary_cn": {
+        "研究动机": "RL 已成为 LLM 对齐、推理增强和工具增强能力训练的重要技术路线，需要统一梳理不同反馈来源、奖励建模和优化策略。",
+        "解决问题": "综述要解决的是如何理解 RLHF、RLAIF、DPO、PPO、GRPO、RLVR 等方法之间的关系，以及它们在 LLM 后训练中的适用场景。",
+        "现象分析": "LLM RL 不只受优化算法影响，还受 reward model、feedback source、reward hacking、计算成本和可扩展反馈收集等因素限制。",
+        "主要方法": "论文以技术综述形式组织 RL for LLMs 的主要范式，比较不同 policy optimization、preference learning、verifiable reward 和 alignment 方法。",
+        "数据集与实验": "作为 survey，论文不提出新实验，而是总结对齐、推理、代码、工具增强和多目标安全等应用中的代表性方法。",
+        "主要贡献": "这篇论文的主要贡献是提供 RL4LLM 的宏观术语和方法谱系。它适合放在相关工作开头，再引出搜索工具调用 RL 的专门稳定性问题。"
+      },
+      "status": "approved",
+      "added_at": "2026-05-12"
+    },
+    {
+      "id": "gpt3-few-shot-2020-arxiv",
+      "title": "Language Models are Few-Shot Learners",
+      "paper_url": "https://arxiv.org/abs/2005.14165",
+      "authors": [
+        "Tom B. Brown",
+        "Benjamin Mann",
+        "Nick Ryder",
+        "Melanie Subbiah",
+        "Jared Kaplan",
+        "Prafulla Dhariwal",
+        "Arvind Neelakantan",
+        "Pranav Shyam",
+        "Girish Sastry",
+        "Amanda Askell",
+        "Sandhini Agarwal",
+        "Ariel Herbert-Voss",
+        "Gretchen Krueger",
+        "Tom Henighan",
+        "Rewon Child",
+        "Aditya Ramesh",
+        "Daniel M. Ziegler",
+        "Jeffrey Wu",
+        "Clemens Winter",
+        "Christopher Hesse",
+        "Mark Chen",
+        "Eric Sigler",
+        "Mateusz Litwin",
+        "Scott Gray",
+        "Benjamin Chess",
+        "Jack Clark",
+        "Christopher Berner",
+        "Sam McCandlish",
+        "Alec Radford",
+        "Ilya Sutskever",
+        "Dario Amodei"
+      ],
+      "venue": "NeurIPS 2020 / arXiv",
+      "year": 2020,
+      "primary_area": "基础/前沿模型 (含LLM)",
+      "category": "LLM 预训练",
+      "keywords": [
+        "GPT-3",
+        "large language models",
+        "few-shot learning",
+        "in-context learning",
+        "scaling",
+        "autoregressive language modeling",
+        "prompting"
+      ],
+      "labels": [
+        "Foundation Model",
+        "In-context Learning",
+        "Scaling"
+      ],
+      "code_url": "",
+      "note": "LLM 背景基础文献。它不是工具调用或 RL 论文，但适合用于说明大规模自回归语言模型的 few-shot / in-context learning 能力，以及为什么后续需要 RAG、工具调用和 RL 后训练来补足事实性、复杂推理和动态知识。",
+      "tldr": "GPT-3 证明扩大自回归语言模型规模可以带来强 few-shot 与 in-context learning 能力，为后续提示学习、RAG、工具调用和 RL 后训练奠定背景。",
+      "abstract": "Language Models are Few-Shot Learners presents GPT-3 and shows that scaling autoregressive language models yields strong in-context learning behavior. Without task-specific gradient updates, the model can perform many NLP tasks from natural-language prompts and a few examples. The paper is a foundational LLM background reference. In a tool-use RL library, its role is to mark the starting point: parameteric and prompt-based abilities are powerful but still insufficient for dynamic knowledge access, robust reasoning, and environment interaction.",
+      "summary_cn": {
+        "研究动机": "大规模语言模型能否通过纯文本提示和少量示例完成多种任务，是 LLM 范式转变的核心问题。",
+        "解决问题": "论文要展示扩大自回归语言模型规模是否能产生无需任务特定微调的 few-shot 和 in-context learning 能力。",
+        "现象分析": "模型规模扩大后，语言模型可以从上下文示例中适配任务，但仅依赖参数知识和提示仍难以保证事实更新、复杂推理和环境交互能力。",
+        "主要方法": "论文训练并评估 GPT-3 系列自回归语言模型，通过 zero-shot、one-shot 和 few-shot prompting 在大量 NLP 任务上测试能力。",
+        "数据集与实验": "实验覆盖翻译、问答、cloze、阅读理解、简单推理、算术和领域适应等多类任务，展示 scale 带来的广泛 few-shot 能力。",
+        "主要贡献": "这篇论文的主要贡献是确立大规模 LLM 与 in-context learning 的基础范式。它为后续检索增强、工具调用和强化学习后训练的必要性提供背景起点。"
+      },
+      "status": "approved",
+      "added_at": "2026-05-12"
+    },
+    {
+      "id": "bfcl-2025-icml",
+      "title": "The Berkeley Function Calling Leaderboard (BFCL): From Tool Use to Agentic Evaluation of Large Language Models",
+      "paper_url": "https://proceedings.mlr.press/v267/patil25a.html",
+      "authors": [
+        "Shishir G. Patil",
+        "Huanzhi Mao",
+        "Fanjia Yan",
+        "Charlie Cheng-Jie Ji",
+        "Vishnu Suresh",
+        "Ion Stoica",
+        "Joseph E. Gonzalez"
+      ],
+      "venue": "ICML 2025",
+      "year": 2025,
+      "primary_area": "数据集与基准",
+      "category": "Agent / 工具使用评测",
+      "keywords": [
+        "BFCL",
+        "Berkeley Function Calling Leaderboard",
+        "function calling",
+        "tool use",
+        "agentic evaluation",
+        "AST evaluation",
+        "serial calls",
+        "parallel calls",
+        "abstention",
+        "stateful multi-step"
+      ],
+      "labels": [
+        "Benchmark",
+        "Tool Use",
+        "Function Calling"
+      ],
+      "code_url": "",
+      "note": "function calling / tool-use evaluation 的代表 benchmark。它不是训练方法，但能说明工具调用能力已经形成标准评测维度：串行/并行调用、AST-based validity、abstention 和 stateful multi-step agentic setting。适合作为 Tool-N1、ResT、DeepAgent 等工作的评测背景。",
+      "tldr": "BFCL 用真实函数调用场景评估 LLM 工具调用能力，覆盖串行/并行调用、多语言函数、AST-based correctness、abstention 和 stateful 多步 agent 设定。",
+      "abstract": "The Berkeley Function Calling Leaderboard evaluates large language models on function-calling and tool-use capabilities. It tests whether models can map user requests into valid external function calls, including serial and parallel calls, multilingual function signatures, abstention, and more stateful multi-step agentic settings. Evaluation relies on structured function-call validity, including AST-based checks. The paper is relevant as an evaluation-side background for tool-use RL: training methods still need stable policy learning, but benchmarks such as BFCL define what correct tool invocation means.",
+      "summary_cn": {
+        "研究动机": "随着 LLM 从文本生成走向工具调用，需要系统评估模型能否根据用户需求正确调用函数、API 或外部工具。",
+        "解决问题": "论文要解决的是 function calling 能力的标准化评测问题，包括单轮、多轮、串行、并行和 abstention 等真实工具使用场景。",
+        "现象分析": "当前强模型在简单单轮函数调用上表现较好，但 memory、dynamic decision-making 和 long-horizon reasoning 仍然是 agentic tool use 的难点。",
+        "主要方法": "BFCL 构造真实函数与 prompt，使用 AST-based evaluation 等机制判断调用格式、函数选择和参数是否正确，并扩展到 stateful multi-step agentic setting。",
+        "数据集与实验": "论文在多类函数调用任务上比较不同 LLM 的 serial calls、parallel calls、abstention 和多步状态保持能力。",
+        "主要贡献": "这篇论文的主要贡献是提供 function calling / tool-use evaluation 的代表性基准。它适合支撑工具调用能力评测背景，而不是作为 RL 训练稳定性方法。"
+      },
+      "status": "approved",
+      "added_at": "2026-05-12"
     }
   ]
 }
