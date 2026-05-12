@@ -3974,6 +3974,311 @@
       },
       "status": "approved",
       "added_at": "2026-05-12"
+    },
+    {
+      "id": "webagent-r1-2025-emnlp",
+      "title": "WebAgent-R1: Training Web Agents via End-to-End Multi-Turn Reinforcement Learning",
+      "paper_url": "https://aclanthology.org/2025.emnlp-main.401/",
+      "authors": [
+        "Zhepei Wei",
+        "Wenlin Yao",
+        "Yao Liu",
+        "Weizhi Zhang",
+        "Qin Lu",
+        "Liang Qiu",
+        "Changlong Yu",
+        "Puyang Xu",
+        "Chao Zhang",
+        "Bing Yin",
+        "Hyokun Yun",
+        "Lihong Li"
+      ],
+      "venue": "EMNLP 2025",
+      "year": 2025,
+      "primary_area": "基础/前沿模型 (含LLM)",
+      "category": "Agent 与工具使用",
+      "keywords": [
+        "WebAgent-R1",
+        "web agent",
+        "multi-turn RL",
+        "end-to-end RL",
+        "online interaction",
+        "binary reward",
+        "WebArena-Lite",
+        "behavior cloning warm-up",
+        "test-time scaling"
+      ],
+      "labels": [
+        "Agent RL",
+        "Web Agent",
+        "Multi-turn"
+      ],
+      "code_url": "https://github.com/weizhepei/WebAgent-R1",
+      "note": "端到端多轮 web agent RL 的代表性工作。它把动态网页交互、长轨迹、二值任务成功奖励和在线 rollout 放到同一个训练框架中，适合作为多轮工具/网页 agent RL 的背景；与搜索问答不同，它更强调真实网页环境下的长时序决策。",
+      "tldr": "WebAgent-R1 通过在线网页环境交互采样多样轨迹，并用任务成功的二值奖励训练 web agent，在 WebArena-Lite 上显著提升开源模型的任务成功率。",
+      "abstract": "WebAgent-R1 studies how to train web agents with end-to-end multi-turn reinforcement learning rather than only single-turn reasoning optimization. The framework learns from online interactions with dynamic web environments, asynchronously generating trajectories and optimizing with binary task-success rewards. It also analyzes behavior-cloning warm-up, thinking-based prompting, and test-time scaling through more interactions. The work is useful for understanding how sparse outcome rewards, long-horizon decision making, and dynamic observations interact in real web-agent training.",
+      "summary_cn": {
+        "研究动机": "大模型 RL 多集中在数学等单轮任务，但真实 web agent 需要在动态界面里连续观察、思考和行动，训练难度来自长时序、多轮交互和稀疏成功信号。",
+        "解决问题": "论文要解决的是如何用端到端 RL 训练网页 agent，使模型能直接从环境交互和任务成功/失败中学习，而不是只模仿固定轨迹。",
+        "现象分析": "网页任务中的 observation 会随动作变化，轨迹长且上下文成本高；只靠静态 SFT 或离线轨迹难以覆盖交互分布，二值奖励又带来明显的 credit assignment 压力。",
+        "主要方法": "WebAgent-R1 异步生成在线交互轨迹，用任务成功的二值 reward 进行多轮 RL，并结合 behavior cloning warm-up、thinking prompting 与测试时增加交互次数等机制。",
+        "数据集与实验": "论文在 WebArena-Lite 上评估，报告 Qwen-2.5-3B 和 LLaMA-3.1-8B 的成功率大幅提升，并分析不同初始化和 CoT 设定对 web agent 的影响。",
+        "主要贡献": "这篇论文的主要贡献是把真实网页交互中的长轨迹 agent training 做成端到端 RL 框架。它为多轮工具调用和网页 agent 的 sparse outcome RL 提供了重要 baseline。"
+      },
+      "status": "approved",
+      "added_at": "2026-05-12"
+    },
+    {
+      "id": "arpo-2025-arxiv",
+      "title": "Agentic Reinforced Policy Optimization",
+      "paper_url": "https://arxiv.org/abs/2507.19849",
+      "authors": [
+        "Guanting Dong",
+        "Hangyu Mao",
+        "Kai Ma",
+        "Licheng Bao",
+        "Yifei Chen",
+        "Zhongyuan Wang",
+        "Zhongxia Chen",
+        "Jiazhen Du",
+        "Huiyang Wang",
+        "Fuzheng Zhang",
+        "Guorui Zhou",
+        "Yutao Zhu",
+        "Ji-Rong Wen",
+        "Zhicheng Dou"
+      ],
+      "venue": "arXiv",
+      "year": 2025,
+      "primary_area": "基础/前沿模型 (含LLM)",
+      "category": "Agent 与工具使用",
+      "keywords": [
+        "ARPO",
+        "agentic RL",
+        "multi-turn tool interaction",
+        "entropy-based rollout",
+        "adaptive rollout",
+        "step-level sampling",
+        "advantage attribution",
+        "tool-use budget"
+      ],
+      "labels": [
+        "Agent RL",
+        "Policy Optimization",
+        "Tool Use"
+      ],
+      "code_url": "https://github.com/RUC-NLPIR/ARPO",
+      "note": "面向多轮工具交互的 agentic RL 方法。核心 insight 是工具反馈后生成 token 的不确定性会上升，因此用 entropy 触发更细粒度的 step-level rollout 和 advantage attribution。它对工具反馈导致的训练不稳定有诊断价值，但更像采样/归因改进，不是完整的稳定性理论。",
+      "tldr": "ARPO 观察到工具反馈后模型 token entropy 上升，并据此做自适应 rollout 与 step-level advantage attribution，用更少工具调用预算训练多轮 agent。",
+      "abstract": "Agentic Reinforced Policy Optimization targets multi-turn LLM agents that combine intrinsic reasoning with external tool interactions. The paper observes that token uncertainty increases immediately after tool feedback, then uses entropy to adaptively choose between global trajectory sampling and step-level sampling. It further introduces advantage attribution for stepwise tool-use interactions. Experiments across computational reasoning, knowledge reasoning, and deep-search benchmarks show better performance than trajectory-level RL under a smaller tool-use budget.",
+      "summary_cn": {
+        "研究动机": "传统 RLVR 更适合单轮推理；多轮 agent 既要保持长程推理，又要学会在工具反馈后继续行动，简单 trajectory-level RL 往往采样效率低。",
+        "解决问题": "论文要解决的是多轮工具使用中的 rollout 粒度和优势归因问题，尤其是如何在工具反馈后的高不确定位置投入更多探索。",
+        "现象分析": "作者观察到模型在收到外部工具反馈后的若干 token 上 entropy 明显上升，说明这些位置是决策不确定性和训练信号错配的集中区域。",
+        "主要方法": "ARPO 使用 entropy-based adaptive rollout，在全轨迹采样和 step-level sampling 之间动态切换，并引入 advantage attribution 来处理共享前缀和工具交互步骤的收益差异。",
+        "数据集与实验": "论文在计算推理、知识推理和 deep search 等 13 个 benchmark 上评估，报告相比 trajectory-level RL 有更高性能，并减少约一半工具使用预算。",
+        "主要贡献": "这篇论文的主要贡献是把工具反馈后的 entropy 变化转化为 agentic RL 的采样和归因机制。它适合作为多轮工具 RL 中 step-level exploration 的代表方法。"
+      },
+      "status": "approved",
+      "added_at": "2026-05-12"
+    },
+    {
+      "id": "simpletir-2025-arxiv",
+      "title": "SimpleTIR: End-to-End Reinforcement Learning for Multi-Turn Tool-Integrated Reasoning",
+      "paper_url": "https://arxiv.org/abs/2509.02479",
+      "authors": [
+        "Zhenghai Xue",
+        "Longtao Zheng",
+        "Qian Liu",
+        "Yingru Li",
+        "Xiaosen Zheng",
+        "Zejun Ma",
+        "Bo An"
+      ],
+      "venue": "arXiv",
+      "year": 2025,
+      "primary_area": "基础/前沿模型 (含LLM)",
+      "category": "Agent 与工具使用",
+      "keywords": [
+        "SimpleTIR",
+        "tool-integrated reasoning",
+        "multi-turn RL",
+        "code interpreter",
+        "training instability",
+        "distributional drift",
+        "low-probability tokens",
+        "gradient norm explosion",
+        "void turn",
+        "trajectory filtering"
+      ],
+      "labels": [
+        "Tool Use",
+        "Agent RL",
+        "Training Stability"
+      ],
+      "code_url": "https://github.com/PRIME-RL/SimpleTIR",
+      "note": "非常贴近多轮工具 RL 稳定性问题。论文把不稳定性归因于外部工具反馈造成的 distributional drift、低概率 token 累积和梯度范数爆炸，并用 void turn 作为可观测过滤信号。重点不是更复杂 reward，而是识别并移除会破坏训练的轨迹。",
+      "tldr": "SimpleTIR 发现多轮 TIR 的崩溃来自工具反馈造成的分布漂移和低概率 token 累积，并通过过滤包含 void turn 的轨迹稳定端到端 RL。",
+      "abstract": "SimpleTIR studies end-to-end reinforcement learning for multi-turn tool-integrated reasoning. It identifies a major source of instability: external tool feedback shifts the generation distribution, causing low-probability tokens to accumulate across turns and leading to gradient norm explosions. The proposed plug-and-play method filters trajectories containing void turns, where a turn produces neither executable code nor a final answer. This simple signal stabilizes multi-turn TIR training and improves mathematical reasoning performance with code-interpreter tools.",
+      "summary_cn": {
+        "研究动机": "工具增强推理在单轮和提示层面有效，但扩展到多轮 RL 后常出现训练不稳定和性能崩溃。",
+        "解决问题": "论文要解决的是多轮工具反馈进入上下文后，为什么 RL 训练会不稳定，以及能否用简单机制稳定训练。",
+        "现象分析": "外部工具反馈会造成生成分布漂移，诱发低概率 token；这些 token 在多轮中累积，最终导致梯度范数爆炸。仅 masking feedback token 不够，因为反馈会影响后续模型生成。",
+        "主要方法": "SimpleTIR 定义 void turn，即某轮既不产生代码块也不产生最终答案。训练时过滤包含 void turn 的轨迹，从数据层面去掉高风险样本。",
+        "数据集与实验": "论文在多项数学推理 benchmark 上评估 Qwen 系列模型，报告 SimpleTIR 能显著提升 AIME、MATH500、Olympiad 等任务表现，并使梯度范数更平滑。",
+        "主要贡献": "这篇论文的主要贡献是把多轮工具 RL 的失败机制定位到工具反馈诱发的分布漂移和低概率 token 累积，并给出极简但有效的轨迹过滤 baseline。"
+      },
+      "status": "approved",
+      "added_at": "2026-05-12"
+    },
+    {
+      "id": "deepagent-2026-www",
+      "title": "DeepAgent: A General Reasoning Agent with Scalable Toolsets",
+      "paper_url": "https://arxiv.org/abs/2510.21618",
+      "authors": [
+        "Xiaoxi Li",
+        "Wenxiang Jiao",
+        "Jiarui Jin",
+        "Guanting Dong",
+        "Jiajie Jin",
+        "Yinuo Wang",
+        "Hao Wang",
+        "Yutao Zhu",
+        "Ji-Rong Wen",
+        "Yuan Lu",
+        "Zhicheng Dou"
+      ],
+      "venue": "WWW 2026",
+      "year": 2026,
+      "primary_area": "基础/前沿模型 (含LLM)",
+      "category": "Agent 与工具使用",
+      "keywords": [
+        "DeepAgent",
+        "general reasoning agent",
+        "scalable toolsets",
+        "tool discovery",
+        "tool execution",
+        "memory folding",
+        "ToolPO",
+        "LLM-simulated APIs",
+        "open-set tools"
+      ],
+      "labels": [
+        "Agent",
+        "Tool Use",
+        "Memory"
+      ],
+      "code_url": "https://github.com/RUC-NLPIR/DeepAgent",
+      "note": "通用工具 agent 方向的重要系统化工作，重点在 scalable toolsets、tool search/call、长程 memory folding 和 ToolPO 训练。它不是搜索 QA 专文，但能补足“开放工具集合 + 长时序 agent”这一支背景。",
+      "tldr": "DeepAgent 把自主思考、工具发现、工具调用和记忆折叠放入统一推理流程，并用 ToolPO 训练面向大规模工具集合的通用 reasoning agent。",
+      "abstract": "DeepAgent proposes a general reasoning agent designed for tasks that require external tools and long-horizon interaction. It unifies autonomous thinking, tool discovery, and tool execution within one reasoning process, and introduces memory folding to compress past interactions into episodic, working, and tool memories. The paper also studies training for scalable toolsets, including tool-call credit assignment and simulated APIs. It is most relevant as a background work for open-set tool-use agents rather than narrow search-augmented QA.",
+      "summary_cn": {
+        "研究动机": "真实任务常需要在大量工具中自主发现并调用合适工具，而固定 workflow 或小工具集合难以扩展到开放环境。",
+        "解决问题": "论文要解决的是如何构建能在大规模工具集合中进行自主思考、工具搜索、调用和长期状态维护的通用 reasoning agent。",
+        "现象分析": "长程工具交互会产生上下文膨胀和错误累积；开放工具集合还要求 agent 先检索/选择工具，再执行调用，而不是预先知道固定 API。",
+        "主要方法": "DeepAgent 将思考、tool discovery 和 action execution 统一到同一推理流程，引入 memory folding 管理长期交互，并用 ToolPO 等训练机制处理工具调用的优势归因和扩展性。",
+        "数据集与实验": "论文覆盖 ToolBench、API-Bank、ToolHop、ALFWorld、WebShop、GAIA、HLE 等工具使用、网页交互和通用推理任务，评估跨环境泛化能力。",
+        "主要贡献": "这篇论文的主要贡献是把 scalable toolsets 和长程 agent memory 作为核心问题系统化处理。它适合作为开放工具集合 agent 训练路线的背景文献。"
+      },
+      "status": "approved",
+      "added_at": "2026-05-12"
+    },
+    {
+      "id": "empirical-search-rl-agents-2025-arxiv",
+      "title": "An Empirical Study on Reinforcement Learning for Reasoning-Search Interleaved LLM Agents",
+      "paper_url": "https://arxiv.org/abs/2505.15117",
+      "authors": [
+        "Bowen Jin",
+        "Jinsung Yoon",
+        "Priyanka Kargupta",
+        "Sercan O. Arik",
+        "Jiawei Han"
+      ],
+      "venue": "arXiv",
+      "year": 2025,
+      "primary_area": "基础/前沿模型 (含LLM)",
+      "category": "Agent 与工具使用",
+      "keywords": [
+        "reasoning-search interleaving",
+        "search agent",
+        "reinforcement learning",
+        "reward formulation",
+        "format reward",
+        "intermediate retrieval reward",
+        "model initialization",
+        "search engine",
+        "training dynamics"
+      ],
+      "labels": [
+        "Search Agent",
+        "Agent RL",
+        "Empirical Study"
+      ],
+      "code_url": "https://github.com/PeterGriffinJin/Search-R1",
+      "note": "与 Search-R1 互补：Search-R1 更像框架/方法，这篇更像系统性 ablation 和 design-factor study。重点结论包括 format reward 有效、中间检索 reward 作用有限、模型初始化/规模和搜索引擎选择会显著影响 RL 结果。",
+      "tldr": "这篇实证研究系统分析 reasoning-search interleaved agents 的 RL 设计因素，强调 reward formulation、底座模型和搜索引擎都会影响训练动态与推理鲁棒性。",
+      "abstract": "This empirical study investigates reinforcement learning for LLM agents that interleave reasoning with search engine use. Instead of proposing only a new agent framework, it examines key design factors including reward formulation, model scale and initialization, and the search engine used during RL. The paper reports that format rewards are effective, intermediate retrieval rewards have limited impact, model choice strongly affects outcomes, and the search backend shapes both training dynamics and inference robustness. It is a useful methodological reference for interpreting Search-R1-style systems.",
+      "summary_cn": {
+        "研究动机": "用 RL 训练 search agent 已经有效，但哪些设计因素真正重要仍不清楚，尤其是 reward、底座模型和搜索引擎的作用。",
+        "解决问题": "论文要解决的是 reasoning-search interleaved agent 的训练设计问题：哪些 reward 有用、什么模型更适合、搜索后端如何影响训练和推理。",
+        "现象分析": "作者发现 format reward 对最终性能有帮助，而中间检索 reward 的边际收益有限；模型规模和是否 reasoning-specialized 会改变 RL 效果，搜索引擎选择也会影响训练动态和部署鲁棒性。",
+        "主要方法": "论文围绕 Search-R1 类 agent 做系统消融，比较不同 reward formulation、底座模型初始化和搜索引擎配置，而不是只报告单一方法提升。",
+        "数据集与实验": "实验覆盖多种搜索增强问答/推理设置，分析训练曲线、最终性能和不同搜索后端下的 inference behavior。",
+        "主要贡献": "这篇论文的主要贡献是提供 reasoning-search RL 的设计因素证据。它适合用来支撑为什么需要关注 reward 形态、检索环境和训练稳定性，而不只是堆叠搜索调用。"
+      },
+      "status": "approved",
+      "added_at": "2026-05-12"
+    },
+    {
+      "id": "tool-n1-2025-arxiv",
+      "title": "Nemotron-Research-Tool-N1: Exploring Tool-Using Language Models with Reinforced Reasoning",
+      "paper_url": "https://arxiv.org/abs/2505.00024",
+      "authors": [
+        "Shaokun Zhang",
+        "Yi Dong",
+        "Jieyu Zhang",
+        "Jan Kautz",
+        "Bryan Catanzaro",
+        "Andrew Tao",
+        "Qingyun Wu",
+        "Zhiding Yu",
+        "Guilin Liu"
+      ],
+      "venue": "arXiv",
+      "year": 2025,
+      "primary_area": "基础/前沿模型 (含LLM)",
+      "category": "Agent 与工具使用",
+      "keywords": [
+        "Nemotron-Research-Tool-N1",
+        "Tool-N1",
+        "tool-calling",
+        "reinforced reasoning",
+        "rule-based RL",
+        "binary reward",
+        "format validity",
+        "functional correctness",
+        "SFT vs RL",
+        "API-Bank"
+      ],
+      "labels": [
+        "Tool Use",
+        "Agent RL",
+        "Reward Design"
+      ],
+      "code_url": "",
+      "note": "工具调用 RL 的重要 reward/training paradigm 背景。它强调不依赖蒸馏中间轨迹，使用 format validity 和 functional correctness 的规则化二值奖励也能训练出强工具调用能力；对比 SFT、RL、SFT-then-RL，说明 SFT 并不总是必要前置。",
+      "tldr": "Tool-N1 用格式有效性和函数正确性的规则化二值奖励训练 tool-calling model，减少对强模型蒸馏轨迹和中间 reasoning supervision 的依赖。",
+      "abstract": "Nemotron-Research-Tool-N1 explores reinforced reasoning for tool-using language models. Instead of supervising intermediate distilled trajectories, it trains tool-calling models with a binary rule-based reward that checks format validity and functional correctness of tool invocations. The paper compares supervised fine-tuning, reinforcement learning, and SFT-then-RL strategies on tool-use benchmarks, showing that lightweight rule-based RL can induce strong tool-calling behavior without heavy trajectory annotation. It is relevant for reward design in tool-use agents.",
+      "summary_cn": {
+        "研究动机": "已有工具调用模型常依赖强模型蒸馏轨迹做 SFT，容易学习到模仿式 reasoning，泛化能力和数据成本都受限制。",
+        "解决问题": "论文要解决的是能否只用可验证的工具调用结果和格式规则，通过 RL 训练出可靠的工具使用能力。",
+        "现象分析": "工具调用任务天然存在可检查信号：调用格式是否有效、函数/参数是否正确。这些信号不要求监督完整中间推理轨迹。",
+        "主要方法": "Tool-N1 使用 rule-based RL，以 format validity 和 functional correctness 构成二值奖励，训练模型自主形成工具调用策略，并系统比较 SFT、RL 和 SFT-then-RL。",
+        "数据集与实验": "论文在 BFCL、API-Bank 等工具调用 benchmark 上评估 Tool-N1-7B/14B，并报告其相对强闭源模型和不同训练范式的表现。",
+        "主要贡献": "这篇论文的主要贡献是证明工具调用能力可以通过轻量规则奖励直接强化出来。它为工具 agent 的 reward design 和 SFT/RL 路线选择提供了背景证据。"
+      },
+      "status": "approved",
+      "added_at": "2026-05-12"
     }
   ]
 }
