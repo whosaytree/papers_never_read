@@ -2615,6 +2615,261 @@
       },
       "status": "approved",
       "added_at": "2026-05-12"
+    },
+    {
+      "id": "deepdive-2509-10446",
+      "title": "DeepDive: Advancing Deep Search Agents with Knowledge Graphs and Multi-Turn RL",
+      "paper_url": "https://arxiv.org/abs/2509.10446",
+      "authors": [
+        "Rui Lu",
+        "Zhenyu Hou",
+        "Zihan Wang",
+        "Hanchen Zhang",
+        "Xiao Liu",
+        "Yujiang Li",
+        "Shi Feng",
+        "Jie Tang",
+        "Yuxiao Dong"
+      ],
+      "venue": "arXiv",
+      "year": 2025,
+      "primary_area": "基础/前沿模型 (含LLM)",
+      "category": "Agent 与工具使用",
+      "keywords": [
+        "DeepDive",
+        "deep search agent",
+        "knowledge graph",
+        "multi-turn RL",
+        "browsing tools",
+        "redundancy penalty",
+        "strict binary reward",
+        "test-time scaling"
+      ],
+      "labels": [
+        "Deep Research",
+        "Web Agent",
+        "Agentic RL"
+      ],
+      "code_url": "https://github.com/THUDM/DeepDive",
+      "note": "deep search agent 的多轮 RL 代表工作。价值在于把困难问题合成、真实浏览工具、strict binary reward、冗余查询惩罚和 tool-call test-time scaling 放在同一训练范式中，说明搜索行为本身已成为 agent policy 的核心变量。",
+      "tldr": "DeepDive 用知识图谱自动合成困难 deep-search 问题，并用 end-to-end multi-turn RL 训练浏览型搜索 agent；其 redundancy penalty 针对重复 query，strict binary reward 则保留了明显的稀疏 credit assignment 问题。",
+      "abstract": "DeepDive targets deep search agents that must solve complex real-world information-seeking tasks with browsing tools. It first synthesizes hard-to-find questions from open knowledge graphs through graph-based construction and difficulty filtering, then trains open LLMs with end-to-end multi-turn reinforcement learning. The agent generates reasoning, performs browsing/search actions, and observes web content across long trajectories. A redundancy penalty discourages repeated similar queries, while strict binary reward enforces both answer accuracy and format correctness. Experiments show improved BrowseComp and deep-search performance, and reveal test-time scaling from larger tool-call budgets and parallel sampling.",
+      "summary_cn": {
+        "研究动机": "deep search agent 需要在开放信息空间中长程搜索、浏览和整合证据，而开放模型在这类任务上通常缺少足够困难的训练数据和稳定的多轮浏览推理能力。",
+        "解决问题": "论文要解决的是如何构造足够困难的 deep-search 训练任务，并通过端到端多轮 RL 训练模型在浏览工具环境中完成长程信息寻求。",
+        "现象分析": "真实 deep search 中，模型容易重复提出相似 query、浪费工具调用预算，或在长轨迹中无法持续利用网页观察。只用最终答案奖励虽然简单，但仍会留下明显的稀疏反馈和中间步骤归因问题。",
+        "主要方法": "DeepDive 使用开放知识图谱合成复杂问题，包括图随机游走、实体混淆和难度过滤。训练阶段采用 Multi-Turn GRPO，让 agent 每轮生成推理、调用浏览工具并观察网页内容，同时加入 redundancy penalty 抑制重复查询。",
+        "数据集与实验": "论文在 BrowseComp、BrowseComp-ZH、Xbench-DeepSearch、SEAL-0 等 deep search benchmark 上评估。结果显示 DeepDive-32B 超过多个开源 web/search agent baseline，并展示工具调用预算和并行采样带来的 test-time scaling。",
+        "主要贡献": "这篇论文的主要贡献是把 deep search agent 的数据构造、浏览工具轨迹和多轮 RL 训练结合起来。它说明搜索工具 RL 的关键不只是最终答案，还包括 query 多样性、工具调用预算、网页观察利用和长程轨迹控制。"
+      },
+      "status": "approved",
+      "added_at": "2026-05-12"
+    },
+    {
+      "id": "webresearcher-2509-13309",
+      "title": "WebResearcher: Unleashing unbounded reasoning capability in Long-Horizon Agents",
+      "paper_url": "https://arxiv.org/abs/2509.13309",
+      "authors": [
+        "Zile Qiao",
+        "Guoxin Chen",
+        "Xuanzhong Chen",
+        "Donglei Yu",
+        "Wenbiao Yin",
+        "Xinyu Wang",
+        "Zhen Zhang",
+        "Baixuan Li",
+        "Huifeng Yin",
+        "Kuan Li",
+        "Rui Min",
+        "Minpeng Liao",
+        "Yong Jiang",
+        "Pengjun Xie",
+        "Fei Huang",
+        "Jingren Zhou"
+      ],
+      "venue": "arXiv",
+      "year": 2025,
+      "primary_area": "基础/前沿模型 (含LLM)",
+      "category": "Agent 与工具使用",
+      "keywords": [
+        "WebResearcher",
+        "long-horizon agent",
+        "deep research",
+        "MDP",
+        "context suffocation",
+        "noise contamination",
+        "WebFrontier",
+        "parallel thinking"
+      ],
+      "labels": [
+        "Deep Research",
+        "Web Agent",
+        "Context Management"
+      ],
+      "code_url": "",
+      "note": "long-horizon deep research agent 的系统范式文献。它最有价值的点是把 mono-contextual agent 的失败归因到 context suffocation 和 noise contamination，并用 evolving report / focused workspace 重构多轮 agent state。",
+      "tldr": "WebResearcher 将 deep research 建模为 MDP，让 agent 周期性把发现压缩进 evolving report，避免把所有搜索内容线性堆进上下文；WebFrontier 则用工具增强复杂度提升合成训练任务。",
+      "abstract": "WebResearcher studies long-horizon deep-research agents that autonomously discover and synthesize knowledge from external sources. It argues that mono-contextual agents suffer from context suffocation and irreversible noise contamination when all observations accumulate in one expanding context. The proposed iterative paradigm reformulates deep research as an MDP in which the agent maintains a focused workspace and periodically consolidates discoveries into an evolving report. WebFrontier provides a scalable data synthesis engine based on tool-augmented complexity escalation. The framework also supports parallel multi-agent exploration and synthesis, leading to strong performance across challenging deep-research benchmarks.",
+      "summary_cn": {
+        "研究动机": "deep research agent 的任务链越来越长，模型需要持续搜索、浏览、调用工具、更新结论并综合证据。简单把所有观察塞进单一上下文会让长程研究过程变得难以控制。",
+        "解决问题": "论文要解决的是 mono-contextual agent 在长程研究中的上下文膨胀和噪声累积问题，并探索如何构造适合主动知识发现的训练数据。",
+        "现象分析": "context suffocation 会压缩模型可用于主动推理的工作空间；noise contamination 则会让早期无关或错误信息持续污染后续推理。长程工具调用不仅是搜索策略问题，也是状态维护和观察压缩问题。",
+        "主要方法": "WebResearcher 把 deep research 建模为 MDP，每轮状态聚焦原始问题、evolving report 以及最近 action/response。模型按 Think-Report-Action 方式推理、更新报告并决定工具动作。WebFrontier 通过 tool-augmented complexity escalation 合成研究任务。",
+        "数据集与实验": "论文在 6 个 challenging benchmark 上评估，并展示 WebResearcher 范式能提升工具使用和 long-horizon research 表现。系统还支持多个 research agents 并行探索，再由 synthesis agent 汇总结论。",
+        "主要贡献": "这篇论文的主要贡献是把 deep research agent 的关键问题从单纯搜索能力扩展到状态压缩、噪声过滤和上下文管理。它说明长程工具 RL 的稳定性会被上下文结构和 observation 管理显著影响。"
+      },
+      "status": "approved",
+      "added_at": "2026-05-12"
+    },
+    {
+      "id": "tree-grpo-2509-21240",
+      "title": "Tree Search for LLM Agent Reinforcement Learning",
+      "paper_url": "https://arxiv.org/abs/2509.21240",
+      "authors": [
+        "Yuxiang Ji",
+        "Ziyu Ma",
+        "Yong Wang",
+        "Guanhua Chen",
+        "Xiangxiang Chu",
+        "Liaoni Wu"
+      ],
+      "venue": "ICLR 2026 Poster / arXiv",
+      "year": 2026,
+      "primary_area": "基础/前沿模型 (含LLM)",
+      "category": "Agent 与工具使用",
+      "keywords": [
+        "Tree-GRPO",
+        "tree search",
+        "agent RL",
+        "step-wise process supervision",
+        "sparse supervision",
+        "tool-call budget",
+        "intra-tree advantage",
+        "inter-tree advantage"
+      ],
+      "labels": [
+        "Agentic RL",
+        "Credit Assignment",
+        "Policy Optimization"
+      ],
+      "code_url": "https://github.com/AMAP-ML/Tree-GRPO",
+      "note": "搜索/工具 agent RL 中 rollout 结构创新的关键文献。它把 chain rollout 改成 tree search，共享公共前缀以提升 token/tool-call budget 利用率，并从 outcome reward 中构造 step-wise process supervision。",
+      "tldr": "Tree-GRPO 将每个 agent interaction step 作为树节点，通过共享前缀在固定预算下采样更多分支，并用 intra-tree / inter-tree grouped advantages 缓解 outcome-only reward 的稀疏监督。",
+      "abstract": "Tree Search for LLM Agent Reinforcement Learning proposes Tree-GRPO for long-term, multi-turn agent tasks where outcome rewards provide sparse supervision. Instead of sampling independent chain rollouts from scratch, the method builds tree-structured rollouts whose nodes correspond to complete agent interaction steps. Shared prefixes increase the number of rollouts under fixed token or tool-call budgets. The tree structure further enables step-wise process supervision to be derived from outcome rewards, and Tree-GRPO estimates grouped relative advantages at both intra-tree and inter-tree levels. Experiments across 11 datasets and 3 QA task types show advantages over chain-based GRPO.",
+      "summary_cn": {
+        "研究动机": "长程、多轮 agent 任务中，最终 outcome reward 太稀疏，传统 chain-based rollout 又会重复生成相似前缀，导致 token 和工具调用预算利用率低。",
+        "解决问题": "论文要解决的是如何在固定采样预算下获得更有效的 agent 轨迹，并把最终结果奖励转化为更接近步骤级的监督信号。",
+        "现象分析": "在搜索问答或工具 agent 中，不同轨迹常共享早期推理和搜索动作。独立 chain rollout 会浪费预算；同时最终答案奖励无法直接告诉哪个中间节点值得保留或扩展。",
+        "主要方法": "Tree-GRPO 用 tree search 组织 rollout，每个树节点表示完整 agent interaction step，包括 reasoning、action 和 observation。方法估计 intra-tree 与 inter-tree 两级 grouped relative advantages，并从树结构中构造 step-wise process supervised signals。",
+        "数据集与实验": "实验覆盖 11 个数据集和 3 类 QA 任务，包括 NQ、TriviaQA、PopQA、HotpotQA、2WikiMultihopQA、MuSiQue 和 Bamboogle 等搜索/多跳问答设置。结果显示 tree-based RL 通常优于 chain-based GRPO。",
+        "主要贡献": "这篇论文的主要贡献是把 agent RL 的采样结构从线性链扩展到树，并把工具调用预算、共享前缀和 step-level advantage 结合起来。它是 outcome reward 下构造过程监督的重要近邻方法。"
+      },
+      "status": "approved",
+      "added_at": "2026-05-12"
+    },
+    {
+      "id": "websailor-2507-02592",
+      "title": "WebSailor: Navigating Super-human Reasoning for Web Agent",
+      "paper_url": "https://arxiv.org/abs/2507.02592",
+      "authors": [
+        "Kuan Li",
+        "Zhongwang Zhang",
+        "Huifeng Yin",
+        "Liwen Zhang",
+        "Litu Ou",
+        "Jialong Wu",
+        "Wenbiao Yin",
+        "Baixuan Li",
+        "Zhengwei Tao",
+        "Xinyu Wang",
+        "Weizhou Shen",
+        "Junkai Zhang",
+        "Dingchu Zhang",
+        "Xixi Wu",
+        "Yong Jiang",
+        "Ming Yan",
+        "Pengjun Xie",
+        "Fei Huang",
+        "Jingren Zhou"
+      ],
+      "venue": "arXiv",
+      "year": 2025,
+      "primary_area": "基础/前沿模型 (含LLM)",
+      "category": "Agent 与工具使用",
+      "keywords": [
+        "WebSailor",
+        "web agent",
+        "high-uncertainty tasks",
+        "information obfuscation",
+        "RFT cold start",
+        "DUPO",
+        "BrowseComp",
+        "GAIA"
+      ],
+      "labels": [
+        "Web Agent",
+        "Deep Research",
+        "Agentic RL"
+      ],
+      "code_url": "https://github.com/Alibaba-NLP/WebAgent",
+      "note": "复杂 web information-seeking agent 后训练代表。它把 BrowseComp 类任务的核心难点解释为 extreme uncertainty reduction，并用高不确定性任务生成、RFT cold start 和 DUPO 形成完整训练 pipeline。",
+      "tldr": "WebSailor 通过结构化采样和信息混淆构造高不确定性任务，先用 RFT cold start 建立工具轨迹格式，再用 DUPO 做 agentic RL，以缩小开源 web agent 与专有 deep research 系统的差距。",
+      "abstract": "WebSailor studies how to train open-source web agents for extremely complex information-seeking tasks. It argues that proprietary deep-research systems succeed by systematically reducing extreme uncertainty in vast information landscapes. The proposed pipeline generates high-uncertainty tasks via structured sampling and information obfuscation, applies RFT cold start with expert trajectories, and further trains agents with Duplicating Sampling Policy Optimization. Experiments on BrowseComp, BrowseComp-ZH, GAIA, and related web-agent benchmarks show that WebSailor substantially improves complex web navigation and information-seeking performance.",
+      "summary_cn": {
+        "研究动机": "复杂 web information seeking 已经超出简单搜索问答，模型需要在巨大信息空间中持续减少不确定性。开源 web agent 与专有 deep research 系统之间仍有明显能力差距。",
+        "解决问题": "论文要解决的是如何通过数据构造、冷启动和 agentic RL 训练，让开源模型获得复杂网页搜索、导航和长程推理能力。",
+        "现象分析": "BrowseComp 类任务要求模型处理模糊线索、间接实体关系和跨网页证据。单纯训练简单多跳 QA 或短链搜索不足以覆盖这种高不确定性信息搜索场景。",
+        "主要方法": "WebSailor 先通过 structured sampling、random-walk-style graph construction 和 information obfuscation 生成 SailorFog-QA 等高不确定性任务；随后用 RFT cold start 学习专家轨迹，再用 Duplicating Sampling Policy Optimization 进行 agentic RL。",
+        "数据集与实验": "实验覆盖 BrowseComp-en、BrowseComp-zh、GAIA 等复杂信息搜索 benchmark。结果显示 WebSailor 显著超过其他开源 agents，并接近或匹配专有 agentic systems 的表现。",
+        "主要贡献": "这篇论文的主要贡献是把 web agent 训练明确定位为高不确定性降低问题。它说明搜索工具 RL 的行为变量包括任务难度、搜索路径复杂度、工具调用次数、信息筛选和最终证据整合。"
+      },
+      "status": "approved",
+      "added_at": "2026-05-12"
+    },
+    {
+      "id": "spa-rl-2505-20732",
+      "title": "SPA-RL: Reinforcing LLM Agents via Stepwise Progress Attribution",
+      "paper_url": "https://arxiv.org/abs/2505.20732",
+      "authors": [
+        "Hanlin Wang",
+        "Chak Tou Leong",
+        "Jiashuo Wang",
+        "Jian Wang",
+        "Wenjie Li"
+      ],
+      "venue": "arXiv",
+      "year": 2025,
+      "primary_area": "基础/前沿模型 (含LLM)",
+      "category": "Agent 与工具使用",
+      "keywords": [
+        "SPA-RL",
+        "stepwise progress attribution",
+        "reward redistribution",
+        "delayed reward",
+        "progress estimator",
+        "grounding signal",
+        "WebShop",
+        "ALFWorld"
+      ],
+      "labels": [
+        "Agentic RL",
+        "Credit Assignment",
+        "Reward Shaping"
+      ],
+      "code_url": "https://github.com/WangHanLinHenry/SPA-RL-Agent",
+      "note": "多步 agent delayed reward / reward redistribution 的直接参考。虽然不是搜索 RAG 核心论文，但它把最终任务完成奖励分解为 stepwise progress contribution，对解释工具调用轨迹中每步贡献很有价值。",
+      "tldr": "SPA-RL 训练 progress estimator 将最终任务奖励重分配为每步增量贡献，并结合动作 grounding signal 形成中间奖励，从而缓解多步 agent 训练中的 delayed reward 和 credit assignment 问题。",
+      "abstract": "SPA-RL addresses reinforcement learning for LLM agents in multi-step, goal-oriented environments where rewards are usually delayed until task completion. It proposes Stepwise Progress Attribution, a reward redistribution framework that decomposes the final reward into per-step contributions reflecting incremental progress. A progress estimator is trained so accumulated contributions match task completion, and policy optimization combines these per-step contributions with grounding signals for executable actions. Experiments on WebShop, ALFWorld, and VirtualHome show improved success rate and grounding accuracy, suggesting that fine-grained intermediate rewards better guide agent training.",
+      "summary_cn": {
+        "研究动机": "多步 agent 与环境交互时，反馈通常只在任务结束后给出。delayed reward 让早期动作缺少有效训练信号，也难以反映环境约束。",
+        "解决问题": "论文要解决的是如何把最终任务完成奖励重新分配到中间步骤，使策略优化能看到每个动作对任务进展的增量贡献。",
+        "现象分析": "任务成功并不是最后一个动作单独造成的，而是多个中间动作逐步积累进展的结果。只用终端 reward 会掩盖早期动作是否正确、是否可执行以及是否推动任务目标。",
+        "主要方法": "SPA-RL 训练 progress estimator，让整条轨迹中每步 contribution 的累积匹配最终 task completion reward。策略优化时，将估计的 per-step contribution 与 grounding signal 结合，形成 fine-grained intermediate reward。",
+        "数据集与实验": "实验在 WebShop、ALFWorld 和 VirtualHome 上进行。结果显示 SPA-RL 相比强基线平均提升 success rate，并提升 grounding accuracy，说明步骤级中间奖励能更有效指导 agent 行为。",
+        "主要贡献": "这篇论文的主要贡献是提供通用 stepwise reward redistribution 框架。它适合作为多轮工具/搜索 agent 中 delayed reward 与 credit assignment 问题的背景参考。"
+      },
+      "status": "approved",
+      "added_at": "2026-05-12"
     }
   ]
 }
