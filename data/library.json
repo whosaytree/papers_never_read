@@ -4641,6 +4641,55 @@
       },
       "status": "approved",
       "added_at": "2026-05-12"
+    },
+    {
+      "id": "coral-2403-06447",
+      "title": "CoRAL: Collaborative Retrieval-Augmented Large Language Models Improve Long-tail Recommendation",
+      "paper_url": "https://arxiv.org/abs/2403.06447",
+      "authors": [
+        "Junda Wu",
+        "Cheng-Chun Chang",
+        "Tong Yu",
+        "Zhankui He",
+        "Jianing Wang",
+        "Yupeng Hou",
+        "Julian McAuley"
+      ],
+      "venue": "KDD 2024",
+      "year": 2024,
+      "primary_area": "其他 ML 主题",
+      "category": "检索与索引",
+      "keywords": [
+        "collaborative retrieval",
+        "retrieval-augmented LLM",
+        "long-tail recommendation",
+        "recommender systems",
+        "collaborative filtering",
+        "reinforcement learning",
+        "DDPG",
+        "user-item interactions"
+      ],
+      "labels": [
+        "LLM 推荐系统",
+        "Collaborative RAG",
+        "Prompt Engineering",
+        "长尾推荐",
+        "强化学习"
+      ],
+      "code_url": "",
+      "note": "",
+      "tldr": "这篇论文提出 CoRAL，把用户-物品交互中的协同证据检索进 LLM prompt，并用强化学习学习检索策略，让 LLM 在长尾推荐中不只依赖物品语义，而能对齐具体数据集里的协同偏好模式。",
+      "abstract": "The long-tail recommendation is a challenging task for traditional recommender systems, due to data sparsity and data imbalance issues. The recent development of large language models (LLMs) has shown their abilities in complex reasoning, which can help to deduce users' preferences based on very few previous interactions. However, since most LLM-based systems rely on items' semantic meaning as the sole evidence for reasoning, the collaborative information of user-item interactions is neglected, which can cause the LLM's reasoning to be misaligned with task-specific collaborative information of the dataset. To further align LLMs' reasoning to task-specific user-item interaction knowledge, we introduce collaborative retrieval-augmented LLMs, CoRAL, which directly incorporate collaborative evidence into the prompts. Based on the retrieved user-item interactions, the LLM can analyze shared and distinct preferences among users, and summarize the patterns indicating which types of users would be attracted by certain items. The retrieved collaborative evidence prompts the LLM to align its reasoning with the user-item interaction patterns in the dataset. However, since the capacity of the input prompt is limited, finding the minimally-sufficient collaborative information for recommendation tasks can be challenging. We propose to find the optimal interaction set through a sequential decision-making process and develop a retrieval policy learned through a reinforcement learning (RL) framework, CoRAL. Our experimental results show that CoRAL can significantly improve LLMs' reasoning abilities on specific recommendation tasks. Our analysis also reveals that CoRAL can more efficiently explore collaborative information through reinforcement learning.",
+      "summary_cn": {
+        "研究动机": "长尾推荐中用户-物品交互稀疏且分布不均，传统协同过滤容易受流行度偏差影响；LLM 虽然有语义推理能力，但直接用于推荐时常只看物品文本语义，忽略真实交互模式。",
+        "解决问题": "论文要解决 LLM 推荐推理与具体推荐数据集中的协同信息不对齐的问题，尤其面向长尾物品推荐中“语义相似但用户偏好不同”的情况。",
+        "现象分析": "单纯基于物品描述的 LLM 推荐可能把相似主题误判为相似偏好；加入用户-物品交互证据后，LLM 可以发现相似用户群体对某些物品的共同喜欢或不喜欢，从而修正推理。",
+        "主要方法": "CoRAL 通过 collaborative prompting 把检索到的协同证据写入 prompt；由于 prompt 容量有限，作者把检索用户-物品交互的过程建模为序列决策问题，并用 DDPG 类 actor-critic 强化学习框架学习轻量检索策略。LLM 在训练中被冻结，作为环境的一部分提供预测与奖励信号。",
+        "数据集与实验": "实验在四个 Amazon Product 长尾推荐任务上进行：Appliances、Gift Cards、Prime Pantry、Software；评价指标为 AUC 和 F1。论文报告 CoRAL 在多种协同过滤 backbone 上优于传统推荐、因果去偏和纯语言 LLM baseline。",
+        "主要贡献": "论文识别了 LLM 推荐中缺少协同信息导致的任务不对齐问题；提出把用户-物品交互作为可检索证据注入 LLM prompt；用强化学习学习最小充分协同证据检索策略；并通过 short-head 数据初始化提升长尾场景下的检索效率。"
+      },
+      "status": "approved",
+      "added_at": "2026-05-12"
     }
   ]
 }

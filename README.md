@@ -38,6 +38,8 @@ https://whosaytree.github.io/papers_never_read/
 - `status`: `approved` 或其他状态
 - `added_at`: 入库时间
 
+`note` 字段只记录人工补充的个人备注。新增论文时默认留空字符串；只有用户明确提供“我的备注”内容，或要求把某段观察写入备注时，才填入该字段。
+
 构建时只会渲染 `status = approved` 的论文；草稿不会进入页面。
 
 ## 新增论文工作流
