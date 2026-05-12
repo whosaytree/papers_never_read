@@ -2373,6 +2373,248 @@
       },
       "status": "approved",
       "added_at": "2026-05-11"
+    },
+    {
+      "id": "turn-level-reward-2505-11821",
+      "title": "Reinforcing Multi-Turn Reasoning in LLM Agents via Turn-Level Reward Design",
+      "paper_url": "https://arxiv.org/abs/2505.11821",
+      "authors": [
+        "Quan Wei",
+        "Siliang Zeng",
+        "Chenliang Li",
+        "William Brown",
+        "Oana Frunza",
+        "Wei Deng",
+        "Anderson Schneider",
+        "Yuriy Nevmyvaka",
+        "Yang Katie Zhao",
+        "Alfredo Garcia",
+        "Mingyi Hong"
+      ],
+      "venue": "arXiv (work in progress)",
+      "year": 2025,
+      "primary_area": "基础/前沿模型 (含LLM)",
+      "category": "Agent 与工具使用",
+      "keywords": [
+        "multi-turn RL",
+        "turn-level reward",
+        "credit assignment",
+        "MT-GRPO",
+        "MT-PPO",
+        "search agent",
+        "LLM-as-judge",
+        "verifiable reward"
+      ],
+      "labels": [
+        "Agentic RL",
+        "Credit Assignment",
+        "Search"
+      ],
+      "code_url": "",
+      "note": "multi-turn agent RL 的细粒度奖励设计代表。价值在于把 trajectory-level sparse outcome reward 的问题具体化到 turn-level reward / advantage，并比较 verifiable reward 与 LLM-as-judge 作为中间监督信号对稳定性、收敛和格式正确性的影响。",
+      "tldr": "这篇工作系统研究 turn-level reward design，把 GRPO/PPO 扩展到多轮搜索 agent 场景，通过每轮可验证或 judge 型奖励提供更细 credit assignment，从而缓解只用最终答案奖励带来的稀疏反馈。",
+      "abstract": "This work studies reinforcement learning for long-horizon, multi-turn LLM agents, where relying only on trajectory-level outcome rewards makes learning sparse and hard to assign across decisions. It proposes turn-level reward design and extends GRPO and PPO into multi-turn variants that incorporate intermediate reward signals. In search-augmented reasoning case studies, the paper designs both verifiable and LLM-as-judge turn rewards, then shows that fine-grained turn signals improve answer correctness, format correctness, convergence speed, and training stability compared with trajectory-level baselines.",
+      "summary_cn": {
+        "研究动机": "多轮 LLM agent 的决策链很长，最终答案对错只能告诉整条轨迹是否成功，很难判断哪一轮搜索、推理或格式动作真正贡献了结果。只依赖 sparse outcome reward 会让训练收敛慢且不稳定。",
+        "解决问题": "论文要解决的是多轮 agent RL 中的奖励稀疏和 credit assignment 问题：如何把反馈从最终轨迹级别下沉到每一轮决策，使 RL 更新更能对应实际的中间行为质量。",
+        "现象分析": "在搜索增强推理中，失败可能来自 query 生成、工具调用、证据使用、答案抽取或格式输出的任一步。trajectory-level advantage 会把成功或失败整体分配给所有动作，容易误奖或误罚中间步骤。",
+        "主要方法": "作者设计 turn-level rewards，并把 GRPO/PPO 扩展为 multi-turn variants。奖励包括可程序验证的中间信号，以及由 LLM-as-judge 评估的轮次级信号，用于在多轮搜索 agent 中提供更细粒度优势估计。",
+        "数据集与实验": "实验聚焦 multi-turn reasoning-augmented search agents，并在多种问答数据集上比较 trajectory-level reward baseline 与 turn-level reward 方法。结果显示 turn-level 设计带来更高答案正确率、更快收敛、更稳定 reward 曲线和 100% format correctness。",
+        "主要贡献": "这篇论文的主要贡献是系统化论证 turn-level reward 对多轮 agent RL 的必要性。它为后续 critical-step tuning、过程奖励和 agentic RL 的细粒度反馈设计提供了直接 baseline。"
+      },
+      "status": "approved",
+      "added_at": "2026-05-12"
+    },
+    {
+      "id": "gigpo-2505-10978",
+      "title": "Group-in-Group Policy Optimization for LLM Agent Training",
+      "paper_url": "https://arxiv.org/abs/2505.10978",
+      "authors": [
+        "Lang Feng",
+        "Zhenghai Xue",
+        "Tingcong Liu",
+        "Bo An"
+      ],
+      "venue": "NeurIPS 2025 / arXiv",
+      "year": 2025,
+      "primary_area": "基础/前沿模型 (含LLM)",
+      "category": "Agent 与工具使用",
+      "keywords": [
+        "GiGPO",
+        "group-based RL",
+        "LLM agent training",
+        "step-level advantage",
+        "anchor state grouping",
+        "sparse reward",
+        "ALFWorld",
+        "WebShop"
+      ],
+      "labels": [
+        "Agentic RL",
+        "Credit Assignment",
+        "Policy Optimization"
+      ],
+      "code_url": "",
+      "note": "从算法层面推进 GRPO-style agent RL 的重要工作。它保留 critic-free / low-memory / group-based optimization 的优点，同时用 episode-level macro advantage 和 anchor-state step-level micro advantage 处理长程 agent 的局部决策归因。",
+      "tldr": "GiGPO 把 group-based RL 扩展到多步 agent 训练，通过完整轨迹组估计宏观优势，并用重复状态构造 step-level action group，给同一状态下的不同动作分配局部相对优势。",
+      "abstract": "GiGPO targets the gap between group-based reinforcement learning for single-turn reasoning and long-horizon LLM agent training. It introduces a two-level advantage structure: macro relative advantages over groups of full trajectories, and micro relative advantages over actions grouped by repeated anchor states across trajectories. This design provides finer step-level credit assignment without adding a critic, extra rollouts, or large memory overhead. Experiments on ALFWorld, WebShop, and search-augmented QA show gains over GRPO while preserving the efficiency advantages of critic-free group optimization.",
+      "summary_cn": {
+        "研究动机": "GRPO 等 group-based RL 在单轮数学推理中有效，但 agent 与环境交互是多步、长程且常带 sparse/delayed reward。完整轨迹奖励不足以判断某个状态下具体动作是否好。",
+        "解决问题": "论文要解决的是如何在不引入 critic、不增加额外 rollout 和显著显存成本的情况下，为 LLM agent 训练提供更细粒度的 step-level credit assignment。",
+        "现象分析": "长程 agent 任务中，两个轨迹最终成败不同，并不意味着其中每个局部动作都同样好或坏；同一环境状态下的不同动作更适合被横向比较。传统 trajectory-level GRPO 难以捕捉这种局部差异。",
+        "主要方法": "GiGPO 使用两层相对优势估计：episode-level 根据完整轨迹组估计 macro advantage；step-level 通过 anchor state grouping 找到跨轨迹重复状态，把同一状态下产生的动作组成局部组，估计 micro advantage。",
+        "数据集与实验": "实验覆盖 ALFWorld、WebShop 以及 search-augmented QA，并使用 Qwen2.5-1.5B/3B/7B-Instruct 等模型。结果显示相对 GRPO，在交互式 agent benchmark 和搜索问答上都有明显提升。",
+        "主要贡献": "这篇论文的主要贡献是把 group-relative policy optimization 改造成适合长程 agent 的层级 advantage 估计。它直接回应 trajectory-level reward 无法细分局部动作质量的问题。"
+      },
+      "status": "approved",
+      "added_at": "2026-05-12"
+    },
+    {
+      "id": "agentflow-2510-05592",
+      "title": "In-the-Flow Agentic System Optimization for Effective Planning and Tool Use",
+      "paper_url": "https://arxiv.org/abs/2510.05592",
+      "authors": [
+        "Zhuofeng Li",
+        "Haoxiang Zhang",
+        "Seungju Han",
+        "Sheng Liu",
+        "Jianwen Xie",
+        "Yu Zhang",
+        "Yejin Choi",
+        "James Zou",
+        "Pan Lu"
+      ],
+      "venue": "ICLR 2026 Oral / arXiv",
+      "year": 2026,
+      "primary_area": "基础/前沿模型 (含LLM)",
+      "category": "Agent 与工具使用",
+      "keywords": [
+        "AgentFlow",
+        "Flow-GRPO",
+        "agentic system",
+        "planner optimization",
+        "tool use",
+        "multi-turn MDP",
+        "trajectory reward broadcasting",
+        "modular agent"
+      ],
+      "labels": [
+        "Agentic RL",
+        "Tool Use",
+        "Planning"
+      ],
+      "code_url": "https://github.com/lupantech/AgentFlow",
+      "note": "modular agentic system + on-policy planner optimization 的重要路线。它不直接做 per-step reward learning，而是把最终可验证结果广播给 planner 的每一轮动作，将长程系统优化转化为可训练的 in-the-flow planner 更新。",
+      "tldr": "AgentFlow 将 agent 拆成 planner、executor、verifier、generator，并用 Flow-GRPO 在真实多轮流程中优化 planner，把 trajectory-level outcome 广播到各轮 planner action，以提升长程规划和工具调用可靠性。",
+      "abstract": "AgentFlow addresses the limitations of monolithic tool-augmented policies by building a modular agentic system with planner, executor, verifier, and generator modules coordinated through memory. Its Flow-GRPO algorithm optimizes the planner on-policy inside the live multi-turn loop. Instead of learning a separate dense reward model, it broadcasts a verifiable final outcome reward to every planner turn and uses group-normalized advantages to stabilize updates. Across search, agentic, mathematical, and scientific reasoning benchmarks, AgentFlow improves planning, tool selection, and multi-turn reliability over strong baselines.",
+      "summary_cn": {
+        "研究动机": "许多工具增强模型把思考和工具调用混在一个单体 policy 里训练。随着工具种类和交互轮数增加，这种 monolithic 方式扩展性差，也难泛化到新任务。",
+        "解决问题": "论文要解决的是如何训练一个模块化 agentic system，而不是只微调单个模型生成完整 ReAct 轨迹。关键是 planner 必须在真实多轮系统流程中被优化，而不是离线学习静态轨迹。",
+        "现象分析": "在 planner、executor、verifier、generator 协作的系统中，最终成功来自跨模块动态交互。单体工具策略容易在长程场景中累积错误，而离线 SFT 可能和真实执行分布脱节。",
+        "主要方法": "AgentFlow 将系统拆成四个模块，并把 planner 作为可训练 policy。Flow-GRPO 在 on-policy 多轮交互中采样轨迹，把最终可验证 outcome reward 广播到每一轮 planner action，再用 group-normalized advantage 和 KL/clipping 稳定更新。",
+        "数据集与实验": "实验覆盖 10 个 benchmark，包括知识密集搜索、GAIA 类 agentic reasoning、数学推理和科学问答。7B-scale backbone 在 search、agentic、math、science 四类任务上相对强基线均有提升，并显示更好的 planning 和 tool-calling reliability。",
+        "主要贡献": "这篇论文的主要贡献是把 agentic RL 从单体轨迹生成推进到模块化系统内的 planner 优化。它强调 in-the-flow optimization，是理解后续系统级 agent RL、工具规划和 credit assignment 的重要参考。"
+      },
+      "status": "approved",
+      "added_at": "2026-05-12"
+    },
+    {
+      "id": "turn-level-credit-wcua-2025",
+      "title": "Reinforcing Multi-Turn Reasoning in LLM Agents via Turn-Level Credit Assignment",
+      "paper_url": "https://openreview.net/forum?id=h83vIG5Hre",
+      "authors": [
+        "Siliang Zeng",
+        "Quan Wei",
+        "William Brown",
+        "Oana Frunza",
+        "Yuriy Nevmyvaka",
+        "Yang Katie Zhao",
+        "Mingyi Hong"
+      ],
+      "venue": "ICML 2025 Workshop WCUA Poster / OpenReview",
+      "year": 2025,
+      "primary_area": "基础/前沿模型 (含LLM)",
+      "category": "Agent 与工具使用",
+      "keywords": [
+        "turn-level credit assignment",
+        "multi-turn tool use",
+        "GRPO",
+        "MDP",
+        "search-based tool use",
+        "exact match",
+        "tool execution"
+      ],
+      "labels": [
+        "Agentic RL",
+        "Credit Assignment",
+        "Workshop"
+      ],
+      "code_url": "",
+      "note": "早期明确把 multi-turn tool-use agent 视为 MDP 而非 bandit 的 workshop baseline。与后续 turn-level reward design 版本相比，这篇更像核心问题定义和短实验验证，适合引用为 turn-level advantage / credit assignment 的早期来源。",
+      "tldr": "这篇 WCUA 论文指出多轮工具使用应按 MDP 处理，并在 GRPO 中引入 turn-level advantage，让搜索式工具 agent 能把成功或失败更准确地分配到中间决策。",
+      "abstract": "This workshop paper studies reinforcement learning for multi-turn LLM agents in tool-use settings. It argues that modeling the problem as a bandit with trajectory-level advantage is insufficient for multi-step interactions, and instead frames tool-use agents as Markov Decision Processes. The proposed turn-level advantage estimation can be incorporated into GRPO-style training to improve credit assignment. On multi-turn reasoning and search-based tool-use tasks, the method improves tool execution success and exact-match answer accuracy over baselines that often fail to invoke tools properly.",
+      "summary_cn": {
+        "研究动机": "多轮工具使用不是一次性答案生成，而是状态、动作、观察不断变化的决策过程。把整条轨迹当作 bandit sample 会忽略每一轮动作对后续状态和最终答案的影响。",
+        "解决问题": "论文要解决的是 trajectory-level advantage 在多轮 agent 训练中粒度过粗的问题。目标是在 GRPO 等 RL 框架内加入 turn-level credit assignment，让每轮工具/推理决策获得更匹配的学习信号。",
+        "现象分析": "搜索式工具任务中，模型可能完全不调用工具、调用失败、格式错误或在证据不足时提前回答。最终 exact match 无法区分这些失败来源，因此训练容易学不到正确的工具使用习惯。",
+        "主要方法": "作者把多轮 agent 形式化为 MDP，并提出 fine-grained turn-level advantage estimation。该策略可插入 GRPO，用每轮状态和动作层面的信号改善多步交互中的 credit assignment。",
+        "数据集与实验": "实验在 multi-turn reasoning 和 search-based tool-use tasks 上进行，报告了工具执行成功率和 exact answer matching 等指标。方法相对 baseline 提高了工具调用成功与答案准确率。",
+        "主要贡献": "这篇论文的主要贡献是较早明确提出 multi-turn tool-use RL 需要 turn-level credit assignment。它为后续更系统的 turn-level reward design、critical-step tuning 和过程监督方法提供了问题定义。"
+      },
+      "status": "approved",
+      "added_at": "2026-05-12"
+    },
+    {
+      "id": "reasonrag-2505-14069",
+      "title": "Process vs. Outcome Reward: Which is Better for Agentic RAG Reinforcement Learning",
+      "paper_url": "https://arxiv.org/abs/2505.14069",
+      "authors": [
+        "Wenlin Zhang",
+        "Xiangyang Li",
+        "Kuicai Dong",
+        "Yichao Wang",
+        "Pengyue Jia",
+        "Xiaopeng Li",
+        "Yingyi Zhang",
+        "Derong Xu",
+        "Zhaocheng Du",
+        "Huifeng Guo",
+        "Ruiming Tang",
+        "Xiangyu Zhao"
+      ],
+      "venue": "NeurIPS 2025 Poster / arXiv",
+      "year": 2025,
+      "primary_area": "基础/前沿模型 (含LLM)",
+      "category": "Agent 与工具使用",
+      "keywords": [
+        "ReasonRAG",
+        "agentic RAG",
+        "process reward",
+        "outcome reward",
+        "RAG-ProGUIDE",
+        "query generation",
+        "evidence extraction",
+        "Search-R1"
+      ],
+      "labels": [
+        "Agentic RAG",
+        "Process Reward",
+        "Agentic RL"
+      ],
+      "code_url": "https://github.com/Applied-Machine-Learning-Lab/ReasonRAG",
+      "note": "agentic RAG 中 process reward vs outcome reward 的直接对照文献。它把过程监督拆到 query generation、evidence extraction、answer generation 三类能力，核心价值是说明 Search-R1 式最终答案奖励存在探索效率低、梯度冲突和稀疏信号问题。",
+      "tldr": "ReasonRAG 用 RAG-ProGUIDE 构造过程级奖励，分别监督搜索 query、证据抽取和答案生成，使 agentic RAG 不只依赖最终答案对错，并以更少训练样本超过 Search-R1 等 outcome-reward 方法。",
+      "abstract": "ReasonRAG compares process-level and outcome-level reward designs for agentic RAG reinforcement learning. It argues that final-answer rewards in Search-R1-style systems suffer from sparse feedback, inefficient exploration, and gradient conflict. The method automatically builds RAG-ProGUIDE, a dataset that provides fine-grained rewards for query generation, evidence extraction, and answer generation. Process-supervised policy optimization enables the model to invoke search, generate queries, extract evidence, and synthesize answers more efficiently, outperforming Search-R1 and traditional RAG baselines on five benchmarks with substantially fewer training instances.",
+      "summary_cn": {
+        "研究动机": "传统 RAG workflow 静态，难以处理多步复杂搜索；agentic RAG 可以动态检索和迭代上下文，但如果训练只看最终答案对错，奖励仍然稀疏且探索效率低。",
+        "解决问题": "论文要解决的是 agentic RAG 中 outcome reward 是否足够的问题。作者希望用过程级奖励分别优化 query generation、evidence extraction 和 answer generation，缓解只用最终答案奖励造成的训练低效。",
+        "现象分析": "Search-R1 类方法用最终答案作为 RL 奖励，容易遇到 sparse reward、gradient conflict 和低探索效率。一个答案错了，模型无法知道错误来自 query、证据选择还是生成阶段。",
+        "主要方法": "ReasonRAG 自动构造 RAG-ProGUIDE，为查询生成、证据抽取和答案生成提供 fine-grained process-level rewards。随后使用 process-supervised reinforcement learning，让模型学习自主搜索、生成 query、抽取证据并综合答案。",
+        "数据集与实验": "论文在五个 benchmark 上评估，并与 Search-R1 和传统 RAG 系统比较。结果显示 ReasonRAG 只用 5k training instances 就优于需要更大训练规模的 Search-R1，体现过程奖励的数据效率优势。",
+        "主要贡献": "这篇论文的主要贡献是把 agentic RAG 的奖励设计从最终答案推进到过程分解。它直接支撑这样一个论点：搜索增强 agent 的关键不只是 outcome RL，还需要针对关键中间能力的过程监督或细粒度 credit assignment。"
+      },
+      "status": "approved",
+      "added_at": "2026-05-12"
     }
   ]
 }
