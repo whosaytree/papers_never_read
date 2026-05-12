@@ -3692,6 +3692,288 @@
       },
       "status": "approved",
       "added_at": "2026-05-12"
+    },
+    {
+      "id": "triviaqa-2017-acl-p17-1147",
+      "title": "TriviaQA: A Large Scale Distantly Supervised Challenge Dataset for Reading Comprehension",
+      "paper_url": "https://aclanthology.org/P17-1147/",
+      "authors": [
+        "Mandar Joshi",
+        "Eunsol Choi",
+        "Daniel Weld",
+        "Luke Zettlemoyer"
+      ],
+      "venue": "ACL 2017",
+      "year": 2017,
+      "primary_area": "数据集与基准",
+      "category": "代码与领域基准",
+      "keywords": [
+        "TriviaQA",
+        "reading comprehension",
+        "open-domain QA",
+        "distant supervision",
+        "question-answer-evidence triples",
+        "evidence documents",
+        "lexical gap",
+        "benchmark"
+      ],
+      "labels": [
+        "Dataset",
+        "Open-domain QA",
+        "Retrieval"
+      ],
+      "code_url": "",
+      "note": "实验数据集背景，不是方法论文。适合在实验章节说明 TriviaQA 的 evidence-grounded / open-domain QA 属性，以及它对检索、证据定位和答案推理的要求。",
+      "tldr": "TriviaQA 是大规模远程监督阅读理解数据集，包含 trivia 问题、答案和多份 evidence documents，问题与证据之间存在较大词汇/句法差异，适合评估开放域问答和检索增强推理。",
+      "abstract": "TriviaQA introduces a large-scale reading-comprehension dataset built from trivia questions and independently gathered evidence documents. It contains question-answer-evidence triples and requires systems to locate and reason over evidence that often differs lexically and syntactically from the question. The dataset exposes a substantial gap between then-current reading-comprehension systems and human performance, making it a lasting benchmark for open-domain QA, evidence retrieval, and retrieval-augmented reasoning.",
+      "summary_cn": {
+        "研究动机": "开放域问答需要模型从外部证据中定位答案，而早期阅读理解数据集往往规模较小或问题与文本匹配较直接。",
+        "解决问题": "论文构建一个更大规模、更接近真实问答的 reading comprehension benchmark，使模型必须处理问题、答案和 evidence documents 之间的远程监督关系。",
+        "现象分析": "TriviaQA 的问题与证据之间存在较大 lexical/syntactic gap，并常需要跨句证据整合。仅依赖表面词匹配或短上下文阅读很难达到人类表现。",
+        "主要方法": "作者收集 trivia enthusiasts 编写的问题答案，并为每个问题独立收集 evidence documents，形成大规模 question-answer-evidence triples。",
+        "数据集与实验": "数据集包含约 95K 问题和超过 650K question-answer-evidence triples。论文用 feature-based classifier 和神经阅读理解模型评估，显示当时系统显著低于人类表现。",
+        "主要贡献": "这篇论文的主要贡献是提供了开放域 evidence-grounded QA 的基础 benchmark。对搜索增强 RL 来说，TriviaQA 常用于检验模型检索、筛选和利用外部证据的能力。"
+      },
+      "status": "approved",
+      "added_at": "2026-05-12"
+    },
+    {
+      "id": "dpr-2020-emnlp-main-550",
+      "title": "Dense Passage Retrieval for Open-Domain Question Answering",
+      "paper_url": "https://aclanthology.org/2020.emnlp-main.550/",
+      "authors": [
+        "Vladimir Karpukhin",
+        "Barlas Oguz",
+        "Sewon Min",
+        "Patrick Lewis",
+        "Ledell Wu",
+        "Sergey Edunov",
+        "Danqi Chen",
+        "Wen-tau Yih"
+      ],
+      "venue": "EMNLP 2020",
+      "year": 2020,
+      "primary_area": "其他 ML 主题",
+      "category": "检索与索引",
+      "keywords": [
+        "DPR",
+        "dense retrieval",
+        "open-domain QA",
+        "dual encoder",
+        "passage retrieval",
+        "BM25",
+        "top-k recall",
+        "retriever"
+      ],
+      "labels": [
+        "Retrieval",
+        "Open-domain QA",
+        "Dense Retriever"
+      ],
+      "code_url": "https://github.com/facebookresearch/DPR",
+      "note": "dense retrieval / open-domain QA 基础文献。它本身不是 RL，但 Search-R1 类方法的 observation quality 高度依赖 retriever choice、top-k recall、hard negatives 和 passage ranking。",
+      "tldr": "DPR 用 question encoder 和 passage encoder 构成 dual-encoder dense retriever，在多个开放域 QA 数据集上显著超过 BM25，并成为 RAG/search agent 的重要检索基础。",
+      "abstract": "Dense Passage Retrieval introduces a simple dual-encoder retrieval model for open-domain question answering. A question encoder and passage encoder map text into dense vectors, and retrieval is performed by nearest-neighbor similarity. With supervised question-passage pairs and in-batch negatives, DPR substantially improves top-k passage retrieval accuracy over sparse BM25 baselines and enables stronger end-to-end QA systems. It is a foundational retriever for later RAG and search-augmented reasoning work.",
+      "summary_cn": {
+        "研究动机": "开放域问答依赖先检索候选 passage，再由 reader 或 generator 生成答案。传统 BM25 等 sparse retrieval 对语义匹配和词汇差异处理有限。",
+        "解决问题": "论文要解决的是如何用学习到的 dense representation 替代纯词项匹配，提高 open-domain QA 的 passage retrieval accuracy。",
+        "现象分析": "如果 top-k 检索没有覆盖正确证据，后续生成器没有机会回答正确；但检索器过强或 top-k 过大也可能带来 hard negatives，需要后续模型鲁棒利用。",
+        "主要方法": "DPR 使用 dual-encoder 框架分别编码 question 和 passage，通过向量相似度检索候选 passage，并使用 question-passage supervision 与 in-batch negatives 训练。",
+        "数据集与实验": "论文在多个 open-domain QA 数据集上比较 DPR 和 BM25，报告 top-k passage retrieval accuracy 和 end-to-end QA performance 的明显提升。",
+        "主要贡献": "这篇论文的主要贡献是奠定 dense passage retrieval 在开放域 QA 中的基础地位。它为 RAG、Search-R1 和搜索工具 RL 中的 retriever / observation quality 分析提供背景。"
+      },
+      "status": "approved",
+      "added_at": "2026-05-12"
+    },
+    {
+      "id": "rag-2020-knowledge-intensive-nlp",
+      "title": "Retrieval-Augmented Generation for Knowledge-Intensive NLP Tasks",
+      "paper_url": "https://arxiv.org/abs/2005.11401",
+      "authors": [
+        "Patrick Lewis",
+        "Ethan Perez",
+        "Aleksandra Piktus",
+        "Fabio Petroni",
+        "Vladimir Karpukhin",
+        "Naman Goyal",
+        "Heinrich Kuttler",
+        "Mike Lewis",
+        "Wen-tau Yih",
+        "Tim Rocktaschel",
+        "Sebastian Riedel",
+        "Douwe Kiela"
+      ],
+      "venue": "NeurIPS 2020",
+      "year": 2020,
+      "primary_area": "其他 ML 主题",
+      "category": "检索与索引",
+      "keywords": [
+        "RAG",
+        "retrieval-augmented generation",
+        "knowledge-intensive NLP",
+        "non-parametric memory",
+        "DPR",
+        "sequence generation",
+        "open-domain QA",
+        "fact verification"
+      ],
+      "labels": [
+        "RAG",
+        "Retrieval",
+        "Generation"
+      ],
+      "code_url": "",
+      "note": "RAG 原始代表文献。适合用作从静态检索增强生成到 agentic/search RL 的起点：RAG 将 retriever 和 generator 结合，但检索时机和查询策略仍主要由固定 pipeline 控制。",
+      "tldr": "RAG 将预训练 seq2seq 生成器与 dense vector index 形式的非参数记忆结合，让模型在生成时条件化检索文档，显著提升知识密集型问答和事实任务表现。",
+      "abstract": "Retrieval-Augmented Generation combines parametric sequence-to-sequence models with non-parametric memory accessed through dense retrieval. Given an input, the retriever selects documents from a large corpus and the generator conditions on those documents to produce outputs. RAG can marginalize over retrieved passages at sequence or token level, improving knowledge-intensive tasks such as open-domain QA and fact verification while making generated answers more grounded in external evidence.",
+      "summary_cn": {
+        "研究动机": "纯参数语言模型难以及时、准确地存储所有外部知识。知识密集型任务需要模型能够访问可更新的外部文档库。",
+        "解决问题": "论文要解决的是如何把预训练生成模型和可检索的非参数记忆结合，使生成过程可以依赖外部证据。",
+        "现象分析": "检索能补充参数知识不足，但静态 RAG pipeline 通常在回答前一次性检索，难以适应推理过程中逐步出现的知识需求。",
+        "主要方法": "RAG 结合 seq2seq generator 与 dense retriever / vector index，并设计 RAG-Sequence 与 RAG-Token 两种 marginalization 方式，让生成器条件化多个检索 passage。",
+        "数据集与实验": "论文在 open-domain QA、fact verification 和 knowledge-intensive generation 任务上评估，显示 RAG 相比纯参数生成和传统检索增强基线有更好表现。",
+        "主要贡献": "这篇论文的主要贡献是确立 retrieval-augmented generation 范式。后续 Self-RAG、Active RAG、Search-R1 等工作可以看作从静态 RAG 逐步走向按需检索、主动搜索和 RL 工具调用。"
+      },
+      "status": "approved",
+      "added_at": "2026-05-12"
+    },
+    {
+      "id": "hotpotqa-2018-emnlp-d18-1259",
+      "title": "HotpotQA: A Dataset for Diverse, Explainable Multi-hop Question Answering",
+      "paper_url": "https://aclanthology.org/D18-1259/",
+      "authors": [
+        "Zhilin Yang",
+        "Peng Qi",
+        "Saizheng Zhang",
+        "Yoshua Bengio",
+        "William Cohen",
+        "Ruslan Salakhutdinov",
+        "Christopher D. Manning"
+      ],
+      "venue": "EMNLP 2018",
+      "year": 2018,
+      "primary_area": "数据集与基准",
+      "category": "代码与领域基准",
+      "keywords": [
+        "HotpotQA",
+        "multi-hop QA",
+        "explainable QA",
+        "supporting facts",
+        "Wikipedia",
+        "retrieval",
+        "reasoning",
+        "benchmark"
+      ],
+      "labels": [
+        "Dataset",
+        "Multi-hop QA",
+        "Retrieval"
+      ],
+      "code_url": "",
+      "note": "多跳问答 benchmark 背景。它常用于 RAG/search agent 评估，因为模型必须跨多个 evidence passages 聚合 supporting facts，而不仅是单文档抽取答案。",
+      "tldr": "HotpotQA 是多样、可解释的 multi-hop QA 数据集，提供 supporting facts 标注，要求模型跨 Wikipedia 文档检索、关联和推理。",
+      "abstract": "HotpotQA is a dataset for diverse and explainable multi-hop question answering. Questions are written to require reasoning over multiple Wikipedia paragraphs, and the dataset includes sentence-level supporting facts for explainability. Its design encourages systems to retrieve relevant evidence, combine information across documents, and produce answers with supporting rationales, making it a common benchmark for retrieval-augmented reasoning and search-agent evaluation.",
+      "summary_cn": {
+        "研究动机": "许多 QA 数据集可以通过单段文本或表面匹配回答，难以检验跨文档推理和证据解释能力。",
+        "解决问题": "论文构建一个需要多跳证据组合的 QA benchmark，并提供 supporting facts 标注，使模型既要答对，也要找到支撑证据。",
+        "现象分析": "多跳问题要求模型先定位多个相关实体或段落，再跨证据链合成答案。检索失败、证据排序错误或噪声 passage 都会影响最终推理。",
+        "主要方法": "HotpotQA 基于 Wikipedia 构造多样化问题，并标注句子级 supporting facts，用于训练和评估可解释 multi-hop QA 系统。",
+        "数据集与实验": "论文提供 large-scale multi-hop QA benchmark，并用当时的 reading comprehension / retrieval systems 评估，显示多跳证据推理仍有明显挑战。",
+        "主要贡献": "这篇论文的主要贡献是提供多跳、可解释 QA 基准。对搜索工具 RL 来说，它适合检验 query generation、evidence retrieval、multi-step reasoning 和 observation utilization。"
+      },
+      "status": "approved",
+      "added_at": "2026-05-12"
+    },
+    {
+      "id": "musique-2022-tacl",
+      "title": "MuSiQue: Multihop Questions via Single-hop Question Composition",
+      "paper_url": "https://arxiv.org/abs/2108.00573",
+      "authors": [
+        "Harsh Trivedi",
+        "Niranjan Balasubramanian",
+        "Tushar Khot",
+        "Ashish Sabharwal"
+      ],
+      "venue": "TACL 2022",
+      "year": 2022,
+      "primary_area": "数据集与基准",
+      "category": "代码与领域基准",
+      "keywords": [
+        "MuSiQue",
+        "multi-hop QA",
+        "single-hop composition",
+        "compositional questions",
+        "retrieval",
+        "reasoning",
+        "benchmark",
+        "answerable reasoning chain"
+      ],
+      "labels": [
+        "Dataset",
+        "Multi-hop QA",
+        "Retrieval"
+      ],
+      "code_url": "",
+      "note": "多跳问答 benchmark 背景，常见于 Search-R1/ReSearch/Tree-GRPO 等搜索增强推理评估。它通过单跳问题组合构造多跳问题，减少 shortcut，强调真正的 compositional reasoning。",
+      "tldr": "MuSiQue 用 single-hop question composition 构造多跳问题，要求模型沿可回答推理链逐步检索和组合证据，是搜索增强推理和 multi-hop RAG 常用 benchmark。",
+      "abstract": "MuSiQue constructs multi-hop questions by composing single-hop questions into answerable reasoning chains. This design reduces shortcut artifacts and better tests whether models can retrieve and combine evidence across multiple hops. The dataset is challenging for both retrieval and reasoning systems, making it a common benchmark for multi-hop QA, iterative retrieval, and search-augmented reasoning.",
+      "summary_cn": {
+        "研究动机": "已有 multi-hop QA 数据集可能存在 shortcut，使模型不真正执行多跳推理也能答对。需要更能检验 compositional reasoning 的 benchmark。",
+        "解决问题": "论文要构造由单跳问题组合而来的多跳问题，让每一步推理都有明确依赖关系，减少表面捷径。",
+        "现象分析": "搜索增强模型在 MuSiQue 上必须逐步检索和整合证据；某一跳检索失败会影响后续问题分解、证据利用和最终答案。",
+        "主要方法": "MuSiQue 通过 single-hop question composition 构造 answerable reasoning chains，并设置多跳问题与证据支持，评估模型是否真正完成组合式推理。",
+        "数据集与实验": "论文比较多种 reading comprehension 和 retrieval-based QA 系统，显示 MuSiQue 对多跳检索和推理都更具挑战性。",
+        "主要贡献": "这篇论文的主要贡献是提供更少 shortcut 的多跳 QA 基准。它适合作为 Search-R1、ReSearch、Tree-GRPO 等方法中 multi-hop search reasoning 的实验背景。"
+      },
+      "status": "approved",
+      "added_at": "2026-05-12"
+    },
+    {
+      "id": "react-2023-iclr",
+      "title": "ReAct: Synergizing Reasoning and Acting in Language Models",
+      "paper_url": "https://openreview.net/forum?id=WE_vluYUL-X",
+      "authors": [
+        "Shunyu Yao",
+        "Jeffrey Zhao",
+        "Dian Yu",
+        "Nan Du",
+        "Izhak Shafran",
+        "Karthik Narasimhan",
+        "Yuan Cao"
+      ],
+      "venue": "ICLR 2023",
+      "year": 2023,
+      "primary_area": "基础/前沿模型 (含LLM)",
+      "category": "Agent 与工具使用",
+      "keywords": [
+        "ReAct",
+        "reasoning and acting",
+        "language agents",
+        "tool use",
+        "interleaved reasoning",
+        "actions",
+        "observations",
+        "HotpotQA"
+      ],
+      "labels": [
+        "Agent",
+        "Tool Use",
+        "Reasoning"
+      ],
+      "code_url": "",
+      "note": "LLM agent / tool-use 的基础范式文献。ReAct 把 reasoning traces 和 actions/observations 交织在同一轨迹中，是后续 Search-R1、WebDancer、WebSailor 等多轮工具调用 RL 的提示与轨迹结构前身。",
+      "tldr": "ReAct 让语言模型交替生成 reasoning traces 和 actions，并从外部 environment observations 中更新推理状态，从而把链式推理和工具/环境交互统一到 agent trajectory。",
+      "abstract": "ReAct proposes to synergize reasoning and acting in language models by interleaving verbal reasoning traces with actions. Reasoning helps the model plan, track state, and update hypotheses, while actions allow it to interact with external environments such as Wikipedia or embodied tasks and receive observations. The paradigm improves interpretability and performance across question answering and decision-making benchmarks, and became a foundational template for later tool-use and web-search agents.",
+      "summary_cn": {
+        "研究动机": "纯 CoT 能生成推理，但无法主动获取外部信息或改变环境；纯 action policy 又缺少可解释的中间推理和计划。",
+        "解决问题": "论文要解决的是如何让语言模型同时具备推理和行动能力，在任务过程中根据 observation 迭代更新状态。",
+        "现象分析": "在 HotpotQA 等知识任务中，模型需要边思考边查询外部信息；在交互环境中，动作结果会改变后续决策。reasoning 和 acting 分离会限制 agent 能力。",
+        "主要方法": "ReAct 让模型交替生成 reasoning traces、actions 和 observations。reasoning 负责计划与状态跟踪，actions 负责调用外部工具或环境，observations 再反馈给后续推理。",
+        "数据集与实验": "论文在 HotpotQA、Fever、ALFWorld、WebShop 等问答和交互任务上评估，显示 ReAct 相比单纯 reasoning 或 acting 有更好表现和可解释性。",
+        "主要贡献": "这篇论文的主要贡献是提出 interleaved reasoning-action trajectory。它是后续工具调用、搜索 agent 和多轮 agent RL 轨迹格式的重要基础。"
+      },
+      "status": "approved",
+      "added_at": "2026-05-12"
     }
   ]
 }
