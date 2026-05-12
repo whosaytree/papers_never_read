@@ -3150,6 +3150,303 @@
       },
       "status": "approved",
       "added_at": "2026-05-12"
+    },
+    {
+      "id": "anchored-sft-2509-23753",
+      "title": "Anchored Supervised Fine-Tuning",
+      "paper_url": "https://openreview.net/forum?id=PORko7QT64",
+      "authors": [
+        "He Zhu",
+        "Junyou Su",
+        "Peng Lai",
+        "Ren Ma",
+        "Wenjia Zhang",
+        "Linyi Yang",
+        "Guanhua Chen"
+      ],
+      "venue": "ICLR 2026 Poster / OpenReview",
+      "year": 2026,
+      "primary_area": "基础/前沿模型 (含LLM)",
+      "category": "指令微调与对齐",
+      "keywords": [
+        "Anchored SFT",
+        "ASFT",
+        "supervised fine-tuning",
+        "reference anchoring",
+        "distribution drift",
+        "KL constraint",
+        "importance weights",
+        "effective sample size"
+      ],
+      "labels": [
+        "Post-training",
+        "Training Stability",
+        "SFT"
+      ],
+      "code_url": "https://github.com/zhuchichi56/ASFT",
+      "note": "通用 post-training 稳定性背景。它不是工具调用论文，但可支撑 reference-relative constraint / KL anchoring 的必要性：策略持续偏离 reference distribution 会放大重要性权重方差并降低 effective sample size。",
+      "tldr": "ASFT 在 supervised fine-tuning 中加入 reference anchoring，控制策略相对初始/参考模型的漂移，从而改善训练稳定性、分布外鲁棒性和重要性采样有效性。",
+      "abstract": "Anchored Supervised Fine-Tuning studies distribution drift in supervised post-training. Standard SFT can move the policy progressively away from a reference distribution, increasing variance in downstream off-policy evaluation or optimization and reducing effective sample size. ASFT adds an anchoring constraint relative to a reference model, limiting harmful policy drift while preserving task learning. The method improves robustness across in-domain and out-of-domain evaluations and provides a distributional-stability perspective complementary to KL regularization in RLHF and RLVR.",
+      "summary_cn": {
+        "研究动机": "后训练不仅要提升任务性能，还要避免策略分布相对参考模型持续漂移。过大的分布偏移会让后续评估或优化中的重要性权重方差变大。",
+        "解决问题": "论文要解决的是普通 SFT 缺少 anchoring 时可能造成的分布漂移、有效样本量下降和泛化退化问题。",
+        "现象分析": "模型在训练集上拟合越强，不一定代表策略分布越健康。若策略远离 reference distribution，重要性权重会变得尖锐，in-domain 曲线可能正常但 out-of-domain 鲁棒性下降。",
+        "主要方法": "ASFT 在 SFT 目标中加入相对 reference model 的 anchoring constraint，类似从监督微调角度引入 KL/reference-relative 控制，使策略更新保持在更稳定的分布邻域内。",
+        "数据集与实验": "论文比较不同 anchoring strength 下的 in-domain 与 out-of-domain 表现，并分析 KL divergence、importance weights variance 和 effective sample size 等指标。",
+        "主要贡献": "这篇论文的主要贡献是把 SFT 稳定性解释为 reference-relative distribution control 问题。它可作为工具调用 RL 中 KL anchoring、reference drift 和策略更新幅度控制的通用背景。"
+      },
+      "status": "approved",
+      "added_at": "2026-05-12"
+    },
+    {
+      "id": "asymmetric-ppo-2510-01656",
+      "title": "Asymmetric Proximal Policy Optimization: mini-critics boost LLM reasoning",
+      "paper_url": "https://arxiv.org/abs/2510.01656",
+      "authors": [
+        "Jiashun Liu",
+        "Johan Obando-Ceron",
+        "Han Lu",
+        "Yancheng He",
+        "Weixun Wang",
+        "Wenbo Su",
+        "Bo Zheng",
+        "Pablo Samuel Castro",
+        "Aaron Courville",
+        "Ling Pan"
+      ],
+      "venue": "ICLR 2026 Poster / arXiv",
+      "year": 2026,
+      "primary_area": "基础/前沿模型 (含LLM)",
+      "category": "推理与思维链",
+      "keywords": [
+        "Asymmetric PPO",
+        "mini-critics",
+        "LLM reasoning",
+        "value estimation",
+        "advantage bias",
+        "entropy collapse",
+        "policy collapse",
+        "off-policy reuse"
+      ],
+      "labels": [
+        "Policy Optimization",
+        "Training Stability",
+        "Reasoning"
+      ],
+      "code_url": "https://github.com/alibaba/ROLL",
+      "note": "critic/value signal 稳定化背景。它强调 RL4LLM 里弱化或移除 critic 会污染 advantage estimation，而 naive entropy regularization 也可能引入 spurious exploration；可用于解释工具 RL 继承的通用优化风险。",
+      "tldr": "Asymmetric PPO 使用小型 mini-critics 给 LLM reasoning RL 提供更稳的 value/advantage 信号，在保持策略模型规模的同时缓解 advantage bias、entropy collapse 和 policy collapse。",
+      "abstract": "Asymmetric Proximal Policy Optimization revisits the role of critics in reinforcement learning for LLM reasoning. The paper argues that critic-free or weak-critic training can produce biased advantages, especially when low-quality or uncertain states contaminate gradient estimates. It proposes asymmetric training with lightweight mini-critics to stabilize value estimation without requiring a full-size critic. Experiments show improved sample efficiency, stronger reasoning performance, more stable entropy dynamics, and better off-policy reuse compared with critic-free or naively regularized baselines.",
+      "summary_cn": {
+        "研究动机": "许多 LLM reasoning RL 方法为了节省显存和复杂度弱化 critic，甚至采用 critic-free 训练。但 advantage 估计不可靠会直接污染 policy gradient。",
+        "解决问题": "论文要解决的是如何在不过度增加训练成本的情况下，为 LLM 推理 RL 提供更稳定的 value/advantage signal。",
+        "现象分析": "低质量 state 或不确定 state 会让 advantage bias 变大；naive entropy regularization 可能带来虚假探索，并触发 entropy collapse 或 policy collapse。训练不稳定不只是 reward 问题，也来自估计层。",
+        "主要方法": "Asymmetric PPO 引入轻量 mini-critics，让 critic 侧承担 value estimation，policy 侧保持主模型生成能力。通过不对称 actor-critic 设计，方法在稳定性和成本之间折中。",
+        "数据集与实验": "实验在 LLM reasoning 任务上比较 critic size、critic number、masking ratio、off-policy reuse 等设置，并报告 score-vs-step、entropy curve 和持续提升能力。",
+        "主要贡献": "这篇论文的主要贡献是重新强调 critic/value estimation 对 RL4LLM 稳定训练的作用。对工具调用 RL 来说，它说明外部工具之外，advantage bias 本身也可能造成训练崩塌。"
+      },
+      "status": "approved",
+      "added_at": "2026-05-12"
+    },
+    {
+      "id": "bapo-jIeJJqG7dz",
+      "title": "BAPO: Stabilizing Off-Policy Reinforcement Learning for LLMs via Balanced Policy Optimization with Adaptive Clipping",
+      "paper_url": "https://openreview.net/forum?id=jIeJJqG7dz",
+      "authors": [
+        "Zhiheng Xi",
+        "Xin Guo",
+        "Yang Nan",
+        "Enyu Zhou",
+        "Junrui Shen",
+        "Wenxiang Chen",
+        "Jiaqi Liu",
+        "Jixuan Huang",
+        "Xun Deng",
+        "Zhihao Zhang",
+        "Honglin Guo",
+        "Zhikai Lei",
+        "Miao Zheng",
+        "Guoteng Wang",
+        "Peng Sun",
+        "Rui Zheng",
+        "Hang Yan",
+        "Tao Gui",
+        "Qi Zhang",
+        "Xuanjing Huang"
+      ],
+      "venue": "ICLR 2026 Poster / OpenReview",
+      "year": 2026,
+      "primary_area": "基础/前沿模型 (含LLM)",
+      "category": "推理与思维链",
+      "keywords": [
+        "BAPO",
+        "off-policy RL",
+        "adaptive clipping",
+        "stale data",
+        "optimization imbalance",
+        "entropy collapse",
+        "gradient explosion",
+        "LLM reasoning"
+      ],
+      "labels": [
+        "Policy Optimization",
+        "Training Stability",
+        "Off-policy RL"
+      ],
+      "code_url": "https://github.com/WooooDyy/BAPO",
+      "note": "off-policy/stale rollout 与 clipping 稳定性的背景论文。它说明固定对称 clipping 在 stale data 和 partial rollout 场景下会系统性压制 entropy-increasing updates，进而触发 entropy collapse 或 gradient explosion。",
+      "tldr": "BAPO 用 balanced policy optimization 和 adaptive clipping 稳定 LLM off-policy RL，缓解 stale data 复用下的 optimization imbalance、entropy collapse 与 gradient explosion。",
+      "abstract": "BAPO studies sample-efficient off-policy reinforcement learning for LLMs, where stale data and partial rollout reuse can cause severe distribution mismatch. The paper identifies optimization imbalance in which negative-advantage samples dominate the policy gradient, and derives an Entropy-Clip Rule showing that fixed PPO-style clipping can systematically block entropy-increasing updates. Balanced Policy Optimization with adaptive clipping dynamically adjusts clipping bounds to rebalance positive and negative contributions, preserve entropy, and stabilize training while retaining the benefits of off-policy reuse. Experiments show improved reward curves, entropy stability, and robustness against stale rollout settings.",
+      "summary_cn": {
+        "研究动机": "LLM RL rollout 成本高，off-policy 数据复用能提高样本效率，但 stale data 会带来策略分布错配和更新不稳定。",
+        "解决问题": "论文要解决的是固定对称 clipping 在 off-policy RL 中造成的 optimization imbalance，以及 stale rollout 下的 entropy collapse、gradient explosion 和 training collapse。",
+        "现象分析": "PPO-style clipping 并不总是中性约束。在 stale data 场景中，negative-advantage samples 可能主导 policy gradient；固定 clipping 还可能系统性阻挡 entropy-increasing updates，导致策略过早过度利用或梯度异常。",
+        "主要方法": "BAPO 提出 balanced policy optimization with adaptive clipping，根据 off-policy mismatch 和更新方向动态调整 clipping 规则，使有益更新和保守约束更平衡。",
+        "数据集与实验": "实验比较不同 stale data 程度、partial rollout 复用和 clipping 规则下的 reward curve、policy entropy、gradient norm 与 clip fraction，显示 BAPO 更稳定且样本效率更高。",
+        "主要贡献": "这篇论文的主要贡献是把 off-policy 复用和 clipping 本身作为 LLM RL 稳定性来源来分析。对工具调用 RL 来说，长轨迹和高 rollout 成本会放大这类 stale-data 风险。"
+      },
+      "status": "approved",
+      "added_at": "2026-05-12"
+    },
+    {
+      "id": "co-rewarding-fDk95XPsCU",
+      "title": "Co-rewarding: Stable Self-supervised RL for Eliciting Reasoning in Large Language Models",
+      "paper_url": "https://openreview.net/forum?id=fDk95XPsCU",
+      "authors": [
+        "Zizhuo Zhang",
+        "Jianing Zhu",
+        "Xinmu Ge",
+        "Zihua Zhao",
+        "Zhanke Zhou",
+        "Xuan Li",
+        "Xiao Feng",
+        "Jiangchao Yao",
+        "Bo Han"
+      ],
+      "venue": "ICLR 2026 Poster / OpenReview",
+      "year": 2026,
+      "primary_area": "基础/前沿模型 (含LLM)",
+      "category": "推理与思维链",
+      "keywords": [
+        "Co-rewarding",
+        "self-supervised RL",
+        "self-rewarding",
+        "reasoning",
+        "reward hacking",
+        "self-consistent illusion",
+        "training collapse",
+        "LLM post-training"
+      ],
+      "labels": [
+        "Reward Design",
+        "Training Stability",
+        "Reasoning"
+      ],
+      "code_url": "https://github.com/tmlr-group/Co-rewarding",
+      "note": "self-supervised/self-rewarding RL 稳定性背景。它提醒 reward 曲线表面平稳不代表目标健康，单一视角监督可能强化错误但自洽的 reasoning pattern；对工具调用 reward hacking 讨论有借鉴价值。",
+      "tldr": "Co-rewarding 用多视角协同奖励稳定 self-supervised reasoning RL，缓解单一自奖励闭环中的 self-consistent illusion、reward hacking 和训练坍塌。",
+      "abstract": "Co-rewarding studies stable self-supervised reinforcement learning for eliciting reasoning in large language models. Self-rewarding methods can amplify self-consistent but incorrect reasoning patterns, producing apparently stable reward curves while the true objective drifts. Co-rewarding introduces complementary reward views that cross-check reasoning quality and reduce collapse into trivial or self-confirming solutions. Experiments show improved reasoning performance and more robust training compared with single-view self-rewarding baselines, highlighting that reward validity is as important as optimization variance for stable LLM RL.",
+      "summary_cn": {
+        "研究动机": "self-supervised/self-rewarding RL 希望减少人工标注依赖，但模型自我评价形成闭环后，可能强化错误但自洽的推理模式。",
+        "解决问题": "论文要解决的是单一视角自奖励导致的 supervision degeneration、reward hacking 和 training collapse。",
+        "现象分析": "reward 曲线看起来平稳并不代表训练目标健康。模型可能学会满足自身奖励器偏好，却偏离真实正确性，形成 self-consistent illusion。",
+        "主要方法": "Co-rewarding 使用多视角协同奖励，对 reasoning quality 进行交叉约束，避免单一奖励源被模型利用或退化为平凡解。",
+        "数据集与实验": "论文在 reasoning 任务上比较单一自奖励和 co-rewarding 训练，观察 collapse/trivial solution、不同监督视角一致性和最终性能。",
+        "主要贡献": "这篇论文的主要贡献是强调奖励信号有效性本身也是训练稳定性问题。对工具调用 RL 来说，奖励设计不当可能诱导模型规避工具、滥用工具或形成错误自洽策略。"
+      },
+      "status": "approved",
+      "added_at": "2026-05-12"
+    },
+    {
+      "id": "sfpo-2510-04072",
+      "title": "Slow-Fast Policy Optimization: Reposition-Before-Update for LLM Reasoning",
+      "paper_url": "https://arxiv.org/abs/2510.04072",
+      "authors": [
+        "Ziyan Wang",
+        "Zheng Wang",
+        "Xingwei Qu",
+        "Qi Cheng",
+        "Jie Fu",
+        "Shengpu Tang",
+        "Minjia Zhang",
+        "Xiaoming Huo"
+      ],
+      "venue": "ICLR 2026 Poster / arXiv",
+      "year": 2026,
+      "primary_area": "基础/前沿模型 (含LLM)",
+      "category": "推理与思维链",
+      "keywords": [
+        "Slow-Fast Policy Optimization",
+        "SFPO",
+        "reposition-before-update",
+        "LLM reasoning",
+        "early rollout quality",
+        "noisy gradient",
+        "off-policy drift",
+        "sample efficiency"
+      ],
+      "labels": [
+        "Policy Optimization",
+        "Training Stability",
+        "Reasoning"
+      ],
+      "code_url": "https://github.com/Urheen/SFPO",
+      "note": "early-stage noisy rollout 与更新路径稳定性的背景文献。它把训练不稳定理解为 low-quality rollouts 诱导 noisy gradients，并用 reposition-before-update 控制 fast inner updates 的 off-policy drift。",
+      "tldr": "SFPO 先用 slow policy reposition 到更可靠区域，再复用同一 batch 做 fast updates，在提高样本效率的同时控制 early noisy rollout 和 off-policy drift。",
+      "abstract": "Slow-Fast Policy Optimization targets sample-efficient reinforcement learning for LLM reasoning. Early-stage rollouts are often low quality, producing noisy gradients that can push the policy in unreliable directions. SFPO introduces a reposition-before-update scheme: a slow policy step first repositions the model toward a more trustworthy region, then fast inner updates reuse the same batch while explicitly controlling off-policy drift. Experiments show improved training accuracy, fewer rollout requirements, and better wall-clock efficiency while maintaining stable update directions.",
+      "summary_cn": {
+        "研究动机": "LLM reasoning RL 早期 rollout 质量低，单步随机梯度噪声大，容易把策略推向不可靠方向；同时 rollout 成本高，需要提高样本效率。",
+        "解决问题": "论文要解决的是如何在复用 batch 提高效率的同时，避免 fast inner updates 带来的 off-policy drift 和不稳定更新。",
+        "现象分析": "早期低质量样本会产生 noisy gradient；直接在同一 batch 上多次更新虽然省 rollout，但可能使策略快速偏离数据分布。",
+        "主要方法": "SFPO 采用 reposition-before-update：先用 slow step 将策略移动到更可靠区域，再执行 fast inner updates；同时监控和限制 off-policy drift。",
+        "数据集与实验": "实验报告 training accuracy vs step、达到目标精度所需 rollout 数、wall-clock time 和 drift 指标，显示 SFPO 在样本效率和稳定性之间取得更好平衡。",
+        "主要贡献": "这篇论文的主要贡献是把训练稳定性解释为更新路径质量问题。对工具调用 RL 来说，长且昂贵的 rollout 会让 early low-quality trajectories 与 batch reuse 风险更加突出。"
+      },
+      "status": "approved",
+      "added_at": "2026-05-12"
+    },
+    {
+      "id": "capo-2510-00819",
+      "title": "Stabilizing Policy Gradients for Sample-Efficient Reinforcement Learning in LLM Reasoning",
+      "paper_url": "https://arxiv.org/abs/2510.00819",
+      "authors": [
+        "Luckeciano Carvalho Melo",
+        "Alessandro Abate",
+        "Yarin Gal"
+      ],
+      "venue": "ICLR 2026 Poster / arXiv",
+      "year": 2026,
+      "primary_area": "基础/前沿模型 (含LLM)",
+      "category": "推理与思维链",
+      "keywords": [
+        "CAPO",
+        "policy gradients",
+        "sample efficiency",
+        "LLM reasoning",
+        "policy shift",
+        "objective shift",
+        "catastrophic update",
+        "token rejection"
+      ],
+      "labels": [
+        "Policy Optimization",
+        "Training Stability",
+        "Reasoning"
+      ],
+      "code_url": "",
+      "note": "policy-gradient 几何稳定性背景。它把不稳定刻画为少量 sample/token 诱发过大的 policy shift 或 objective shift，可用于补充 KL/entropy/reward 曲线之外的局部更新风险诊断。",
+      "tldr": "CAPO 从 policy/objective shift 角度稳定 aggressive LLM reasoning RL，用 token rejection 和 curvature-aware 控制避免少量样本造成 catastrophic update。",
+      "abstract": "This paper studies policy-gradient instability in sample-efficient reinforcement learning for LLM reasoning. In aggressive learning regimes, a small number of samples or tokens can induce disproportionately large policy or objective shifts, causing catastrophic updates and policy collapse. The method stabilizes gradients by monitoring shift proxies and rejecting or controlling high-risk token contributions. Experiments demonstrate improved sample efficiency and robustness under aggressive training settings, providing an optimization-geometry view complementary to reward shaping, KL regularization, and entropy tracking.",
+      "summary_cn": {
+        "研究动机": "为了提高样本效率，LLM reasoning RL 常进入 aggressive learning regime，但少量样本或 token 可能导致过大的策略分布变化。",
+        "解决问题": "论文要解决的是 policy-gradient update 中局部样本诱发的 policy shift / objective shift 过大问题，避免 catastrophic update 和 policy collapse。",
+        "现象分析": "宏观 reward 或 accuracy 曲线可能滞后于真实风险；一次局部更新如果几何上过大，可能直接破坏策略分布，尤其在小 batch 或高学习率设置中更明显。",
+        "主要方法": "方法监控 policy shift proxy 与 objective shift proxy，并通过 token rejection 或 curvature-aware 控制抑制高风险 token 对梯度的贡献。",
+        "数据集与实验": "实验在 LLM reasoning 任务上评估 aggressive learning regime 下的稳定性、sample efficiency、token rejection rate 和 policy/objective shift 指标。",
+        "主要贡献": "这篇论文的主要贡献是提供优化几何视角的训练稳定性诊断。它可作为工具调用 RL 中局部 token/step 更新风险和过大策略漂移的背景参考。"
+      },
+      "status": "approved",
+      "added_at": "2026-05-12"
     }
   ]
 }
