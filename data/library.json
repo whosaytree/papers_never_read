@@ -4279,6 +4279,104 @@
       },
       "status": "approved",
       "added_at": "2026-05-12"
+    },
+    {
+      "id": "gtpo-grpo-s-2025-arxiv",
+      "title": "GTPO and GRPO-S: Token and Sequence-Level Reward Shaping with Policy Entropy",
+      "paper_url": "https://arxiv.org/abs/2508.04349",
+      "authors": [
+        "Hongze Tan",
+        "Jianfei Pan",
+        "Jinghao Lin",
+        "Tao Chen",
+        "Zhihang Zheng",
+        "Zhihao Tang",
+        "Haihua Yang"
+      ],
+      "venue": "arXiv",
+      "year": 2025,
+      "primary_area": "基础/前沿模型 (含LLM)",
+      "category": "推理与思维链",
+      "keywords": [
+        "GTPO",
+        "GRPO-S",
+        "GRPO",
+        "policy entropy",
+        "reward shaping",
+        "token-level credit assignment",
+        "sequence-level reward",
+        "Dynamic Entropy Weighting",
+        "reasoning RL",
+        "DAPO"
+      ],
+      "labels": [
+        "Policy Optimization",
+        "Training Stability",
+        "Credit Assignment"
+      ],
+      "code_url": "",
+      "note": "通用 reasoning RL 稳定性和 credit assignment 背景。它指出 GRPO/DAPO 类方法常把最终 reward 粗粒度分配给整条 response，并尝试用 policy entropy 做 token/sequence-level reward shaping。不是工具调用论文，但对搜索/工具轨迹中 query、observation 后续 token、answer 等区域如何分配信用很有参考价值。",
+      "tldr": "GTPO/GRPO-S 用 policy entropy 做动态奖励重加权，把 GRPO 的统一轨迹奖励细化到 token 或 sequence 层面，以缓解长链推理中的粗粒度 credit assignment。",
+      "abstract": "GTPO and GRPO-S study credit assignment in reinforcement learning for LLM reasoning. The paper argues that common GRPO-style algorithms apply a coarse sequence-level outcome reward to all tokens, which is a poor fit for long reasoning chains. It proposes Dynamic Entropy Weighting, using policy entropy as a proxy for important high-uncertainty decision points. GTPO assigns entropy-weighted rewards at the token level, while GRPO-S shapes sequence-level rewards using average entropy. The work is relevant to tool-use RL as a general method background for token- and sequence-level reward shaping, though its experiments focus on reasoning benchmarks rather than external tools.",
+      "summary_cn": {
+        "研究动机": "GRPO、DAPO 等 value-function-free RL 方法降低了 critic 成本，但常把最终结果奖励统一分配给整条 response，难以精确指导长链推理中的关键 token。",
+        "解决问题": "论文要解决的是 LLM reasoning RL 中粗粒度 credit assignment 问题：哪些 token 或片段真正承担关键决策，应获得更强学习信号。",
+        "现象分析": "高 policy entropy 往往出现在模型不确定、需要做关键选择的位置。若所有 token 共享同一个 reward，关键决策点和模板/填充 token 会被同等更新，可能降低样本效率并影响稳定性。",
+        "主要方法": "论文提出 Dynamic Entropy Weighting，并据此设计 GTPO 和 GRPO-S。GTPO 在 token level 分配 entropy-weighted reward，GRPO-S 用平均 entropy 调整 sequence-level reward，以在细粒度和稳定性之间折中。",
+        "数据集与实验": "实验主要在数学/长链推理 benchmark 上比较 GRPO、DAPO 等基线，报告 entropy-based reward shaping 能提升性能和训练效率。",
+        "主要贡献": "这篇论文的主要贡献是把 policy entropy 从普通正则项转化为 reward shaping 信号。对工具调用 RL 来说，它提供了分析 query、tool-use 决策和最终答案 token 不应同质更新的通用算法背景。"
+      },
+      "status": "approved",
+      "added_at": "2026-05-12"
+    },
+    {
+      "id": "sfr-deepresearch-2025-arxiv",
+      "title": "SFR-DeepResearch: Towards Effective Reinforcement Learning for Autonomously Reasoning Single Agents",
+      "paper_url": "https://arxiv.org/abs/2509.06283",
+      "authors": [
+        "Xuan-Phi Nguyen",
+        "Shrey Pandit",
+        "Revanth Gangi Reddy",
+        "Austin Xu",
+        "Silvio Savarese",
+        "Caiming Xiong",
+        "Shafiq Joty"
+      ],
+      "venue": "arXiv",
+      "year": 2025,
+      "primary_area": "基础/前沿模型 (含LLM)",
+      "category": "Agent 与工具使用",
+      "keywords": [
+        "SFR-DeepResearch",
+        "SFR-DR",
+        "deep research agent",
+        "autonomous single-agent",
+        "continual reinforcement learning",
+        "reasoning-optimized models",
+        "synthetic data",
+        "web search",
+        "web browsing",
+        "Python tool"
+      ],
+      "labels": [
+        "Agent RL",
+        "Deep Research",
+        "Tool Use"
+      ],
+      "code_url": "",
+      "note": "deep research / autonomous single-agent RL 背景。论文强调不是固定多智能体 workflow，而是单个 reasoning-optimized model 通过 continual RL 学习动态决定搜索、浏览、Python 调用和推理步骤。它更像应用场景与训练 recipe 文献，不是细粒度稳定性诊断论文。",
+      "tldr": "SFR-DeepResearch 用合成数据对 reasoning-optimized models 做 continual RL，训练能自主搜索、浏览和调用 Python 的 single-agent deep research 模型。",
+      "abstract": "SFR-DeepResearch studies reinforcement learning for autonomous single-agent deep research. The paper focuses on agents that dynamically choose their next action from context, rather than following a fixed multi-agent workflow. It applies continual RL to reasoning-optimized models using synthetic data, aiming to improve agentic skills while preserving reasoning ability. The resulting SFR-DR agents use web search, browsing, and Python tools for deep research tasks, with the best SFR-DR-20B variant reported at 28.7% on Humanity's Last Exam. The paper is most useful as evidence that tool-use RL is moving toward open-ended deep research workflows.",
+      "summary_cn": {
+        "研究动机": "Deep Research 任务要求模型在多个信息源之间搜索、阅读、计算和推理，固定 workflow 或预设角色的多智能体系统难以覆盖动态决策需求。",
+        "解决问题": "论文要解决的是如何训练 autonomous single-agent，使其根据当前上下文自主决定下一步搜索、浏览、Python 调用或继续推理，同时保留 reasoning-optimized model 的原有推理能力。",
+        "现象分析": "deep research agent 的能力不只取决于最终答案，还取决于工具使用频率、网页爬取深度、计算工具调用、step-level response length 和 reasoning ability preservation。",
+        "主要方法": "SFR-DeepResearch 使用完全合成数据，对 reasoning-optimized open-source models 进行 continual RL，训练模型形成搜索、浏览、Python 工具和推理交织的单 agent 行为。",
+        "数据集与实验": "论文报告最佳 SFR-DR-20B 在 Humanity's Last Exam text-only 设置上达到 28.7%，并通过分析实验考察训练 recipe、工具使用和模型行为变化。",
+        "主要贡献": "这篇论文的主要贡献是把 deep research 建模为 autonomous single-agent continual RL 任务。它说明工具调用 RL 正从固定检索问答扩展到更开放、更长链的研究型 agent。"
+      },
+      "status": "approved",
+      "added_at": "2026-05-12"
     }
   ]
 }
