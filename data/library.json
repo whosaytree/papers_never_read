@@ -2870,6 +2870,286 @@
       },
       "status": "approved",
       "added_at": "2026-05-12"
+    },
+    {
+      "id": "aepo-2510-14545",
+      "title": "Agentic Entropy-Balanced Policy Optimization",
+      "paper_url": "https://arxiv.org/abs/2510.14545",
+      "authors": [
+        "Guanting Dong",
+        "Licheng Bao",
+        "Zhongyuan Wang",
+        "Kangzhi Zhao",
+        "Xiaoxi Li",
+        "Jiajie Jin",
+        "Jinghan Yang",
+        "Hangyu Mao",
+        "Fuzheng Zhang",
+        "Kun Gai",
+        "Guorui Zhou",
+        "Yutao Zhu",
+        "Ji-Rong Wen",
+        "Zhicheng Dou"
+      ],
+      "venue": "arXiv (work in progress)",
+      "year": 2025,
+      "primary_area": "基础/前沿模型 (含LLM)",
+      "category": "Agent 与工具使用",
+      "keywords": [
+        "AEPO",
+        "agentic RL",
+        "entropy-balanced rollout",
+        "high-entropy tool-call steps",
+        "rollout collapse",
+        "gradient clipping",
+        "entropy-aware advantage",
+        "web agent"
+      ],
+      "labels": [
+        "Agentic RL",
+        "Training Stability",
+        "Web Agent"
+      ],
+      "code_url": "https://github.com/dongguanting/ARPO",
+      "note": "直接把 entropy dynamics 放进 web agent RL 稳定性讨论的工作。核心价值在于指出 high-entropy tool-call steps 会造成 rollout budget 失衡和高熵 token 梯度被过度裁剪，适合支撑训练过程中必须看 entropy、branch budget 和 clipping 的论点。",
+      "tldr": "AEPO 通过 entropy pre-monitoring 动态分配 rollout 分支预算，并在 policy update 中保护高熵 token 梯度，缓解 long-horizon web agent RL 中的 high-entropy rollout collapse 与 clipping 问题。",
+      "abstract": "Agentic Entropy-Balanced Policy Optimization studies how entropy-guided exploration can both help and destabilize long-horizon web-agent reinforcement learning. The paper identifies that consecutive high-entropy tool-call steps can concentrate branch sampling budget and cause rollout collapse, while standard policy optimization may over-clip gradients on valuable high-entropy tokens. AEPO addresses this with dynamic entropy-balanced rollout, branch penalties for consecutive uncertain tool calls, stop-gradient treatment in high-entropy clipping terms, and entropy-aware advantage estimation. Experiments across 14 datasets show improved sampling diversity, stable policy entropy, and better web-agent performance.",
+      "summary_cn": {
+        "研究动机": "多轮 web agent 需要在高不确定性的工具调用步骤中探索，但 entropy 不只是探索信号，也可能成为训练不稳定来源。",
+        "解决问题": "论文要解决的是 entropy-driven agentic RL 中的两类问题：高熵工具调用导致分支采样预算集中，以及高熵 token 在策略更新中被 clipping 过度压制。",
+        "现象分析": "连续高熵 tool-call steps 会让 rollout 扩展集中在少数轨迹，降低采样多样性；同时 vanilla RL 的 clipping 可能削弱真正有价值的探索 token 梯度，使模型难以学习有效工具探索。",
+        "主要方法": "AEPO 包含 dynamic entropy-balanced rollout 和 entropy-balanced policy optimization。前者通过 entropy pre-monitoring 分配 global/branch sampling budget 并惩罚连续高熵分支；后者用 stop-gradient 和 entropy-aware advantage 保留并重缩放高熵 token 的学习信号。",
+        "数据集与实验": "实验覆盖 14 个数据集，工具包括 web search、browser 和 code executor。Qwen3-14B + AEPO 只用 1K RL samples 在 GAIA、Humanity's Last Exam、WebWalker 等任务上取得强表现，并优于多个主流 RL 算法。",
+        "主要贡献": "这篇论文的主要贡献是把 entropy、branch budget、gradient clipping 和 advantage estimation 的耦合明确为 web agent RL 稳定性问题。它为分析工具调用训练中的探索崩溃提供了直接参考。"
+      },
+      "status": "approved",
+      "added_at": "2026-05-12"
+    },
+    {
+      "id": "tool-integrated-reasoning-2508-19201",
+      "title": "Understanding Tool-Integrated Reasoning",
+      "paper_url": "https://arxiv.org/abs/2508.19201",
+      "authors": [
+        "Heng Lin",
+        "Zhongwen Xu"
+      ],
+      "venue": "arXiv",
+      "year": 2025,
+      "primary_area": "基础/前沿模型 (含LLM)",
+      "category": "Agent 与工具使用",
+      "keywords": [
+        "tool-integrated reasoning",
+        "TIR",
+        "Python interpreter",
+        "support expansion",
+        "feasible support",
+        "token efficiency",
+        "ASPO",
+        "advantage shaping"
+      ],
+      "labels": [
+        "Tool Use",
+        "Reasoning",
+        "Training Stability"
+      ],
+      "code_url": "",
+      "note": "工具集成推理为何有效的机制性文献。虽然主要工具是 Python interpreter 而非搜索，但它说明外部工具会扩展模型可达轨迹；ASPO 部分还指出 naive reward shaping 在 GRPO-like group-normalized advantage 下可能破坏训练稳定性。",
+      "tldr": "这篇论文从 empirical/feasible support expansion 解释 TIR 能突破纯文本推理上限，并提出 ASPO 直接塑形 advantage 来引导早期工具调用，避免把辅助奖励直接混进 reward 后被 group normalization 放大。",
+      "abstract": "Understanding Tool-Integrated Reasoning provides a formal and empirical account of why external tools expand LLM reasoning capability. It argues that tools such as Python interpreters enlarge the empirical and feasible support of model trajectories, enabling strategies that pure-text generation cannot express or would express only with impractically many tokens. The paper also introduces Advantage Shaping Policy Optimization, which modifies the advantage function rather than raw rewards to guide tool-use timing without compromising training stability. Experiments on mathematical benchmarks show improved pass@k and emergent patterns such as computation offloading, exploration and verification via code, and insight-to-computation transformation.",
+      "summary_cn": {
+        "研究动机": "工具集成推理在数学和代码任务中很有效，但为什么外部工具能真正提升模型能力，而不只是提供额外计算接口，仍缺少清晰解释。",
+        "解决问题": "论文要解决的是 TIR 的机制解释，以及如何在 RL 中引导工具调用行为而不破坏 GRPO 类训练稳定性。",
+        "现象分析": "纯文本 RL 主要是在 base model 原有支持集内重新加权轨迹；外部工具通过确定性转移让模型进入纯文本难以生成或 token 成本过高的解题路径。直接加辅助 reward 又可能在 group-normalized advantage 中扭曲正确性信号。",
+        "主要方法": "论文提出 empirical support expansion 和 feasible support/token efficiency 两个视角解释 TIR，并提出 ASPO：不直接修改 reward，而是在 correctness advantage 之后加入受控 bias，引导模型更早、更频繁地使用工具。",
+        "数据集与实验": "实验使用 Python interpreter 和 Qwen3-8B 等模型，在 AIME24、AIME25、Omni-MATH-512 等数学 benchmark 上比较 TIR 与 pure-text RL。结果显示 TIR 在 pass@k 上明显优于纯文本模型，ASPO 能提前代码调用并增加交互轮次。",
+        "主要贡献": "这篇论文的主要贡献是解释工具为何能扩展 LLM 推理轨迹，并提醒工具调用 RL 中 reward shaping、advantage normalization 和工具调用时机之间存在稳定性耦合。"
+      },
+      "status": "approved",
+      "added_at": "2026-05-12"
+    },
+    {
+      "id": "autorefine-2505-11277",
+      "title": "Search and Refine During Think: Facilitating Knowledge Refinement for Improved Retrieval-Augmented Reasoning",
+      "paper_url": "https://arxiv.org/abs/2505.11277",
+      "authors": [
+        "Yaorui Shi",
+        "Sihang Li",
+        "Chang Wu",
+        "Zhiyuan Liu",
+        "Junfeng Fang",
+        "Hengxing Cai",
+        "An Zhang",
+        "Xiang Wang"
+      ],
+      "venue": "arXiv",
+      "year": 2025,
+      "primary_area": "基础/前沿模型 (含LLM)",
+      "category": "Agent 与工具使用",
+      "keywords": [
+        "AutoRefine",
+        "search-and-refine-during-think",
+        "retrieval-augmented reasoning",
+        "knowledge refinement",
+        "GRPO",
+        "retrieval-specific reward",
+        "multi-hop QA",
+        "evidence synthesis"
+      ],
+      "labels": [
+        "Agentic RAG",
+        "Search",
+        "Reward Design"
+      ],
+      "code_url": "",
+      "note": "Search-R1 近邻路线，但重点不是单纯自主搜索，而是在相邻 search calls 之间显式加入 knowledge refinement。notes 中原 arXiv 号 2505.09316 已不对应本标题；入库按当前 arXiv 2505.11277 元信息处理。",
+      "tldr": "AutoRefine 在 think 过程中交替执行搜索与知识精炼，用 retrieval-specific rewards 加 answer correctness rewards 训练模型过滤、蒸馏和组织检索证据，尤其提升复杂 multi-hop retrieval-augmented reasoning。",
+      "abstract": "AutoRefine proposes a search-and-refine-during-think paradigm for retrieval-augmented reasoning. Instead of only issuing search queries during reasoning, the model performs explicit knowledge refinement between successive searches, filtering noisy information, distilling useful evidence, and organizing intermediate knowledge before answering. The framework is trained with group relative policy optimization using both answer correctness rewards and retrieval-specific rewards. Experiments on single-hop and multi-hop QA benchmarks show improved retrieval quality, evidence synthesis, and reasoning performance, especially on complex multi-hop settings.",
+      "summary_cn": {
+        "研究动机": "检索增强推理能补足模型知识，但现有方法常检索到无关或噪声信息。如果模型只会频繁搜索而不会整理证据，外部信息反而会干扰推理。",
+        "解决问题": "论文要解决的是如何让模型在思考过程中不仅搜索，还能在连续搜索之间显式精炼知识，过滤噪声并组织可用证据。",
+        "现象分析": "搜索工具调用的质量不只取决于 query，也取决于模型是否能消化检索结果。multi-hop QA 中，多次检索产生的证据需要被逐步蒸馏和整合，否则后续推理会被噪声污染。",
+        "主要方法": "AutoRefine 采用 search-and-refine-during-think 范式，在 search calls 之间插入 knowledge refinement steps。训练上使用 GRPO，并将 answer correctness rewards 与 retrieval-specific rewards 结合，鼓励高质量检索和证据综合。",
+        "数据集与实验": "实验覆盖 single-hop 和 multi-hop QA benchmarks。结果显示 AutoRefine 相比现有 retrieval-augmented reasoning 方法表现更好，尤其在复杂多跳推理场景中能发出更高质量搜索并更有效合成证据。",
+        "主要贡献": "这篇论文的主要贡献是把搜索增强推理中的中间能力从 query generation 扩展到 evidence refinement。它说明 search count 不是唯一行为指标，检索信息的过滤、蒸馏和组织同样需要训练信号。"
+      },
+      "status": "approved",
+      "added_at": "2026-05-12"
+    },
+    {
+      "id": "negative-gradient-grpo-2505-18830",
+      "title": "On the Effect of Negative Gradient in Group Relative Deep Reinforcement Optimization",
+      "paper_url": "https://arxiv.org/abs/2505.18830",
+      "authors": [
+        "Wenlong Deng",
+        "Yi Ren",
+        "Muchen Li",
+        "Danica J. Sutherland",
+        "Xiaoxiao Li",
+        "Christos Thrampoulidis"
+      ],
+      "venue": "arXiv",
+      "year": 2025,
+      "primary_area": "基础/前沿模型 (含LLM)",
+      "category": "推理与思维链",
+      "keywords": [
+        "GRPO",
+        "negative gradient",
+        "Lazy Likelihood Displacement",
+        "LLD",
+        "NTHR",
+        "token-level penalty",
+        "group-relative advantage",
+        "reasoning RL"
+      ],
+      "labels": [
+        "Policy Optimization",
+        "Training Stability",
+        "Reasoning"
+      ],
+      "code_url": "",
+      "note": "GRPO 训练动态机制文献。它不是工具调用论文，但对 Search-R1/Tree-GRPO/ToolRL 这类 group-relative agent RL 很重要：incorrect trajectory/token 的负梯度可能误伤正确推理相关 token，导致 correct response likelihood 增长缓慢甚至下降。",
+      "tldr": "这篇论文发现 GRPO 中的 negative gradient 会造成 Lazy Likelihood Displacement，并提出 NTHR 利用同组正确回答作为 anchors，降低错误回答中有益 token 的惩罚强度。",
+      "abstract": "This paper analyzes a negative-gradient effect in Group Relative Policy Optimization. It identifies Lazy Likelihood Displacement, where the likelihood of correct responses only marginally increases or even decreases during training. The source is that GRPO naively penalizes all tokens in incorrect responses with the same strength, even though some of those tokens may also contribute to correct reasoning. NTHR uses GRPO's group-based structure and correct responses as anchors to locate influential tokens that cause LLD, downweighting their penalties while preserving overall suppression of incorrect responses. Math reasoning experiments show consistent improvements across 0.5B to 3B models.",
+      "summary_cn": {
+        "研究动机": "GRPO 已成为 LLM reasoning RL 的常用算法，但其 token-level 训练动态并不天然稳定。正确答案概率在训练中可能只缓慢上升，甚至下降。",
+        "解决问题": "论文要解释 GRPO 中 negative gradient 如何影响正确回答 likelihood，并提出方法缓解错误回答 token 被统一惩罚带来的副作用。",
+        "现象分析": "错误回答中的所有 token 不一定都是有害的。某些 token 可能也出现在正确回答中，或参与正确推理。若它们被等强度负梯度压低，就会拖累正确轨迹概率，形成 Lazy Likelihood Displacement。",
+        "主要方法": "作者提出 NTHR，利用 GRPO 的 group-based structure，以同组正确回答作为 anchors，识别 incorrect responses 中可能导致 LLD 的 influential tokens，并降低这些 token 的惩罚强度。",
+        "数据集与实验": "实验在数学推理 benchmark 上进行，覆盖 0.5B 到 3B 参数规模模型。结果显示 NTHR 能缓解 LLD，并带来稳定性能提升。",
+        "主要贡献": "这篇论文的主要贡献是揭示 GRPO negative gradient 的 token-level 误伤机制。对搜索/工具 RL 来说，它提醒我们 reasoning、query、format、answer 等不同 token 区域不能简单看成同质更新对象。"
+      },
+      "status": "approved",
+      "added_at": "2026-05-12"
+    },
+    {
+      "id": "demystifying-agentic-rl-2510-11701",
+      "title": "Demystifying Reinforcement Learning in Agentic Reasoning",
+      "paper_url": "https://arxiv.org/abs/2510.11701",
+      "authors": [
+        "Zhaochen Yu",
+        "Ling Yang",
+        "Jiaru Zou",
+        "Shuicheng Yan",
+        "Mengdi Wang"
+      ],
+      "venue": "arXiv",
+      "year": 2025,
+      "primary_area": "基础/前沿模型 (含LLM)",
+      "category": "Agent 与工具使用",
+      "keywords": [
+        "agentic reasoning",
+        "agentic RL",
+        "tool-use trajectories",
+        "SFT initialization",
+        "policy entropy",
+        "clipping",
+        "overlong reward shaping",
+        "tool-call efficiency"
+      ],
+      "labels": [
+        "Agentic RL",
+        "Tool Use",
+        "Empirical Study"
+      ],
+      "code_url": "https://github.com/Gen-Verse/Open-AgentRL",
+      "note": "agentic RL empirical recipe 文献。价值在于从 data、algorithm、reasoning mode 三个维度说明：真实端到端工具轨迹、探索友好训练、保持 policy entropy，以及更少但更审慎的工具调用，都显著影响 agentic reasoning 表现。",
+      "tldr": "这篇论文系统拆解 agentic RL：真实 tool-use trajectories 比拼接轨迹更适合 SFT；clip higher、overlong reward shaping 和 policy entropy 有助训练；deliberative fewer tool calls 往往优于频繁调用或冗长自推理。",
+      "abstract": "Demystifying Reinforcement Learning in Agentic Reasoning systematically studies why agentic RL works from data, algorithm, and reasoning-mode perspectives. It finds that real end-to-end tool-use trajectories provide stronger SFT initialization than stitched synthetic trajectories; high-diversity, model-aware data sustains exploration; exploration-friendly training such as higher clipping, overlong reward shaping, and adequate policy entropy improves efficiency; and deliberative strategies with fewer tool calls outperform frequent tool calls or verbose self-reasoning. The paper releases agentic SFT/RL datasets and code, showing strong results on AIME, GPQA-Diamond, and LiveCodeBench-v6.",
+      "summary_cn": {
+        "研究动机": "agentic RL 已能提升工具推理能力，但哪些设计原则真正有效仍不清楚。只比较最终准确率难以解释数据、算法和工具调用模式的作用。",
+        "解决问题": "论文要从 data、algorithm、reasoning mode 三个维度拆解 agentic RL 的有效实践，为后续工具使用 RL 提供可复现实证基线。",
+        "现象分析": "拼接式合成轨迹可能无法提供真实工具交互分布；过低 entropy 或过紧 clipping 会限制探索；频繁工具调用或冗长自我推理未必更好，反而可能降低工具效率。",
+        "主要方法": "作者构造真实端到端 agentic SFT/RL 数据，比较数据多样性、model-aware data、clipping、overlong reward shaping、policy entropy 和不同 tool-call reasoning mode 的影响。",
+        "数据集与实验": "实验覆盖 AIME2024/AIME2025、GPQA-Diamond、LiveCodeBench-v6 等 benchmark。公开 Open-AgentRL 代码、SFT/RL 数据和相关模型；使用这些 recipes 后，小模型也能达到较强 agentic reasoning 表现。",
+        "主要贡献": "这篇论文的主要贡献是把 agentic RL 的成功因素从单一算法扩展到数据质量、探索机制、熵保持和工具调用策略。它支持对 search count、tool-call frequency、entropy 和轨迹数据质量做联合诊断。"
+      },
+      "status": "approved",
+      "added_at": "2026-05-12"
+    },
+    {
+      "id": "ikea-adaptive-search-2505-07596",
+      "title": "Reinforced Internal-External Knowledge Synergistic Reasoning for Efficient Adaptive Search Agent",
+      "paper_url": "https://arxiv.org/abs/2505.07596",
+      "authors": [
+        "Ziyang Huang",
+        "Xiaowei Yuan",
+        "Yiming Ju",
+        "Jun Zhao",
+        "Kang Liu"
+      ],
+      "venue": "arXiv",
+      "year": 2025,
+      "primary_area": "基础/前沿模型 (含LLM)",
+      "category": "Agent 与工具使用",
+      "keywords": [
+        "IKEA",
+        "adaptive search agent",
+        "internal-external knowledge synergy",
+        "knowledge boundary",
+        "retrieval timing",
+        "retrieval frequency",
+        "knowledge-boundary aware reward",
+        "search efficiency"
+      ],
+      "labels": [
+        "Search",
+        "Agentic RAG",
+        "Reward Design"
+      ],
+      "code_url": "",
+      "note": "adaptive search agent 的效率导向文献。它强调搜索不是越多越好，模型应识别 knowledge boundary，在内部知识足够时少检索，在知识不足时再搜索；适合支撑 search count / retrieval necessity / tool efficiency 分析。",
+      "tldr": "IKEA 用 knowledge-boundary aware reward 和 training data 训练模型协同内部参数知识与外部检索知识，在保持答案准确性的同时减少不必要搜索、冲突和推理延迟。",
+      "abstract": "IKEA studies efficient adaptive search agents that balance internal parametric knowledge and external retrieved knowledge. It argues that RL-based search agents often overuse retrieval, causing redundant searches, harmful internal-external knowledge conflicts, and higher inference latency. The proposed Reinforced Internal-External Knowledge Synergistic Reasoning Agent identifies its knowledge boundary, uses internal knowledge when sufficient, and calls external search when needed. A knowledge-boundary aware reward function and training dataset incentivize accurate answers, fewer unnecessary retrievals, and appropriate searches under internal knowledge insufficiency. Experiments across knowledge reasoning tasks show improved performance, reduced retrieval frequency, and robust generalization.",
+      "summary_cn": {
+        "研究动机": "RAG 能缓解幻觉，RL 能训练模型主动搜索，但现有 search agents 往往过度依赖外部检索，忽视模型已有内部知识。",
+        "解决问题": "论文要解决的是如何训练 efficient adaptive search agent，使模型能判断自身 knowledge boundary，在需要时检索，在不需要时避免冗余搜索。",
+        "现象分析": "无条件频繁检索会带来不必要的工具调用、内部知识与外部知识冲突，以及更高推理延迟。搜索工具调用频率本身是策略质量的一部分，不应只看最终答案。",
+        "主要方法": "IKEA 设计 knowledge-boundary aware reward function 和 training dataset，奖励准确回答、减少不必要检索，并在内部知识不足时鼓励适当外部搜索，从而训练 internal-external knowledge synergy。",
+        "数据集与实验": "论文在多个 knowledge reasoning tasks 上评估。结果显示 IKEA 相比 baseline 提升性能，显著降低 retrieval frequency，并表现出较好泛化能力。",
+        "主要贡献": "这篇论文的主要贡献是把 search agent 的目标从“会检索”推进到“知道何时需要检索”。它为分析 retrieval timing、search count、knowledge conflict 和工具效率提供了直接背景。"
+      },
+      "status": "approved",
+      "added_at": "2026-05-12"
     }
   ]
 }
