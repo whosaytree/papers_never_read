@@ -5649,6 +5649,184 @@
       },
       "status": "approved",
       "added_at": "2026-05-13"
+    },
+    {
+      "id": "ppo-1707-06347",
+      "title": "Proximal Policy Optimization Algorithms",
+      "paper_url": "https://arxiv.org/abs/1707.06347",
+      "authors": [
+        "John Schulman",
+        "Filip Wolski",
+        "Prafulla Dhariwal",
+        "Alec Radford",
+        "Oleg Klimov"
+      ],
+      "venue": "arXiv",
+      "year": 2017,
+      "primary_area": "强化学习",
+      "category": "RL 理论",
+      "keywords": [
+        "PPO",
+        "policy gradient",
+        "clipped surrogate objective",
+        "importance ratio",
+        "trust region",
+        "minibatch updates",
+        "KL constraint",
+        "online reinforcement learning"
+      ],
+      "labels": [
+        "PPO",
+        "Policy Gradient",
+        "RL Foundation",
+        "Preliminaries"
+      ],
+      "code_url": "",
+      "note": "第 3 章方法基础文献。用于定义 PPO clipped surrogate objective、old policy、importance ratio、clip range、advantage-weighted policy update 和多轮 minibatch update。这里作为公式/符号来源，不作为相关工作展开。",
+      "tldr": "PPO 用 clipped surrogate objective 控制策略更新幅度，在采样数据上进行多轮 minibatch 优化，是后续 LLM RLHF、PPO-style tool-use RL 和 Search-R1 PPO baseline 的核心基础算法。",
+      "abstract": "Proximal Policy Optimization Algorithms introduces PPO, a policy-gradient family that alternates between collecting on-policy data and optimizing a surrogate objective. Its clipped objective constrains policy updates through an importance ratio, making multiple epochs of minibatch optimization practical while preserving much of the stability motivation behind trust-region methods. In this library, PPO is included as a preliminaries entry for defining the objective used by RLHF and tool-use RL baselines.",
+      "summary_cn": {
+        "研究动机": "标准 policy gradient 方法通常一次采样只做有限更新，TRPO 虽能控制策略变化但实现复杂，因此需要一种简单、稳定且样本效率较好的 policy optimization 方法。",
+        "解决问题": "论文要解决如何在不显式求解复杂 trust-region 约束的情况下，限制单次策略更新幅度，并允许同一批 rollout 数据进行多轮 minibatch 更新。",
+        "现象分析": "如果策略更新过大，采样旧策略与更新后策略之间的分布差异会破坏 on-policy 近似；如果更新过小，样本利用率和 wall-time efficiency 又较差。",
+        "主要方法": "PPO 引入 importance ratio 和 clipped surrogate objective。当 ratio 超出 1±epsilon 范围时，裁剪目标限制有利方向的过大更新，从而在简单实现中近似控制策略漂移。",
+        "数据集与实验": "论文在模拟机器人 locomotion 和 Atari 等 benchmark 上测试 PPO，显示其在样本复杂度、实现简单性和运行效率之间取得较好平衡。",
+        "主要贡献": "PPO 成为后续 RLHF 和 LLM tool-use RL 的基础优化器之一。对本文而言，它主要提供第 3 章 PPO clipped objective、importance ratio、old policy 和 advantage-weighted token update 的公式来源。"
+      },
+      "status": "approved",
+      "added_at": "2026-05-13"
+    },
+    {
+      "id": "gae-1506-02438",
+      "title": "High-Dimensional Continuous Control Using Generalized Advantage Estimation",
+      "paper_url": "https://arxiv.org/abs/1506.02438",
+      "authors": [
+        "John Schulman",
+        "Philipp Moritz",
+        "Sergey Levine",
+        "Michael Jordan",
+        "Pieter Abbeel"
+      ],
+      "venue": "arXiv",
+      "year": 2015,
+      "primary_area": "强化学习",
+      "category": "RL 理论",
+      "keywords": [
+        "GAE",
+        "generalized advantage estimation",
+        "advantage function",
+        "TD residual",
+        "bias-variance trade-off",
+        "value function",
+        "policy gradient",
+        "trust region optimization"
+      ],
+      "labels": [
+        "GAE",
+        "Advantage Estimation",
+        "Policy Gradient",
+        "RL Foundation"
+      ],
+      "code_url": "",
+      "note": "第 3 章 advantage estimation 基础。用于定义 TD residual、GAE(lambda)、value baseline 以及优势估计的 bias-variance trade-off。对本文尤其重要，因为 PPO/GRPO/tool-use RL 的稳定性高度依赖 advantage 估计质量。",
+      "tldr": "GAE 用 exponentially-weighted TD residuals 构造优势估计，在降低 policy-gradient 方差和引入有限偏差之间做权衡，是 PPO 类方法中解释 \\hat{A}_t 的基础引用。",
+      "abstract": "High-Dimensional Continuous Control Using Generalized Advantage Estimation develops an advantage estimator for policy-gradient methods that uses value functions to reduce variance while introducing controlled bias. The estimator combines temporal-difference residuals with an exponentially weighted trace parameter, analogous to TD(lambda), and is paired with trust-region optimization for high-dimensional continuous control. In this library, it is included for the definition of advantage estimation used in PPO-style preliminaries.",
+      "summary_cn": {
+        "研究动机": "Policy gradient 可直接优化累计回报，但在高维状态和动作空间中样本需求大、梯度方差高，训练也容易不稳定。",
+        "解决问题": "论文要构造一种优势估计方法，在利用 value function 降低方差的同时控制引入的偏差，使 policy gradient 更适合高维连续控制。",
+        "现象分析": "优势估计存在 bias-variance trade-off：纯 Monte Carlo 回报无偏但方差高，过度依赖 bootstrapping 方差低但偏差更大。",
+        "主要方法": "GAE 使用 TD residual 的指数加权和来估计 advantage，通过 gamma 和 lambda 调节长短期回报混合程度，并结合 trust-region 风格的策略和值函数优化。",
+        "数据集与实验": "论文在 3D locomotion 等高维连续控制任务上实验，学习从原始运动学状态到关节力矩的神经网络策略。",
+        "主要贡献": "GAE 给出了 PPO 类方法中 \\hat{A}_t 的经典定义来源。对本文而言，它支撑后续讨论 advantage 噪声、critic/value baseline 和稀疏工具奖励下的估计偏差。"
+      },
+      "status": "approved",
+      "added_at": "2026-05-13"
+    },
+    {
+      "id": "sutton-barto-rl-introduction-2018",
+      "title": "Reinforcement Learning: An Introduction",
+      "paper_url": "https://mitpress.mit.edu/9780262039246/reinforcement-learning/",
+      "authors": [
+        "Richard S. Sutton",
+        "Andrew G. Barto"
+      ],
+      "venue": "MIT Press",
+      "year": 2018,
+      "primary_area": "强化学习",
+      "category": "RL 理论",
+      "keywords": [
+        "reinforcement learning",
+        "MDP",
+        "return",
+        "value function",
+        "policy",
+        "Bellman equation",
+        "temporal-difference learning",
+        "policy gradient",
+        "textbook"
+      ],
+      "labels": [
+        "RL Foundation",
+        "Textbook",
+        "MDP",
+        "Preliminaries"
+      ],
+      "code_url": "",
+      "note": "第 3 章 RL 基础定义来源。用于 MDP、state/action/reward、return、value function、policy、Bellman equation、TD learning、policy gradient 等基本概念。不是论文方法条目，但对 preliminaries 的符号统一很重要。",
+      "tldr": "Sutton 和 Barto 的 Reinforcement Learning: An Introduction 是 RL 标准教材，可作为第 3 章 MDP、return、value、policy、advantage 和 policy-gradient 基础概念的权威来源。",
+      "abstract": "Reinforcement Learning: An Introduction is a standard textbook covering the core ideas and algorithms of reinforcement learning. The second edition introduces the agent-environment interaction view, Markov decision processes, returns, value functions, Bellman equations, temporal-difference learning, function approximation, and policy-gradient methods. In this library, it is included as the general reference for preliminaries and notation rather than as a narrow method paper.",
+      "summary_cn": {
+        "研究动机": "第 3 章需要统一强化学习的基础对象，包括状态、动作、奖励、回报、策略、价值函数和 MDP 表述。",
+        "解决问题": "这本教材提供 RL 的标准定义和算法框架，可避免在工具调用 LLM 场景中混淆真实环境状态、策略可见上下文和文本 token 动作。",
+        "现象分析": "工具调用语言模型可以被看作 agent-environment interaction：模型根据上下文采取文本或工具动作，环境返回 observation，最终根据任务完成情况给出 reward。",
+        "主要方法": "教材系统介绍 MDP、Bellman 方程、动态规划、Monte Carlo、temporal-difference learning、function approximation 和 policy-gradient methods 等基础内容。",
+        "数据集与实验": "作为教材，它不对应单一实验设置，而是提供从 tabular RL 到 function approximation 和 policy gradient 的统一理论与算法背景。",
+        "主要贡献": "对本文而言，主要贡献是提供第 3 章通用 RL 符号和概念来源，支撑后续将 search/tool-use LLM 训练写成多轮、部分可观测的强化学习问题。"
+      },
+      "status": "approved",
+      "added_at": "2026-05-13"
+    },
+    {
+      "id": "reinforce-williams-1992",
+      "title": "Simple Statistical Gradient-Following Algorithms for Connectionist Reinforcement Learning",
+      "paper_url": "https://link.springer.com/article/10.1007/BF00992696",
+      "authors": [
+        "Ronald J. Williams"
+      ],
+      "venue": "Machine Learning",
+      "year": 1992,
+      "primary_area": "强化学习",
+      "category": "RL 理论",
+      "keywords": [
+        "REINFORCE",
+        "policy gradient",
+        "likelihood-ratio estimator",
+        "score function",
+        "gradient following",
+        "connectionist reinforcement learning",
+        "baseline",
+        "stochastic units"
+      ],
+      "labels": [
+        "REINFORCE",
+        "Policy Gradient",
+        "RL Foundation",
+        "Likelihood Ratio"
+      ],
+      "code_url": "",
+      "note": "Policy-gradient / REINFORCE 的经典来源。第 3 章可用它引出 score-function estimator：用回报或 advantage 加权生成动作的 log-prob 梯度。对工具调用 RL 的 credit assignment 分析很关键。",
+      "tldr": "Williams 1992 提出 REINFORCE 类 likelihood-ratio policy-gradient 更新，用回报加权随机动作的 log-prob 梯度，是 PPO/GRPO 等后续策略优化方法的底层基础。",
+      "abstract": "Simple Statistical Gradient-Following Algorithms for Connectionist Reinforcement Learning introduces the REINFORCE family of stochastic gradient-following algorithms. The method estimates policy gradients through likelihood-ratio terms, increasing the probability of sampled actions in proportion to return-like reinforcement signals and allowing baseline variants to reduce variance. In this library, it is included as the foundational reference for score-function policy gradients used before PPO and GRPO definitions.",
+      "summary_cn": {
+        "研究动机": "强化学习需要在无法直接反向传播环境回报的情况下，估计随机策略参数对期望回报的梯度。",
+        "解决问题": "论文提出一类统计梯度跟随算法，使连接主义模型中的随机单元可以根据 reinforcement signal 更新参数。",
+        "现象分析": "若某个随机动作后得到较高回报，就应提高该动作在相似状态下的概率；若回报较低，则应降低其概率。这个思想可由 log-prob 的 score-function 梯度形式刻画。",
+        "主要方法": "REINFORCE 使用 likelihood-ratio estimator，将回报或带 baseline 的回报乘以 \\nabla log pi(a|s)，得到无模型 policy-gradient 更新。",
+        "数据集与实验": "作为基础算法论文，它关注算法推导和连接主义强化学习设置，而不是现代 LLM benchmark。",
+        "主要贡献": "这篇论文奠定了 REINFORCE / score-function policy gradient 的基础。对本文而言，它解释了为什么轨迹级奖励会通过 log-prob 梯度作用到搜索 query、格式 token 和最终答案 token，从而产生 credit assignment 问题。"
+      },
+      "status": "approved",
+      "added_at": "2026-05-13"
     }
   ]
 }
