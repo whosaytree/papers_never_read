@@ -2989,28 +2989,30 @@
         "AutoRefine",
         "search-and-refine-during-think",
         "retrieval-augmented reasoning",
-        "knowledge refinement",
+        "RAG agent",
         "GRPO",
         "retrieval-specific reward",
-        "multi-hop QA",
-        "evidence synthesis"
+        "document refinement",
+        "multi-hop QA"
       ],
       "labels": [
-        "Agentic RAG",
+        "Agentic RL",
         "Search",
-        "Reward Design"
+        "RAG",
+        "Reward Design",
+        "GRPO"
       ],
-      "code_url": "",
-      "note": "Search-R1 近邻路线，但重点不是单纯自主搜索，而是在相邻 search calls 之间显式加入 knowledge refinement。notes 中原 arXiv 号 2505.09316 已不对应本标题；入库按当前 arXiv 2505.11277 元信息处理。",
-      "tldr": "AutoRefine 在 think 过程中交替执行搜索与知识精炼，用 retrieval-specific rewards 加 answer correctness rewards 训练模型过滤、蒸馏和组织检索证据，尤其提升复杂 multi-hop retrieval-augmented reasoning。",
-      "abstract": "AutoRefine proposes a search-and-refine-during-think paradigm for retrieval-augmented reasoning. Instead of only issuing search queries during reasoning, the model performs explicit knowledge refinement between successive searches, filtering noisy information, distilling useful evidence, and organizing intermediate knowledge before answering. The framework is trained with group relative policy optimization using both answer correctness rewards and retrieval-specific rewards. Experiments on single-hop and multi-hop QA benchmarks show improved retrieval quality, evidence synthesis, and reasoning performance, especially on complex multi-hop settings.",
+      "code_url": "https://github.com/syr-cn/AutoRefine",
+      "note": "",
+      "tldr": "AutoRefine 在 Search-R1 式搜索增强推理轨迹中显式加入 refine 步骤，并用答案奖励与检索特定奖励联合训练，让模型在回答前先过滤、提炼检索文档，从而提升多跳 RAG agent 的检索质量和推理准确率。",
+      "abstract": "Large language models have demonstrated impressive reasoning capabilities but are inherently limited by their knowledge reservoir. Retrieval-augmented reasoning mitigates this limitation by allowing LLMs to query external resources, but existing methods often retrieve irrelevant or noisy information, hindering accurate reasoning. In this paper, we propose AutoRefine, a reinforcement learning post-training framework that adopts a new \"search-and-refine-during-think\" paradigm. AutoRefine introduces explicit knowledge refinement steps between successive search calls, enabling the model to iteratively filter, distill, and organize evidence before generating an answer. Furthermore, we incorporate tailored retrieval-specific rewards alongside answer correctness rewards using group relative policy optimization. Experiments on single-hop and multi-hop QA benchmarks demonstrate that AutoRefine significantly outperforms existing approaches, particularly in complex, multi-hop reasoning scenarios. Detailed analysis shows that AutoRefine issues frequent, higher-quality searches and synthesizes evidence effectively.",
       "summary_cn": {
-        "研究动机": "检索增强推理能补足模型知识，但现有方法常检索到无关或噪声信息。如果模型只会频繁搜索而不会整理证据，外部信息反而会干扰推理。",
-        "解决问题": "论文要解决的是如何让模型在思考过程中不仅搜索，还能在连续搜索之间显式精炼知识，过滤噪声并组织可用证据。",
-        "现象分析": "搜索工具调用的质量不只取决于 query，也取决于模型是否能消化检索结果。multi-hop QA 中，多次检索产生的证据需要被逐步蒸馏和整合，否则后续推理会被噪声污染。",
-        "主要方法": "AutoRefine 采用 search-and-refine-during-think 范式，在 search calls 之间插入 knowledge refinement steps。训练上使用 GRPO，并将 answer correctness rewards 与 retrieval-specific rewards 结合，鼓励高质量检索和证据综合。",
-        "数据集与实验": "实验覆盖 single-hop 和 multi-hop QA benchmarks。结果显示 AutoRefine 相比现有 retrieval-augmented reasoning 方法表现更好，尤其在复杂多跳推理场景中能发出更高质量搜索并更有效合成证据。",
-        "主要贡献": "这篇论文的主要贡献是把搜索增强推理中的中间能力从 query generation 扩展到 evidence refinement。它说明 search count 不是唯一行为指标，检索信息的过滤、蒸馏和组织同样需要训练信号。"
+        "研究动机": "检索增强推理可以缓解 LLM 参数知识受限的问题，但现有 search-during-think 方法往往把检索文档直接塞进推理轨迹，容易受无关或噪声文档干扰。作者希望让模型不仅会搜索，还会在继续推理前主动精炼检索证据。",
+        "解决问题": "论文要解决 RAG agent 中检索文档噪声、检索质量缺少直接监督、以及多跳问答中证据链组织困难的问题。核心目标是让模型学会何时搜索、搜什么、如何从文档中提取关键信息，并把这些信息用于最终答案。",
+        "现象分析": "只用最终答案奖励训练搜索增强推理时，模型可能拿到包含答案的文档却不会有效利用，也可能被长文档中的无关细节带偏。显式的 refine 块把文档压缩成关键证据，既减少上下文噪声，也为检索质量提供了可度量的中间信号。",
+        "主要方法": "论文提出 AutoRefine 框架，采用 search-and-refine-during-think 范式组织轨迹：模型在 <think> 中规划，在 <search> 中生成查询并调用检索工具，在 <documents> 中接收文档，在 <refine> 中抽取关键证据，最后生成答案。训练时使用 GRPO，并结合最终答案 F1 奖励与检索特定奖励；后者检查 refine 内容是否覆盖真实答案成分。同时屏蔽检索文档部分的 loss，避免把外部文档噪声错误归因到策略更新。",
+        "数据集与实验": "主要实验使用 Qwen2.5-3B Base/Instruct，消融扩展到 Qwen2.5-7B；训练数据结合 Natural Questions 和 HotpotQA，评估覆盖 NQ、TriviaQA、PopQA、HotpotQA、2WikiMultihopQA、Musique、Bamboogle 七个问答基准。检索源为 2018 年 12 月 Wikipedia 快照，检索器为 E5-base-v2，默认每次返回 top-3 文档。训练使用 8 张 NVIDIA A100-80GB GPU、FSDP 和全参数微调。",
+        "主要贡献": "AutoRefine 的主要贡献是把搜索增强推理从 search-during-think 推进到 search-and-refine-during-think：引入显式文档精炼步骤，设计答案奖励与检索特定奖励的联合优化，并在单跳和多跳 QA 上显示更强的自适应检索、证据抽取和抗噪能力，尤其提升复杂多跳场景表现。"
       },
       "status": "approved",
       "added_at": "2026-05-12"
