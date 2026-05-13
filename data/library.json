@@ -4942,6 +4942,292 @@
       },
       "status": "approved",
       "added_at": "2026-05-13"
+    },
+    {
+      "id": "llm4ir-survey-2025-tois",
+      "title": "Large Language Models for Information Retrieval: A Survey",
+      "paper_url": "https://arxiv.org/abs/2308.07107",
+      "authors": [
+        "Yutao Zhu",
+        "Huaying Yuan",
+        "Shuting Wang",
+        "Jiongnan Liu",
+        "Wenhan Liu",
+        "Chenlong Deng",
+        "Haonan Chen",
+        "Zheng Liu",
+        "Zhicheng Dou",
+        "Ji-Rong Wen"
+      ],
+      "venue": "ACM TOIS 2025 / arXiv",
+      "year": 2025,
+      "primary_area": "其他 ML 主题",
+      "category": "检索与索引",
+      "keywords": [
+        "LLM4IR",
+        "information retrieval",
+        "query rewriting",
+        "retriever",
+        "reranker",
+        "reader",
+        "search agents",
+        "LLM-based retrieval",
+        "IR pipeline"
+      ],
+      "labels": [
+        "Survey",
+        "Information Retrieval",
+        "Search"
+      ],
+      "code_url": "",
+      "note": "LLM for IR 的宏观综述。它比 RAG Survey 更偏 query rewriting、retrieving、reranking、reading 和 search agents 的完整 IR pipeline，可作为 Search-R1 / ReSearch / DeepResearcher 的检索背景；但不分析 PPO/GRPO 或搜索工具 RL 的训练动态。",
+      "tldr": "这篇综述系统梳理 LLM 在信息检索中的作用，覆盖查询改写、召回、重排、阅读和 search agents 等 IR pipeline 环节。",
+      "abstract": "Large Language Models for Information Retrieval surveys how LLMs are used throughout the information retrieval pipeline. It covers query rewriting and expansion, retrieval, reranking, reading, relevance judgment, and emerging search-agent systems. The paper is useful background for search-augmented LLMs because it frames search not only as retrieval-augmented generation, but as a complete pipeline involving query formulation, evidence ranking, result reading, and interactive search behavior.",
+      "summary_cn": {
+        "研究动机": "信息检索是外部知识获取的重要入口，LLM 的语言理解、生成和推理能力正在改变传统 IR pipeline。",
+        "解决问题": "综述要回答的是 LLM 如何参与 query rewriting、retrieving、reranking、reading 和 search agent 等检索流程。",
+        "现象分析": "搜索增强 LLM 的关键不只是能否访问外部知识，还包括如何构造查询、召回候选、排序证据、阅读结果以及在多轮交互中规划搜索行为。",
+        "主要方法": "论文以 survey 形式梳理 LLM 在 IR 各环节的角色，比较 sparse retrieval、neural retrieval、LLM-based retrieval/reranking 和 search agents 等方向。",
+        "数据集与实验": "作为综述，论文总结多类 IR 任务、benchmark 和 evaluation dimensions，包括 query rewriting quality、retrieval recall、ranking relevance 和 reader accuracy。",
+        "主要贡献": "这篇论文的主要贡献是提供 LLM4IR 的宏观地图。它适合支撑本文的搜索/检索背景，并说明现有 IR 综述通常不触及搜索工具 RL 的训练稳定性。"
+      },
+      "status": "approved",
+      "added_at": "2026-05-13"
+    },
+    {
+      "id": "deepseekmath-2024-arxiv",
+      "title": "DeepSeekMath: Pushing the Limits of Mathematical Reasoning in Open Language Models",
+      "paper_url": "https://arxiv.org/abs/2402.03300",
+      "authors": [
+        "Zhihong Shao",
+        "Peiyi Wang",
+        "Qihao Zhu",
+        "Runxin Xu",
+        "Junxiao Song",
+        "Xiao Bi",
+        "Haowei Zhang",
+        "Mingchuan Zhang",
+        "Y. K. Li",
+        "Y. Wu",
+        "Daya Guo"
+      ],
+      "venue": "arXiv",
+      "year": 2024,
+      "primary_area": "基础/前沿模型 (含LLM)",
+      "category": "推理与思维链",
+      "keywords": [
+        "DeepSeekMath",
+        "mathematical reasoning",
+        "GRPO",
+        "group relative policy optimization",
+        "critic-free RL",
+        "reasoning RL",
+        "MATH",
+        "self-consistency",
+        "math pretraining"
+      ],
+      "labels": [
+        "Reasoning",
+        "GRPO",
+        "RL"
+      ],
+      "code_url": "https://github.com/deepseek-ai/DeepSeek-Math",
+      "note": "GRPO / reasoning RL 的基础来源文献。它不是工具调用论文，但 Search-R1、ReSearch、ToolRL 等大量搜索/工具 RL 工作都继承或改造 GRPO。引用时应强调：GRPO 降低 critic/value model 成本，但不直接解决工具 observation、retrieved token masking 和 query credit assignment。",
+      "tldr": "DeepSeekMath 提出 GRPO，用同组样本相对分数估计 advantage，降低 PPO 中 value model 的资源开销，并显著提升 7B 开源模型数学推理能力。",
+      "abstract": "DeepSeekMath continues pretraining a 7B code-oriented model on a large math corpus and studies reinforcement learning for mathematical reasoning. Its key algorithmic contribution is Group Relative Policy Optimization, which estimates a group-relative baseline from multiple sampled outputs instead of training an explicit value model. GRPO reduces PPO-style memory and training cost while improving mathematical reasoning. The paper is a core background reference for later LLM reasoning RL and search/tool-use RL systems that use GRPO.",
+      "summary_cn": {
+        "研究动机": "数学推理是评估 LLM 复杂推理能力的核心场景，但训练高性能开源数学模型需要更好的数据和更低成本的 RL 方法。",
+        "解决问题": "论文要解决的是如何通过数学数据继续预训练和 critic-free RL 提升 7B 开源模型的 competition-level math reasoning。",
+        "现象分析": "PPO 需要 value model / critic，带来显存与训练开销；数学推理任务又可以提供可验证 outcome reward，适合探索更轻量的 group-relative advantage 估计。",
+        "主要方法": "DeepSeekMath 构建大规模数学网页数据继续预训练，并提出 GRPO：对同一问题采样一组输出，用组内分数估计相对优势，避免显式 value model。",
+        "数据集与实验": "论文在 MATH 等数学推理 benchmark 上评估 DeepSeekMath 7B，报告在不使用外部工具和 voting 的情况下达到强性能，并通过 self-consistency 进一步提升。",
+        "主要贡献": "这篇论文的主要贡献是提出并验证 GRPO。对工具调用 RL 来说，它提供了算法背景，但搜索/工具场景还需要额外处理外部 observation、mask 和多轮 credit assignment。"
+      },
+      "status": "approved",
+      "added_at": "2026-05-13"
+    },
+    {
+      "id": "archrag-2025-arxiv",
+      "title": "ArchRAG: Attributed Community-based Hierarchical Retrieval-Augmented Generation",
+      "paper_url": "https://arxiv.org/abs/2502.09891",
+      "authors": [
+        "Shu Wang",
+        "Yixiang Fang",
+        "Yingli Zhou",
+        "Xilin Liu",
+        "Yuchi Ma"
+      ],
+      "venue": "arXiv",
+      "year": 2025,
+      "primary_area": "其他 ML 主题",
+      "category": "检索与索引",
+      "keywords": [
+        "ArchRAG",
+        "GraphRAG",
+        "graph-based RAG",
+        "hierarchical retrieval",
+        "attributed communities",
+        "community summary",
+        "adaptive filtering",
+        "token cost",
+        "retrieval granularity"
+      ],
+      "labels": [
+        "RAG",
+        "Graph Retrieval",
+        "Hierarchical Retrieval"
+      ],
+      "code_url": "",
+      "note": "Graph-based RAG / retrieval organization 背景。它不学习 search policy，但说明 observation quality、retrieval granularity、community quality 和 token cost 会显著影响 RAG。适合作为外部 observation 组织与压缩的背景，不是 RL 稳定性方法。",
+      "tldr": "ArchRAG 用 attributed communities、hierarchical retrieval 和 adaptive filtering 改进 GraphRAG，提升不同粒度问题的相关信息识别并降低 token cost。",
+      "abstract": "ArchRAG improves graph-based retrieval-augmented generation by organizing knowledge into attributed communities and searching them hierarchically. It argues that graph-based RAG systems suffer from weak community quality, single-granularity retrieval, and high online token cost. The method builds knowledge graphs, uses LLM-based hierarchical clustering and community summaries, and applies adaptive filtering during search. For tool-use RL, it is useful as retrieval-side background: the quality, organization, and cost of observations matter even before policy learning begins.",
+      "summary_cn": {
+        "研究动机": "GraphRAG 类方法能组织外部知识，但 community quality、检索粒度和在线 token cost 会影响实际问答性能。",
+        "解决问题": "论文要解决 graph-based RAG 中社区检测忽略语义属性、检索粒度单一和遍历大量 communities 成本高的问题。",
+        "现象分析": "不同问题需要不同粒度的外部信息；若检索结构粗糙或上下文过长，模型可能得到不相关 observation 或付出过高 token cost。",
+        "主要方法": "ArchRAG 构建 KG，使用 LLM-based hierarchical clustering 生成 attributed communities 和 summaries，并通过 C-HNSW hierarchical index 与 adaptive filtering 在线检索。",
+        "数据集与实验": "论文在 graph-based RAG 设置中比较 accuracy、abstract/specific QA 表现和 token usage，报告相对 GraphRAG 显著降低 token cost。",
+        "主要贡献": "这篇论文的主要贡献是强调 RAG 中外部知识组织和检索粒度的重要性。它可支撑本文关于 observation quality 和 token cost 的背景论述。"
+      },
+      "status": "approved",
+      "added_at": "2026-05-13"
+    },
+    {
+      "id": "qwen3-technical-report-2025-arxiv",
+      "title": "Qwen3 Technical Report",
+      "paper_url": "https://arxiv.org/abs/2505.09388",
+      "authors": [
+        "Qwen Team"
+      ],
+      "venue": "arXiv",
+      "year": 2025,
+      "primary_area": "基础/前沿模型 (含LLM)",
+      "category": "LLM 预训练",
+      "keywords": [
+        "Qwen3",
+        "technical report",
+        "open-weight LLM",
+        "dense models",
+        "MoE",
+        "thinking mode",
+        "thinking budget",
+        "reasoning",
+        "agent benchmark"
+      ],
+      "labels": [
+        "Model Report",
+        "Backbone",
+        "Open Model"
+      ],
+      "code_url": "https://github.com/QwenLM/Qwen3",
+      "note": "模型来源 / 实验 backbone 文献。它不是搜索工具 RL 方法，但如果实验或对比使用 Qwen3 系列，需要引用说明模型来源、thinking/non-thinking mode、thinking budget 和开源模型能力。",
+      "tldr": "Qwen3 是 Qwen 系列新一代开源模型技术报告，覆盖 dense 与 MoE 架构，并引入 thinking / non-thinking mode 与 thinking budget。",
+      "abstract": "Qwen3 Technical Report describes the Qwen3 open-weight language model family, including dense and mixture-of-experts models across multiple sizes. The report emphasizes strong general, coding, mathematical reasoning, multilingual, and agentic capabilities, and introduces a unified thinking and non-thinking mode with controllable thinking budgets. In this library, it is mainly an experimental backbone reference rather than a tool-use RL method.",
+      "summary_cn": {
+        "研究动机": "开源基础模型是后续 SFT、RL 和 agent 训练的基础，实验需要明确 backbone 来源和模型能力边界。",
+        "解决问题": "技术报告说明 Qwen3 系列模型的规模、架构、训练和评测表现，为使用 Qwen3 的实验提供引用依据。",
+        "现象分析": "Qwen3 在 reasoning、coding、多语言和 agent benchmark 上表现较强，并支持 thinking / non-thinking 模式，以在推理质量和推理成本之间权衡。",
+        "主要方法": "报告介绍 dense 与 MoE 架构模型、预训练与后训练流程，以及 thinking budget 等推理控制机制。",
+        "数据集与实验": "报告在通用能力、数学、代码、多语言和 agent tasks 等多类 benchmark 上评估 Qwen3 系列模型。",
+        "主要贡献": "这篇技术报告的主要作用是提供 Qwen3 模型族的正式引用。它适合实验章节作为 backbone 来源，不应作为工具 RL 稳定性方法来展开。"
+      },
+      "status": "approved",
+      "added_at": "2026-05-13"
+    },
+    {
+      "id": "qwen25-technical-report-2024-arxiv",
+      "title": "Qwen2.5 Technical Report",
+      "paper_url": "https://arxiv.org/abs/2412.15115",
+      "authors": [
+        "Qwen Team"
+      ],
+      "venue": "arXiv",
+      "year": 2024,
+      "primary_area": "基础/前沿模型 (含LLM)",
+      "category": "LLM 预训练",
+      "keywords": [
+        "Qwen2.5",
+        "technical report",
+        "open-weight LLM",
+        "base model",
+        "instruction-tuned model",
+        "supervised fine-tuning",
+        "multistage reinforcement learning",
+        "reasoning",
+        "coding"
+      ],
+      "labels": [
+        "Model Report",
+        "Backbone",
+        "Open Model"
+      ],
+      "code_url": "https://github.com/QwenLM/Qwen2.5",
+      "note": "模型来源 / baseline 文献。Search-R1、ReSearch、RLFactory 等很多实验使用 Qwen2.5 系列；入库主要为了实验章节引用 backbone，不作为工具调用 RL 方法。",
+      "tldr": "Qwen2.5 Technical Report 介绍 Qwen2.5 系列 base/instruct 模型、18T token 预训练、SFT 和多阶段 RL 后训练，是许多搜索/推理 RL 实验的 backbone 来源。",
+      "abstract": "Qwen2.5 Technical Report describes the Qwen2.5 language model family, including base, instruction-tuned, quantized, and hosted variants. The report details large-scale pretraining, supervised fine-tuning, and multi-stage reinforcement learning post-training, with strong results in language understanding, reasoning, mathematics, coding, and human preference alignment. In this library, it is mainly included as a backbone and baseline source for experiments using Qwen2.5 models.",
+      "summary_cn": {
+        "研究动机": "许多搜索增强推理和工具 RL 工作使用 Qwen2.5 作为 backbone，需要正式模型来源引用。",
+        "解决问题": "报告说明 Qwen2.5 系列模型的训练规模、模型类型、后训练流程和 benchmark 能力，为实验复现和 baseline 说明提供依据。",
+        "现象分析": "Qwen2.5 在语言理解、数学推理、代码和人类偏好对齐上表现较强，因此常被用作 Search-R1 类方法的基础模型。",
+        "主要方法": "报告介绍 18T token 级别预训练、超过百万 SFT 样本、多阶段 RL 后训练，以及 base/instruct/quantized/hosted 等模型版本。",
+        "数据集与实验": "报告覆盖通用语言理解、reasoning、mathematics、coding 和 alignment 等 benchmark。",
+        "主要贡献": "这篇技术报告的主要作用是提供 Qwen2.5 模型族的正式引用。它适合实验章节作为 backbone / baseline 来源，而不是相关工作主线方法。"
+      },
+      "status": "approved",
+      "added_at": "2026-05-13"
+    },
+    {
+      "id": "otc-po-2504-14870",
+      "title": "Acting Less is Reasoning More! Teaching Model to Act Efficiently",
+      "paper_url": "https://arxiv.org/abs/2504.14870",
+      "authors": [
+        "Hongru Wang",
+        "Cheng Qian",
+        "Wanjun Zhong",
+        "Xiusi Chen",
+        "Jiahao Qiu",
+        "Shijue Huang",
+        "Bowen Jin",
+        "Mengdi Wang",
+        "Kam-Fai Wong",
+        "Heng Ji"
+      ],
+      "venue": "NeurIPS 2025 LAW Workshop / arXiv",
+      "year": 2025,
+      "primary_area": "基础/前沿模型 (含LLM)",
+      "category": "Agent 与工具使用",
+      "keywords": [
+        "OTC-PO",
+        "tool-integrated reasoning",
+        "tool call efficiency",
+        "tool productivity",
+        "cognitive offloading",
+        "OTC-PPO",
+        "OTC-GRPO",
+        "search engine",
+        "code interpreter"
+      ],
+      "labels": [
+        "Tool Use",
+        "Agentic RL",
+        "Reward Design",
+        "Efficiency",
+        "GRPO"
+      ],
+      "code_url": "",
+      "note": "",
+      "tldr": "OTC-PO 在工具集成推理 RL 中把“少调用工具”显式写进奖励：只有答案正确时才奖励更少的搜索/代码工具调用，从而在基本保持准确率的同时减少工具调用、提升 tool productivity，并缓解模型过度依赖外部工具的 cognitive offloading。",
+      "abstract": "Tool-integrated reasoning (TIR) augments large language models (LLMs) with the ability to invoke external tools during long-form reasoning, such as search engines and code interpreters, to solve tasks beyond the capabilities of internal reasoning. While reinforcement learning (RL) has shown promise in training such agents, most of existing approaches typically optimize only for final correctness without considering the efficiency or necessity of external tool use. This often leads to excessive tool calling, incurring high computational costs and hindering the development of internal reasoning capabilities - a phenomenon known as \\textit{cognitive offloading}. To this end, we propose Optimal Tool Call-controlled Policy Optimization (OTC-PO), a simple yet effective RL-based framework that encourages models to produce accurate answers with minimal tool calls. Our method introduces a tool-integrated reward that jointly considers answer correctness and corresponding tool use behavior of model to reach that answer. To validate the effectiveness, we introduce the metric of \\textit{tool productivity}, defined as the ratio between the number of correct answers and the total number of tool calls across all test cases. This metric reflects how efficiently tool usage contributes to successful task completion, with higher values indicating smarter and more autonomous reasoning. We instantiate this framework within both Proximal Policy Optimization (PPO) and Group Relative Preference Optimization (GRPO), resulting in OTC-PPO and OTC-GRPO. Experiments with Qwen-2.5 and Qwen-Math across multiple QA benchmarks show that our approach reduces tool calls by up to 68.3\\% and improves tool productivity by up to 215.4\\%, while maintaining comparable answer accuracy.",
+      "summary_cn": {
+        "研究动机": "工具集成推理让 LLM 可以调用搜索引擎、代码解释器等外部工具完成复杂 QA，但现有 RL 训练通常只优化最终答案正确性，不关心工具调用是否必要。这会造成过度调用工具、增加计算和延迟成本，并削弱模型内部推理能力的发展，即 cognitive offloading。",
+        "解决问题": "论文要解决的是：在保持答案准确性的前提下，如何训练模型以尽可能少的工具调用完成任务。核心目标不是禁止工具，而是让模型学会什么时候必须调用、什么时候可以依靠内部推理完成，从而提升工具使用效率。",
+        "现象分析": "Search-R1、ToRL 等工具推理方法会鼓励模型学会用工具，但如果奖励只看最终结果，模型可能把工具当成默认捷径。作者把轨迹成本定义为工具调用次数，并指出工具效率需要和答案正确性一起度量，否则准确率相同的两条轨迹在实际系统成本上可能差异很大。",
+        "主要方法": "论文提出 Optimal Tool Call-controlled Policy Optimization (OTC-PO)。核心是 multiplicative tool-integrated reward：基础奖励先判断答案正确性或格式合规性，只有基础奖励为正时，工具调用数量越少才获得越高工具奖励。作者将该思想接入 PPO 和 GRPO，形成 OTC-PPO 与 OTC-GRPO；OTC-PPO 用余弦函数把调用次数映射到奖励衰减，OTC-GRPO 在同组正确轨迹中动态识别最小工具调用数并奖励接近局部最优的轨迹。论文还提出 tool productivity，定义为正确答案数与总工具调用数之比，用于衡量工具调用的生产力。",
+        "数据集与实验": "搜索任务使用 Qwen2.5-3B/7B-Base，训练集包括 NQ 和 HotpotQA，测试覆盖 TriviaQA、PopQA、2Wiki、Musique、Bamboogle 等域内外 QA；代码任务使用 Qwen2.5-Math-1.5B/7B-Base 和 ToRL 数据设置，评估 AIME24、AIME25、MATH 等数学问题。实验在 8 张 A100-80G GPU 上进行，搜索任务最大工具调用次数为 4，代码任务为 3，奖励缩放系数 alpha 设为 1。",
+        "主要贡献": "OTC-PO 的主要贡献是首次把工具调用效率作为 TIR 强化学习的显式优化目标，并用正确性优先的奖励设计避免模型为了少调用工具而牺牲答案质量。实验显示，在搜索和代码工具任务上，OTC 方法能显著减少工具调用、提升 tool productivity，并且 7B 模型收益更明显，说明更强模型可以通过奖励控制把一部分外部工具依赖转化为内部推理。"
+      },
+      "status": "approved",
+      "added_at": "2026-05-13"
     }
   ]
 }
