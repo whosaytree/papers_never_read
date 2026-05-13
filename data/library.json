@@ -5228,6 +5228,273 @@
       },
       "status": "approved",
       "added_at": "2026-05-13"
+    },
+    {
+      "id": "agentic-rl-landscape-survey-2509-02547",
+      "title": "The Landscape of Agentic Reinforcement Learning for LLMs: A Survey",
+      "paper_url": "https://arxiv.org/abs/2509.02547",
+      "authors": [
+        "Guibin Zhang",
+        "Hejia Geng",
+        "Xiaohang Yu",
+        "Zhenfei Yin",
+        "Zaibin Zhang",
+        "Zelin Tan",
+        "Heng Zhou",
+        "Zhongzhi Li",
+        "Xiangyuan Xue",
+        "Yijiang Li",
+        "Yifan Zhou",
+        "Yang Chen",
+        "Chen Zhang",
+        "Yutao Fan",
+        "Zihu Wang",
+        "Songtao Huang",
+        "Francisco Piedrahita-Velez",
+        "Yue Liao",
+        "Hongru Wang",
+        "Mengyue Yang",
+        "Heng Ji",
+        "Jun Wang",
+        "Shuicheng Yan",
+        "Philip Torr",
+        "Lei Bai"
+      ],
+      "venue": "Transactions on Machine Learning Research / arXiv",
+      "year": 2026,
+      "primary_area": "基础/前沿模型 (含LLM)",
+      "category": "Agent 与工具使用",
+      "keywords": [
+        "agentic reinforcement learning",
+        "LLM agents",
+        "tool use",
+        "planning",
+        "memory",
+        "POMDP",
+        "multi-turn decision making",
+        "agent benchmarks",
+        "survey"
+      ],
+      "labels": [
+        "Agentic RL",
+        "Survey",
+        "Tool Use",
+        "Multi-turn RL"
+      ],
+      "code_url": "",
+      "note": "上位综述文献。它把传统 LLM-RL 和 agentic RL 区分为 single-step MDP 与 temporally extended POMDP，可用于说明 search/tool-use RL 属于 agentic RL 中的工具使用和多轮决策子方向。不是具体算法，也不分析本文关注的 search RL 训练稳定性细节。",
+      "tldr": "这篇综述把 Agentic RL 定义为将 LLM 放入动态、部分可观测、多轮环境中的强化学习范式，并按 planning、tool use、memory、reasoning 等能力以及应用领域组织已有工作。",
+      "abstract": "The Landscape of Agentic Reinforcement Learning for LLMs surveys the shift from conventional LLM reinforcement learning to agentic reinforcement learning. It frames standard LLM-RL as a degenerate single-step MDP and agentic RL as temporally extended, partially observable decision making. The paper proposes a twofold taxonomy over agentic capabilities such as planning, tool use, memory, reasoning, self-improvement, and perception, and over application domains, while collecting environments, benchmarks, and frameworks. For this library, it is mainly a macro-level taxonomy for positioning search/tool-use RL rather than a method paper.",
+      "summary_cn": {
+        "研究动机": "LLM 正从被动文本生成器走向能在外部环境中规划、调用工具、使用记忆并完成长期任务的 agent，因此传统单步 LLM-RL 已不足以描述这类训练问题。",
+        "解决问题": "论文希望为 agentic RL for LLMs 建立统一问题定义、能力分类、应用分类和资源地图，帮助研究者理解该方向与普通 RLHF/RLVR 的区别。",
+        "现象分析": "当模型需要在动态环境中多轮交互时，外部 observation、长期目标、部分可观测性和工具反馈会共同改变 RL 问题结构，使其更接近 temporally extended POMDP。",
+        "主要方法": "论文以综述方式组织超过五百篇相关工作，按 planning、tool use、memory、reasoning、self-improvement、perception 等 agentic capabilities 以及不同应用领域建立 taxonomy。",
+        "数据集与实验": "作为综述论文，它不提出新实验算法，而是整理 agentic RL 相关 environments、benchmarks、frameworks 和开源资源。",
+        "主要贡献": "主要贡献是提供 agentic RL 的宏观问题建模和分类框架。对本文而言，它适合用于说明搜索/工具调用 RL 为什么不是普通单步 RLHF 的简单延伸，而是 agentic RL 中的 tool-use/search 子方向。"
+      },
+      "status": "approved",
+      "added_at": "2026-05-13"
+    },
+    {
+      "id": "stabilizing-rl-with-llms-2512-01374",
+      "title": "Stabilizing Reinforcement Learning with LLMs: Formulation and Practices",
+      "paper_url": "https://arxiv.org/abs/2512.01374",
+      "authors": [
+        "Chujie Zheng",
+        "Kai Dang",
+        "Bowen Yu",
+        "Mingze Li",
+        "Huiqiang Jiang",
+        "Junrong Lin",
+        "Yuqiong Liu",
+        "Hao Lin",
+        "Chencan Wu",
+        "Feng Hu",
+        "An Yang",
+        "Jingren Zhou",
+        "Junyang Lin"
+      ],
+      "venue": "arXiv",
+      "year": 2025,
+      "primary_area": "强化学习",
+      "category": "基于偏好/反馈的 RL",
+      "keywords": [
+        "LLM reinforcement learning",
+        "training stability",
+        "sequence-level reward",
+        "token-level objective",
+        "policy staleness",
+        "training-inference discrepancy",
+        "importance sampling",
+        "clipping",
+        "Routing Replay",
+        "MoE"
+      ],
+      "labels": [
+        "LLM RL",
+        "Training Stability",
+        "Policy Optimization",
+        "MoE"
+      ],
+      "code_url": "",
+      "note": "LLM RL 稳定性核心背景。它不研究 search/tool-use RL，但从 sequence-level reward 与 token-level surrogate 的一阶近似解释 IS correction、clipping、policy staleness 和 training-inference discrepancy，适合支撑本文对 reward、entropy、KL、策略漂移和 off-policy 程度的诊断框架。",
+      "tldr": "这篇论文把 LLM RL 的 token-level surrogate objective 解释为 sequence-level reward 目标的一阶近似，并指出训练-推理差异和 policy staleness 是稳定性的关键条件。",
+      "abstract": "Stabilizing Reinforcement Learning with LLMs studies why sequence-level rewards in LLM reinforcement learning can be optimized through token-level surrogate objectives. It shows that this approximation becomes valid when training-inference discrepancy and policy staleness are controlled, which gives a principled explanation for importance sampling correction, clipping, and Routing Replay for MoE models. The paper evaluates these ideas on a 30B MoE setup and argues that stabilized training can reduce collapse and initialization sensitivity. In this library, it is a general LLM-RL stability reference rather than a search/tool-use method.",
+      "summary_cn": {
+        "研究动机": "LLM RL 通常用最终 response 的 sequence-level reward 评价好坏，但训练时常用 token-level surrogate objective 更新策略，两者之间存在优化粒度错配。",
+        "解决问题": "论文要解释在什么条件下 token-level 目标可以合理近似真实序列级目标，并给出稳定 LLM RL 训练的实践原则。",
+        "现象分析": "当 rollout policy 与更新时的 target policy 不一致，或训练引擎与推理引擎产生数值、路由和批处理差异时，surrogate objective 的近似会变差，进而引发 policy staleness、entropy/性能异常和 premature collapse。",
+        "主要方法": "论文从一阶近似推导 token-level surrogate 的成立条件，并将 importance sampling correction、clipping 和 MoE Routing Replay 解释为控制 training-inference discrepancy 与 policy staleness 的机制。",
+        "数据集与实验": "作者在 30B MoE 模型上进行大规模 RL 实验，比较 on-policy 与 off-policy 设置、IS correction、clipping、Routing Replay 和不同 cold-start initialization 对稳定性和最终性能的影响。",
+        "主要贡献": "这篇论文为 LLM RL 稳定性提供了 formulation 层面的解释。对本文而言，它可作为第 2.3 节核心背景，用来解释工具调用 RL 中策略更新、rollout 陈旧性、KL/entropy 诊断和训练-推理差异为什么重要。"
+      },
+      "status": "approved",
+      "added_at": "2026-05-13"
+    },
+    {
+      "id": "tool-learning-with-llms-survey-2405-17935",
+      "title": "Tool Learning with Large Language Models: A Survey",
+      "paper_url": "https://arxiv.org/abs/2405.17935",
+      "authors": [
+        "Changle Qu",
+        "Sunhao Dai",
+        "Xiaochi Wei",
+        "Hengyi Cai",
+        "Shuaiqiang Wang",
+        "Dawei Yin",
+        "Jun Xu",
+        "Ji-Rong Wen"
+      ],
+      "venue": "Frontiers of Computer Science / arXiv",
+      "year": 2025,
+      "primary_area": "基础/前沿模型 (含LLM)",
+      "category": "Agent 与工具使用",
+      "keywords": [
+        "tool learning",
+        "LLM tools",
+        "task planning",
+        "tool selection",
+        "tool calling",
+        "response generation",
+        "tool benchmarks",
+        "survey"
+      ],
+      "labels": [
+        "Tool Use",
+        "Survey",
+        "Agent"
+      ],
+      "code_url": "https://github.com/quchangle1/LLM-Tool-Survey",
+      "note": "工具学习综述。它适合在 Toolformer、ToolLLM、BFCL、ToolRL、RLFactory 等具体工作前后提供 taxonomy：task planning、tool selection、tool calling、response generation。不是 RL 稳定性论文，不能替代 search/tool-use RL 的训练动态分析。",
+      "tldr": "这篇综述将 LLM tool learning 组织为 task planning、tool selection、tool calling 和 response generation 四个阶段，并整理相关 benchmark 与评估方法。",
+      "abstract": "Tool Learning with Large Language Models surveys why tool integration benefits LLMs and how tool learning is implemented. It organizes the tool-learning workflow into task planning, tool selection, tool calling, and response generation, and summarizes benchmarks and evaluation methods for these stages. In this library, it serves as the general tool-use background for understanding search and API-use agents, while the paper itself does not propose a reinforcement learning algorithm.",
+      "summary_cn": {
+        "研究动机": "工具调用已经成为扩展 LLM 知识获取、计算、交互和执行能力的重要路径，但已有 tool learning 工作分散，缺少统一分类。",
+        "解决问题": "论文要系统回答为什么工具学习有价值，以及 LLM 如何完成工具学习，并为相关 benchmark 和 evaluation 建立整理框架。",
+        "现象分析": "工具学习不是简单的一次 API 调用，而是包含任务分解、工具选择、参数构造、工具执行结果利用和最终响应生成的多阶段过程。",
+        "主要方法": "论文以综述方式将 tool learning workflow 划分为 task planning、tool selection、tool calling 和 response generation 四个阶段，并分别讨论方法、数据和评估。",
+        "数据集与实验": "作为综述论文，它不做新算法实验，而是整理 API、search engine、calculator 等工具类型及不同阶段对应的 benchmarks 和 evaluation methods。",
+        "主要贡献": "主要贡献是提供 LLM 工具学习的阶段化 taxonomy。对本文而言，它可支撑把工具调用 RL 的行为拆成何时调用、调用什么、参数是否正确、结果是否被利用等可观测变量。"
+      },
+      "status": "approved",
+      "added_at": "2026-05-13"
+    },
+    {
+      "id": "ircot-2023-acl",
+      "title": "Interleaving Retrieval with Chain-of-Thought Reasoning for Knowledge-Intensive Multi-Step Questions",
+      "paper_url": "https://aclanthology.org/2023.acl-long.557/",
+      "authors": [
+        "Harsh Trivedi",
+        "Niranjan Balasubramanian",
+        "Tushar Khot",
+        "Ashish Sabharwal"
+      ],
+      "venue": "ACL",
+      "year": 2023,
+      "primary_area": "应用：CV/音频/语言等",
+      "category": "自然语言处理",
+      "keywords": [
+        "IRCoT",
+        "interleaved retrieval",
+        "chain-of-thought",
+        "multi-hop QA",
+        "dynamic retrieval",
+        "retrieval-reasoning loop",
+        "HotpotQA",
+        "MuSiQue",
+        "IIRC"
+      ],
+      "labels": [
+        "RAG",
+        "Chain-of-Thought",
+        "Dynamic Retrieval",
+        "Multi-hop QA"
+      ],
+      "code_url": "https://github.com/stonybrooknlp/ircot",
+      "note": "动态检索 / retrieval-reasoning 背景。IRCoT 不做 RL，而是在推理步骤之间交错检索，说明多步 QA 中 query 取决于当前 reasoning state。适合放在从固定 RAG 到 search-reasoning / Search-R1 类方法的过渡位置。",
+      "tldr": "IRCoT 在 CoT 推理句子之间插入检索，用当前推理状态引导下一次 retrieval，并用检索结果改善后续推理，在多跳 QA 上提升检索和回答表现。",
+      "abstract": "IRCoT argues that one-step retrieve-and-read is insufficient for knowledge-intensive multi-step QA because what to retrieve depends on what has already been derived and previously retrieved. The method interleaves retrieval with sentence-level Chain-of-Thought reasoning: the current reasoning state guides retrieval, and retrieved evidence improves subsequent reasoning. Experiments on HotpotQA, 2WikiMultihopQA, MuSiQue, and IIRC show gains in retrieval and downstream QA and reduced hallucination. For this library, it is a key pre-RL dynamic retrieval background.",
+      "summary_cn": {
+        "研究动机": "多步知识密集型问答中，模型往往需要根据中间推理状态继续检索外部证据，一次性 retrieve-and-read 很难覆盖后续推理需要。",
+        "解决问题": "论文要解决的是：如何让检索过程随 CoT 推理动态展开，使后续 query 由当前已推理出的中间结论和已有证据决定。",
+        "现象分析": "纯 CoT 在缺少参数知识或知识过时时容易 hallucinate；固定检索又不能根据中间结论调整检索目标。多步 QA 的 retrieval need 与 reasoning state 存在动态依赖。",
+        "主要方法": "IRCoT 在 CoT 的句子级推理步骤之间插入检索，用当前 CoT 状态作为检索引导，再把检索结果纳入后续 CoT 推理，形成 retrieval-reasoning loop。",
+        "数据集与实验": "论文在 HotpotQA、2WikiMultihopQA、MuSiQue 和 IIRC 上评估，报告 retrieval 指标和 downstream QA 均有明显提升，并在 OOD 和小模型设置中也观察到收益。",
+        "主要贡献": "主要贡献是提出并验证 interleaved retrieval-reasoning 范式。对本文而言，它说明搜索增强推理的关键不是简单拼接文档，而是在推理过程中动态决定何时搜、搜什么、如何用证据；但它不涉及 PPO/GRPO 或训练稳定性。"
+      },
+      "status": "approved",
+      "added_at": "2026-05-13"
+    },
+    {
+      "id": "e5-text-embeddings-2212-03533",
+      "title": "Text Embeddings by Weakly-Supervised Contrastive Pre-training",
+      "paper_url": "https://arxiv.org/abs/2212.03533",
+      "authors": [
+        "Liang Wang",
+        "Nan Yang",
+        "Xiaolong Huang",
+        "Binxing Jiao",
+        "Linjun Yang",
+        "Daxin Jiang",
+        "Rangan Majumder",
+        "Furu Wei"
+      ],
+      "venue": "arXiv",
+      "year": 2022,
+      "primary_area": "表征学习",
+      "category": "对比学习",
+      "keywords": [
+        "E5",
+        "text embeddings",
+        "weak supervision",
+        "contrastive learning",
+        "dense retrieval",
+        "CCPairs",
+        "BEIR",
+        "MTEB",
+        "embedding model"
+      ],
+      "labels": [
+        "Dense Retrieval",
+        "Embedding",
+        "Retriever",
+        "Experiment Component"
+      ],
+      "code_url": "",
+      "note": "实验组件 / dense retriever 来源文献。E5 不是 tool-use RL 或 search RL 方法，但若实验使用 E5 embedding 或 dense index，需要引用它说明检索器来源；也可用于讨论 observation quality 对 search-enhanced QA 的影响。",
+      "tldr": "E5 通过大规模弱监督文本对上的对比学习训练通用 text embedding，在 BEIR 和 MTEB 上表现强，可作为 dense retrieval / embedding retriever 的来源。",
+      "abstract": "Text Embeddings by Weakly-Supervised Contrastive Pre-training introduces E5, a family of general-purpose text embedding models trained with weak supervision from the CCPairs text-pair dataset. E5 learns single-vector representations useful for retrieval, clustering, and classification, and is evaluated on BEIR and MTEB in zero-shot and fine-tuned settings. In this library, it is mainly an experimental retriever/embedding-model reference rather than a reinforcement learning paper.",
+      "summary_cn": {
+        "研究动机": "开放域问答和 RAG 系统需要高质量语义检索器，通用 text embedding 模型可以为 retrieval、clustering 和 classification 提供统一表示。",
+        "解决问题": "论文要训练一组泛化性强的文本嵌入模型，使其在无需任务标注或少量 fine-tuning 的情况下也能支持多种检索和表征任务。",
+        "现象分析": "检索增强系统的下游表现受候选证据质量影响；dense embedding retriever 的语义匹配能力会影响 retrieved observation 的相关性、召回率和最终回答准确率。",
+        "主要方法": "论文构建大规模弱监督文本对数据 CCPairs，并用 contrastive pre-training 训练 E5 系列模型，得到可直接用于单向量文本表示的 embedding model。",
+        "数据集与实验": "作者在 BEIR 和 MTEB 共 56 个数据集上评估 E5，报告 zero-shot retrieval 和 fine-tuned embedding settings 下的强表现，包括在 BEIR zero-shot 设置下超过强 BM25 baseline。",
+        "主要贡献": "这篇论文的主要作用是提供现代 dense retrieval / text embedding 模型来源。对本文而言，它适合放在实验设置或检索器背景中，而不应作为工具调用 RL 稳定性主线文献。"
+      },
+      "status": "approved",
+      "added_at": "2026-05-13"
     }
   ]
 }
