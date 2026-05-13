@@ -4692,6 +4692,256 @@
       },
       "status": "approved",
       "added_at": "2026-05-12"
+    },
+    {
+      "id": "long-context-rag-2025-iclr",
+      "title": "Long-Context LLMs Meet RAG: Overcoming Challenges for Long Inputs in RAG",
+      "paper_url": "https://openreview.net/forum?id=oU3tpaR8fm",
+      "authors": [
+        "Bowen Jin",
+        "Jinsung Yoon",
+        "Jiawei Han",
+        "Sercan O. Arik"
+      ],
+      "venue": "ICLR 2025",
+      "year": 2025,
+      "primary_area": "基础/前沿模型 (含LLM)",
+      "category": "长上下文",
+      "keywords": [
+        "long-context LLM",
+        "RAG",
+        "retrieval noise",
+        "hard negatives",
+        "retrieved passages",
+        "inverted-U pattern",
+        "retrieval reordering",
+        "relevance fine-tuning",
+        "observation utilization"
+      ],
+      "labels": [
+        "RAG",
+        "Long Context",
+        "Retrieval Noise"
+      ],
+      "code_url": "",
+      "note": "Long-context RAG 背景。它不是 RL 论文，但直接支撑本文关心的 retrieval top-k、hard negatives、observation noise 和 evidence utilization：检索更多文档提高 recall 的同时也可能引入误导性证据，使生成性能呈先升后降。",
+      "tldr": "这篇论文发现 long-context RAG 中检索文档数量增加并不总是更好，更多 passages 会同时带来正确证据和 hard negatives，导致性能常呈 inverted-U。",
+      "abstract": "Long-Context LLMs Meet RAG studies how long-context language models behave when RAG systems provide many retrieved passages. The paper shows that increasing the number of retrieved passages often improves recall at first but later degrades answer accuracy because irrelevant or misleading hard negatives distract the model. It further studies retriever strength, document ordering, robustness fine-tuning, and relevance-focused fine-tuning. For search/tool-use RL, the paper is useful as evidence that external observations are noisy and that retrieval top-k is a behaviorally important variable rather than a simple monotonic knob.",
+      "summary_cn": {
+        "研究动机": "长上下文模型可以接收更多检索文档，但更多上下文是否一定提升 RAG 表现并不清楚。",
+        "解决问题": "论文要解决的是 retrieved context size、retriever strength、hard negatives 和最终生成准确率之间的关系问题。",
+        "现象分析": "随着检索文档数量增加，正确证据的 recall 会提升，但无关或误导性 hard negatives 也会增加。很多模型即使看到正确证据，也可能被噪声文档干扰。",
+        "主要方法": "作者系统改变 retrieved passage 数量、检索器强度和文档顺序，并提出 retrieval reordering、implicit robustness fine-tuning 和 explicit relevance fine-tuning 来提升鲁棒性。",
+        "数据集与实验": "实验在多个 RAG / open-domain QA 设置中比较不同 long-context LLM、retriever 和检索数量，观察 RAG accuracy、recall、hard negative impact 与上下文利用能力。",
+        "主要贡献": "这篇论文的主要贡献是指出 long-context RAG 中“更多检索不一定更好”。它为搜索工具 RL 中分析 top-k、检索噪声和 observation utilization 提供了重要背景。"
+      },
+      "status": "approved",
+      "added_at": "2026-05-13"
+    },
+    {
+      "id": "rlhf-survey-2025-tmlr",
+      "title": "A Survey of Reinforcement Learning from Human Feedback",
+      "paper_url": "https://arxiv.org/abs/2312.14925",
+      "authors": [
+        "Timo Kaufmann",
+        "Paul Weng",
+        "Viktor Bengs",
+        "Eyke Huellermeier"
+      ],
+      "venue": "TMLR 2025 / arXiv",
+      "year": 2025,
+      "primary_area": "基础/前沿模型 (含LLM)",
+      "category": "指令微调与对齐",
+      "keywords": [
+        "RLHF",
+        "preference-based RL",
+        "human feedback",
+        "reward modeling",
+        "alignment",
+        "feedback noise",
+        "policy optimization",
+        "human objectives"
+      ],
+      "labels": [
+        "Survey",
+        "RLHF",
+        "Preference Learning"
+      ],
+      "code_url": "",
+      "note": "RLHF / preference-based RL 背景综述。它不讨论工具调用，但能说明 InstructGPT 之后的基本后训练链条：收集反馈、学习 reward/preference model、再优化策略。工具调用 RL 可看作反馈来源从 human preference 扩展到 tool/environment feedback。",
+      "tldr": "这篇综述系统梳理 RLHF：从人类反馈或偏好中学习奖励信号，再用 RL 优化策略，是 LLM 对齐和后训练的重要基础范式。",
+      "abstract": "This survey reviews reinforcement learning from human feedback as a family of methods that learn reward or preference signals from human input and optimize policies accordingly. It connects RLHF to preference-based reinforcement learning and human-computer interaction, covering feedback types, reward modeling, policy optimization, and applications in language models, control, and robotics. In a tool-use RL bibliography, its role is to provide the general feedback-learning background before moving to more structured tool or environment feedback.",
+      "summary_cn": {
+        "研究动机": "很多任务难以手工设计完整 reward function，因此需要从人类反馈或偏好中学习奖励信号。",
+        "解决问题": "综述要解决的是 RLHF 的方法谱系问题，包括反馈形式、preference-based RL、reward modeling 和策略优化如何协同工作。",
+        "现象分析": "人类反馈能提供目标对齐信号，但也可能带来 feedback noise、inconsistency、效率不足和泛化问题。",
+        "主要方法": "论文系统总结 RLHF 流程：收集人类反馈或偏好，训练 reward/preference model，再用 RL 或相关优化方法调整策略。",
+        "数据集与实验": "作为 survey，论文覆盖 LLM、control、robotics 等场景中的代表性 RLHF / preference-based RL 方法，而不提出单一新实验。",
+        "主要贡献": "这篇论文的主要贡献是把 RLHF 放在 preference-based RL 的统一框架下。它适合用来解释工具/检索反馈 RL 与传统人类偏好 RL 的关系和差异。"
+      },
+      "status": "approved",
+      "added_at": "2026-05-13"
+    },
+    {
+      "id": "score-self-correct-2024-arxiv",
+      "title": "Training Language Models to Self-Correct via Reinforcement Learning",
+      "paper_url": "https://arxiv.org/abs/2409.12917",
+      "authors": [
+        "Aviral Kumar",
+        "Vincent Zhuang",
+        "Rishabh Agarwal",
+        "Yi Su",
+        "John D. Co-Reyes",
+        "Avi Singh",
+        "Kate Baumli",
+        "Shariq Iqbal",
+        "Colton Bishop",
+        "Rebecca Roelofs",
+        "Lei M. Zhang",
+        "Kay McKinney",
+        "Disha Shrivastava",
+        "Cosmin Paduraru",
+        "George Tucker",
+        "Doina Precup",
+        "Feryal Behbahani",
+        "Aleksandra Faust"
+      ],
+      "venue": "arXiv",
+      "year": 2024,
+      "primary_area": "基础/前沿模型 (含LLM)",
+      "category": "推理与思维链",
+      "keywords": [
+        "SCoRe",
+        "self-correction",
+        "multi-turn online RL",
+        "self-generated traces",
+        "distribution mismatch",
+        "behavior collapse",
+        "policy initialization",
+        "reward bonus",
+        "MATH",
+        "HumanEval"
+      ],
+      "labels": [
+        "Reasoning",
+        "RL",
+        "Self-Correction"
+      ],
+      "code_url": "",
+      "note": "多轮 online RL / self-correction 背景。它不是工具调用论文，但对搜索工具 RL 很有借鉴意义：离线 correction traces 和模型自身分布不匹配会造成失败，模型也可能塌缩到无效纠错模式；搜索 query 重写和检索反馈利用同样可能有类似风险。",
+      "tldr": "SCoRe 用模型自生成轨迹做 multi-turn online RL，训练自我纠错能力，并指出离线纠错数据 SFT 容易受 distribution mismatch 和 behavior collapse 影响。",
+      "abstract": "SCoRe trains language models to self-correct through multi-turn online reinforcement learning on self-generated data. The paper argues that supervised fine-tuning on offline correction traces often fails because the data-collection policy does not match the model's own test-time response distribution, and because models can collapse into ineffective correction modes. SCoRe uses staged RL, policy initialization, and reward bonuses to make self-correction more reliable. Although it does not involve external tools, it is a useful background work for multi-turn RL behavior learning and collapse risks.",
+      "summary_cn": {
+        "研究动机": "Self-correction 是 LLM 重要能力，但仅靠 prompt 或离线纠错轨迹微调往往不稳定。",
+        "解决问题": "论文要解决的是如何在模型自身生成的轨迹分布上训练可靠纠错行为，避免离线数据分布不匹配和无效纠错模式塌缩。",
+        "现象分析": "离线 correction traces 可能来自不同策略，与测试时模型自己的错误分布不一致；模型还可能学到表面修改但实际无效的 correction pattern。",
+        "主要方法": "SCoRe 使用完全 self-generated data 做 multi-turn online RL，并通过阶段化 policy initialization、regularization 和 reward bonus 放大有效 self-correction 行为。",
+        "数据集与实验": "论文在 MATH 和 HumanEval 等任务上评估 Gemini 模型的 first response 与 corrected response 表现，报告 self-correction 成功率明显提升。",
+        "主要贡献": "这篇论文的主要贡献是把 self-correction 作为多轮 online RL 行为来训练，并揭示 distribution mismatch 和 behavior collapse。它可作为搜索工具 RL 中多轮反馈闭环训练的背景。"
+      },
+      "status": "approved",
+      "added_at": "2026-05-13"
+    },
+    {
+      "id": "rewardbench-2024-arxiv",
+      "title": "RewardBench: Evaluating Reward Models for Language Modeling",
+      "paper_url": "https://arxiv.org/abs/2403.13787",
+      "authors": [
+        "Nathan Lambert",
+        "Valentina Pyatkin",
+        "Jacob Morrison",
+        "LJ Miranda",
+        "Bill Yuchen Lin",
+        "Khyathi Chandu",
+        "Nouha Dziri",
+        "Sachin Kumar",
+        "Tom Zick",
+        "Yejin Choi",
+        "Noah A. Smith",
+        "Hannaneh Hajishirzi"
+      ],
+      "venue": "arXiv",
+      "year": 2024,
+      "primary_area": "对齐/安全/公平性/隐私",
+      "category": "红队与评估",
+      "keywords": [
+        "RewardBench",
+        "reward models",
+        "RLHF",
+        "preference evaluation",
+        "chosen rejected pairs",
+        "reasoning",
+        "safety",
+        "instruction following",
+        "refusal propensity",
+        "DPO"
+      ],
+      "labels": [
+        "Benchmark",
+        "Reward Model",
+        "RLHF"
+      ],
+      "code_url": "https://huggingface.co/spaces/allenai/reward-bench",
+      "note": "reward model / reward signal evaluation 背景。它不覆盖工具调用过程，但能支撑一个重要论点：后训练不只看 policy 最终表现，也要评估 reward signal 本身的能力和偏置。工具/检索反馈还缺少类似细粒度 benchmark。",
+      "tldr": "RewardBench 提供 reward model 评测集和 leaderboard，用 prompt-chosen-rejected trios 测试 RM 在 chat、reasoning 和 safety 等维度区分优劣回答的能力。",
+      "abstract": "RewardBench evaluates reward models for language modeling. It provides challenging prompt-chosen-rejected examples spanning chat, reasoning, and safety, including subtle but verifiable differences such as factual errors, bugs, or refusal behavior. The benchmark compares explicit reward models and implicit reward signals from preference optimization methods. For tool-use RL, RewardBench is useful as a general reminder that reward signals themselves need evaluation, though tool actions, retrieval quality, and observation utilization require more specialized diagnostics.",
+      "summary_cn": {
+        "研究动机": "Reward models 是 RLHF 和偏好优化的重要组件，但公开社区缺少统一、困难且覆盖多维能力的 RM 评测。",
+        "解决问题": "论文要解决的是如何评估 reward model 是否真的能区分更好与更差回答，尤其在 reasoning、safety 和 instruction following 场景中。",
+        "现象分析": "不同 reward model 在拒答倾向、推理能力、事实错误识别和指令遵循上存在明显差异，这些偏置会影响后训练优化方向。",
+        "主要方法": "RewardBench 构造 prompt-chosen-rejected trios，并评估 reward model 是否给 chosen response 更高分；同时比较显式 RM 和 DPO 等隐式 reward signal。",
+        "数据集与实验": "数据覆盖 chat、reasoning、safety、OOD queries 和细微可验证错误，论文评估多种公开 reward models 并发布 leaderboard。",
+        "主要贡献": "这篇论文的主要贡献是建立 reward model 评测基准。对工具调用 RL 来说，它提示我们也需要评估工具奖励、检索奖励和过程奖励本身是否可靠。"
+      },
+      "status": "approved",
+      "added_at": "2026-05-13"
+    },
+    {
+      "id": "retrollm-2025-acl",
+      "title": "RetroLLM: Empowering Large Language Models to Retrieve Fine-grained Evidence within Generation",
+      "paper_url": "https://aclanthology.org/2025.acl-long.819/",
+      "authors": [
+        "Xiaoxi Li",
+        "Jiajie Jin",
+        "Yujia Zhou",
+        "Yongkang Wu",
+        "Zhonghua Li",
+        "Ye Qi",
+        "Zhicheng Dou"
+      ],
+      "venue": "ACL 2025",
+      "year": 2025,
+      "primary_area": "基础/前沿模型 (含LLM)",
+      "category": "其他",
+      "keywords": [
+        "RetroLLM",
+        "retrieval-augmented generation",
+        "fine-grained evidence",
+        "constrained decoding",
+        "FM-Index",
+        "retrieval-generation integration",
+        "open-domain QA",
+        "evidence generation"
+      ],
+      "labels": [
+        "RAG",
+        "Retrieval",
+        "Evidence"
+      ],
+      "code_url": "",
+      "note": "RAG / retrieval-generation integration 背景。它不做在线 RL，而是用 corpus-constrained decoding 让模型在生成过程中直接产生 fine-grained evidence。适合作为 Search-R1 前的检索增强发展线索：证据获取可以更细粒度，但不是学出来的搜索策略。",
+      "tldr": "RetroLLM 把检索和生成整合为统一自回归过程，通过语料约束解码生成细粒度证据，减少 separate retriever 和冗余 retrieved chunks 的问题。",
+      "abstract": "RetroLLM integrates retrieval and generation into a single autoregressive process. Instead of separately retrieving large text chunks and feeding them to the generator, the model generates fine-grained evidence constrained by a corpus. It uses hierarchical FM-Index constraints and forward-looking constrained decoding to reduce false pruning and improve evidence accuracy. The paper is relevant to RAG background because it represents a non-RL route toward tighter retrieval-generation integration, contrasting with Search-R1-style systems that learn search queries through reinforcement learning.",
+      "summary_cn": {
+        "研究动机": "传统 RAG 需要部署 separate retriever，并把较长 retrieved chunks 输入模型，容易带来冗余 token 和 retrieval-generation 非联合优化问题。",
+        "解决问题": "论文要解决的是如何让 LLM 在生成过程中直接从语料中获取细粒度证据，而不是依赖外部 retriever 返回大块文本。",
+        "现象分析": "检索增强的瓶颈不只是是否能找到文档，还包括证据粒度、冗余上下文和错误剪枝。过粗的 retrieved chunks 会增加模型筛选负担。",
+        "主要方法": "RetroLLM 使用 constrained decoding，使模型生成受语料库约束的 evidence；并用 hierarchical FM-Index constraints 与 forward-looking constrained decoding 提升证据生成准确性。",
+        "数据集与实验": "论文在 5 个 open-domain QA datasets 上评估 in-domain 和 out-of-domain performance，分析 evidence accuracy 和下游 QA 表现。",
+        "主要贡献": "这篇论文的主要贡献是提出检索与生成一体化的细粒度证据生成路线。它为 RAG 背景提供补充，但不涉及搜索工具 RL 的 reward、mask 或 policy optimization 问题。"
+      },
+      "status": "approved",
+      "added_at": "2026-05-13"
     }
   ]
 }
