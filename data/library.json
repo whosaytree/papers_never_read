@@ -5495,6 +5495,160 @@
       },
       "status": "approved",
       "added_at": "2026-05-13"
+    },
+    {
+      "id": "chain-of-thought-prompting-2022-neurips",
+      "title": "Chain-of-Thought Prompting Elicits Reasoning in Large Language Models",
+      "paper_url": "https://papers.nips.cc/paper_files/paper/2022/hash/9d5609613524ecf4f15af0f7b31abca4-Abstract-Conference.html",
+      "authors": [
+        "Jason Wei",
+        "Xuezhi Wang",
+        "Dale Schuurmans",
+        "Maarten Bosma",
+        "Brian Ichter",
+        "Fei Xia",
+        "Ed H. Chi",
+        "Quoc V. Le",
+        "Denny Zhou"
+      ],
+      "venue": "NeurIPS",
+      "year": 2022,
+      "primary_area": "基础/前沿模型 (含LLM)",
+      "category": "推理与思维链",
+      "keywords": [
+        "chain-of-thought",
+        "prompting",
+        "reasoning",
+        "arithmetic reasoning",
+        "commonsense reasoning",
+        "symbolic reasoning",
+        "GSM8K",
+        "emergent ability"
+      ],
+      "labels": [
+        "Chain-of-Thought",
+        "Reasoning",
+        "Prompting",
+        "Background"
+      ],
+      "code_url": "",
+      "note": "长链推理基础文献。它不是 retrieval、tool-use 或 RL 论文，但为 IRCoT、ReAct、Search-o1、ReSearch、Search-R1 等把搜索动作插入 reasoning trace 的工作提供了基础背景。",
+      "tldr": "CoT Prompting 通过在 few-shot prompt 中提供中间推理步骤，显著提升足够大语言模型在算术、常识和符号推理任务上的表现。",
+      "abstract": "Chain-of-Thought Prompting Elicits Reasoning in Large Language Models shows that prompting sufficiently large language models with examples containing intermediate reasoning steps can improve complex reasoning. The method improves arithmetic, commonsense, and symbolic reasoning across multiple large language models; notably, PaLM 540B with eight chain-of-thought exemplars achieved strong GSM8K performance. For this library, the paper is a foundational reasoning background: search/tool-use agents often extend CoT-style traces with external actions and observations.",
+      "summary_cn": {
+        "研究动机": "复杂推理任务往往需要中间步骤，而普通输入输出式 prompting 难以显式诱导模型分解问题。",
+        "解决问题": "论文要验证在 prompt 中加入自然语言中间推理步骤，是否能提升大语言模型的多步推理能力。",
+        "现象分析": "CoT 效果具有规模依赖性，足够大的模型能从 exemplars 中学会生成有用的中间推理链，小模型则可能生成流畅但不可靠的推理。",
+        "主要方法": "作者在 few-shot prompt 中提供问题、中间推理步骤和答案组成的 chain-of-thought demonstrations，让模型在回答前生成自然语言 reasoning steps。",
+        "数据集与实验": "实验覆盖 arithmetic、commonsense 和 symbolic reasoning 任务；论文报告 PaLM 540B 使用 8 个 CoT exemplars 在 GSM8K 上取得强结果，超过 finetuned GPT-3 with verifier。",
+        "主要贡献": "主要贡献是把中间自然语言推理步骤确立为激发 LLM 复杂推理能力的关键 prompting 范式。对本文而言，CoT 是后续 search-reasoning 和 tool-use trajectory 的内部推理基础，但它本身不研究工具调用 RL 稳定性。"
+      },
+      "status": "approved",
+      "added_at": "2026-05-13"
+    },
+    {
+      "id": "logic-rl-2502-14768",
+      "title": "Logic-RL: Unleashing LLM Reasoning with Rule-Based Reinforcement Learning",
+      "paper_url": "https://arxiv.org/abs/2502.14768",
+      "authors": [
+        "Tian Xie",
+        "Zitian Gao",
+        "Qingnan Ren",
+        "Haoming Luo",
+        "Yuqian Hong",
+        "Bryan Dai",
+        "Joey Zhou",
+        "Kai Qiu",
+        "Zhirong Wu",
+        "Chong Luo"
+      ],
+      "venue": "arXiv",
+      "year": 2025,
+      "primary_area": "基础/前沿模型 (含LLM)",
+      "category": "推理与思维链",
+      "keywords": [
+        "Logic-RL",
+        "rule-based RL",
+        "reasoning",
+        "format reward",
+        "answer reward",
+        "synthetic logic puzzles",
+        "reflection",
+        "verification",
+        "REINFORCE++",
+        "Qwen2.5"
+      ],
+      "labels": [
+        "Reasoning RL",
+        "Rule-based Reward",
+        "Training Dynamics",
+        "Format Reward"
+      ],
+      "code_url": "https://github.com/Unakar/Logic-RL",
+      "note": "Rule-based RL reasoning 背景。它不包含搜索工具，但对训练动态指标化很有价值：format reward、shortcut/reward hacking、response length、reflection/verification token 等都可迁移到 search/tool-use rollout 分析。",
+      "tldr": "Logic-RL 用可程序生成、答案可验证的逻辑谜题做 rule-based RL，强调严格 format reward 和稳定训练 recipe，并观察到小模型发展出 reflection、verification、summarization 等推理行为。",
+      "abstract": "Logic-RL studies rule-based reinforcement learning for reasoning after the success of DeepSeek-R1. It uses synthetic logic puzzles with controllable complexity and straightforward verification, and introduces a system prompt, stringent format reward, and training recipe to stabilize RL. A 7B model trained on about 5K logic problems develops reasoning behaviors such as reflection, verification, and summarization and generalizes to AIME and AMC. In this library, it is included as a reasoning-RL and training-dynamics reference rather than a search/tool-use method.",
+      "summary_cn": {
+        "研究动机": "DeepSeek-R1 之后，一个关键问题是规则奖励强化学习能否在更小、更可控的任务环境中激发模型推理能力，并观察其训练动态。",
+        "解决问题": "论文要解决如何构造可验证训练环境、格式奖励和训练 recipe，使小规模模型在 rule-based RL 下稳定发展推理行为。",
+        "现象分析": "仅看最终准确率不足以理解 reasoning RL；训练还会改变 response length、format compliance、reflection/verification 行为以及 shortcut/reward hacking 倾向。",
+        "主要方法": "作者使用 procedurally generated Knights and Knaves 逻辑谜题，结合 answer reward 和严格 format reward，训练 Qwen2.5-7B-Instruct-1M，并采用修改后的 REINFORCE++ recipe。",
+        "数据集与实验": "训练约 5K 个逻辑问题，评估包括逻辑验证以及 AIME、AMC 等数学 benchmark，观察到跨域泛化和 reasoning behavior 的涌现。",
+        "主要贡献": "主要贡献是给出一个可控的 rule-based RL reasoning 设置，并强调格式奖励、shortcut 惩罚和行为指标分析。对本文而言，它可作为 RL 改变推理行为和训练动态的近邻证据，但不能替代 search/tool-use RL 文献。"
+      },
+      "status": "approved",
+      "added_at": "2026-05-13"
+    },
+    {
+      "id": "inference-scaling-long-context-rag-2410-04343",
+      "title": "Inference Scaling for Long-Context Retrieval Augmented Generation",
+      "paper_url": "https://arxiv.org/abs/2410.04343",
+      "authors": [
+        "Zhenrui Yue",
+        "Honglei Zhuang",
+        "Aijun Bai",
+        "Kai Hui",
+        "Rolf Jagerman",
+        "Hansi Zeng",
+        "Zhen Qin",
+        "Dong Wang",
+        "Xuanhui Wang",
+        "Michael Bendersky"
+      ],
+      "venue": "ICLR / arXiv",
+      "year": 2025,
+      "primary_area": "基础/前沿模型 (含LLM)",
+      "category": "长上下文",
+      "keywords": [
+        "long-context RAG",
+        "inference scaling",
+        "test-time compute",
+        "retrieved documents",
+        "in-context learning",
+        "iterative prompting",
+        "compute allocation",
+        "RAG scaling laws"
+      ],
+      "labels": [
+        "RAG",
+        "Long Context",
+        "Inference Scaling",
+        "Test-time Compute"
+      ],
+      "code_url": "",
+      "note": "Long-context RAG / inference-time compute scaling 背景。它不训练 search policy，但说明更多上下文或更多 retrieved documents 并不必然更好，关键在于 compute allocation；可用于讨论 search count、retrieval top-k、trajectory length 和 observation budget。",
+      "tldr": "这篇论文系统研究 long-context RAG 的 inference scaling，发现只有合理分配 retrieved documents、in-context examples 和 iterative prompting 等推理计算资源时，RAG 性能才会随 compute 稳定提升。",
+      "abstract": "Inference Scaling for Long-Context Retrieval Augmented Generation studies how to allocate test-time compute in long-context RAG. It argues that simply adding more external knowledge or expanding context does not always improve performance unless the model can use that knowledge effectively. The paper evaluates strategies such as increasing retrieved documents, adding in-context examples, and iterative prompting, observes near-linear gains when compute is optimally allocated, and proposes a computation allocation model to predict optimal inference configurations. In this library, it is an inference-scaling background for search/RAG systems rather than an RL method.",
+      "summary_cn": {
+        "研究动机": "长上下文 LLM 允许 RAG 在推理阶段纳入更多外部知识，但更多文档和更长上下文并不自动带来更好效果。",
+        "解决问题": "论文要研究在给定 inference compute budget 下，如何在 retrieved documents、in-context examples 和 iterative prompting 等策略之间分配计算资源。",
+        "现象分析": "如果模型不能有效利用外部知识，单纯扩大 context 可能收益有限；RAG 性能与检索文档数量、示例数量、迭代步数和生成成本之间存在非平凡关系。",
+        "主要方法": "作者系统比较多种 inference compute allocation 策略，并建立 computation allocation model，用于预测不同 compute constraint 下的最优 inference configuration。",
+        "数据集与实验": "论文在 long-context RAG benchmark 上评估不同推理配置，报告当 compute 被最优分配时，RAG performance 随 inference computation 近似线性提升，最优配置相对 standard RAG 最高提升 58.9%。",
+        "主要贡献": "主要贡献是提出 long-context RAG 的 inference scaling 视角。对本文而言，它适合支撑 search count、retrieval top-k、rollout length 和 observation budget 都是计算分配变量这一论点，但它不研究 RL 训练稳定性。"
+      },
+      "status": "approved",
+      "added_at": "2026-05-13"
     }
   ]
 }
