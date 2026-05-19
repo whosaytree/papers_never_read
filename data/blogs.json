@@ -1,3 +1,50 @@
 {
-  "posts": []
+  "posts": [
+    {
+      "id": "minimax-ma-jiaqi-glitch-token",
+      "title": "为什么 MiniMax 大模型无法识别马嘉祺是谁？",
+      "url": "https://www.zhihu.com/question/2017049686331127666",
+      "source": "知乎 / 机器之心转载",
+      "published_at": "2026-05-09",
+      "added_at": "2026-05-19",
+      "tags": [
+        "LLM",
+        "post-training",
+        "SFT",
+        "lm_head",
+        "glitch token",
+        "token coverage"
+      ],
+      "summary": "这篇技术分享围绕 MiniMax-M2.5 无法稳定输出“马嘉祺”这一现象，解释了一个比普通知识缺失更细粒度的问题：模型仍然理解相关概念和人物信息，但后训练阶段让某些长尾 token 的输出侧表示发生漂移，导致正确 token 在生成时概率被压低或被错误邻近 token 替代。排查结论认为 tokenizer 和预训练 embedding 并不是主要问题，关键在 SFT 数据中低频 token 覆盖不足，使 lm_head 的局部结构被特殊 token、工具调用标记、编码噪声等挤压。MiniMax 的修复思路是构造全词表覆盖合成数据，让每个 token 在 SFT 中至少作为生成目标出现一定次数，从而给长尾 token 的生成能力做保底校准。",
+      "key_points": [
+        "这个问题不是模型完全不知道马嘉祺，而是知道相关语义却无法稳定生成对应名字，体现了理解和生成出口之间的错位。",
+        "排查排除了 tokenizer 切分错误和预训练表示异常；Base 模型能输出目标词，SFT 后模型却回避目标词，说明问题主要出在后训练阶段。",
+        "SFT 数据中“嘉祺”等低频 token 覆盖极少，输入侧 vocab embedding 基本稳定，但输出侧 lm_head 向量发生明显漂移。",
+        "lm_head 漂移会破坏词表输出空间的局部邻域，让原本人名 token 附近混入特殊 token、工具标记、网页噪声或小语种 token。",
+        "修复方案不是简单补一条知识，而是用全词表覆盖合成数据给每个 token 提供最低生成训练信号，提升后训练阶段的 token coverage。",
+        "对 LLM 后训练的启示是，数据质量不能只看任务和领域覆盖，还要监控词表级覆盖、低频 token 表征漂移和输出空间结构。"
+      ],
+      "quotes": [
+        {
+          "text": "不是 AI 不知道，是说不出来",
+          "note": "这句话准确概括了知识存在但生成出口失效的核心现象。"
+        },
+        {
+          "text": "Tokenizer 没问题，问题出在后训练（SFT）阶段。",
+          "note": "排查路径的关键分界点，把问题从分词/预训练转向 SFT 数据分布。"
+        },
+        {
+          "text": "模型没有忘掉概念，却忘掉了如何把某个 token 说出来。",
+          "note": "这比传统灾难性遗忘更细粒度，指向 token-level generation forgetting。"
+        },
+        {
+          "text": "后训练不是简单地把模型调得更会聊天",
+          "note": "提醒后训练会重塑输出词表空间，不只是提升指令跟随。"
+        }
+      ],
+      "my_note": "这篇对我有价值的地方在于，它把一个看似娱乐化的 bug 还原成后训练数据分布和输出头漂移问题。以后看 SFT/RL 后训练时，不能只看 benchmark 和高层能力，还要关注 token coverage、低频词输出概率、lm_head 邻域变化，以及工具调用/特殊标记是否污染普通语言 token 的输出空间。",
+      "related_papers": [],
+      "status": "approved"
+    }
+  ]
 }
