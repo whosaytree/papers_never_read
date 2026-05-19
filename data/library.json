@@ -5827,52 +5827,6 @@
       },
       "status": "approved",
       "added_at": "2026-05-13"
-    },
-    {
-      "id": "mllm-strong-reranker-2407-21439",
-      "title": "MLLM Is a Strong Reranker: Advancing Multimodal Retrieval-augmented Generation via Knowledge-enhanced Reranking and Noise-injected Training",
-      "paper_url": "https://arxiv.org/abs/2407.21439",
-      "authors": [
-        "Zhanpeng Chen",
-        "Chengjin Xu",
-        "Yiyan Qi",
-        "Jian Guo"
-      ],
-      "venue": "arXiv",
-      "year": 2024,
-      "primary_area": "应用：CV/音频/语言等",
-      "category": "视觉-语言模型 (VLM/MLLM)",
-      "keywords": [
-        "RagVL",
-        "RagLLaVA",
-        "multimodal RAG",
-        "MLLM reranker",
-        "knowledge-enhanced reranking",
-        "noise-injected training",
-        "multi-granularity noisy correspondence",
-        "visual question answering"
-      ],
-      "labels": [
-        "Multimodal RAG",
-        "VLM",
-        "Reranking",
-        "Retrieval",
-        "Robust Training"
-      ],
-      "code_url": "https://github.com/DataArcTech/RagVL",
-      "note": "",
-      "tldr": "RagVL 把 MLLM 训练成多模态 RAG 的图像 reranker，用 caption-aware 的知识增强重排过滤 CLIP 召回结果，并通过数据级和 token 级视觉噪声注入提升生成器鲁棒性，从而缓解多模态检索中的粗粒度和细粒度噪声对应问题。",
-      "abstract": "Multimodal Large Language Models (MLLMs) have demonstrated remarkable capabilities in processing and generating content across multiple data modalities. However, a significant drawback of MLLMs is their reliance on static training data, leading to outdated information and limited contextual awareness. This static nature hampers their ability to provide accurate and up-to-date responses, particularly in dynamic or rapidly evolving contexts. Though integrating Multimodal Retrieval-augmented Generation (Multimodal RAG) offers a promising solution, the system would inevitably encounter the multi-granularity noisy correspondence (MNC) problem, which hinders accurate retrieval and generation. In this work, we propose RagVL, a novel framework with knowledge-enhanced reranking and noise-injected training, to address these limitations. We instruction-tune the MLLM with a simple yet effective instruction template to induce its ranking ability and serve it as a reranker to precisely filter the top-k retrieved images. For generation, we inject visual noise during training at the data and token levels to enhance the generator's robustness. Extensive experiments on the subsets of two datasets that require retrieving and reasoning over images to answer a given query verify the effectiveness of our method. Code and models are available at https://github.com/IDEA-FinAI/RagVL.",
-      "summary_cn": {
-        "研究动机": "MLLM 具备跨模态理解和生成能力，但仍依赖静态训练数据，面对动态知识或需要外部视觉证据的问题时容易过时或上下文不足。多模态 RAG 可以补充外部图像知识，但检索结果会带来噪声，直接影响后续生成质量。",
-        "解决问题": "论文要解决多模态 RAG 中的 multi-granularity noisy correspondence (MNC) 问题：粗粒度上，查询和候选 caption 可能相关但图像不真正支持答案；细粒度上，查询和图像之间可能存在局部视觉证据错配。这些噪声会同时损害检索准确性和生成鲁棒性。",
-        "现象分析": "传统 CLIP 类召回为了保证 recall 往往返回较大的 top-k 候选，但多模态 QA 需要的是能真正支撑回答的图像。MLLM 已经具备较强图文语义理解能力，因此可以被指令微调成 reranker，在候选图像、caption 和 query 之间做更细粒度的相关性判断。",
-        "主要方法": "论文提出 RagVL/RagLLaVA 三阶段框架。第一步用 CLIP 召回 top-k 图像；第二步构造 caption-aware ranking instruction，让 MLLM 判断图像及其 caption 是否与问题相关，并用生成 Yes 的概率作为 relevance score 进行 reranking；第三步训练生成器时注入视觉噪声，包括数据级噪声和 token 级噪声，使模型在面对不完美检索结果时仍能稳健生成答案。",
-        "数据集与实验": "实验在 WebQA 和 MultimodalQA 的需要检索并基于图像推理的子集上进行，比较 CLIP 初始召回、不同 MLLM reranker 和噪声注入生成器的效果。结果显示，caption-aware reranking 能显著提升检索质量，噪声注入训练能增强生成鲁棒性，整体框架在开放世界多模态问答中优于基线。",
-        "主要贡献": "这篇论文的主要贡献是证明 MLLM 本身可以作为强多模态 reranker，并把知识增强重排与噪声注入训练结合起来处理多模态 RAG 的检索噪声。它说明多模态 RAG 的瓶颈不只是召回更多图像，而是需要对候选视觉证据进行可学习的精排和抗噪生成。"
-      },
-      "status": "approved",
-      "added_at": "2026-05-19"
     }
   ]
 }
