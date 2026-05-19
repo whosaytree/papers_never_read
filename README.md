@@ -17,6 +17,8 @@ https://whosaytree.github.io/papers_never_read/
 
 主数据文件：`data/library.json`
 待审字段模板：`data/review_template.json`
+技术分享数据文件：`data/blogs.json`
+技术分享待审模板：`data/blog_template.json`
 
 每篇论文字段约定：
 
@@ -41,6 +43,72 @@ https://whosaytree.github.io/papers_never_read/
 `note` 字段只记录人工补充的个人备注。新增论文时默认留空字符串；只有用户明确提供“我的备注”内容，或要求把某段观察写入备注时，才填入该字段。
 
 构建时只会渲染 `status = approved` 的论文；草稿不会进入页面。
+
+## 技术分享模块
+
+技术分享模块用于记录网上读到的技术文章、工程分享、方法解析和经验总结。它不是论文条目，也不使用六维总结，而是保留轻量但可检索的阅读卡片。
+
+每篇技术分享字段约定：
+
+- `id`: 本地唯一 ID，建议用短 slug
+- `title`: 文章标题
+- `url`: 原文链接
+- `source`: 作者、站点或发布平台
+- `published_at`: 原文发布时间；未知可留空
+- `added_at`: 入库时间
+- `tags`: 主题标签
+- `summary`: 主要内容总结
+- `key_points`: 关键要点列表
+- `quotes`: 关键语句摘录，每项包含 `text` 和 `note`
+- `my_note`: 你的理解、判断或后续想法
+- `related_papers`: 关联论文 ID 列表，引用 `data/library.json` 中的 `id`
+- `status`: `approved` 或其他状态
+
+构建时只会渲染 `status = approved` 的技术分享；草稿不会进入页面。
+
+## 新增技术分享工作流
+
+新增技术分享也采用“预审”和“入库发布”两个阶段。用户只发网页链接时，默认只进入预审阶段；只有用户明确说“确认”“加入网页”“入库”“发布”等指令后，才进入入库发布阶段。
+
+### 1. 预审阶段
+
+预审阶段必须遵守：
+
+- 不修改 `data/blogs.json`
+- 不运行构建脚本
+- 不提交、不推送
+- 用 Markdown 渲染给用户看，不直接输出 JSON 作为主要审阅格式
+- 内容必须按网页实际展示字段组织，方便用户直接修改
+
+预写入版必须包括：
+
+- 标题
+- 原文链接
+- 来源 / 发布时间
+- 标签
+- 主要内容
+- 关键要点
+- 关键语句：
+  - 原文短摘录
+  - 这句话为什么重要，或我的理解
+- 我的备注
+- 关联论文建议
+
+### 2. 入库发布阶段
+
+只有用户确认预写入版后，才执行入库发布。
+
+入库发布阶段必须完成：
+
+1. 将确认后的内容写入 `data/blogs.json`
+2. 将 `status` 设为 `approved`
+3. 设置 `added_at` 为当天日期
+4. 运行 `python3 -m json.tool data/blogs.json` 检查 JSON
+5. 运行 `python3 scripts/build_site.py` 本地构建
+6. 检查 `dist/index.html` 中能搜索到新增技术分享
+7. 提交并推送到 `main`
+8. 等待 GitHub Actions `Deploy Pages` 成功
+9. 最后回复线上链接、提交信息和部署状态
 
 ## 新增论文工作流
 

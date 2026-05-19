@@ -10,6 +10,7 @@ from urllib.parse import quote
 
 ROOT = Path(__file__).resolve().parents[1]
 DATA_FILE = ROOT / "data" / "library.json"
+BLOG_FILE = ROOT / "data" / "blogs.json"
 OUTPUT_DIR = ROOT / "dist"
 OUTPUT_FILE = OUTPUT_DIR / "index.html"
 
@@ -184,6 +185,30 @@ a{color:inherit}
   border-color:var(--accent-deep);
   background:linear-gradient(180deg, var(--accent), var(--accent-deep));
 }
+.view-tabs{
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:8px;
+  margin-bottom:14px;
+}
+.view-tab{
+  border:1px solid var(--line);
+  border-radius:8px;
+  background:var(--surface);
+  color:var(--muted);
+  padding:9px 10px;
+  font-size:13px;
+  font-weight:700;
+  cursor:pointer;
+}
+.view-tab.active{
+  border-color:var(--accent-deep);
+  color:#fff;
+  background:linear-gradient(180deg, var(--accent), var(--accent-deep));
+}
+.view-panel.hidden,
+.sidebar-panel.hidden,
+.filter-row.hidden{display:none}
 h2.pri-title{
   font-size:24px;
   color:var(--accent-deep);
@@ -301,6 +326,68 @@ h3.sub-title{
 .paper.expanded .full-abs{display:block}
 .paper.expanded .toggle-abs::before{content:"▾ "}
 .paper:not(.expanded) .toggle-abs::before{content:"▸ "}
+.blog-list{
+  display:grid;
+  gap:14px;
+}
+.blog{
+  background:var(--surface);
+  border:1px solid var(--line);
+  border-radius:8px;
+  padding:18px 20px;
+  box-shadow:var(--shadow);
+}
+.blog-title{
+  font-size:18px;
+  font-weight:750;
+  line-height:1.4;
+  margin-bottom:8px;
+}
+.blog-title a{text-decoration:none}
+.blog-title a:hover{color:var(--accent);text-decoration:underline}
+.blog-meta{
+  font-size:12px;
+  color:var(--muted);
+  margin-bottom:10px;
+}
+.blog-summary{
+  font-size:13.5px;
+  color:#34424f;
+  margin:10px 0 12px;
+}
+.blog-block{
+  margin-top:12px;
+  display:grid;
+  gap:7px;
+}
+.blog-block h4{
+  font-size:13px;
+  color:var(--accent-deep);
+}
+.blog-points{
+  padding-left:18px;
+  font-size:13px;
+}
+.blog-points li{margin:4px 0}
+.quote-row{
+  border-left:3px solid var(--accent);
+  background:var(--surface-soft);
+  padding:9px 12px;
+  border-radius:0 6px 6px 0;
+  font-size:12.5px;
+}
+.quote-row .quote-note{
+  color:var(--muted);
+  margin-top:4px;
+}
+.related-links{
+  display:flex;
+  gap:6px;
+  flex-wrap:wrap;
+}
+.related-links a{
+  text-decoration:none;
+}
 .empty{
   padding:36px 26px;
   border:1px dashed #9ab6b0;
@@ -337,10 +424,16 @@ footer{
 JS = """
 const search = document.getElementById('search');
 const cards = document.querySelectorAll('.paper');
+const blogCards = document.querySelectorAll('.blog');
 const subSecs = document.querySelectorAll('section.sub-sec');
 const priSecs = document.querySelectorAll('section.pri-sec');
 const chips = document.querySelectorAll('.filter-chip');
+const viewTabs = document.querySelectorAll('.view-tab');
+const viewPanels = document.querySelectorAll('.view-panel');
+const sidebarPanels = document.querySelectorAll('.sidebar-panel');
+const filterRows = document.querySelectorAll('.filter-row');
 let activeFilter = '__all__';
+let activeView = 'papers';
 
 document.querySelectorAll('.nav-pri-head').forEach(head => {
   head.addEventListener('click', () => {
@@ -359,6 +452,17 @@ function applyFilters() {
       activeFilter === '__all__' ||
       (activeFilter === 'with-code' && hasCode) ||
       (activeFilter === 'with-note' && hasNote);
+    card.classList.toggle('hidden', !(matchesSearch && matchesFilter));
+  });
+  blogCards.forEach(card => {
+    const haystack = (card.dataset.search || '').toLowerCase();
+    const hasRelated = card.dataset.hasRelated === 'true';
+    const hasQuotes = card.dataset.hasQuotes === 'true';
+    const matchesSearch = !q || haystack.includes(q);
+    const matchesFilter =
+      activeFilter === '__all__' ||
+      (activeFilter === 'with-related' && hasRelated) ||
+      (activeFilter === 'with-quotes' && hasQuotes);
     card.classList.toggle('hidden', !(matchesSearch && matchesFilter));
   });
 
@@ -389,8 +493,27 @@ function applyFilters() {
 search.addEventListener('input', applyFilters);
 chips.forEach(chip => {
   chip.addEventListener('click', () => {
+    if (chip.dataset.view !== activeView) return;
     activeFilter = chip.dataset.filter;
-    chips.forEach(item => item.classList.toggle('active', item === chip));
+    chips.forEach(item => {
+      if (item.dataset.view === activeView) item.classList.toggle('active', item === chip);
+    });
+    applyFilters();
+  });
+});
+viewTabs.forEach(tab => {
+  tab.addEventListener('click', () => {
+    activeView = tab.dataset.view;
+    activeFilter = '__all__';
+    search.value = '';
+    search.placeholder = activeView === 'papers'
+      ? '搜索论文标题 / 关键词 / 备注 / abstract'
+      : '搜索技术分享标题 / 标签 / 主要内容 / 关键语句';
+    viewTabs.forEach(item => item.classList.toggle('active', item === tab));
+    viewPanels.forEach(panel => panel.classList.toggle('hidden', panel.dataset.view !== activeView));
+    sidebarPanels.forEach(panel => panel.classList.toggle('hidden', panel.dataset.view !== activeView));
+    filterRows.forEach(row => row.classList.toggle('hidden', row.dataset.view !== activeView));
+    chips.forEach(item => item.classList.toggle('active', item.dataset.view === activeView && item.dataset.filter === '__all__'));
     applyFilters();
   });
 });
@@ -399,6 +522,12 @@ chips.forEach(chip => {
 
 def load_library() -> dict:
     return json.loads(DATA_FILE.read_text(encoding="utf-8"))
+
+
+def load_blogs() -> dict:
+    if not BLOG_FILE.exists():
+        return {"posts": []}
+    return json.loads(BLOG_FILE.read_text(encoding="utf-8"))
 
 
 def ensure_output_dir() -> None:
@@ -426,6 +555,24 @@ def search_blob(paper: dict) -> str:
         paper.get("note", ""),
         paper.get("abstract", ""),
         paper.get("code_url", ""),
+    ]
+    return " ".join(part for part in parts if part)
+
+
+def blog_search_blob(post: dict) -> str:
+    quote_parts = []
+    for quote in post.get("quotes", []):
+        quote_parts.extend([quote.get("text", ""), quote.get("note", "")])
+    parts = [
+        post.get("title", ""),
+        post.get("url", ""),
+        post.get("source", ""),
+        " ".join(post.get("tags", [])),
+        post.get("summary", ""),
+        " ".join(post.get("key_points", [])),
+        " ".join(quote_parts),
+        post.get("my_note", ""),
+        " ".join(post.get("related_papers", [])),
     ]
     return " ".join(part for part in parts if part)
 
@@ -483,6 +630,76 @@ def paper_card(paper: dict) -> str:
   <div class="full-abs">{abstract}</div>
 </article>
 """
+
+
+def blog_card(post: dict, papers_by_id: dict[str, dict]) -> str:
+    title = escape(safe_text(post.get("title"), "未命名技术分享"))
+    url = escape(safe_text(post.get("url"), "#"))
+    source = escape(safe_text(post.get("source"), "来源待补充"))
+    published_at = escape(safe_text(post.get("published_at"), "发布时间待补充"))
+    added_at = escape(safe_text(post.get("added_at"), "入库时间待补充"))
+    summary = escape(safe_text(post.get("summary"), "主要内容待补充"))
+    my_note = escape(safe_text(post.get("my_note"), "暂无备注"))
+    tags = post.get("tags", [])
+    key_points = post.get("key_points", [])
+    quotes = post.get("quotes", [])
+    related_papers = post.get("related_papers", [])
+    tag_html = "".join(f'<span class="badge">{escape(item)}</span>' for item in tags)
+    points_html = "".join(f"<li>{escape(item)}</li>" for item in key_points)
+    quote_html = "".join(
+        f'<div class="quote-row"><div>{escape(safe_text(item.get("text"), "关键语句待补充"))}</div>'
+        f'<div class="quote-note">{escape(safe_text(item.get("note"), "暂无说明"))}</div></div>'
+        for item in quotes
+    )
+    related_html = []
+    for paper_id in related_papers:
+        paper = papers_by_id.get(paper_id, {})
+        label = paper.get("title") or paper_id
+        related_html.append(
+            f'<a class="badge label" href="{escape(safe_text(paper.get("paper_url"), "#"))}" target="_blank" rel="noreferrer">{escape(label)}</a>'
+        )
+    return f"""
+<article class="blog" data-search="{escape(blog_search_blob(post))}" data-has-related="{str(bool(related_papers)).lower()}" data-has-quotes="{str(bool(quotes)).lower()}">
+  <div class="blog-title"><a href="{url}" target="_blank" rel="noreferrer">{title}</a></div>
+  <div class="blog-meta">{source} · 发布：{published_at} · 入库：{added_at}</div>
+  <div>{tag_html or '<span class="badge">未打标签</span>'}</div>
+  <div class="blog-summary">{summary}</div>
+  <div class="blog-block">
+    <h4>关键要点</h4>
+    <ul class="blog-points">{points_html or '<li>待补充</li>'}</ul>
+  </div>
+  <div class="blog-block">
+    <h4>关键语句</h4>
+    {quote_html or '<div class="quote-row">暂无关键语句</div>'}
+  </div>
+  <div class="blog-block">
+    <h4>我的备注</h4>
+    <div class="blog-summary">{my_note}</div>
+  </div>
+  <div class="blog-block">
+    <h4>关联论文</h4>
+    <div class="related-links">{"".join(related_html) or "暂无关联论文"}</div>
+  </div>
+</article>
+"""
+
+
+def render_blog_section(posts: list[dict], papers: list[dict]) -> str:
+    approved_posts = [
+        post for post in posts
+        if (post.get("status") or "approved") == "approved"
+    ]
+    papers_by_id = {paper.get("id"): paper for paper in papers if paper.get("id")}
+    if not approved_posts:
+        return """
+<section>
+  <div class="empty">
+    技术分享库还没有正式内容。之后你发来网页链接时，我会先生成待审版本：主要内容、关键要点、关键语句、标签和关联论文建议；你确认后再入库发布。
+  </div>
+</section>
+"""
+    cards_html = "".join(blog_card(post, papers_by_id) for post in approved_posts)
+    return f'<section class="blog-list">{cards_html}</section>'
 
 
 def render_sections(library: dict) -> tuple[str, str]:
@@ -545,18 +762,26 @@ def render_sections(library: dict) -> tuple[str, str]:
     return "".join(nav_blocks), "".join(main_blocks)
 
 
-def render_page(library: dict) -> str:
+def render_page(library: dict, blogs: dict) -> str:
     site = library["site"]
     papers = [
         paper for paper in library["papers"]
         if (paper.get("status") or "approved") == "approved"
     ]
+    posts = [
+        post for post in blogs.get("posts", [])
+        if (post.get("status") or "approved") == "approved"
+    ]
     library = {**library, "papers": papers}
     nav_html, main_html = render_sections(library)
+    blog_html = render_blog_section(posts, papers)
     counter = Counter()
     counter["all"] = len(papers)
     counter["with_code"] = sum(1 for item in papers if (item.get("code_url") or "").strip())
     counter["with_note"] = sum(1 for item in papers if (item.get("note") or "").strip())
+    counter["blogs"] = len(posts)
+    counter["blogs_with_related"] = sum(1 for item in posts if item.get("related_papers"))
+    counter["blogs_with_quotes"] = sum(1 for item in posts if item.get("quotes"))
     generated_at = datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M UTC")
 
     return f"""<!doctype html>
@@ -576,27 +801,47 @@ def render_page(library: dict) -> str:
         <p>{escape(site['description'])}</p>
         <a class="repo" href="https://github.com/{escape(site['repo'])}" target="_blank" rel="noreferrer">{escape(site['repo'])}</a>
       </div>
-      <input id="search" type="search" placeholder="搜索标题 / 关键词 / 备注 / abstract">
-      <div class="stat-grid">
-        <div class="stat-box"><b>{len(papers)}</b>论文总数</div>
-        <div class="stat-box"><b>{len(library['taxonomy'])}</b>一级分类</div>
-        <div class="stat-box"><b>{counter['with_code']}</b>含代码链接</div>
-        <div class="stat-box"><b>{counter['with_note']}</b>含个人备注</div>
+      <div class="view-tabs">
+        <button class="view-tab active" data-view="papers">论文库</button>
+        <button class="view-tab" data-view="blogs">技术分享</button>
       </div>
-      <div class="nav-tree">{nav_html}</div>
+      <input id="search" type="search" placeholder="搜索论文标题 / 关键词 / 备注 / abstract">
+      <div class="sidebar-panel" data-view="papers">
+        <div class="stat-grid">
+          <div class="stat-box"><b>{len(papers)}</b>论文总数</div>
+          <div class="stat-box"><b>{len(library['taxonomy'])}</b>一级分类</div>
+          <div class="stat-box"><b>{counter['with_code']}</b>含代码链接</div>
+          <div class="stat-box"><b>{counter['with_note']}</b>含个人备注</div>
+        </div>
+        <div class="nav-tree">{nav_html}</div>
+      </div>
+      <div class="sidebar-panel hidden" data-view="blogs">
+        <div class="stat-grid">
+          <div class="stat-box"><b>{counter['blogs']}</b>技术分享</div>
+          <div class="stat-box"><b>{counter['blogs_with_quotes']}</b>含关键语句</div>
+          <div class="stat-box"><b>{counter['blogs_with_related']}</b>关联论文</div>
+          <div class="stat-box"><b>{len({tag for post in posts for tag in post.get('tags', [])})}</b>标签数</div>
+        </div>
+      </div>
     </aside>
     <main class="main">
       <header class="main-header">
         <h1>{escape(site['name'])}</h1>
-        <p>这是一个按两级目录组织的个人静态论文库。页面结构延续参考项目，但数据、分类入库和审阅流程改成了长期维护型版本：先审阅，再入库。</p>
-        <div class="filter-row">
-          <button class="filter-chip active" data-filter="__all__">全部 {counter['all']} 篇</button>
-          <button class="filter-chip" data-filter="with-code">含代码 {counter['with_code']} 篇</button>
-          <button class="filter-chip" data-filter="with-note">含备注 {counter['with_note']} 篇</button>
+        <p>这是一个按两级目录组织的个人静态论文库，并补充记录网上读到的技术分享。论文和技术分享都采用先审阅、再入库的长期维护流程。</p>
+        <div class="filter-row" data-view="papers">
+          <button class="filter-chip active" data-view="papers" data-filter="__all__">全部 {counter['all']} 篇</button>
+          <button class="filter-chip" data-view="papers" data-filter="with-code">含代码 {counter['with_code']} 篇</button>
+          <button class="filter-chip" data-view="papers" data-filter="with-note">含备注 {counter['with_note']} 篇</button>
         </div>
-        <div class="meta">总结维度固定为：研究动机 / 解决问题 / 现象分析 / 主要方法 / 数据集与实验 / 主要贡献。最近构建时间：{generated_at}</div>
+        <div class="filter-row hidden" data-view="blogs">
+          <button class="filter-chip active" data-view="blogs" data-filter="__all__">全部 {counter['blogs']} 篇</button>
+          <button class="filter-chip" data-view="blogs" data-filter="with-quotes">含关键语句 {counter['blogs_with_quotes']} 篇</button>
+          <button class="filter-chip" data-view="blogs" data-filter="with-related">关联论文 {counter['blogs_with_related']} 篇</button>
+        </div>
+        <div class="meta">论文总结维度固定为：研究动机 / 解决问题 / 现象分析 / 主要方法 / 数据集与实验 / 主要贡献。技术分享记录主要内容、关键要点、关键语句和个人备注。最近构建时间：{generated_at}</div>
       </header>
-      {main_html}
+      <div class="view-panel" data-view="papers">{main_html}</div>
+      <div class="view-panel hidden" data-view="blogs">{blog_html}</div>
       <footer>GitHub Pages 目标仓库：{escape(site['repo'])}</footer>
     </main>
   </div>
@@ -608,8 +853,9 @@ def render_page(library: dict) -> str:
 
 def main() -> None:
     library = load_library()
+    blogs = load_blogs()
     ensure_output_dir()
-    OUTPUT_FILE.write_text(render_page(library), encoding="utf-8")
+    OUTPUT_FILE.write_text(render_page(library, blogs), encoding="utf-8")
     print(f"Built {OUTPUT_FILE.relative_to(ROOT)}")
 
 
