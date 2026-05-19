@@ -5827,6 +5827,58 @@
       },
       "status": "approved",
       "added_at": "2026-05-13"
+    },
+    {
+      "id": "rethinking-thinking-tokens-2510-01123",
+      "title": "Rethinking Thinking Tokens: LLMs as Improvement Operators",
+      "paper_url": "https://arxiv.org/abs/2510.01123",
+      "authors": [
+        "Lovish Madaan",
+        "Aniket Didolkar",
+        "Suchin Gururangan",
+        "John Quan",
+        "Ruan Silva",
+        "Ruslan Salakhutdinov",
+        "Manzil Zaheer",
+        "Sanjeev Arora",
+        "Anirudh Goyal"
+      ],
+      "venue": "arXiv",
+      "year": 2025,
+      "primary_area": "基础/前沿模型 (含LLM)",
+      "category": "推理与思维链",
+      "keywords": [
+        "thinking tokens",
+        "improvement operator",
+        "Parallel-Distill-Refine",
+        "Sequential Refinement",
+        "long CoT",
+        "bounded workspace",
+        "test-time scaling",
+        "reasoning efficiency",
+        "AIME"
+      ],
+      "labels": [
+        "Reasoning",
+        "Test-time Scaling",
+        "Efficient Reasoning",
+        "PDR",
+        "Long CoT"
+      ],
+      "code_url": "",
+      "note": "",
+      "tldr": "这篇论文把 LLM 看成对自身“思考草稿”的 improvement operator，提出 Sequential Refinement 和 Parallel-Distill-Refine，用多轮短上下文的生成、压缩、改进替代单次长 CoT，在数学推理上用更可控的上下文长度和延迟取得更高准确率。",
+      "abstract": "Reasoning training incentivizes LLMs to produce long chains of thought (long CoT), which among other things, allows them to explore solution strategies with self-checking. This results in higher accuracy, but inflates context length, token/compute cost, and answer latency. We ask: Can current models leverage their metacognition to provide other combinations on this Pareto frontier, e.g., better accuracy with lower context length and/or latency? Abstractly, we view the model as an improvement operator on its own \"thoughts\" with a continuum of possible strategies. We identify an interesting inference family Parallel-Distill-Refine (PDR), which performs the following: (i) generate diverse drafts in parallel; (ii) distill them into a bounded, textual workspace; and (iii) refine conditioned on this workspace, producing an output that seeds the next round. Importantly, context length (hence compute cost) is controllable via degree of parallelism, and is no longer conflated with the total number of generated tokens. We report PDR instantiations of current models that give better accuracy than long CoT while incurring lower latency. Setting degree of parallelism to 1 yields an interesting subcase, Sequential Refinement (SR) (iteratively improve a single candidate answer) which provides performance superior to long CoT. Success of such model orchestrations raises the question whether further training could shift the Pareto frontier. To this end, we train an 8B thinking model with Reinforcement Learning (RL) to make it consistent with PDR as the inference method. On math tasks with verifiable answers, iterative pipelines surpass single-pass baselines at matched sequential budgets, with PDR delivering the largest gains (e.g., +11% on AIME 2024 and +9% on AIME 2025).",
+      "summary_cn": {
+        "研究动机": "长 CoT 能提升推理准确率，但会显著增加上下文长度、token/compute cost 和回答延迟。作者关心的问题是：能否不只是“想得更长”，而是让模型用更高效的推理组织方式，在准确率、延迟和总计算之间取得更好的 Pareto trade-off。",
+        "解决问题": "论文要解决长 CoT 把“推理深度”和“单次上下文长度”绑定在一起的问题。作者希望把推理改写成多轮 improvement process，使模型可以在有限 workspace 中迭代改进答案，并通过并行候选换取准确率，而不线性增加用户感知延迟。",
+        "现象分析": "简单延长 CoT 或把所有历史尝试都塞进上下文，会引入长上下文遗忘、重复错误、anchoring bias 和成本膨胀。模型其实具备一定 metacognition，包括验证、修正、压缩和多样化探索，但需要更合适的推理编排方式来释放这些能力。",
+        "主要方法": "论文提出 LLM-as-improvement-operator 视角，并给出两类推理流程：Sequential Refinement (SR) 迭代改进单个候选答案；Parallel-Distill-Refine (PDR) 每轮并行生成多个草稿，再把它们压缩成 bounded textual workspace，最后基于该 workspace 继续 refine。PDR 将 sequential budget 作为延迟代理，将 total budget 作为总计算成本，从而把延迟和总计算解耦。作者还训练 8B thinking model，使其与 PDR 这种推理方式保持一致。",
+        "数据集与实验": "实验主要在数学推理任务上进行，包括 AIME 2024 和 AIME 2025。论文比较 long CoT、SR、PDR 以及 operator-consistent training 后的模型。结果显示，在 matched sequential budget 下，SR 和 PDR 通常优于单次 long CoT；PDR 通过并行草稿和压缩 workspace 获得最大收益。论文报告 PDR 在 AIME 2024 和 AIME 2025 上相对单次基线有明显提升，例如约 +11% 和 +9%。",
+        "主要贡献": "论文的主要贡献是把 thinking tokens 从“更长的链”重新理解为“可迭代改进的状态管理问题”。它提出 PDR 这类 bounded workspace 推理范式，区分 sequential latency 和 total compute，并说明进一步训练模型适配这种 operator-style inference 可以移动准确率-成本 Pareto frontier。"
+      },
+      "status": "approved",
+      "added_at": "2026-05-19"
     }
   ]
 }
