@@ -18,6 +18,7 @@
       "subcategories": [
         "LLM 预训练",
         "指令微调与对齐",
+        "训练数据构造与合成",
         "推理与思维链",
         "多模态基础模型",
         "长上下文",
@@ -894,8 +895,8 @@
       ],
       "venue": "arXiv",
       "year": 2026,
-      "primary_area": "强化学习",
-      "category": "基于偏好/反馈的 RL",
+      "primary_area": "基础/前沿模型 (含LLM)",
+      "category": "训练数据构造与合成",
       "keywords": [
         "second-order rollout",
         "critique training",
@@ -978,8 +979,8 @@
       ],
       "venue": "arXiv",
       "year": 2026,
-      "primary_area": "强化学习",
-      "category": "探索与奖励设计",
+      "primary_area": "基础/前沿模型 (含LLM)",
+      "category": "训练数据构造与合成",
       "keywords": [
         "Composition-RL",
         "RLVR",
@@ -1754,7 +1755,7 @@
       "venue": "NeurIPS 2023 / arXiv",
       "year": 2023,
       "primary_area": "基础/前沿模型 (含LLM)",
-      "category": "Agent 与工具使用",
+      "category": "训练数据构造与合成",
       "keywords": [
         "Toolformer",
         "tool use",
@@ -5565,7 +5566,7 @@
       "venue": "arXiv",
       "year": 2025,
       "primary_area": "基础/前沿模型 (含LLM)",
-      "category": "推理与思维链",
+      "category": "训练数据构造与合成",
       "keywords": [
         "Logic-RL",
         "rule-based RL",
