@@ -45,6 +45,52 @@
       "my_note": "这篇对我有价值的地方在于，它把一个看似娱乐化的 bug 还原成后训练数据分布和输出头漂移问题。以后看 SFT/RL 后训练时，不能只看 benchmark 和高层能力，还要关注 token coverage、低频词输出概率、lm_head 邻域变化，以及工具调用/特殊标记是否污染普通语言 token 的输出空间。",
       "related_papers": [],
       "status": "approved"
+    },
+    {
+      "id": "lmsys-hard-prompts-category",
+      "title": "Introducing Hard Prompts Category in Chatbot Arena",
+      "url": "https://www.lmsys.org/blog/2024-05-17-category-hard/",
+      "source": "LMSYS Blog",
+      "published_at": "2024-05-20",
+      "added_at": "2026-05-27",
+      "tags": [
+        "Chatbot Arena",
+        "LLM evaluation",
+        "hard prompts",
+        "benchmark construction",
+        "leaderboard",
+        "deduplication"
+      ],
+      "summary": "这篇 LMSYS 技术分享介绍了 Chatbot Arena 新增的 Hard Prompts 分类。核心思路是从真实 Arena 用户提交的问题中筛出更复杂、更严苛的 prompt，用 specificity、domain knowledge、complexity、problem-solving、creativity、technical accuracy 和 real-world application 七个标准给 prompt 打硬度标签；满足多个标准的 prompt 会得到更高 hardness score。LMSYS 用 Llama-3-70B-Instruct 给超过 100 万条 Arena prompt 标注这些标准，但模型排名仍基于 Arena 用户偏好投票，而不是用 LLM judge 评价答案。Hard Prompts 分类会改变模型相对排名，例如一些在普通 English 类别表现接近强模型的小模型，在更难 prompt 上明显掉队；同时文章还强调了 prompt 去重，尤其要降低高频 greeting 类问题对排行榜分布的影响。",
+      "key_points": [
+        "Hard Prompts 不是人工另造一套封闭 benchmark，而是从 Chatbot Arena 的真实用户问题中按难度标准筛选出来。",
+        "prompt 硬度由七个标准刻画：具体性、领域知识、复杂性、问题求解、创造性、技术准确性和真实世界应用。",
+        "LMSYS 使用 Llama-3-70B-Instruct 给超过 100 万条 Arena prompt 标注标准是否满足，但不使用 LLM judge 给模型答案打分。",
+        "Hardness Score 按满足标准数量计算，分数大于等于 6 的 prompt 被用于构建 Hard Prompts 分类。",
+        "Hard Prompts 排行榜会揭示普通 English 分类中不明显的能力差异，例如小模型在复杂任务上相对排名可能显著下降。",
+        "去重流程会下采样最高频的 0.1% prompt，把常见问候语等冗余问题压到 99.9 分位频次附近，并移除约 8.6% 的投票，以降低分布偏斜。"
+      ],
+      "quotes": [
+        {
+          "text": "This category features user-submitted prompts from the Arena",
+          "note": "说明 Hard Prompts 仍来自真实用户流量，而不是完全离线设计的测试集。"
+        },
+        {
+          "text": "meet multiple criteria",
+          "note": "硬度定义不是单一标签，而是多个能力需求的组合。"
+        },
+        {
+          "text": "do not use LLM as judges",
+          "note": "这点很关键：LLM 只辅助标注 prompt 难度，模型排序仍依赖人类偏好投票。"
+        },
+        {
+          "text": "8.6% of the votes",
+          "note": "去重不是小修小补，会实质改变 Arena 数据分布和排行榜统计。"
+        }
+      ],
+      "my_note": "这篇对我有用的地方在于，它把 benchmark 构造拆成两个层次：prompt selection 和 answer preference aggregation。Hard Prompts 的价值不只是“更难”，而是让排行榜更接近模型在复杂、多约束、领域化任务上的真实差异。对我后续整理 evaluation / RLVR 数据时也有启发：难例筛选可以基于任务属性和真实用户分布，而不是只按模型答错率；同时必须处理重复 prompt，否则 leaderboard 容易被低信息量高频请求稀释。",
+      "related_papers": [],
+      "status": "approved"
     }
   ]
 }
