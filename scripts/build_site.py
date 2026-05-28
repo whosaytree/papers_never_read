@@ -277,10 +277,6 @@ h3.sub-title{
   margin-bottom:12px;
 }
 .key-figure{
-  display:grid;
-  grid-template-columns:minmax(160px,240px) minmax(0,1fr);
-  gap:14px;
-  align-items:start;
   margin:12px 0;
   padding:12px;
   border:1px solid var(--line);
@@ -289,7 +285,7 @@ h3.sub-title{
 }
 .key-figure img{
   width:100%;
-  aspect-ratio:4/3;
+  max-height:520px;
   object-fit:contain;
   background:#fff;
   border:1px solid var(--line);
@@ -299,7 +295,7 @@ h3.sub-title{
   font-size:12px;
   font-weight:700;
   color:var(--accent-deep);
-  margin-bottom:5px;
+  margin:10px 0 5px;
 }
 .key-figure-caption{
   font-size:12.5px;
@@ -497,7 +493,6 @@ footer{
   }
   .dim,.extra-row{display:block}
   .dim-label,.extra-row .label{width:auto;margin-bottom:3px}
-  .key-figure{grid-template-columns:1fr}
 }
 """
 
