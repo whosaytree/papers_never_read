@@ -112,6 +112,30 @@ def normalize_pdf_url(url: str) -> str:
         return f"https://arxiv.org/pdf/{arxiv_id}"
     if host.endswith("arxiv.org") and path.startswith("/pdf/"):
         return cleaned
+    if host.endswith("openreview.net") and path.startswith("/forum"):
+        query = parsed.query
+        for part in query.split("&"):
+            if part.startswith("id="):
+                return f"https://openreview.net/pdf?id={part.removeprefix('id=')}"
+    if host.endswith("aclanthology.org"):
+        acl_id = path.strip("/")
+        if acl_id and not acl_id.endswith(".pdf"):
+            return f"https://aclanthology.org/{acl_id}.pdf"
+    if host.endswith("proceedings.mlr.press") and path.endswith(".html"):
+        stem = Path(path).stem
+        volume = Path(path).parts[1] if len(Path(path).parts) > 1 else ""
+        if volume:
+            return f"https://raw.githubusercontent.com/mlresearch/{volume}/main/assets/{stem}/{stem}.pdf"
+    if host.endswith("papers.nips.cc") and path.endswith("-Abstract-Conference.html"):
+        paper_id = Path(path).stem.removesuffix("-Abstract-Conference")
+        parts = Path(path).parts
+        if len(parts) > 3:
+            year = parts[3]
+            return f"https://papers.nips.cc/paper_files/paper/{year}/file/{paper_id}-Paper-Conference.pdf"
+    if host.endswith("link.springer.com") and path.startswith("/article/"):
+        doi = path.removeprefix("/article/").strip("/")
+        if doi:
+            return f"https://link.springer.com/content/pdf/{doi}.pdf"
     if cleaned.lower().endswith(".pdf"):
         return cleaned
     return cleaned
