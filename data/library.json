@@ -5880,6 +5880,57 @@
       },
       "status": "approved",
       "added_at": "2026-05-19"
+    },
+    {
+      "id": "ets-energy-guided-test-time-scaling-2601-21484",
+      "title": "ETS: Energy-Guided Test-Time Scaling for Training-Free RL Alignment",
+      "paper_url": "https://arxiv.org/abs/2601.21484",
+      "authors": [
+        "Xiuyu Li",
+        "Jinkai Zhang",
+        "Mingyang Yi",
+        "Yu Li",
+        "Longqiang Wang",
+        "Yue Wang",
+        "Ju Fan"
+      ],
+      "venue": "ICML 2026",
+      "year": 2026,
+      "primary_area": "强化学习",
+      "category": "基于偏好/反馈的 RL",
+      "keywords": [
+        "test-time scaling",
+        "training-free alignment",
+        "RL alignment",
+        "energy-guided sampling",
+        "optimal RL policy",
+        "Monte Carlo",
+        "importance sampling",
+        "masked language modeling",
+        "autoregressive language model",
+        "diffusion language model"
+      ],
+      "labels": [
+        "RLHF",
+        "Alignment",
+        "Test-time Scaling",
+        "Training-free",
+        "Energy Sampling"
+      ],
+      "code_url": "https://github.com/sheriyuo/ETS",
+      "note": "",
+      "tldr": "这篇论文把 RL 对齐改写成测试时采样问题：不更新模型参数，而是利用 KL-regularized RL 的最优策略形式，在解码过程中用 reward/verifier 和 Monte Carlo 估计前缀的 energy，引导模型近似从高奖励分布中采样。它省的是训练成本，不是推理成本。",
+      "abstract": "Reinforcement Learning (RL) post-training alignment for language models is effective, but also costly and unstable in practice, owing to its complicated training process. To address this, we propose a training-free inference method to sample directly from the optimal RL policy. The transition probability applied to Masked Language Modeling (MLM) consists of a reference policy model and an energy term. Based on this, our algorithm, Energy-Guided Test-Time Scaling (ETS), estimates the key energy term via online Monte Carlo, with a provable convergence rate. Moreover, to ensure practical efficiency, ETS leverages modern acceleration frameworks alongside tailored importance sampling estimators, substantially reducing inference latency while provably preserving sampling quality. Experiments on MLM (including autoregressive models and diffusion language models) across reasoning, coding, and science benchmarks show that our ETS consistently improves generation quality, validating its effectiveness and design.",
+      "summary_cn": {
+        "研究动机": "传统 RLHF / RL post-training 能提升模型对齐和任务表现，但训练闭环很重：需要采样、奖励评估、反复更新 actor，常常还要 value model 或 baseline 辅助，训练过程对超参数敏感且稳定性差。更麻烦的是，奖励函数一变，通常就要重新跑一轮训练。ETS 的动机是把一部分对齐能力从训练阶段搬到测试时，让 reward 可以直接影响采样，而不必先写进模型参数。",
+        "解决问题": "论文解决的是 training-free RL alignment：在不更新模型参数的前提下，如何让生成结果更接近 KL-regularized RL 下的最优策略分布。这里的“最优分布”不是凭空得到的，而是由 reference policy 和外部 reward/verifier 定义出来；难点在于完整答案的 reward 只有生成后才能评估，中间前缀通向高 reward completion 的潜力需要在线估计，因此估计会有方差，也不保证每一步都准。",
+        "现象分析": "ETS 的关键 trade-off 是：省掉训练成本，但把一部分成本转移到推理阶段。它不是让模型真正学会新的偏好，也不是替代充分训练后的 actor；它是在当前 query 的 decoding 过程中，用 reward 临时塑形采样分布。相比普通采样或 Best-of-N，它能更早地把采样质量往高 reward 区域推；相比 RLHF / GRPO，它更灵活、更易切换 reward，但估计稳定性和推理效率依赖 Monte Carlo completion、importance sampling 和 verifier 质量。",
+        "主要方法": "ETS 从 KL-regularized RL 的解析最优策略出发：最优输出分布可理解为 reference model 概率乘以 exp(reward / beta)。由于无法枚举所有完整输出，ETS 将生成过程建模为反向马尔可夫链，在每一步结合 reference policy 与 energy term 进行采样。完整 completion 的 reward 来自外部 reward function、verifier 或 reward model；中间前缀的 energy/value 则通过在线 Monte Carlo 估计，即估计“从当前前缀继续生成，未来能拿到多高 reward”。论文进一步用 tailored importance sampling 降低估计成本，并结合推理加速框架减少延迟。",
+        "数据集与实验": "论文在 masked language modeling 框架下验证 ETS，覆盖自回归模型和扩散语言模型。实验任务包括数学推理、代码生成和科学问答，代表性基准包括 MATH500、GSM8K、GPQA 和 HumanEval。结果显示，ETS 通常优于 Beam Search、Best-of-N 等常规 test-time scaling 方法，在部分设置下可接近甚至超过经过 GRPO 训练后的模型，同时不做参数更新；但它的收益来自额外测试时计算和 reward/verifier 引导，而不是免费获得对齐能力。",
+        "主要贡献": "这篇论文的价值不是证明“无需 reward 也能对齐”，而是把 test-time scaling 和 KL-regularized RL alignment 统一到一个最优策略采样框架下。它提供了一种适合 reward 经常变化、训练成本过高、或需要快速验证 reward 设计的方案：用推理时计算换训练灵活性。对固定任务和大规模高频部署，训练后的模型可能更高效；对低频高价值、reward 可验证且经常变化的任务，ETS 的免训练特性更有意义。"
+      },
+      "status": "approved",
+      "added_at": "2026-05-28"
     }
   ]
 }
