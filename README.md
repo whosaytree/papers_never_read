@@ -62,7 +62,7 @@ https://whosaytree.github.io/papers_never_read/
 - `summary`: 主要内容总结
 - `key_points`: 关键要点列表
 - `quotes`: 关键语句摘录，每项包含 `text` 和 `note`
-- `my_note`: 你的理解、判断或后续想法
+- `my_note`: 你的备注
 - `related_papers`: 关联论文 ID 列表，引用 `data/library.json` 中的 `id`
 - `status`: `approved` 或其他状态
 

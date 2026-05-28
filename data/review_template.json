@@ -11,6 +11,19 @@
   "note": "",
   "tldr": "",
   "abstract": "",
+  "key_figure": {
+    "type": "",
+    "name": "",
+    "page": "",
+    "path": "",
+    "caption": "",
+    "bbox": [],
+    "caption_bbox": [],
+    "source": "",
+    "confidence": 0,
+    "needs_manual_review": true,
+    "contexts": []
+  },
   "summary_cn": {
     "研究动机": "",
     "解决问题": "",

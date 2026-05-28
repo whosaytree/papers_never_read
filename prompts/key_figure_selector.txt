@@ -1,0 +1,45 @@
+你要从一篇论文的 Figure/Table 候选中选择一张 key figure。
+
+key figure 是最适合放在论文数据库卡片里代表论文核心内容的图或表。它应该帮助读者快速理解论文的核心方法、主要贡献、关键结果、benchmark 设计或整体概念框架。
+
+请优先依据文字证据判断：
+- 论文 title
+- TL;DR
+- abstract
+- summary_cn
+- 每个候选的 caption
+- 每个候选的 imageText
+- 每个候选在正文中被引用时的 contexts
+- figType、name、page 等结构信息
+
+选择原则：
+1. caption 与论文核心贡献、方法名称、任务设定或主要结果越匹配越好。
+2. Figure 1 / Figure 2 有先验优势，但不能机械选择。
+3. 方法论文优先选择 overview / framework / pipeline / architecture / method diagram。
+4. benchmark 或 dataset 论文优先选择 benchmark design、dataset construction overview、task taxonomy 或 evaluation protocol。
+5. 实证分析论文优先选择 main finding、核心趋势图或关键对比图。
+6. survey 或 position 论文优先选择 taxonomy、concept map 或 landscape figure。
+7. Table 默认降权，除非它是 main benchmark、leaderboard 或核心结果汇总。
+8. ablation、hyperparameter、sensitivity、implementation detail、appendix-style、局部模块图默认降权。
+9. 如果多个候选都只是普通实验图，或证据不足，请降低置信度并标记 needs_manual_review，不要强行高置信选择。
+
+请只输出 JSON：
+
+{
+  "selected": {
+    "figType": "...",
+    "name": "...",
+    "page": 0,
+    "reason": "为什么它最能代表论文"
+  },
+  "confidence": 0.0,
+  "needs_manual_review": true,
+  "ranked_candidates": [
+    {
+      "figType": "...",
+      "name": "...",
+      "page": 0,
+      "score_reason": "这个候选为什么排在这里"
+    }
+  ]
+}

@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import json
+import shutil
 from collections import Counter, defaultdict
 from datetime import datetime, timezone
 from html import escape
@@ -12,6 +13,7 @@ ROOT = Path(__file__).resolve().parents[1]
 DATA_FILE = ROOT / "data" / "library.json"
 BLOG_FILE = ROOT / "data" / "blogs.json"
 PROJECT_FILE = ROOT / "data" / "projects.json"
+ASSET_DIR = ROOT / "assets"
 OUTPUT_DIR = ROOT / "dist"
 OUTPUT_FILE = OUTPUT_DIR / "index.html"
 
@@ -274,6 +276,40 @@ h3.sub-title{
   color:#6c5400;
   margin-bottom:12px;
 }
+.key-figure{
+  display:grid;
+  grid-template-columns:minmax(160px,240px) minmax(0,1fr);
+  gap:14px;
+  align-items:start;
+  margin:12px 0;
+  padding:12px;
+  border:1px solid var(--line);
+  border-radius:8px;
+  background:#fbfcfd;
+}
+.key-figure img{
+  width:100%;
+  aspect-ratio:4/3;
+  object-fit:contain;
+  background:#fff;
+  border:1px solid var(--line);
+  border-radius:6px;
+}
+.key-figure-label{
+  font-size:12px;
+  font-weight:700;
+  color:var(--accent-deep);
+  margin-bottom:5px;
+}
+.key-figure-caption{
+  font-size:12.5px;
+  color:#44515e;
+}
+.key-figure-meta{
+  margin-top:8px;
+  font-size:11.5px;
+  color:var(--muted);
+}
 .dim{display:flex;gap:10px;align-items:flex-start;margin:8px 0;font-size:13.5px}
 .dim-label{
   width:90px;
@@ -461,6 +497,7 @@ footer{
   }
   .dim,.extra-row{display:block}
   .dim-label,.extra-row .label{width:auto;margin-bottom:3px}
+  .key-figure{grid-template-columns:1fr}
 }
 """
 
@@ -492,11 +529,13 @@ function applyFilters() {
     const haystack = (card.dataset.search || '').toLowerCase();
     const hasCode = card.dataset.hasCode === 'true';
     const hasNote = card.dataset.hasNote === 'true';
+    const hasKeyFigure = card.dataset.hasKeyFigure === 'true';
     const matchesSearch = !q || haystack.includes(q);
     const matchesFilter =
       activeFilter === '__all__' ||
       (activeFilter === 'with-code' && hasCode) ||
-      (activeFilter === 'with-note' && hasNote);
+      (activeFilter === 'with-note' && hasNote) ||
+      (activeFilter === 'with-key-figure' && hasKeyFigure);
     card.classList.toggle('hidden', !(matchesSearch && matchesFilter));
   });
   blogCards.forEach(card => {
@@ -598,6 +637,14 @@ def ensure_output_dir() -> None:
     OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
 
 
+def copy_assets() -> None:
+    target = OUTPUT_DIR / "assets"
+    if target.exists():
+        shutil.rmtree(target)
+    if ASSET_DIR.exists():
+        shutil.copytree(ASSET_DIR, target)
+
+
 def slug(value: str) -> str:
     return quote(value, safe="")
 
@@ -619,6 +666,7 @@ def search_blob(paper: dict) -> str:
         paper.get("note", ""),
         paper.get("abstract", ""),
         paper.get("code_url", ""),
+        (paper.get("key_figure") or {}).get("caption", ""),
     ]
     return " ".join(part for part in parts if part)
 
@@ -681,6 +729,38 @@ def summary_html(summary: dict) -> str:
     return "".join(rows)
 
 
+def key_figure_html(paper: dict) -> str:
+    key_figure = paper.get("key_figure") or {}
+    path = safe_text(key_figure.get("path"), "")
+    if not path:
+        return ""
+    fig_type = safe_text(key_figure.get("type"), "Figure")
+    name = safe_text(str(key_figure.get("name", "")), "")
+    page = safe_text(str(key_figure.get("page", "")), "")
+    caption = safe_text(key_figure.get("caption"), "暂无图注")
+    confidence = key_figure.get("confidence")
+    review = bool(key_figure.get("needs_manual_review"))
+    label = " ".join(part for part in [fig_type, name] if part).strip() or "Key figure"
+    meta_parts = []
+    if page:
+        meta_parts.append(f"第 {escape(page)} 页")
+    if isinstance(confidence, (int, float)):
+        meta_parts.append(f"置信度 {confidence:.2f}")
+    if review:
+        meta_parts.append("建议人工复核")
+    meta = " · ".join(meta_parts)
+    return f"""
+  <figure class="key-figure">
+    <img src="{escape(path)}" alt="{escape(label)}">
+    <figcaption>
+      <div class="key-figure-label">{escape(label)}</div>
+      <div class="key-figure-caption">{escape(caption)}</div>
+      {f'<div class="key-figure-meta">{meta}</div>' if meta else ''}
+    </figcaption>
+  </figure>
+"""
+
+
 def paper_card(paper: dict) -> str:
     title = escape(safe_text(paper.get("title"), "未命名论文"))
     paper_url = escape(safe_text(paper.get("paper_url"), "#"))
@@ -696,6 +776,7 @@ def paper_card(paper: dict) -> str:
     abstract = escape(safe_text(paper.get("abstract"), "暂无摘要"))
     tldr = escape(safe_text(paper.get("tldr"), "待补充一句话定位"))
     summary = paper.get("summary_cn") or {}
+    key_figure = paper.get("key_figure") or {}
     keyword_html = "".join(f'<span class="badge">{escape(item)}</span>' for item in keywords)
     label_html = "".join(f'<span class="badge label">{escape(item)}</span>' for item in labels)
     code_html = (
@@ -704,7 +785,7 @@ def paper_card(paper: dict) -> str:
         else "暂无代码链接"
     )
     return f"""
-<article class="paper" data-search="{escape(search_blob(paper))}" data-has-code="{str(bool(code_url)).lower()}" data-has-note="{str(bool((paper.get('note') or '').strip())).lower()}">
+<article class="paper" data-search="{escape(search_blob(paper))}" data-has-code="{str(bool(code_url)).lower()}" data-has-note="{str(bool((paper.get('note') or '').strip())).lower()}" data-has-key-figure="{str(bool((key_figure.get('path') or '').strip())).lower()}">
   <div class="paper-title"><a href="{paper_url}" target="_blank" rel="noreferrer">{title}</a></div>
   <div class="paper-meta">
     <span class="badge">{primary}</span>
@@ -712,6 +793,7 @@ def paper_card(paper: dict) -> str:
     <span>{authors}</span> · <span>{venue}</span> · <span>{year}</span>
   </div>
   <div class="paper-tldr"><b>TL;DR</b> {tldr}</div>
+  {key_figure_html(paper)}
   {summary_html(summary)}
   <div class="paper-extra">
     <div class="extra-row"><div class="label">标签</div><div class="value">{label_html or "暂无标签"}</div></div>
@@ -991,6 +1073,10 @@ def render_page(library: dict, blogs: dict, projects_data: dict) -> str:
     counter["all"] = len(papers)
     counter["with_code"] = sum(1 for item in papers if (item.get("code_url") or "").strip())
     counter["with_note"] = sum(1 for item in papers if (item.get("note") or "").strip())
+    counter["with_key_figure"] = sum(
+        1 for item in papers
+        if ((item.get("key_figure") or {}).get("path") or "").strip()
+    )
     counter["blogs"] = len(posts)
     counter["blogs_with_related"] = sum(1 for item in posts if item.get("related_papers"))
     counter["blogs_with_quotes"] = sum(1 for item in posts if item.get("quotes"))
@@ -1035,6 +1121,7 @@ def render_page(library: dict, blogs: dict, projects_data: dict) -> str:
           <div class="stat-box"><b>{len(library['taxonomy'])}</b>一级分类</div>
           <div class="stat-box"><b>{counter['with_code']}</b>含代码链接</div>
           <div class="stat-box"><b>{counter['with_note']}</b>含个人备注</div>
+          <div class="stat-box"><b>{counter['with_key_figure']}</b>含关键图</div>
         </div>
         <div class="nav-tree">{nav_html}</div>
       </div>
@@ -1063,6 +1150,7 @@ def render_page(library: dict, blogs: dict, projects_data: dict) -> str:
           <button class="filter-chip active" data-view="papers" data-filter="__all__">全部 {counter['all']} 篇</button>
           <button class="filter-chip" data-view="papers" data-filter="with-code">含代码 {counter['with_code']} 篇</button>
           <button class="filter-chip" data-view="papers" data-filter="with-note">含备注 {counter['with_note']} 篇</button>
+          <button class="filter-chip" data-view="papers" data-filter="with-key-figure">含关键图 {counter['with_key_figure']} 篇</button>
         </div>
         <div class="filter-row hidden" data-view="blogs">
           <button class="filter-chip active" data-view="blogs" data-filter="__all__">全部 {counter['blogs']} 篇</button>
@@ -1093,6 +1181,7 @@ def main() -> None:
     blogs = load_blogs()
     projects = load_projects()
     ensure_output_dir()
+    copy_assets()
     OUTPUT_FILE.write_text(render_page(library, blogs, projects), encoding="utf-8")
     print(f"Built {OUTPUT_FILE.relative_to(ROOT)}")
 

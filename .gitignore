@@ -6,3 +6,4 @@ site/
 *.pyc
 *.pyo
 *.swp
+tools/*.jar
