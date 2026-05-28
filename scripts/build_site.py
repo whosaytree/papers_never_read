@@ -369,6 +369,32 @@ h3.sub-title{
   font-size:13px;
 }
 .blog-points li{margin:4px 0}
+.blog-table{
+  width:100%;
+  border-collapse:collapse;
+  font-size:12.5px;
+  overflow:hidden;
+  border:1px solid var(--line);
+  border-radius:8px;
+}
+.blog-table th,
+.blog-table td{
+  text-align:left;
+  vertical-align:top;
+  padding:8px 10px;
+  border-bottom:1px solid var(--line);
+}
+.blog-table th{
+  background:var(--surface-soft);
+  color:var(--accent-deep);
+  font-size:12px;
+}
+.blog-table tr:last-child td{border-bottom:none}
+.blog-table .term{
+  width:170px;
+  font-weight:700;
+  color:#34424f;
+}
 .quote-row{
   border-left:3px solid var(--accent);
   background:var(--surface-soft);
@@ -570,6 +596,10 @@ def blog_search_blob(post: dict) -> str:
         " ".join(post.get("tags", [])),
         post.get("summary", ""),
         " ".join(post.get("key_points", [])),
+        " ".join(
+            " ".join([item.get("name", ""), item.get("description", "")])
+            for item in post.get("standards", [])
+        ),
         " ".join(quote_parts),
         post.get("my_note", ""),
         " ".join(post.get("related_papers", [])),
@@ -642,10 +672,16 @@ def blog_card(post: dict, papers_by_id: dict[str, dict]) -> str:
     my_note = escape(safe_text(post.get("my_note"), "暂无备注"))
     tags = post.get("tags", [])
     key_points = post.get("key_points", [])
+    standards = post.get("standards", [])
     quotes = post.get("quotes", [])
     related_papers = post.get("related_papers", [])
     tag_html = "".join(f'<span class="badge">{escape(item)}</span>' for item in tags)
     points_html = "".join(f"<li>{escape(item)}</li>" for item in key_points)
+    standards_html = "".join(
+        f'<tr><td class="term">{escape(safe_text(item.get("name"), "标准待补充"))}</td>'
+        f'<td>{escape(safe_text(item.get("description"), "说明待补充"))}</td></tr>'
+        for item in standards
+    )
     quote_html = "".join(
         f'<div class="quote-row"><div>{escape(safe_text(item.get("text"), "关键语句待补充"))}</div>'
         f'<div class="quote-note">{escape(safe_text(item.get("note"), "暂无说明"))}</div></div>'
@@ -668,6 +704,7 @@ def blog_card(post: dict, papers_by_id: dict[str, dict]) -> str:
     <h4>关键要点</h4>
     <ul class="blog-points">{points_html or '<li>待补充</li>'}</ul>
   </div>
+  {f'<div class="blog-block"><h4>难度标准</h4><table class="blog-table"><thead><tr><th>标准</th><th>含义</th></tr></thead><tbody>{standards_html}</tbody></table></div>' if standards_html else ''}
   <div class="blog-block">
     <h4>关键语句</h4>
     {quote_html or '<div class="quote-row">暂无关键语句</div>'}

@@ -70,6 +70,36 @@
         "Hard Prompts 分类会改变模型相对排名，因为它更强调复杂、多约束、领域化任务，而不是普通 English 流量中的平均表现。",
         "去重流程会下采样最高频的 0.1% prompt，把常见问候语等冗余问题压到 99.9 分位频次附近，并移除约 8.6% 的投票，以降低低信息量重复问题对排行榜的影响。"
       ],
+      "standards": [
+        {
+          "name": "Specificity",
+          "description": "问题是否给出明确目标、限制条件、输出格式或评价标准；越具体，越不容易靠泛泛回答糊弄过去。"
+        },
+        {
+          "name": "Domain Knowledge",
+          "description": "问题是否需要特定领域知识，例如法律、医学、工程、数学、编程或专业工具背景。"
+        },
+        {
+          "name": "Complexity",
+          "description": "问题是否包含多步骤、多约束、多变量或长上下文信息，需要模型综合处理。"
+        },
+        {
+          "name": "Problem-Solving",
+          "description": "问题是否要求模型实际解决一个任务，而不是只解释概念或给出简单事实。"
+        },
+        {
+          "name": "Creativity",
+          "description": "问题是否需要开放式构思、生成、改写、设计或在约束下产生新内容。"
+        },
+        {
+          "name": "Technical Accuracy",
+          "description": "问题是否对技术细节、推理严谨性、代码正确性或事实准确性有较高要求。"
+        },
+        {
+          "name": "Real-world Application",
+          "description": "问题是否贴近真实业务、工程、研究或生活场景，而不是孤立的玩具问题。"
+        }
+      ],
       "quotes": [
         {
           "text": "This category features user-submitted prompts from the Arena",
