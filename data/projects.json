@@ -1,0 +1,115 @@
+{
+  "projects": [
+    {
+      "id": "search-r1",
+      "name": "Search-R1",
+      "repo_url": "https://github.com/PeterGriffinJin/Search-R1",
+      "homepage_url": "",
+      "docs_url": "https://github.com/PeterGriffinJin/Search-R1/tree/main/docs",
+      "demo_url": "",
+      "source": "PeterGriffinJin / Search-R1",
+      "added_at": "2026-05-28",
+      "project_type": "official implementation",
+      "domain": "Agentic RL / Search-augmented reasoning",
+      "tags": [
+        "Search-R1",
+        "agentic RL",
+        "tool use",
+        "search-augmented reasoning",
+        "RAG",
+        "GRPO",
+        "PPO"
+      ],
+      "stack": [
+        "Python",
+        "PyTorch",
+        "veRL",
+        "vLLM",
+        "FAISS",
+        "Pyserini",
+        "FastAPI"
+      ],
+      "summary": "Search-R1 是一个用于训练“推理 + 搜索”交错式 LLM agent 的强化学习框架。它把搜索引擎调用纳入 reasoning rollout，让模型学习何时搜索、搜索什么，以及如何利用检索结果继续推理。",
+      "highlights": [
+        "基于 veRL，提供较完整的开源 RL 训练管线。",
+        "支持 PPO、GRPO、reinforce 等 RL 方法。",
+        "支持 Llama、Qwen2.5 等模型作为训练 backbone。",
+        "支持本地 sparse/dense retriever，也支持 Google、Bing、Brave 等在线搜索 API。",
+        "提供 retrieved token masking，用于避免把外部检索文本错误纳入策略更新。"
+      ],
+      "use_cases": [
+        "复现 Search-R1 / reasoning-search RL 实验。",
+        "研究 search query generation、multi-turn retrieval、tool-use RL 训练动态。",
+        "构建 open-domain QA、多跳问答、agentic RAG 的训练基线。",
+        "对比 PPO / GRPO 在工具调用场景下的稳定性和效率。"
+      ],
+      "setup_note": "项目需要分别准备 Search-R1 训练环境和可选 retriever 环境。README 推荐 Python 3.9 的训练环境，依赖 torch、vLLM、veRL、flash-attn、wandb；如果使用本地检索器，还需要单独准备 Python 3.10 retriever 环境，并安装 Pyserini、FAISS、FastAPI / uvicorn 等组件。",
+      "license": "Apache-2.0",
+      "maintenance": "active",
+      "my_note": "",
+      "related_papers": [
+        "search-r1-2503-09516",
+        "rlfactory-2509-06980"
+      ],
+      "related_blogs": [],
+      "status": "approved"
+    },
+    {
+      "id": "sglang",
+      "name": "SGLang",
+      "repo_url": "https://github.com/sgl-project/sglang",
+      "homepage_url": "https://www.sglang.io/",
+      "docs_url": "https://docs.sglang.io/",
+      "demo_url": "",
+      "source": "sgl-project / SGLang",
+      "added_at": "2026-05-28",
+      "project_type": "serving framework",
+      "domain": "LLM inference / Multimodal model serving",
+      "tags": [
+        "SGLang",
+        "LLM serving",
+        "VLM serving",
+        "structured generation",
+        "inference optimization",
+        "RadixAttention",
+        "OpenAI-compatible API"
+      ],
+      "stack": [
+        "Python",
+        "Rust",
+        "CUDA",
+        "PyTorch",
+        "Triton",
+        "FlashInfer",
+        "Docker"
+      ],
+      "summary": "SGLang 是一个面向大语言模型和多模态模型的高性能推理服务框架，主要负责 inference / serving，而不是模型训练本身。它可以作为 RLHF、RLVR、agentic RL 等训练系统里的 rollout backend：训练框架负责 loss、optimizer、PPO/GRPO 更新，SGLang 负责高速生成 rollout，并在权重更新后加载新 policy 继续推理采样。",
+      "highlights": [
+        "支持从单卡到分布式集群的 LLM/VLM serving。",
+        "使用 RadixAttention 做 prefix caching，提高多轮和共享前缀场景的 KV cache 复用效率。",
+        "支持 zero-overhead scheduler、continuous batching、paged attention、chunked prefill、speculative decoding。",
+        "支持 prefill-decode disaggregation，以及 tensor / pipeline / expert / data parallelism。",
+        "支持 structured outputs、量化、多 LoRA batching 和 OpenAI-compatible API。",
+        "相比更纯粹的推理引擎，SGLang 更强调复杂 generation workflow、结构化输出和多轮程序化调用。",
+        "不直接负责训练，但常被 verl、AReaL、slime 等 post-training / RL 系统用作 rollout inference backend。"
+      ],
+      "use_cases": [
+        "部署开源 LLM/VLM 的高吞吐推理服务。",
+        "做 structured output / JSON decoding / agent workflow serving。",
+        "为 RLHF、RLVR、agentic RL 提供 rollout inference backend。",
+        "配合训练框架完成“采样 rollout -> trainer 更新权重 -> serving engine 加载新权重”的循环。",
+        "对比 vLLM、TensorRT-LLM、LightLLM 等 serving 系统。",
+        "研究 prefix caching、PD disaggregation、expert parallelism、weight update 等推理系统问题。"
+      ],
+      "setup_note": "官网提供 pip / uv / Docker 安装路径；基础使用通常是安装 sglang 和 sglang-kernel 后启动 sglang.launch_server，再通过 OpenAI-compatible endpoint 调用。SGLang 本身不是训练框架；如果用于 RL/post-training，需要另配 verl、AReaL、slime、RLFactory 等训练系统，由训练系统负责梯度更新和优化器状态，SGLang 主要负责 rollout 推理和新权重加载。",
+      "license": "Apache-2.0",
+      "maintenance": "active",
+      "my_note": "",
+      "related_papers": [],
+      "related_blogs": [
+        "lmsys-p2p-weight-transfer-rl"
+      ],
+      "status": "approved"
+    }
+  ]
+}

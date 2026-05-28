@@ -19,6 +19,8 @@ https://whosaytree.github.io/papers_never_read/
 待审字段模板：`data/review_template.json`
 技术分享数据文件：`data/blogs.json`
 技术分享待审模板：`data/blog_template.json`
+代码项目数据文件：`data/projects.json`
+代码项目待审模板：`data/project_template.json`
 
 每篇论文字段约定：
 
@@ -65,6 +67,39 @@ https://whosaytree.github.io/papers_never_read/
 - `status`: `approved` 或其他状态
 
 构建时只会渲染 `status = approved` 的技术分享；草稿不会进入页面。
+
+## 代码项目模块
+
+代码项目模块用于记录论文官方实现、开源库、benchmark 工具、工程 demo、数据处理仓库和其他值得长期检索的项目。它不是论文条目的附属字段，而是独立条目；需要时可以反向关联论文和技术分享。
+
+每个代码项目字段约定：
+
+- `id`: 本地唯一 ID，建议用短 slug
+- `name`: 项目名称
+- `repo_url`: 代码仓库链接
+- `homepage_url`: 项目主页；没有可留空
+- `docs_url`: 文档链接；没有可留空
+- `demo_url`: Demo 或在线体验链接；没有可留空
+- `source`: 作者、机构或来源
+- `added_at`: 入库时间
+- `project_type`: 项目类型，例如 official implementation、library、benchmark、tool、demo
+- `domain`: 领域或方向
+- `tags`: 主题标签
+- `stack`: 技术栈、框架或关键依赖
+- `summary`: 项目定位和主要能力
+- `highlights`: 亮点列表
+- `use_cases`: 适用场景列表
+- `setup_note`: 安装、运行或使用注意事项
+- `license`: 许可证
+- `maintenance`: 维护状态，例如 active、stale、archived、unknown
+- `my_note`: 你的备注
+- `related_papers`: 关联论文 ID 列表，引用 `data/library.json` 中的 `id`
+- `related_blogs`: 关联技术分享 ID 列表，引用 `data/blogs.json` 中的 `id`
+- `status`: `approved` 或其他状态
+
+构建时只会渲染 `status = approved` 的代码项目；草稿不会进入页面。
+
+`my_note` 字段只记录人工补充的个人备注。新增代码项目时默认留空字符串；只有用户明确提供“我的备注”内容，或要求把某段观察写入备注时，才填入该字段。
 
 ## 新增技术分享工作流
 
@@ -158,6 +193,54 @@ https://whosaytree.github.io/papers_never_read/
 4. 运行 `python3 -m json.tool data/library.json` 检查 JSON
 5. 运行 `python3 scripts/build_site.py` 本地构建
 6. 检查 `dist/index.html` 中能搜索到新增论文
+7. 提交并推送到 `main`
+8. 等待 GitHub Actions `Deploy Pages` 成功
+9. 最后回复线上链接、提交信息和部署状态
+
+只有完成推送并确认 GitHub Pages 部署成功，才算“新增到线上网页”。
+
+## 新增代码项目工作流
+
+新增代码项目也采用“预审”和“入库发布”两个阶段。用户只发 GitHub 或项目链接时，默认只进入预审阶段；只有用户明确说“确认”“加入网页”“入库”“发布”等指令后，才进入入库发布阶段。
+
+### 1. 预审阶段
+
+预审阶段必须遵守：
+
+- 不修改 `data/projects.json`
+- 不运行构建脚本
+- 不提交、不推送
+- 用 Markdown 渲染给用户看，不直接输出 JSON 作为主要审阅格式
+- 内容必须按网页实际展示字段组织，方便用户直接修改
+
+预写入版必须包括：
+
+- 项目名称
+- 项目链接：Repo / Homepage / Docs / Demo
+- 来源
+- 项目类型 / 领域
+- 标签 / 技术栈
+- 项目定位
+- 亮点
+- 适用场景
+- 安装或使用备注
+- 许可证 / 维护状态
+- 我的备注
+- 关联论文建议
+- 关联技术分享建议
+
+### 2. 入库发布阶段
+
+只有用户确认预写入版后，才执行入库发布。
+
+入库发布阶段必须完成：
+
+1. 将确认后的内容写入 `data/projects.json`
+2. 将 `status` 设为 `approved`
+3. 设置 `added_at` 为当天日期
+4. 运行 `python3 -m json.tool data/projects.json` 检查 JSON
+5. 运行 `python3 scripts/build_site.py` 本地构建
+6. 检查 `dist/index.html` 中能搜索到新增代码项目
 7. 提交并推送到 `main`
 8. 等待 GitHub Actions `Deploy Pages` 成功
 9. 最后回复线上链接、提交信息和部署状态

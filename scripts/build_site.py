@@ -11,6 +11,7 @@ from urllib.parse import quote
 ROOT = Path(__file__).resolve().parents[1]
 DATA_FILE = ROOT / "data" / "library.json"
 BLOG_FILE = ROOT / "data" / "blogs.json"
+PROJECT_FILE = ROOT / "data" / "projects.json"
 OUTPUT_DIR = ROOT / "dist"
 OUTPUT_FILE = OUTPUT_DIR / "index.html"
 
@@ -187,7 +188,7 @@ a{color:inherit}
 }
 .view-tabs{
   display:grid;
-  grid-template-columns:repeat(2,minmax(0,1fr));
+  grid-template-columns:repeat(3,minmax(0,1fr));
   gap:8px;
   margin-bottom:14px;
 }
@@ -326,49 +327,66 @@ h3.sub-title{
 .paper.expanded .full-abs{display:block}
 .paper.expanded .toggle-abs::before{content:"▾ "}
 .paper:not(.expanded) .toggle-abs::before{content:"▸ "}
-.blog-list{
+.blog-list,
+.project-list{
   display:grid;
   gap:14px;
 }
-.blog{
+.blog,
+.project{
   background:var(--surface);
   border:1px solid var(--line);
   border-radius:8px;
   padding:18px 20px;
   box-shadow:var(--shadow);
 }
-.blog-title{
+.blog-title,
+.project-title{
   font-size:18px;
   font-weight:750;
   line-height:1.4;
   margin-bottom:8px;
 }
-.blog-title a{text-decoration:none}
-.blog-title a:hover{color:var(--accent);text-decoration:underline}
-.blog-meta{
+.blog-title a,
+.project-title a{text-decoration:none}
+.blog-title a:hover,
+.project-title a:hover{color:var(--accent);text-decoration:underline}
+.blog-meta,
+.project-meta{
   font-size:12px;
   color:var(--muted);
   margin-bottom:10px;
 }
-.blog-summary{
+.blog-summary,
+.project-summary{
   font-size:13.5px;
   color:#34424f;
   margin:10px 0 12px;
 }
-.blog-block{
+.blog-block,
+.project-block{
   margin-top:12px;
   display:grid;
   gap:7px;
 }
-.blog-block h4{
+.blog-block h4,
+.project-block h4{
   font-size:13px;
   color:var(--accent-deep);
 }
-.blog-points{
+.blog-points,
+.project-points{
   padding-left:18px;
   font-size:13px;
 }
-.blog-points li{margin:4px 0}
+.blog-points li,
+.project-points li{margin:4px 0}
+.project-links{
+  display:flex;
+  gap:6px;
+  flex-wrap:wrap;
+}
+.project-links a{text-decoration:none}
 .blog-table{
   width:100%;
   border-collapse:collapse;
@@ -451,6 +469,7 @@ JS = """
 const search = document.getElementById('search');
 const cards = document.querySelectorAll('.paper');
 const blogCards = document.querySelectorAll('.blog');
+const projectCards = document.querySelectorAll('.project');
 const subSecs = document.querySelectorAll('section.sub-sec');
 const priSecs = document.querySelectorAll('section.pri-sec');
 const chips = document.querySelectorAll('.filter-chip');
@@ -489,6 +508,17 @@ function applyFilters() {
       activeFilter === '__all__' ||
       (activeFilter === 'with-related' && hasRelated) ||
       (activeFilter === 'with-quotes' && hasQuotes);
+    card.classList.toggle('hidden', !(matchesSearch && matchesFilter));
+  });
+  projectCards.forEach(card => {
+    const haystack = (card.dataset.search || '').toLowerCase();
+    const hasLinks = card.dataset.hasLinks === 'true';
+    const hasRelated = card.dataset.hasRelated === 'true';
+    const matchesSearch = !q || haystack.includes(q);
+    const matchesFilter =
+      activeFilter === '__all__' ||
+      (activeFilter === 'with-links' && hasLinks) ||
+      (activeFilter === 'with-related' && hasRelated);
     card.classList.toggle('hidden', !(matchesSearch && matchesFilter));
   });
 
@@ -534,7 +564,9 @@ viewTabs.forEach(tab => {
     search.value = '';
     search.placeholder = activeView === 'papers'
       ? '搜索论文标题 / 关键词 / 备注 / abstract'
-      : '搜索技术分享标题 / 标签 / 主要内容 / 关键语句';
+      : activeView === 'blogs'
+        ? '搜索技术分享标题 / 标签 / 主要内容 / 关键语句'
+        : '搜索代码项目名称 / 标签 / 技术栈 / 使用场景';
     viewTabs.forEach(item => item.classList.toggle('active', item === tab));
     viewPanels.forEach(panel => panel.classList.toggle('hidden', panel.dataset.view !== activeView));
     sidebarPanels.forEach(panel => panel.classList.toggle('hidden', panel.dataset.view !== activeView));
@@ -554,6 +586,12 @@ def load_blogs() -> dict:
     if not BLOG_FILE.exists():
         return {"posts": []}
     return json.loads(BLOG_FILE.read_text(encoding="utf-8"))
+
+
+def load_projects() -> dict:
+    if not PROJECT_FILE.exists():
+        return {"projects": []}
+    return json.loads(PROJECT_FILE.read_text(encoding="utf-8"))
 
 
 def ensure_output_dir() -> None:
@@ -603,6 +641,31 @@ def blog_search_blob(post: dict) -> str:
         " ".join(quote_parts),
         post.get("my_note", ""),
         " ".join(post.get("related_papers", [])),
+    ]
+    return " ".join(part for part in parts if part)
+
+
+def project_search_blob(project: dict) -> str:
+    parts = [
+        project.get("name", ""),
+        project.get("repo_url", ""),
+        project.get("homepage_url", ""),
+        project.get("docs_url", ""),
+        project.get("demo_url", ""),
+        project.get("source", ""),
+        project.get("project_type", ""),
+        project.get("domain", ""),
+        " ".join(project.get("tags", [])),
+        " ".join(project.get("stack", [])),
+        project.get("summary", ""),
+        " ".join(project.get("highlights", [])),
+        " ".join(project.get("use_cases", [])),
+        project.get("setup_note", ""),
+        project.get("license", ""),
+        project.get("maintenance", ""),
+        project.get("my_note", ""),
+        " ".join(project.get("related_papers", [])),
+        " ".join(project.get("related_blogs", [])),
     ]
     return " ".join(part for part in parts if part)
 
@@ -721,6 +784,94 @@ def blog_card(post: dict, papers_by_id: dict[str, dict]) -> str:
 """
 
 
+def project_card(project: dict, papers_by_id: dict[str, dict], blogs_by_id: dict[str, dict]) -> str:
+    name = escape(safe_text(project.get("name"), "未命名代码项目"))
+    repo_url = (project.get("repo_url") or "").strip()
+    homepage_url = (project.get("homepage_url") or "").strip()
+    docs_url = (project.get("docs_url") or "").strip()
+    demo_url = (project.get("demo_url") or "").strip()
+    source = escape(safe_text(project.get("source"), "来源待补充"))
+    added_at = escape(safe_text(project.get("added_at"), "入库时间待补充"))
+    project_type = escape(safe_text(project.get("project_type"), "类型待补充"))
+    domain = escape(safe_text(project.get("domain"), "领域待补充"))
+    summary = escape(safe_text(project.get("summary"), "项目简介待补充"))
+    setup_note = escape(safe_text(project.get("setup_note"), "暂无安装或使用备注"))
+    license_name = escape(safe_text(project.get("license"), "许可证待补充"))
+    maintenance = escape(safe_text(project.get("maintenance"), "维护状态待补充"))
+    my_note = escape(safe_text(project.get("my_note"), "暂无备注"))
+    tags = project.get("tags", [])
+    stack = project.get("stack", [])
+    highlights = project.get("highlights", [])
+    use_cases = project.get("use_cases", [])
+    related_papers = project.get("related_papers", [])
+    related_blogs = project.get("related_blogs", [])
+    title_url = repo_url or homepage_url or docs_url or demo_url or "#"
+    tag_html = "".join(f'<span class="badge">{escape(item)}</span>' for item in tags)
+    stack_html = "".join(f'<span class="badge label">{escape(item)}</span>' for item in stack)
+    highlights_html = "".join(f"<li>{escape(item)}</li>" for item in highlights)
+    use_cases_html = "".join(f"<li>{escape(item)}</li>" for item in use_cases)
+    link_items = []
+    for label, url in [
+        ("Repo", repo_url),
+        ("Homepage", homepage_url),
+        ("Docs", docs_url),
+        ("Demo", demo_url),
+    ]:
+        if url:
+            link_items.append(
+                f'<a class="badge" href="{escape(url)}" target="_blank" rel="noreferrer">{escape(label)}</a>'
+            )
+    related_items = []
+    for paper_id in related_papers:
+        paper = papers_by_id.get(paper_id, {})
+        label = paper.get("title") or paper_id
+        related_items.append(
+            f'<a class="badge label" href="{escape(safe_text(paper.get("paper_url"), "#"))}" target="_blank" rel="noreferrer">{escape(label)}</a>'
+        )
+    for blog_id in related_blogs:
+        post = blogs_by_id.get(blog_id, {})
+        label = post.get("title") or blog_id
+        related_items.append(
+            f'<a class="badge label" href="{escape(safe_text(post.get("url"), "#"))}" target="_blank" rel="noreferrer">{escape(label)}</a>'
+        )
+    return f"""
+<article class="project" data-search="{escape(project_search_blob(project))}" data-has-links="{str(bool(homepage_url or docs_url or demo_url)).lower()}" data-has-related="{str(bool(related_papers or related_blogs)).lower()}">
+  <div class="project-title"><a href="{escape(title_url)}" target="_blank" rel="noreferrer">{name}</a></div>
+  <div class="project-meta">{source} · 入库：{added_at} · {project_type} · {domain}</div>
+  <div>{tag_html or '<span class="badge">未打标签</span>'} {stack_html}</div>
+  <div class="project-summary">{summary}</div>
+  <div class="project-block">
+    <h4>项目链接</h4>
+    <div class="project-links">{"".join(link_items) or "暂无项目链接"}</div>
+  </div>
+  <div class="project-block">
+    <h4>亮点</h4>
+    <ul class="project-points">{highlights_html or '<li>待补充</li>'}</ul>
+  </div>
+  <div class="project-block">
+    <h4>适用场景</h4>
+    <ul class="project-points">{use_cases_html or '<li>待补充</li>'}</ul>
+  </div>
+  <div class="project-block">
+    <h4>使用备注</h4>
+    <div class="project-summary">{setup_note}</div>
+  </div>
+  <div class="project-block">
+    <h4>维护信息</h4>
+    <div class="project-summary">许可证：{license_name} · 维护状态：{maintenance}</div>
+  </div>
+  <div class="project-block">
+    <h4>我的备注</h4>
+    <div class="project-summary">{my_note}</div>
+  </div>
+  <div class="project-block">
+    <h4>关联内容</h4>
+    <div class="project-links">{"".join(related_items) or "暂无关联内容"}</div>
+  </div>
+</article>
+"""
+
+
 def render_blog_section(posts: list[dict], papers: list[dict]) -> str:
     approved_posts = [
         post for post in posts
@@ -737,6 +888,25 @@ def render_blog_section(posts: list[dict], papers: list[dict]) -> str:
 """
     cards_html = "".join(blog_card(post, papers_by_id) for post in approved_posts)
     return f'<section class="blog-list">{cards_html}</section>'
+
+
+def render_project_section(projects: list[dict], papers: list[dict], posts: list[dict]) -> str:
+    approved_projects = [
+        project for project in projects
+        if (project.get("status") or "approved") == "approved"
+    ]
+    papers_by_id = {paper.get("id"): paper for paper in papers if paper.get("id")}
+    blogs_by_id = {post.get("id"): post for post in posts if post.get("id")}
+    if not approved_projects:
+        return """
+<section>
+  <div class="empty">
+    代码项目库还没有正式内容。之后你发来 GitHub 或项目链接时，我会先生成待审版本：项目定位、技术栈、亮点、适用场景、使用备注和关联论文/技术分享；你确认后再入库发布。
+  </div>
+</section>
+"""
+    cards_html = "".join(project_card(project, papers_by_id, blogs_by_id) for project in approved_projects)
+    return f'<section class="project-list">{cards_html}</section>'
 
 
 def render_sections(library: dict) -> tuple[str, str]:
@@ -799,7 +969,7 @@ def render_sections(library: dict) -> tuple[str, str]:
     return "".join(nav_blocks), "".join(main_blocks)
 
 
-def render_page(library: dict, blogs: dict) -> str:
+def render_page(library: dict, blogs: dict, projects_data: dict) -> str:
     site = library["site"]
     papers = [
         paper for paper in library["papers"]
@@ -809,9 +979,14 @@ def render_page(library: dict, blogs: dict) -> str:
         post for post in blogs.get("posts", [])
         if (post.get("status") or "approved") == "approved"
     ]
+    projects = [
+        project for project in projects_data.get("projects", [])
+        if (project.get("status") or "approved") == "approved"
+    ]
     library = {**library, "papers": papers}
     nav_html, main_html = render_sections(library)
     blog_html = render_blog_section(posts, papers)
+    project_html = render_project_section(projects, papers, posts)
     counter = Counter()
     counter["all"] = len(papers)
     counter["with_code"] = sum(1 for item in papers if (item.get("code_url") or "").strip())
@@ -819,6 +994,16 @@ def render_page(library: dict, blogs: dict) -> str:
     counter["blogs"] = len(posts)
     counter["blogs_with_related"] = sum(1 for item in posts if item.get("related_papers"))
     counter["blogs_with_quotes"] = sum(1 for item in posts if item.get("quotes"))
+    counter["projects"] = len(projects)
+    counter["projects_with_links"] = sum(
+        1 for item in projects
+        if (item.get("homepage_url") or item.get("docs_url") or item.get("demo_url"))
+    )
+    counter["projects_with_related"] = sum(
+        1 for item in projects
+        if item.get("related_papers") or item.get("related_blogs")
+    )
+    counter["project_stack"] = len({tech for project in projects for tech in project.get("stack", [])})
     generated_at = datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M UTC")
 
     return f"""<!doctype html>
@@ -841,6 +1026,7 @@ def render_page(library: dict, blogs: dict) -> str:
       <div class="view-tabs">
         <button class="view-tab active" data-view="papers">论文库</button>
         <button class="view-tab" data-view="blogs">技术分享</button>
+        <button class="view-tab" data-view="projects">代码项目</button>
       </div>
       <input id="search" type="search" placeholder="搜索论文标题 / 关键词 / 备注 / abstract">
       <div class="sidebar-panel" data-view="papers">
@@ -860,11 +1046,19 @@ def render_page(library: dict, blogs: dict) -> str:
           <div class="stat-box"><b>{len({tag for post in posts for tag in post.get('tags', [])})}</b>标签数</div>
         </div>
       </div>
+      <div class="sidebar-panel hidden" data-view="projects">
+        <div class="stat-grid">
+          <div class="stat-box"><b>{counter['projects']}</b>代码项目</div>
+          <div class="stat-box"><b>{counter['projects_with_links']}</b>含文档/Demo</div>
+          <div class="stat-box"><b>{counter['projects_with_related']}</b>关联内容</div>
+          <div class="stat-box"><b>{counter['project_stack']}</b>技术栈</div>
+        </div>
+      </div>
     </aside>
     <main class="main">
       <header class="main-header">
         <h1>{escape(site['name'])}</h1>
-        <p>这是一个按两级目录组织的个人静态论文库，并补充记录网上读到的技术分享。论文和技术分享都采用先审阅、再入库的长期维护流程。</p>
+        <p>这是一个按两级目录组织的个人静态论文库，并补充记录网上读到的技术分享与代码项目。所有内容都采用先审阅、再入库的长期维护流程。</p>
         <div class="filter-row" data-view="papers">
           <button class="filter-chip active" data-view="papers" data-filter="__all__">全部 {counter['all']} 篇</button>
           <button class="filter-chip" data-view="papers" data-filter="with-code">含代码 {counter['with_code']} 篇</button>
@@ -875,10 +1069,16 @@ def render_page(library: dict, blogs: dict) -> str:
           <button class="filter-chip" data-view="blogs" data-filter="with-quotes">含关键语句 {counter['blogs_with_quotes']} 篇</button>
           <button class="filter-chip" data-view="blogs" data-filter="with-related">关联论文 {counter['blogs_with_related']} 篇</button>
         </div>
-        <div class="meta">论文总结维度固定为：研究动机 / 解决问题 / 现象分析 / 主要方法 / 数据集与实验 / 主要贡献。技术分享记录主要内容、关键要点、关键语句和个人备注。最近构建时间：{generated_at}</div>
+        <div class="filter-row hidden" data-view="projects">
+          <button class="filter-chip active" data-view="projects" data-filter="__all__">全部 {counter['projects']} 个</button>
+          <button class="filter-chip" data-view="projects" data-filter="with-links">含文档/Demo {counter['projects_with_links']} 个</button>
+          <button class="filter-chip" data-view="projects" data-filter="with-related">关联内容 {counter['projects_with_related']} 个</button>
+        </div>
+        <div class="meta">论文总结维度固定为：研究动机 / 解决问题 / 现象分析 / 主要方法 / 数据集与实验 / 主要贡献。技术分享记录主要内容、关键要点、关键语句和个人备注。代码项目记录技术栈、亮点、适用场景和关联内容。最近构建时间：{generated_at}</div>
       </header>
       <div class="view-panel" data-view="papers">{main_html}</div>
       <div class="view-panel hidden" data-view="blogs">{blog_html}</div>
+      <div class="view-panel hidden" data-view="projects">{project_html}</div>
       <footer>GitHub Pages 目标仓库：{escape(site['repo'])}</footer>
     </main>
   </div>
@@ -891,8 +1091,9 @@ def render_page(library: dict, blogs: dict) -> str:
 def main() -> None:
     library = load_library()
     blogs = load_blogs()
+    projects = load_projects()
     ensure_output_dir()
-    OUTPUT_FILE.write_text(render_page(library, blogs), encoding="utf-8")
+    OUTPUT_FILE.write_text(render_page(library, blogs, projects), encoding="utf-8")
     print(f"Built {OUTPUT_FILE.relative_to(ROOT)}")
 
 
