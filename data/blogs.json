@@ -138,13 +138,15 @@
         "rollout infrastructure",
         "MoE"
       ],
-      "summary": "这篇 LMSYS 技术分享讨论的是大规模 LLM 强化学习中的系统瓶颈：trainer 更新完模型参数后，需要把新权重同步到负责 rollout 的 inference engines；在同步期间，训练端和推理端都会停下来等待，因此权重传输处在 RL 训练的关键路径上。传统 SGLang / miles / verl 等开源方案常依赖 NCCL broadcast，从少数源 rank 向多个推理 rank 广播权重，容易产生重复网络传输、trainer rank 空转、通信组刚性强等问题。文章提出一种基于 RDMA 的 P2P weight update 方案：在训练侧 CPU 内存中创建 SGLang engine replica，复用 SGLang 的权重加载逻辑和 TransferEngine 的 RDMA zero-copy 能力，让更多训练 rank 直接把自己负责的 shard 发送到目标 inference rank。结果是在 1T 参数 Kimi-K2 FP8 场景中，把权重传输时间从约 53 秒降到约 7.2 秒，代价是每个 training rank 需要额外约 32GB CPU 内存保存一个推理引擎副本。",
+      "summary": "这篇 LMSYS 技术分享讨论的是大规模 LLM 强化学习中的系统瓶颈：trainer 更新完模型参数后，需要把新权重同步到负责 rollout 的 inference engines；在同步期间，训练端和推理端都会停下来等待，因此权重传输处在 RL 训练的关键路径上。传统 SGLang / miles / verl 等开源方案常依赖 NCCL broadcast，从少数源 rank 向多个推理 rank 广播权重，容易产生重复网络传输、trainer rank 空转、通信组刚性强等问题。文章提出一种基于 RDMA 的 P2P weight update 方案：在训练侧 CPU 内存中创建 SGLang engine replica，复用 SGLang 的权重加载逻辑和 Mooncake TransferEngine 的 RDMA zero-copy 能力，让更多训练 rank 直接把自己负责的 shard 发送到目标 inference rank。它的定位更像是 SGLang 大规模 RL 生态中的高级工程能力：直接服务 miles 的 RL 训练闭环，而不是普通 SGLang serving 用户默认会接触的推理核心模块。结果是在 1T 参数 Kimi-K2 FP8 场景中，把权重传输时间从约 53 秒降到约 7.2 秒，代价是每个 training rank 需要额外约 32GB CPU 内存保存一个推理引擎副本。",
       "key_points": [
         "这篇文章解决的不是 RL 优化算法问题，而是大规模 distributed RL pipeline 中 trainer-to-inference 的权重同步瓶颈。",
+        "它已经是 SGLang 生态里面向 RL workloads 的 P2P 权重更新能力，但更偏 miles + SGLang + Mooncake TransferEngine 这条大规模 RL 路线的高级特性，不是普通在线推理默认路径。",
         "NCCL broadcast 适合集体通信和对称训练，但在动态 RL 场景里要求所有 rank lock-step 参与；一个接收端慢启动就可能拖住整个通信组。",
         "传统 broadcast 方案会把相同数据多次发到网络上，同时只有少数 head ranks 参与实际传输，导致多数 trainer ranks 在权重同步阶段空转。",
         "RDMA P2P 方案通过 CPU-side engine replica 承接 SGLang 权重形状和量化逻辑，再用 TransferEngine 做跨节点 zero-copy 传输。",
         "P2P mapping 让更多 source ranks 参与发送，并尽量只把目标推理 rank 需要的 shard 传过去，从而减少网络冗余并提高带宽利用率。",
+        "文中明确的落地路径是 miles 启用 p2p update 并调用 SGLang/Mooncake 相关能力；verl 和 slime 更多是 NCCL broadcast 背景对比，不能据此认为已经采用该实现。",
         "实验显示收益主要出现在大模型、大 MoE、高 expert parallelism 和多节点 rollout 场景；小规模配置下，CPU replica 的加载开销可能抵消 P2P 传输收益。",
         "这个设计用额外 CPU 内存换更短的关键路径等待时间，本质上是在 RL 训练吞吐和系统资源占用之间做工程权衡。"
       ],
@@ -166,7 +168,7 @@
           "note": "说明该方法的优势主要在更大规模集群和大 MoE 模型上体现。"
         }
       ],
-      "my_note": "这篇对我有用的地方在于，它把 LLM RL 的效率瓶颈从“rollout 生成慢”进一步拆到了“policy 更新后如何快速把新权重同步给 rollout engine”。如果权重同步需要几十秒，那么再好的 RL 算法也会被系统关键路径拖慢。这个设计的核心不是更复杂的训练目标，而是把同步方式从 NCCL collective broadcast 改成 RDMA P2P shard transfer，并用 CPU replica 吸收模型并行、量化和 SGLang 权重格式的复杂性。对后续看 agent/RL 系统很重要：训练吞吐不只取决于 GPU 算力，还取决于 rollout engine、weight update、network topology、parallelism mapping 和 stale policy 控制之间的整体配合。",
+      "my_note": "这篇对我有用的地方在于，它把 LLM RL 的效率瓶颈从“rollout 生成慢”进一步拆到了“policy 更新后如何快速把新权重同步给 rollout engine”。如果权重同步需要几十秒，那么再好的 RL 算法也会被系统关键路径拖慢。这个设计的核心不是更复杂的训练目标，而是把同步方式从 NCCL collective broadcast 改成 RDMA P2P shard transfer，并用 CPU replica 吸收模型并行、量化和 SGLang 权重格式的复杂性。它在 SGLang 里的地位应理解为大规模 RL 生态的重要版本亮点/高级能力，而不是普通 serving 核心模块；真正直接受益的是 miles 这类需要频繁 policy update + rollout 的训练系统。对后续看 agent/RL 系统很重要：训练吞吐不只取决于 GPU 算力，还取决于 rollout engine、weight update、network topology、parallelism mapping 和 stale policy 控制之间的整体配合。",
       "related_papers": [],
       "status": "approved"
     }
