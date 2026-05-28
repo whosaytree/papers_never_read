@@ -121,6 +121,54 @@
       "my_note": "这篇对我有用的地方在于，它清楚区分了 benchmark 的两个问题：先决定“用哪些题评价模型”，再决定“如何评价这些题上的回答质量”。Hard Prompts 主要解决前者，即从真实用户流量中切出一个更能暴露模型差异的困难题目范围；后者仍沿用 Arena 的人类偏好投票，而没有引入专家标注、标准答案、自动验证器或 LLM judge。因此它更像是 Chatbot Arena 的难题切片，而不是一个全新的可验证 benchmark。对我后续整理 evaluation / RLVR 数据时的启发是：难例筛选可以基于任务属性和真实用户分布，但如果任务需要严格正确性，仍要额外考虑答案评估机制是否足够可靠。",
       "related_papers": [],
       "status": "approved"
+    },
+    {
+      "id": "lmsys-p2p-weight-transfer-rl",
+      "title": "Updating 1T parameters in seconds: P2P weight transfer in Large Scale Distributed RL",
+      "url": "https://www.lmsys.org/blog/2026-04-29-p2p-update/",
+      "source": "LMSYS Blog",
+      "published_at": "2026-04-29",
+      "added_at": "2026-05-28",
+      "tags": [
+        "distributed RL",
+        "SGLang",
+        "RDMA",
+        "P2P weight transfer",
+        "NCCL",
+        "rollout infrastructure",
+        "MoE"
+      ],
+      "summary": "这篇 LMSYS 技术分享讨论的是大规模 LLM 强化学习中的系统瓶颈：trainer 更新完模型参数后，需要把新权重同步到负责 rollout 的 inference engines；在同步期间，训练端和推理端都会停下来等待，因此权重传输处在 RL 训练的关键路径上。传统 SGLang / miles / verl 等开源方案常依赖 NCCL broadcast，从少数源 rank 向多个推理 rank 广播权重，容易产生重复网络传输、trainer rank 空转、通信组刚性强等问题。文章提出一种基于 RDMA 的 P2P weight update 方案：在训练侧 CPU 内存中创建 SGLang engine replica，复用 SGLang 的权重加载逻辑和 TransferEngine 的 RDMA zero-copy 能力，让更多训练 rank 直接把自己负责的 shard 发送到目标 inference rank。结果是在 1T 参数 Kimi-K2 FP8 场景中，把权重传输时间从约 53 秒降到约 7.2 秒，代价是每个 training rank 需要额外约 32GB CPU 内存保存一个推理引擎副本。",
+      "key_points": [
+        "这篇文章解决的不是 RL 优化算法问题，而是大规模 distributed RL pipeline 中 trainer-to-inference 的权重同步瓶颈。",
+        "NCCL broadcast 适合集体通信和对称训练，但在动态 RL 场景里要求所有 rank lock-step 参与；一个接收端慢启动就可能拖住整个通信组。",
+        "传统 broadcast 方案会把相同数据多次发到网络上，同时只有少数 head ranks 参与实际传输，导致多数 trainer ranks 在权重同步阶段空转。",
+        "RDMA P2P 方案通过 CPU-side engine replica 承接 SGLang 权重形状和量化逻辑，再用 TransferEngine 做跨节点 zero-copy 传输。",
+        "P2P mapping 让更多 source ranks 参与发送，并尽量只把目标推理 rank 需要的 shard 传过去，从而减少网络冗余并提高带宽利用率。",
+        "实验显示收益主要出现在大模型、大 MoE、高 expert parallelism 和多节点 rollout 场景；小规模配置下，CPU replica 的加载开销可能抵消 P2P 传输收益。",
+        "这个设计用额外 CPU 内存换更短的关键路径等待时间，本质上是在 RL 训练吞吐和系统资源占用之间做工程权衡。"
+      ],
+      "quotes": [
+        {
+          "text": "weight transfer times for 1T-parameter Kimi-K2",
+          "note": "说明这篇文章关注的是万亿参数级别模型的权重同步问题。"
+        },
+        {
+          "text": "the entire RL training comes to a halt",
+          "note": "点明权重传输为什么是关键路径：同步期间训练和 rollout 都无法继续推进。"
+        },
+        {
+          "text": "centralized broadcast to a distributed P2P mapping",
+          "note": "概括方案的核心结构变化：从集中广播改成分布式点对点传输。"
+        },
+        {
+          "text": "scales well with more nodes",
+          "note": "说明该方法的优势主要在更大规模集群和大 MoE 模型上体现。"
+        }
+      ],
+      "my_note": "这篇对我有用的地方在于，它把 LLM RL 的效率瓶颈从“rollout 生成慢”进一步拆到了“policy 更新后如何快速把新权重同步给 rollout engine”。如果权重同步需要几十秒，那么再好的 RL 算法也会被系统关键路径拖慢。这个设计的核心不是更复杂的训练目标，而是把同步方式从 NCCL collective broadcast 改成 RDMA P2P shard transfer，并用 CPU replica 吸收模型并行、量化和 SGLang 权重格式的复杂性。对后续看 agent/RL 系统很重要：训练吞吐不只取决于 GPU 算力，还取决于 rollout engine、weight update、network topology、parallelism mapping 和 stale policy 控制之间的整体配合。",
+      "related_papers": [],
+      "status": "approved"
     }
   ]
 }
