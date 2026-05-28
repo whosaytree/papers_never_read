@@ -45,6 +45,18 @@ https://whosaytree.github.io/papers_never_read/
 
 `note` 字段只记录人工补充的个人备注。新增论文时默认留空字符串；只有用户明确提供“我的备注”内容，或要求把某段观察写入备注时，才填入该字段。
 
+详细论文笔记统一使用 `analysis_note` 字段挂载。笔记源文件放在 `docs/paper_notes/{paper_id}.md`，字段写法为：
+
+```json
+"analysis_note": {
+  "title": "详细笔记：论文简称或主题",
+  "source": "docs/paper_notes/{paper_id}.md",
+  "url": "paper_notes/{paper_id}.html"
+}
+```
+
+构建脚本会把 Markdown 笔记渲染到 `dist/paper_notes/{paper_id}.html`，并在论文卡片的“详细笔记”行展示链接。以后为已入库论文增加详细笔记时，优先采用这种形式，不把长笔记直接塞进 `summary_cn`、`tldr` 或 `note`。线上短总结只保留最重要的校正后认识，详细推导、实验细节、复现状态和个人判断写入 Markdown 笔记。
+
 构建时只会渲染 `status = approved` 的论文；草稿不会进入页面。
 
 ## 技术分享模块
@@ -194,9 +206,10 @@ https://whosaytree.github.io/papers_never_read/
 4. 运行 `python3 -m json.tool data/library.json` 检查 JSON
 5. 运行 `python3 scripts/build_site.py` 本地构建
 6. 检查 `dist/index.html` 中能搜索到新增论文
-7. 提交并推送到 `main`
-8. 等待 GitHub Actions `Deploy Pages` 成功
-9. 最后回复线上链接、提交信息和部署状态
+7. 如果本次包含详细笔记，确认 `dist/paper_notes/{paper_id}.html` 已生成，且论文卡片的“详细笔记”链接可以打开
+8. 提交并推送到 `main`
+9. 等待 GitHub Actions `Deploy Pages` 成功
+10. 最后回复线上链接、提交信息和部署状态
 
 只有完成推送并确认 GitHub Pages 部署成功，才算“新增到线上网页”。
 
