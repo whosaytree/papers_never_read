@@ -5979,6 +5979,57 @@
       },
       "status": "approved",
       "added_at": "2026-05-28"
+    },
+    {
+      "id": "rewards-as-labels-rlvr-classification-2602-05630",
+      "title": "Rewards as Labels: Revisiting RLVR from a Classification Perspective",
+      "paper_url": "https://arxiv.org/abs/2602.05630",
+      "authors": [
+        "Zepeng Zhai",
+        "Meilin Chen",
+        "Jiaxuan Zhao",
+        "Junlang Qian",
+        "Lei Shen",
+        "Yuan Lu"
+      ],
+      "venue": "arXiv",
+      "year": 2026,
+      "primary_area": "强化学习",
+      "category": "基于偏好/反馈的 RL",
+      "keywords": [
+        "RLVR",
+        "Rewards as Labels",
+        "REAL",
+        "classification objective",
+        "GRPO",
+        "DAPO",
+        "GSPO",
+        "anchor logits",
+        "gradient misassignment",
+        "gradient domination",
+        "mathematical reasoning"
+      ],
+      "labels": [
+        "RLVR",
+        "GRPO",
+        "Classification",
+        "Training Stability",
+        "Reasoning RL"
+      ],
+      "code_url": "https://github.com/Red-RL/RLVR-REAL",
+      "note": "",
+      "tldr": "这篇论文把 RLVR 里的 reward 从“策略梯度权重”重新理解成“分类标签”，提出 REAL：用分类损失和 anchor logits 替代 GRPO 式标量 advantage 加权，从而缓解正样本梯度分配错误和负样本梯度支配问题。",
+      "abstract": "Reinforcement Learning with Verifiable Rewards has recently advanced the capabilities of Large Language Models in complex reasoning tasks by providing explicit rule-based supervision. Among RLVR methods, GRPO and its variants have achieved strong empirical performance. Despite their success, we identify that they suffer from Gradient Misassignment in Positives and Gradient Domination in Negatives, which lead to inefficient and suboptimal policy updates. To address these issues, we propose Rewards as Labels (REAL), a novel framework that revisits verifiable rewards as categorical labels rather than scalar weights, thereby reformulating policy optimization as a classification problem. Building on this, we further introduce anchor logits to enhance policy learning. Our analysis reveals that REAL induces a monotonic and bounded gradient weighting, enabling balanced gradient allocation across rollouts and effectively mitigating the identified mismatches. Extensive experiments on mathematical reasoning benchmarks show that REAL improves training stability and consistently outperforms GRPO and strong variants such as DAPO. On the 1.5B model, REAL improves average Pass@1 over DAPO by 6.7%. These gains further scale to 7B model, REAL continues to outperform DAPO and GSPO by 6.2% and 1.7%, respectively. Notably, even with a vanilla binary cross-entropy, REAL remains stable and exceeds DAPO by 4.5% on average.",
+      "summary_cn": {
+        "研究动机": "RLVR 通过可验证奖励推动 LLM 数学推理能力提升，GRPO、DAPO、GSPO 等方法已经很强。但这些方法本质上仍把 reward / advantage 当成 policy gradient 的权重，容易出现梯度分配不合理：有些真正该加强的正确 rollout 更新不足，有些错误 rollout 又因为概率结构导致梯度过大，破坏训练稳定性。",
+        "解决问题": "论文指出 GRPO-style RLVR 有两个核心梯度问题：Gradient Misassignment in Positives 和 Gradient Domination in Negatives。对正样本来说，低置信但正确的 rollout/token 本应得到更强更新，但 GRPO 的梯度权重可能反而更弱；对负样本来说，少数高概率错误 rollout 可能产生过大的梯度，主导整个 group update，压制其他有信息量的样本。也就是说，RLVR 的问题不只是 reward 稀疏，而是 reward 被用作 scalar weight 时，梯度分配机制本身可能错位。",
+        "现象分析": "这篇论文很适合放在 RLVR / GRPO 相关线里。它不是做新 reward，也不是做工具调用或搜索，而是直接挑战“RLVR 应该怎么用 reward 更新策略”这个底层训练机制。它和 ETS 形成一个有意思的对照：ETS 不训练，在 test-time 用 reward 改采样；REAL 继续训练，但把 reward 从 policy-gradient 权重改成 classification label。对工具调用、检索、答案正确性等多 reward 场景，它提示梯度错配可能不是副作用，而是算法结构问题。",
+        "主要方法": "作者提出 REAL (Rewards as Labels)。核心做法是：不再把 verifiable reward 当作连续权重，而是把它当成分类标签。reward = 1 的 rollout 是正类，reward = 0 的 rollout 是负类，策略优化被改写成“把正确 rollout 和错误 rollout 分开”的分类问题。具体上，REAL 使用 rollout 的长度归一化相对 log probability 作为分类 logit，衡量新策略相对旧策略是提高还是压低该轨迹概率。然后引入 anchor logit 作为稳定边界：正样本希望分数高于 anchor，负样本希望分数低于 anchor。这个设计让梯度权重变得单调且有界，避免 GRPO 中正样本更新不足、负样本梯度爆炸或支配的问题。",
+        "数据集与实验": "论文主要在数学推理 benchmark 上验证 REAL，比较对象包括 GRPO、DAPO、GSPO 等 RLVR 方法。实验覆盖 1.5B 和 7B 规模模型，并评估 Pass@1 和训练稳定性。论文报告：1.5B 模型上，REAL 相比 DAPO 平均 Pass@1 提升 +6.7%；7B 模型上，REAL 分别超过 DAPO +6.2%、超过 GSPO +1.7%；即使用 vanilla binary cross-entropy，REAL 仍然稳定，并平均超过 DAPO +4.5%。",
+        "主要贡献": "论文的主要贡献是从分类视角重新解释 RLVR，把 reward 作为 label 而不是 scalar weight；指出 GRPO-style 方法存在 positive misassignment 和 negative domination 两类梯度错配；提出 REAL，用分类目标和 anchor logits 稳定 policy update；并给出梯度权重单调、有界的分析，解释为什么 REAL 更稳定。"
+      },
+      "status": "approved",
+      "added_at": "2026-05-28"
     }
   ]
 }
