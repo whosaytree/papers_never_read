@@ -373,7 +373,7 @@
         "page": 9,
         "path": "assets/paper_images/on-the-direction-of-rlvr-updates-2603-22117-figure-5.png",
         "caption": "Figure 5: Training curves for different reweighting methods on Qwen2.5-Math-7B.",
-        "caption_cn": "",
+        "caption_cn": "图 5：Qwen2.5-Math-7B 上不同重加权方法的训练曲线。",
         "bbox": {
           "x1": 96.47999999999999,
           "x2": 498.71999999999997,
@@ -452,7 +452,7 @@
         "page": 1,
         "path": "assets/paper_images/the-past-is-not-past-2604-11297-figure-1.png",
         "caption": "Figure 1 Illustration of error collapse in on-policy optimization and its effect on output diversity. (a) During on-policy optimization, the policy evolves from a high-entropy distribution into a narrow, stable error basin. (b) Different errors share the same failure mode and become progressively reinforced during training. (c) Comparison of output diversity between DAPO and our method, with detailed description provided in Section 4.3.",
-        "caption_cn": "",
+        "caption_cn": "图 1：on-policy 优化中的错误坍缩及其对输出多样性的影响示意图。(a) 在 on-policy 优化过程中，策略从高熵分布演化为狭窄且稳定的错误盆地。(b) 不同错误共享同一种失败模式，并在训练过程中被逐步强化。(c) DAPO 与我们方法的输出多样性对比，详细说明见第 4.3 节。",
         "bbox": {
           "x1": 57.12,
           "x2": 541.1999999999999,
@@ -534,7 +534,7 @@
         "page": 3,
         "path": "assets/paper_images/rlvr-implicitly-incentivizes-correct-reasoning-2506-14245-figure-2.png",
         "caption": "Figure 2: Comparisons of Pass@K (the top row) and CoT-Pass@K (the bottom row) on five math benchmarks (different columns) to show how RLVR could improve base LLMs. Here the base LLM is Qwen2.5-32B, and the post-RLVR model is DAPO-Qwen-32B. For CoT-Pass@K, we perform multiple verifications for each CoT using DeepSeek-R1-0528-Qwen3-8B, and display the results determined by any-correct, all-correct, and majority-correct strategies, which constitute the shaded area in lower subplots.",
-        "caption_cn": "",
+        "caption_cn": "图 2：在五个数学基准（不同列）上比较 Pass@K（第一行）和 CoT-Pass@K（第二行），展示 RLVR 如何改进基础 LLM。这里的基础 LLM 是 Qwen2.5-32B，RLVR 后模型是 DAPO-Qwen-32B。对于 CoT-Pass@K，我们使用 DeepSeek-R1-0528-Qwen3-8B 对每条 CoT 进行多次验证，并展示由 any-correct、all-correct 和 majority-correct 策略确定的结果；这些结果构成下方子图中的阴影区域。",
         "bbox": {
           "x1": 107.75999999999999,
           "x2": 504.0,
@@ -610,7 +610,7 @@
         "page": 8,
         "path": "assets/paper_images/implicitrm-2603-23184-figure-3.png",
         "caption": "Figure 3 Performance comparison under different proportions of positive samples that elicit user actions (α).",
-        "caption_cn": "",
+        "caption_cn": "图 3：在不同比例的、能够触发用户行为的正样本（α）下的性能对比。",
         "bbox": {
           "x1": 72.0,
           "x2": 541.1999999999999,
@@ -681,7 +681,7 @@
         "page": 1,
         "path": "assets/paper_images/dgo-2603-24093-figure-1.png",
         "caption": "Figure 1. Comparison of DGO and baseline methods on six in-domain and out-of-domain benchmarks using Qwen3-4B/8B/14B-Base.",
-        "caption_cn": "",
+        "caption_cn": "图 1：使用 Qwen3-4B/8B/14B-Base，在六个域内和域外基准上比较 DGO 与基线方法。",
         "bbox": {
           "x1": 305.03999999999996,
           "x2": 518.16,
@@ -753,7 +753,7 @@
         "page": 6,
         "path": "assets/paper_images/skill0-2604-02268-figure-5.png",
         "caption": "Figure 5: Training Dynamics Comparison. (a) Validation performance of SKILL0 (OCR) with and without skill augmentation, evaluated every 10 training steps. (b) Performance comparison between SKILL0 and AgentOCR, both evaluated without skill augmentation. (c) Performance comparison of SKILL0 (OCR) against GRPO (Text) and SkillRL (Text), all evaluated without skill augmentation.",
-        "caption_cn": "",
+        "caption_cn": "图 5：训练动态对比。(a) SKILL0（OCR）在有无技能增强时的验证性能，每 10 个训练步评估一次。(b) SKILL0 与 AgentOCR 的性能对比，二者均在无技能增强设置下评估。(c) SKILL0（OCR）与 GRPO（Text）和 SkillRL（Text）的性能对比，均在无技能增强设置下评估。",
         "bbox": {
           "x1": 109.92,
           "x2": 503.03999999999996,
@@ -833,7 +833,7 @@
         "page": 3,
         "path": "assets/paper_images/sortedrl-2603-23414-figure-2.png",
         "caption": "Figure 2: The SortedRL framework. a, The architecture of the SortedRL engine, consisting of two core modules: a length-aware controller and a stateful rollout buffer. The RL training pipeline includes five key steps: 1) concatenate buffer and feed prompts, 2) early termination, 3) collect and update rollout trajectories, and 4) sort and feed training batches; b and c, imaginary timeline and SortedRL strategy. Samples in same batch are denoted in same color. Dotted lines and boxes indicates the harvest timing. For fully on-policy mode, the gray bars are partially discarded incomplete samples or non-scheduled prompts, while there is no discarded trajectories in partial mode.",
-        "caption_cn": "",
+        "caption_cn": "图 2：SortedRL 框架。a：SortedRL 引擎架构，由长度感知控制器和有状态 rollout 缓冲区两个核心模块组成。RL 训练流程包括五个关键步骤：1）拼接缓冲区与输入提示，2）提前终止，3）收集并更新 rollout 轨迹，4）排序并送入训练批次；b 和 c：虚拟时间线与 SortedRL 策略。同一批次的样本用相同颜色表示。虚线和方框表示收集时机。在完全 on-policy 模式下，灰色条表示被部分丢弃的未完成样本或未调度提示；而在 partial 模式下不会丢弃轨迹。",
         "bbox": {
           "x1": 111.83999999999999,
           "x2": 485.03999999999996,
@@ -916,7 +916,7 @@
         "page": 9,
         "path": "assets/paper_images/nemotron-cascade-2-2603-19220-figure-2.png",
         "caption": "Figure 2: Nemotron-Cascade 2 applies Cascade RL with the sequential, domain-wise ordering after SFT, leading to substantial improvements across the corresponding domains.",
-        "caption_cn": "",
+        "caption_cn": "图 2：Nemotron-Cascade 2 在 SFT 之后按领域顺序依次应用 Cascade RL，从而在对应领域上带来显著提升。",
         "bbox": {
           "x1": 48.48,
           "x2": 533.04,
@@ -989,7 +989,7 @@
         "page": 8,
         "path": "assets/paper_images/v0-5-2603-10848-figure-5.png",
         "caption": "Figure 5. Performance of V0.5 under extreme sparsity (1, 2, 4, and 8 rollouts) vs. standard GRPO (16 rollouts). To ensure a fair comparison, prompt batch sizes are adjusted to maintain constant per-step computational overhead.",
-        "caption_cn": "",
+        "caption_cn": "图 5：V0.5 在极端稀疏 rollout 设置（1、2、4、8 次 rollout）下与标准 GRPO（16 次 rollout）的性能对比。为保证公平比较，提示批大小经过调整，以维持每步计算开销不变。",
         "bbox": {
           "x1": 59.28,
           "x2": 542.16,
@@ -1067,7 +1067,7 @@
         "page": 1,
         "path": "assets/paper_images/shuttleenv-2603-17324-figure-1.png",
         "caption": "Figure 1: The workflow of our data-driven badminton environment. The RL agent interacts with the environment in a standard loop. Inside the environment, the outcome of an action at is determined by a two-stage probabilistic process, driven by two pre-trained models (Msucc and Mret) which leverage the elite-level badminton match data. The agent receives a new observation ot+1 generated from the action history window to make the next decision and a sparse reward Rt at the end of a rally.",
-        "caption_cn": "",
+        "caption_cn": "图 1：数据驱动羽毛球环境的工作流。RL agent 以标准循环与环境交互。在环境内部，动作 at 的结果由两阶段概率过程决定，该过程由两个预训练模型（Msucc 和 Mret）驱动，并利用精英级羽毛球比赛数据。agent 根据动作历史窗口生成的新观测 ot+1 做出下一步决策，并在一回合结束时获得稀疏奖励 Rt。",
         "bbox": {
           "x1": 54.0,
           "x2": 297.12,
@@ -1141,7 +1141,7 @@
         "page": 5,
         "path": "assets/paper_images/trace-2510-01367-figure-9.png",
         "caption": "Figure 9: F1 score of hacking detection in code setting.",
-        "caption_cn": "",
+        "caption_cn": "图 9：代码场景中奖励黑客检测的 F1 分数。",
         "bbox": {
           "x1": 266.88,
           "x2": 503.52,
@@ -1215,7 +1215,7 @@
         "page": 1,
         "path": "assets/paper_images/longrlvr-2603-02146-figure-1.png",
         "caption": "Figure 1: The accuracy reward and contextual recall of naive RLVR and LongRLVR on the training data.",
-        "caption_cn": "",
+        "caption_cn": "图 1：训练数据上朴素 RLVR 与 LongRLVR 的准确率奖励和上下文召回率。",
         "bbox": {
           "x1": 300.71999999999997,
           "x2": 499.68,
@@ -1287,7 +1287,7 @@
         "page": 3,
         "path": "assets/paper_images/deepseek-v3-2-2512-02556-figure-2.png",
         "caption": "Figure 2 | Attention architecture of DeepSeek-V3.2, where DSA is instantiated under MLA. The green part illustrates how DSA selects the top-k key-value entries according to the indexer.",
-        "caption_cn": "",
+        "caption_cn": "图 2：DeepSeek-V3.2 的注意力架构，其中 DSA 在 MLA 下实例化。绿色部分展示了 DSA 如何根据索引器选择 top-k 键值条目。",
         "bbox": {
           "x1": 81.6,
           "x2": 513.12,
@@ -1366,7 +1366,7 @@
         "page": 1,
         "path": "assets/paper_images/rl-compositionality-jt7oCtYqHE-figure-1.png",
         "caption": "Figure 1: An overview of our research framework and key findings. (Top) We introduce a clean string transformation testbed to scientifically analyze RL’s capabilities. (Bottom-Left) Our central RL Compositionality Hypothesis posits that training on simple composites with RL unlocks generalizable compositional skills. (Bottom-Right) Our experiments validate this, showing that: (1) compositional data combined with RL is the key ingredient for learning this new skill; (2) the learned skill transfers across domains; and (3) RL significantly improves difficult problems where the base model fails, while only reranking on problems it solves well.",
-        "caption_cn": "",
+        "caption_cn": "图 1：研究框架与关键发现概览。（上）我们引入一个干净的字符串变换测试床，用于科学分析 RL 的能力。（左下）我们的核心 RL 组合性假设认为，用 RL 在简单组合任务上训练可以解锁可泛化的组合技能。（右下）实验验证了这一点：1）组合数据与 RL 结合是学习新技能的关键因素；2）学到的技能可以跨领域迁移；3）对于基础模型失败的难题，RL 能显著提升表现，而对于基础模型已经能解决的问题，RL 主要起到重排序作用。",
         "bbox": {
           "x1": 108.0,
           "x2": 504.0,
@@ -1422,16 +1422,21 @@
       ],
       "labels": [],
       "code_url": "",
-      "note": "本质上可以看作一种面向 RL rollout 结构的数据增强：把一阶回答扩展成“回答 + critique”的二阶训练信号。",
-      "tldr": "这篇论文认为传统 RL 只训练“生成答案”的一阶 rollout，没有训练模型“批判答案”的能力，因此没把训练数据吃干净。作者提出 second-order rollout，即对已有回答再生成多条 critique，并联合训练 generation 与 critique，从而更充分地利用 RL 训练信号。",
+      "note": "本质上是一种训练时 rollout 结构的数据增强：把一阶回答扩展成“回答 + critique”的二阶训练信号，并通过共享参数把判断能力内化进同一个 policy model。",
+      "analysis_note": {
+        "title": "详细笔记：Second-Order Rollout 与 GC-RL",
+        "source": "docs/paper_notes/second-order-rollout-2602-22765.md",
+        "url": "paper_notes/second-order-rollout-2602-22765.html"
+      },
+      "tldr": "这篇论文提出 GC-RL：在普通数学 RLVR 的答题 rollout 之外，让同一个 policy model 对缓存中的 <问题, 回答> 生成 critique，并用最终 right/wrong 判断是否命中原回答真实正误作为二阶 reward。训练时混合 answer 与 critique rollout 更新共享参数，主评测仍用单次直接答题，收益体现为 critique 能力内化后提升数学推理准确率和训练数据利用率。",
       "abstract": "Reinforcement Learning (RL) has empowered Large Language Models (LLMs) with strong reasoning capabilities, but vanilla RL mainly focuses on generation capability improvement by training with only first-order rollout (generating multiple responses for a question), and we argue that this approach fails to fully exploit the potential of training data because of the neglect of critique capability training. To tackle this problem, we further introduce the concept of second-order rollout (generating multiple critiques for a response) and propose a unified framework for jointly training generation and critique capabilities. Extensive experiments across various models and datasets demonstrate that our approach can utilize training data more effectively than vanilla RL and achieve better performance under the same training data. Additionally, we uncover several insightful findings regarding second-order rollout and critique training, such as the importance of label balance in critique training and the noise problem of outcome-based rewards, which can be mitigated through sampling techniques. Our work offers a preliminary exploration of dynamic data augmentation and joint generation-critique training in RL, providing meaningful inspiration for the further advancement of RL training.",
       "summary_cn": {
-        "研究动机": "作者观察到，RL for LLM 的主流流程基本都围绕 first-order rollout 展开，也就是“给问题，采样多个答案，再按 reward 更新”。这种方式虽然能提升生成能力，但忽视了一个重要维度：模型是否会判断自己或别人答案的好坏。",
-        "解决问题": "论文要解决的是：如何提升 RL 训练数据的利用率，而不只是继续堆同类 rollout。作者希望把训练目标从单一的 answer generation 扩展成 generation + critique 的联合学习，让同一份数据同时服务于两种能力提升。",
-        "现象分析": "作者认为，vanilla RL 实际上浪费了大量潜在监督信号，因为对一个回答本身还可以继续生成批评、分析其错误模式与优缺点。如果这些 critique 信号不被建模，那么训练只是在强化“会答”，而没有同步强化“会评”。",
-        "主要方法": "论文提出 second-order rollout：在 first-order rollout 生成回答之后，再对这些回答生成多个 critique，并把 critique training 与 generation training 放进同一个统一框架里联合优化。作者还分析了两个关键细节：其一是 critique 训练里的 label balance 很重要；其二是 outcome-based reward 会带来噪声，但可以通过采样策略缓解。",
-        "数据集与实验": "作者在多个模型和数据集上验证方法，结果显示 second-order rollout 比 vanilla RL 更能充分利用相同训练数据，并取得更好的最终性能。论文还特别强调，critique 训练带来的提升不只是附带现象，而是训练数据利用效率提高的核心来源之一。",
-        "主要贡献": "这篇论文的主要贡献是把 RL 训练中的“批判能力”显式纳入 rollout 设计，并提出二阶 rollout 这一视角。它说明，RL 后训练不一定只能围绕答案生成展开，围绕答案再生成 critique，也是一条重要的数据增益路径。"
+        "研究动机": "主流数学 RLVR 主要围绕 first-order rollout 展开：给定问题，采样多个回答，再用最终答案 reward 更新模型。作者关注同一批数学题中已有回答还能提供“判断答案正误”的训练信号，从而让训练数据同时服务于解题能力和评价能力。",
+        "解决问题": "论文要解决的是：在不增加人工标注题目的前提下，让同一个 policy model 同时学习解题和评价回答，并检验这种联合目标能否提升数学准确率与 critique accuracy。",
+        "现象分析": "一阶 rollout 会自然产生正确和错误回答，这些 <问题, 回答> 可以转化成二阶 critique 任务。Critique reward 可靠落点主要是末尾 right/wrong 二分类判断，中间分析难以自动验证，因此正负样本平衡、二分类 reward 噪声和动态数据投机成为关键风险。",
+        "主要方法": "GC-RL 每步采样问题生成多个 response，用 verifier 标注正误；data filter 只保留同题中一正一错进入 question-response cache；再从 cache 采样 <问题, 回答> 生成多条 critique。Response reward 基于最终答案正确性，critique reward 基于最终判断是否匹配原回答真实正误，两类 rollout 混合后用 GRPO 更新同一个 policy model。",
+        "数据集与实验": "训练以 DAPO-MATH-17k 为主，1k 用于 GPT-5 蒸馏 critique cold-start SFT，16k 用于 RL；评测覆盖 Math-500、GSM8K、Minerva、AMC23、OlympiadBench。Critique evaluation 是基于数学题构造的 balanced <question,response> 正误判断集，主指标是最终 right/wrong accuracy。GC-RL 在 generation 上超过 G-RL，在 critique 上超过 C-RL，同时二阶 rollout 带来额外计算与较慢收敛。",
+        "主要贡献": "这篇论文把 critique 作为训练时二阶 rollout 纳入 RLVR，并展示同一模型的 judging 能力可以通过共享参数促进直接答题表现。它的价值在于给出一种训练侧数据利用方式，同时揭示 critique 训练中的正负样本平衡、二分类 reward 噪声和动态数据 reward hacking 风险。"
       },
       "status": "approved",
       "added_at": "2026-05-04",
@@ -1441,7 +1446,7 @@
         "page": 2,
         "path": "assets/paper_images/second-order-rollout-2602-22765-figure-2.png",
         "caption": "Figure 2: Flowchart of a single training step in GC-RL. First, a batch of questions is sampled from the training data, and multiple responses are generated (first-order rollout). Then, without replacement, a batch of <question, response> pairs is sampled from the Question-Response Data Cache, and multiple critiques are generated (secondorder rollout). These rollouts are combined and utilized jointly to update the policy model. In addition, the Question-Response Data Cache is maintained by processing the first-order rollout through a Data Filter and adding the filtered data into the cache.",
-        "caption_cn": "",
+        "caption_cn": "图 2：GC-RL 单个训练步骤的流程图。首先从训练数据中采样一批问题，并生成多个回答（一级 rollout）。然后从问答数据缓存中无放回采样一批 <问题, 回答> 对，并生成多个评论（二级 rollout）。这些 rollout 被合并并共同用于更新策略模型。此外，问答数据缓存会通过数据过滤器处理一级 rollout，并将过滤后的数据加入缓存。",
         "bbox": {
           "x1": 85.92,
           "x2": 511.2,
@@ -1514,7 +1519,7 @@
         "page": 0,
         "path": "assets/paper_images/g-opd-2602-12125-figure-1.png",
         "caption": "Figure 1: The empirical effectiveness of our method ExOPD compared with off-policy distillation (SFT), standard OPD, and the weight-extrapolation method ExPO (Zheng et al., 2025) in multi-teacher and strong-to-weak distillation settings (results averaged over 4 math reasoning and 3 code generation benchmarks). (a) When merging multiple domain experts—obtained by applying domain-specific RL to the same base model—back into the original base model, ExOPD is the only method that yields a unified student that consistently outperforms all domain teachers. (b) ExOPD also yields significant improvements over standard OPD when distilling a smaller student from a larger teacher. Moreover, applying reward correction in ExOPD can further boost distillation performance (Figure 6).",
-        "caption_cn": "",
+        "caption_cn": "图 1：在多教师和强到弱蒸馏设置中，我们的方法 ExOPD 与 off-policy 蒸馏（SFT）、标准 OPD、权重外推方法 ExPO（Zheng 等，2025）的实证效果对比（结果在 4 个数学推理和 3 个代码生成基准上取平均）。(a) 将多个领域专家（由同一基础模型经过领域特定 RL 得到）合并回原始基础模型时，ExOPD 是唯一能得到统一学生模型并持续超越所有领域教师的方法。(b) 从更大教师蒸馏较小学生时，ExOPD 也显著优于标准 OPD。此外，在 ExOPD 中应用奖励校正还能进一步提升蒸馏性能（图 6）。",
         "bbox": {
           "x1": 69.84,
           "x2": 323.52,
@@ -1587,7 +1592,7 @@
         "page": 1,
         "path": "assets/paper_images/composition-rl-2602-12036-figure-1.png",
         "caption": "Figure 1. Overview of Composition-RL. Top: an example of composing two math problems, illustrating the high-level idea of CompositionRL. Bottom left: pass@1 (%) on AIME24 versus training steps for different methods, summarizing key findings in Sections 4.2 and 4.3. Bottom right: cross-topic results on MMLU-Pro subjects with the top-5 largest sample sizes, highlighting the main finding in Section 4.4.",
-        "caption_cn": "",
+        "caption_cn": "图 1：Composition-RL 概览。上方：组合两个数学问题的示例，展示 Composition-RL 的高层思想。左下：不同方法在 AIME24 上 pass@1（%）随训练步数的变化，总结第 4.2 和 4.3 节的关键发现。右下：MMLU-Pro 中样本量最大的前 5 个学科的跨主题结果，突出第 4.4 节的主要发现。",
         "bbox": {
           "x1": 70.8,
           "x2": 527.04,
@@ -1663,7 +1668,7 @@
         "page": 11,
         "path": "assets/paper_images/seeupo-2602-06554-figure-4.png",
         "caption": "Figure 4: Training success rate comparison of SeeUPO and baselines. Subplots (a)-(d) show results for Qwen-3 model on Appworld and BFCL, and Qwen-2.5 model on Appworld and BFCL, respectively.",
-        "caption_cn": "",
+        "caption_cn": "图 4：SeeUPO 与基线方法的训练成功率对比。子图 (a)-(d) 分别展示 Qwen-3 模型在 Appworld 和 BFCL 上，以及 Qwen-2.5 模型在 Appworld 和 BFCL 上的结果。",
         "bbox": {
           "x1": 69.84,
           "x2": 524.16,
@@ -1738,7 +1743,7 @@
         "page": 2,
         "path": "assets/paper_images/rloo-2402-14740-figure-1.png",
         "caption": "Figure 1: Training reward curves for PPO on Llama-7B based models with the HH dataset. Left: In an RLHF environment we observe that a higher emphasis on variance reduction at the cost of bias (low λ) performs worse than forgoing variance reduction but introducing less bias (high λ). λ = 1.0 is the vanilla policy gradient which has the highest variance but no bias, and makes use of the full-trajectory reward in each update, performs the best. Right: PPO is unnecessarily complicated. Removing various augmentations of PPO such as clipping and loss normalization not degrade performance.",
-        "caption_cn": "",
+        "caption_cn": "图 1：基于 Llama-7B 的模型在 HH 数据集上使用 PPO 的训练奖励曲线。左：在 RLHF 环境中，我们观察到，为降低方差而引入更多偏差（低 λ）反而不如放弃方差降低但引入更少偏差（高 λ）。λ=1.0 是原始策略梯度，方差最高但无偏，并在每次更新中使用完整轨迹奖励，表现最好。右：PPO 过于复杂。去除 PPO 的若干增强项（如 clipping 和损失归一化）并不会降低性能。",
         "bbox": {
           "x1": 96.96,
           "x2": 516.0,
@@ -1830,7 +1835,7 @@
         "page": 2,
         "path": "assets/paper_images/large-concept-models-2412-08821-figure-1.png",
         "caption": "Figure 1 - Left: visualization of reasoning in an embedding space of concepts (task of summarization). Right: fundamental architecture of an Large Concept Model (LCM). ⋆: concept encoder and decoder are frozen.",
-        "caption_cn": "",
+        "caption_cn": "图 1：左：在概念嵌入空间中进行推理的可视化（摘要任务）。右：大概念模型（LCM）的基本架构。⋆ 表示概念编码器和解码器被冻结。",
         "bbox": {
           "x1": 80.88,
           "x2": 538.0799999999999,
@@ -1913,7 +1918,7 @@
         "page": 8,
         "path": "assets/paper_images/rlfactory-2509-06980-figure-5.png",
         "caption": "Figure 5: Mean reward score trends across different base model.",
-        "caption_cn": "",
+        "caption_cn": "图 5：不同基础模型的平均奖励分数趋势。",
         "bbox": {
           "x1": 150.96,
           "x2": 458.15999999999997,
@@ -1990,7 +1995,7 @@
         "page": 13,
         "path": "assets/paper_images/video-r1-2503-21776-figure-8.png",
         "caption": "Figure 8: Effect of length reward.",
-        "caption_cn": "",
+        "caption_cn": "图 8：长度奖励的影响。",
         "bbox": {
           "x1": 114.72,
           "x2": 497.03999999999996,
@@ -2068,7 +2073,7 @@
         "page": 3,
         "path": "assets/paper_images/alfworld-2010-03768-figure-3.png",
         "caption": "Figure 3: BUTLER::BRAIN: The text agent takes the initial/current observations o0/ot, and goal g to generate a textual action at token-by-token.",
-        "caption_cn": "",
+        "caption_cn": "图 3：BUTLER::BRAIN：文本 agent 接收初始/当前观测 o0/ot 和目标 g，并逐 token 生成文本动作 at。",
         "bbox": {
           "x1": 306.47999999999996,
           "x2": 503.52,
@@ -2150,7 +2155,7 @@
         "page": 0,
         "path": "assets/paper_images/agenttuning-2310-12823-figure-1.png",
         "caption": "Figure 1: (a) AgentLM exhibits superior performance. AgentLM is a series of models fine-tuned on the foundation of Llama 2 chat. Moreover, its generalization capability on held-out tasks is on par with GPT-3.5; (b) This figure is directly re-printed from AgentBench (Liu et al., 2023) with permission. Open LLMs significantly underperforms API-based LLMs.",
-        "caption_cn": "",
+        "caption_cn": "图 1：(a) AgentLM 表现更优。AgentLM 是一系列基于 Llama 2 chat 微调的模型，其在留出任务上的泛化能力与 GPT-3.5 相当；(b) 该图经许可直接转载自 AgentBench（Liu 等，2023）。开源 LLM 的表现明显弱于 API 型 LLM。",
         "bbox": {
           "x1": 107.75999999999999,
           "x2": 463.44,
@@ -2238,7 +2243,7 @@
         "page": 1,
         "path": "assets/paper_images/lumos-2311-05657-figure-2.png",
         "caption": "Figure 2: Overall framework of LUMOS. LUMOS are trained with 56K high-quality training annotations. We propose two agent training and inference formulations, LUMOS-O (§2.2) and LUMOS-I (§2.3). LUMOS-O is an efficient formulation that enables one-pass inference; LUMOS-I is an adaptive formulation that help agents flexibly plan based on the execution feedback. We showcase two LUMOS-I running examples in A-OKVQA and Mind2Web.",
-        "caption_cn": "",
+        "caption_cn": "图 2：LUMOS 的整体框架。LUMOS 使用 5.6 万条高质量训练标注进行训练。我们提出两种 agent 训练与推理形式：LUMOS-O（第 2.2 节）和 LUMOS-I（第 2.3 节）。LUMOS-O 是一种高效的一次性推理形式；LUMOS-I 是一种自适应形式，可帮助 agent 根据执行反馈灵活规划。图中展示了 LUMOS-I 在 A-OKVQA 和 Mind2Web 中的两个运行示例。",
         "bbox": {
           "x1": 70.8,
           "x2": 525.12,
@@ -2324,7 +2329,7 @@
         "page": 8,
         "path": "assets/paper_images/search-r1-2503-09516-figure-2.png",
         "caption": "Figure 2: (a) PPO vs. GRPO: GRPO generally converges faster but may exhibit instability after trained for a number of steps, whereas PPO provides more stable optimization but converges at a slower rate. (b) Base vs. Instruct LLM study: Instruction-tuned LLMs converge faster, but the final performance of both modles remains highly similar. (c) Response length study: The response length exhibits a decrease-increase-stabilize trend throughout training, aligning with the overall performance trajectory of the LLM. (d) # Valid search study: As the training proceeds, the LLM learns to call search more.",
-        "caption_cn": "",
+        "caption_cn": "图 2：(a) PPO 与 GRPO：GRPO 通常收敛更快，但训练若干步后可能出现不稳定；PPO 优化更稳定但收敛较慢。(b) Base 与 Instruct LLM 研究：指令微调 LLM 收敛更快，但二者最终性能非常接近。(c) 回答长度研究：训练过程中回答长度呈现下降-上升-稳定的趋势，与 LLM 整体性能轨迹一致。(d) 有效搜索次数研究：随着训练推进，LLM 学会更多地调用搜索。",
         "bbox": {
           "x1": 108.0,
           "x2": 504.0,
@@ -2405,7 +2410,7 @@
         "page": 1,
         "path": "assets/paper_images/self-rag-2310-11511-figure-1.png",
         "caption": "Figure 1: Overview of SELF-RAG. SELF-RAG learns to retrieve, critique, and generate text passages to enhance overall generation quality, factuality, and verifiability.",
-        "caption_cn": "",
+        "caption_cn": "图 1：SELF-RAG 概览。SELF-RAG 学习检索、评判和生成文本段落，以提升整体生成质量、事实性和可验证性。",
         "bbox": {
           "x1": 108.0,
           "x2": 504.96,
@@ -2492,7 +2497,7 @@
         "page": 16,
         "path": "assets/paper_images/deepseek-r1-2501-12948-figure-5.png",
         "caption": "Figure 5 | Overview of our RL framework.",
-        "caption_cn": "",
+        "caption_cn": "图 5：我们的 RL 框架概览。",
         "bbox": {
           "x1": 72.96,
           "x2": 523.1999999999999,
@@ -2568,7 +2573,7 @@
         "page": 2,
         "path": "assets/paper_images/grounding-by-trying-2410-23214-figure-2.png",
         "caption": "Figure 2: An overview of the standard multi-hop retrieval pipeline we study in this work. A user asks a question to the system. In each hop, the LLM generates search queries for the retriever and receives a collection of documents. The overall set of retrieved documents and the user question are then given to a downstream LLM for grounded answer generation.",
-        "caption_cn": "",
+        "caption_cn": "图 2：本文研究的标准多跳检索流程概览。用户向系统提出问题。在每一跳中，LLM 为检索器生成搜索查询并接收一组文档。随后，整体检索到的文档集合和用户问题一起输入下游 LLM，用于生成有依据的答案。",
         "bbox": {
           "x1": 118.8,
           "x2": 493.2,
@@ -2660,7 +2665,7 @@
         "page": 2,
         "path": "assets/paper_images/ragen-2504-20073-figure-2.png",
         "caption": "Figure 2 | The State-Thinking-Actions-Reward Policy Optimization (StarPO) framework. LLM generates reasoning-guided actions for multi-turn interactions with environments and accumulates trajectory-level rewards, normalized and used to update the LLM policy.",
-        "caption_cn": "",
+        "caption_cn": "图 2：State-Thinking-Actions-Reward Policy Optimization（StarPO）框架。LLM 生成由推理引导的动作，与环境进行多轮交互并累积轨迹级奖励；这些奖励经过归一化后用于更新 LLM 策略。",
         "bbox": {
           "x1": 70.8,
           "x2": 525.12,
@@ -2754,7 +2759,7 @@
         "page": 20,
         "path": "assets/paper_images/agentbench-2308-03688-figure-5.png",
         "caption": "Figure 5: The toolkit of AGENTBENCH is meticulously crafted for the seamless deployment of tasks and agents, coupled with an efficient evaluation assignment system. Agent servers (left) manifest in diverse forms, enabling us to deploy a model server and expose an accessible API through the HTTP protocol. Task servers (right) are composed of a task controller and several task workers, whose environment is within an isolated environment, ensuring freedom from conflicts and optimal task execution. Evaluation client (center) establishes an agent-task graph and employs the max-flow algorithm to optimize interactions. This optimization results in client workers seamlessly engaging with agent and task servers, facilitating the smooth execution of tasks and evaluations.",
-        "caption_cn": "",
+        "caption_cn": "图 5：AGENTBENCH 工具包经过精心设计，用于无缝部署任务和 agent，并配套高效的评测分配系统。agent 服务器（左）可以有多种形态，使我们能够部署模型服务器并通过 HTTP 协议暴露可访问 API。任务服务器（右）由任务控制器和若干任务 worker 组成，运行在隔离环境中，以避免冲突并保证任务执行。评测客户端（中）构建 agent-任务图，并使用最大流算法优化交互，使客户端 worker 能顺畅地与 agent 和任务服务器交互，完成任务和评测。",
         "bbox": {
           "x1": 108.0,
           "x2": 504.0,
@@ -2846,7 +2851,7 @@
         "page": 1,
         "path": "assets/paper_images/instructgpt-2203-02155-figure-1.png",
         "caption": "Figure 1: Human evaluations of various models on our API prompt distribution, evaluated by how often outputs from each model were preferred to those from the 175B SFT model. Our InstructGPT models (PPO-ptx) as well as its variant trained without pretraining mix (PPO) significantly outperform the GPT-3 baselines (GPT, GPT prompted); outputs from our 1.3B PPO-ptx model are preferred to those from the 175B GPT-3. Error bars throughout the paper are 95% confidence intervals.",
-        "caption_cn": "",
+        "caption_cn": "图 1：在 API 提示分布上对不同模型进行人工评估，指标是各模型输出相比 175B SFT 模型输出被偏好的频率。我们的 InstructGPT 模型（PPO-ptx）及其无预训练混合版本（PPO）显著优于 GPT-3 基线（GPT、GPT prompted）；其中 1.3B PPO-ptx 模型的输出也比 175B GPT-3 更受偏好。全文误差条均为 95% 置信区间。",
         "bbox": {
           "x1": 151.44,
           "x2": 453.12,
@@ -2928,7 +2933,7 @@
         "page": 0,
         "path": "assets/paper_images/toolformer-2302-04761-figure-1.png",
         "caption": "Figure 1: Exemplary predictions of Toolformer. The model autonomously decides to call different APIs (from top to bottom: a question answering system, a calculator, a machine translation system, and a Wikipedia search engine) to obtain information that is useful for completing a piece of text.",
-        "caption_cn": "",
+        "caption_cn": "图 1：Toolformer 的示例预测。模型会自主决定调用不同 API（自上而下分别为问答系统、计算器、机器翻译系统和维基百科搜索引擎），以获取对补全文本有用的信息。",
         "bbox": {
           "x1": 306.0,
           "x2": 525.12,
@@ -3015,7 +3020,7 @@
         "page": 15,
         "path": "assets/paper_images/rag-survey-2312-10997-figure-6.png",
         "caption": "Fig. 6. Summary of RAG ecosystem",
-        "caption_cn": "",
+        "caption_cn": "图 6：RAG 生态系统总结。",
         "bbox": {
           "x1": 98.88,
           "x2": 513.12,
@@ -3093,7 +3098,7 @@
         "page": 2,
         "path": "assets/paper_images/re2g-2022-naacl-main-194-figure-1.png",
         "caption": "Figure 1: KILT tasks of slot filling, question answering, fact checking and dialog",
-        "caption_cn": "",
+        "caption_cn": "图 1：KILT 中的槽填充、问答、事实核查和对话任务。",
         "bbox": {
           "x1": 69.84,
           "x2": 532.0799999999999,
@@ -3178,7 +3183,7 @@
         "page": 10,
         "path": "assets/paper_images/toolrl-2504-13958-figure-9.png",
         "caption": "Figure 9: Response length (left) and its reward (right) trends across training steps within the dynamic length reward training setting.",
-        "caption_cn": "",
+        "caption_cn": "图 9：动态长度奖励训练设置下，回答长度（左）及其奖励（右）随训练步数的变化趋势。",
         "bbox": {
           "x1": 74.64,
           "x2": 286.08,
@@ -3259,7 +3264,7 @@
         "page": 1,
         "path": "assets/paper_images/active-rag-flare-2023-emnlp-main-495-figure-1.png",
         "caption": "Figure 1: An illustration of forward-looking active retrieval augmented generation (FLARE). Starting with the user input x and initial retrieval results Dx, FLARE iteratively generates a temporary next sentence (shown in gray italic) and check whether it contains low-probability tokens (indicated with underline). If so (step 2 and 3), the system retrieves relevant documents and regenerates the sentence.",
-        "caption_cn": "",
+        "caption_cn": "图 1：前瞻式主动检索增强生成（FLARE）示意图。从用户输入 x 和初始检索结果 Dx 开始，FLARE 迭代生成一个临时下一句（灰色斜体），并检查其中是否包含低概率 token（以下划线标出）。如果包含（第 2 和第 3 步），系统会检索相关文档并重新生成该句。",
         "bbox": {
           "x1": 94.32,
           "x2": 502.08,
@@ -3349,7 +3354,7 @@
         "page": 1,
         "path": "assets/paper_images/research-2503-19470-figure-1.png",
         "caption": "Figure 1: Comparative performance of ReSearch and baseline methods on benchmark datasets. All baselines are built upon Qwen2.5-32B-Instruct. See Section 3 for details.",
-        "caption_cn": "",
+        "caption_cn": "图 1：ReSearch 与基线方法在基准数据集上的性能对比。所有基线均基于 Qwen2.5-32B-Instruct。详见第 3 节。",
         "bbox": {
           "x1": 118.08,
           "x2": 469.2,
@@ -3431,7 +3436,7 @@
         "page": 9,
         "path": "assets/paper_images/retool-2504-11536-figure-6.png",
         "caption": "Figure 6 Case of CI-powered Reasoning vs. Text-based Reasoning.",
-        "caption_cn": "",
+        "caption_cn": "图 6：由 CI 驱动的推理与基于文本的推理案例。",
         "bbox": {
           "x1": 72.96,
           "x2": 540.0,
@@ -3517,7 +3522,7 @@
         "page": 2,
         "path": "assets/paper_images/rag-gym-2502-13957-figure-1.png",
         "caption": "Figure 1. Process supervision of search agents with RAG-Gym. a, RAG-Gym formulates agentic search as a high-level Markov decision process (MDP). At each step t, the agent (Actor) receives a state st comprising the question and history, and executes a macro-action at (either issuing a search query or generating an answer), receiving an updated state st+1. b, Illustration of the limitation of outcome supervision. In outcome-only settings, a correct final answer assigns a positive reward to the entire trajectory, failing to penalize suboptimal intermediate steps or distinguish between unsupported answers and rigorously justified deductions. c, The RAG-Gym framework enables modular optimization across three dimensions: Architecture Design, Parameter Optimization, and Action Evaluation.",
-        "caption_cn": "",
+        "caption_cn": "图 1：使用 RAG-Gym 对搜索 agent 进行过程监督。a：RAG-Gym 将 agentic search 建模为高层马尔可夫决策过程（MDP）。在每一步 t，agent（Actor）接收由问题和历史组成的状态 st，并执行宏动作 at（发出搜索查询或生成答案），随后得到更新状态 st+1。b：结果监督局限性的示意。在只监督最终结果的设置中，正确最终答案会给整条轨迹赋予正奖励，无法惩罚次优中间步骤，也无法区分无依据答案和严谨推导。c：RAG-Gym 框架支持在架构设计、参数优化和动作评估三个维度上进行模块化优化。",
         "bbox": {
           "x1": 78.72,
           "x2": 547.1999999999999,
@@ -3592,7 +3597,7 @@
         "page": 17,
         "path": "assets/paper_images/deepresearcher-2025-emnlp-main-22-figure-6.png",
         "caption": "Figure 6: DeepResearcher performs the best on all 7 datasets measured by reliable model-based evaluation.",
-        "caption_cn": "",
+        "caption_cn": "图 6：DeepResearcher 在 7 个数据集上按可靠的基于模型评估衡量均取得最佳表现。",
         "bbox": {
           "x1": 133.92,
           "x2": 474.24,
@@ -3672,7 +3677,7 @@
         "page": 8,
         "path": "assets/paper_images/search-o1-2501-05366-figure-3.png",
         "caption": "Figure 3: Scaling analysis of top-k retrieved documents utilized in reasoning. All results are based on QwQ-32B-Preview model.",
-        "caption_cn": "",
+        "caption_cn": "图 3：推理中使用的 top-k 检索文档数量的扩展性分析。所有结果均基于 QwQ-32B-Preview 模型。",
         "bbox": {
           "x1": 111.6,
           "x2": 499.2,
@@ -3752,7 +3757,7 @@
         "page": 2,
         "path": "assets/paper_images/webthinker-2504-21776-figure-2.png",
         "caption": "Figure 2: Comparison of RAG paradigms: (a) Standard RAG workflow, (b) Iterative RAG workflow, and (c) WebThinker, a reasoning agent that autonomously searches, deeply explores web pages, and drafts research reports, all within its continuous thinking process.",
-        "caption_cn": "",
+        "caption_cn": "图 2：RAG 范式对比：(a) 标准 RAG 工作流，(b) 迭代式 RAG 工作流，(c) WebThinker：一个能在连续思考过程中自主搜索、深入探索网页并撰写研究报告的推理 agent。",
         "bbox": {
           "x1": 108.0,
           "x2": 504.0,
@@ -3839,7 +3844,7 @@
         "page": 3,
         "path": "assets/paper_images/zerosearch-2505-04588-figure-1.png",
         "caption": "Figure 1: Demonstration of PPO and GRPO training without the search engine.",
-        "caption_cn": "",
+        "caption_cn": "图 1：不使用搜索引擎进行 PPO 和 GRPO 训练的示例。",
         "bbox": {
           "x1": 109.92,
           "x2": 501.12,
@@ -3921,7 +3926,7 @@
         "page": 4,
         "path": "assets/paper_images/webdancer-2505-22648-figure-2.png",
         "caption": "Figure 2: The overview of training framework. (I) The SFT stage for cold start utilizes the reformatted ReAct datasets, where the thought includes both short and long CoT, respectively. (II) The RL stage performs rollouts with the tool calls on the QA pairs that are not utilized during the SFT stage, and optimizes the policy using the DAPO algorithm.",
-        "caption_cn": "",
+        "caption_cn": "图 2：训练框架概览。(I) 冷启动 SFT 阶段使用重新格式化的 ReAct 数据集，其中 thought 分别包含短 CoT 和长 CoT。(II) RL 阶段在 SFT 阶段未使用的 QA 对上通过工具调用进行 rollout，并使用 DAPO 算法优化策略。",
         "bbox": {
           "x1": 69.84,
           "x2": 525.12,
@@ -4005,7 +4010,7 @@
         "page": 22,
         "path": "assets/paper_images/turn-level-reward-2505-11821-figure-8.png",
         "caption": "Figure 8: Overview of the multi-turn LLM agent pipeline and comparison of different advantage estimation methods. The agent interacts with the tool environment across multiple steps: reasoning, tool use, and answer generation, receiving both intermediate and final rewards. GRPO is used as a representative algorithm to illustrate the different advantage estimation strategies. GRPO-OR and GRPO-MR serve as baselines with trajectory-level advantage estimation, while MT-GRPO is our proposed variant with fine-grained turn-level advantage estimation.",
-        "caption_cn": "",
+        "caption_cn": "图 8：多轮 LLM agent 流程概览及不同优势估计方法对比。agent 通过多个步骤与工具环境交互，包括推理、工具使用和答案生成，并接收中间奖励和最终奖励。图中使用 GRPO 作为代表算法说明不同优势估计策略。GRPO-OR 和 GRPO-MR 是使用轨迹级优势估计的基线，而 MT-GRPO 是我们提出的、使用细粒度轮次级优势估计的变体。",
         "bbox": {
           "x1": 108.0,
           "x2": 505.2,
@@ -4086,7 +4091,7 @@
         "page": 4,
         "path": "assets/paper_images/gigpo-2505-10978-figure-2.png",
         "caption": "Figure 2: Overview of GiGPO. The agent interacts with a group of environments initialized with identical states to generate a set of trajectories {τi}Ni=1. States with the same color represent the same environment state. GiGPO performs two-dimensional group computations (episode-level AE and step-level AS) to produce hierarchical relative advantages that guide fine-grained policy optimization.",
-        "caption_cn": "",
+        "caption_cn": "图 2：GiGPO 概览。agent 与一组以相同状态初始化的环境交互，生成一组轨迹 {τi}Ni=1。相同颜色的状态表示同一个环境状态。GiGPO 进行二维分组计算（episode 级 AE 和 step 级 AS），产生分层相对优势，用于指导细粒度策略优化。",
         "bbox": {
           "x1": 114.0,
           "x2": 500.15999999999997,
@@ -4168,7 +4173,7 @@
         "page": 2,
         "path": "assets/paper_images/agentflow-2510-05592-figure-2.png",
         "caption": "Figure 2: (a) Overview of AGENTFLOW, a trainable agentic system for in-the-flow planning and tool use. Four modules (planner, executor, verifier, generator) coordinate via a shared evolving memory M and toolset K, given a query q. The planner policy is optimized on-policy inside the system’s multi-turn loop to enable adaptive, long-horizon reasoning. (b) A single state transition, showing the action at, execution result et, and verifier signal vt that update the memory from M t to M t+1.",
-        "caption_cn": "",
+        "caption_cn": "图 2：(a) AGENTFLOW 概览，这是一个可训练的 agentic 系统，用于 in-the-flow 规划和工具使用。给定查询 q，四个模块（planner、executor、verifier、generator）通过共享且不断演化的记忆 M 和工具集 K 协同工作。planner 策略在系统多轮循环内部进行 on-policy 优化，以实现自适应的长程推理。(b) 单次状态转移，展示动作 at、执行结果 et 和 verifier 信号 vt 如何将记忆从 Mt 更新到 Mt+1。",
         "bbox": {
           "x1": 108.0,
           "x2": 504.0,
@@ -4251,7 +4256,7 @@
         "page": 1,
         "path": "assets/paper_images/turn-level-credit-wcua-2025-figure-1.png",
         "caption": "Figure 1: Overview of the multi-turn LLM agent pipeline and comparison of different advantage estimation methods. The agent interacts with the tool environment across multiple steps: reasoning, tool use, and answer generation, receiving both turn-level and outcome-level rewards. GRPO is used as a representative algorithm to illustrate the different advantage estimation strategies. GRPO-OR and GRPO-MR serve as baselines with trajectory-level advantage estimation, while MT-GRPO is our proposed variant with fine-grained turn-level advantage estimation.",
-        "caption_cn": "",
+        "caption_cn": "图 1：多轮 LLM agent 流程概览及不同优势估计方法对比。agent 通过多个步骤与工具环境交互，包括推理、工具使用和答案生成，并接收轮次级奖励和结果级奖励。图中使用 GRPO 作为代表算法说明不同优势估计策略。GRPO-OR 和 GRPO-MR 是使用轨迹级优势估计的基线，而 MT-GRPO 是我们提出的、使用细粒度轮次级优势估计的变体。",
         "bbox": {
           "x1": 54.96,
           "x2": 542.16,
@@ -4340,7 +4345,7 @@
         "page": 2,
         "path": "assets/paper_images/reasonrag-2505-14069-figure-2.png",
         "caption": "Figure 2: Framework of ReasonRAG. Figure (a) illustrates the policy optimization based on process supervision. MCTS guides the construction of the state-action tree and the assignment of process-level rewards for fine-grained policy optimization. (Actions derived from the same state are color-coded by reward: green circle (highest), red circle (lowest).) Figure (b) demonstrates an inference example.",
-        "caption_cn": "",
+        "caption_cn": "图 2：ReasonRAG 框架。图 (a) 展示基于过程监督的策略优化。MCTS 指导状态-动作树的构建，并分配过程级奖励以进行细粒度策略优化。（来自同一状态的动作按奖励着色：绿色圆圈表示最高，红色圆圈表示最低。）图 (b) 展示一个推理示例。",
         "bbox": {
           "x1": 123.6,
           "x2": 497.03999999999996,
@@ -4422,7 +4427,7 @@
         "page": 3,
         "path": "assets/paper_images/deepdive-2509-10446-figure-3.png",
         "caption": "Figure 3: Overview of automated question–answer (QA) data synthesis from knowledge graphs (KGs) for DeepDive. Deep search QA pairs are automatically constructed by performing random walks over a knowledge graph and subsequently obfuscated using a large language model.",
-        "caption_cn": "",
+        "caption_cn": "图 3：DeepDive 中基于知识图谱（KG）的自动问答（QA）数据合成概览。通过在知识图谱上执行随机游走自动构建深度搜索 QA 对，随后使用大语言模型对其进行混淆处理。",
         "bbox": {
           "x1": 108.0,
           "x2": 504.0,
@@ -4511,7 +4516,7 @@
         "page": 14,
         "path": "assets/paper_images/webresearcher-2509-13309-figure-5.png",
         "caption": "Figure 5: Effect of n in Reason-Synthesis Framework",
-        "caption_cn": "",
+        "caption_cn": "图 5：Reason-Synthesis 框架中 n 的影响。",
         "bbox": {
           "x1": 72.72,
           "x2": 523.1999999999999,
@@ -4590,7 +4595,7 @@
         "page": 3,
         "path": "assets/paper_images/tree-grpo-2509-21240-figure-3.png",
         "caption": "Figure 3: The overview of the Tree-GRPO training pipeline. The rollout is conducted in a tree-search manner, where each node corresponds to a complete thought-action-observation step. The group relative advantages are estimated at both intra-tree and inter-tree levels. Tree-GRPO constructs steplevel process supervision signals through a tree structure with a less rollout budget.",
-        "caption_cn": "",
+        "caption_cn": "图 3：Tree-GRPO 训练流程概览。rollout 以树搜索方式进行，每个节点对应一个完整的 thought-action-observation 步骤。组相对优势同时在树内和树间两个层面估计。Tree-GRPO 用更少的 rollout 预算，通过树结构构建 step 级过程监督信号。",
         "bbox": {
           "x1": 108.72,
           "x2": 501.12,
@@ -4682,7 +4687,7 @@
         "page": 0,
         "path": "assets/paper_images/websailor-2507-02592-figure-1.png",
         "caption": "Figure 1: Performance on the BrowseComp-en/zh benchmarks. DeepSeek-R1-Browse is DeepSeek-R1 equipped with browsing tools via the ReAct framework, sharing the same implementation as our model, WebSailor. Doubao-Search and Grok-3 are proprietary web-based products (marked by ∗). The result for GPT-4o with browsing is taken from OpenAI’s official publication.",
-        "caption_cn": "",
+        "caption_cn": "图 1：BrowseComp-en/zh 基准上的性能。DeepSeek-R1-Browse 是通过 ReAct 框架配备浏览工具的 DeepSeek-R1，与我们的模型 WebSailor 采用相同实现。Doubao-Search 和 Grok-3 是专有网页产品（以 ∗ 标记）。带浏览的 GPT-4o 结果来自 OpenAI 官方发布。",
         "bbox": {
           "x1": 69.84,
           "x2": 449.76,
@@ -4764,7 +4769,7 @@
         "page": 3,
         "path": "assets/paper_images/spa-rl-2505-20732-figure-1.png",
         "caption": "Figure 1: Overview of our proposed Stepwise Progress Attribution (SPA) framework for training LLM agents with RL.",
-        "caption_cn": "",
+        "caption_cn": "图 1：我们提出的 Stepwise Progress Attribution（SPA）框架概览，用于通过 RL 训练 LLM agent。",
         "bbox": {
           "x1": 110.39999999999999,
           "x2": 502.08,
@@ -4851,7 +4856,7 @@
         "page": 0,
         "path": "assets/paper_images/aepo-2510-14545-figure-1.png",
         "caption": "Figure 1: Performance overview of AEPO algorithm.",
-        "caption_cn": "",
+        "caption_cn": "图 1：AEPO 算法性能概览。",
         "bbox": {
           "x1": 318.96,
           "x2": 547.92,
@@ -4926,7 +4931,7 @@
         "page": 13,
         "path": "assets/paper_images/tool-integrated-reasoning-2508-19201-figure-5.png",
         "caption": "Figure 5: The (a) training and (b) testing accuracy of the baseline and ASPO algorithm.",
-        "caption_cn": "",
+        "caption_cn": "图 5：基线方法和 ASPO 算法的 (a) 训练准确率与 (b) 测试准确率。",
         "bbox": {
           "x1": 132.96,
           "x2": 480.47999999999996,
@@ -5013,7 +5018,7 @@
         "page": 6,
         "path": "assets/paper_images/autorefine-2505-11277-figure-4.png",
         "caption": "Figure 4: (RQ2) Visualization of the search behaviors. (a) AutoRefine’s average number of search calls per rollout. For both variants, AutoRefine learns to adaptively issue more search queries for multi-hop questions and fewer for single-hop ones. (b) Comparison of search success rates between retrieval-augmented reasoning methods. While all methods draft more efficient search queries than naive retrieval, AutoRefine achieves more significant performance gains.",
-        "caption_cn": "",
+        "caption_cn": "图 4：（RQ2）搜索行为可视化。(a) AutoRefine 每次 rollout 的平均搜索调用次数。对于两个变体，AutoRefine 都学会了针对多跳问题自适应地发起更多搜索查询，而针对单跳问题发起更少查询。(b) 检索增强推理方法之间的搜索成功率对比。尽管所有方法都比朴素检索生成更高效的搜索查询，AutoRefine 获得了更显著的性能提升。",
         "bbox": {
           "x1": 110.64,
           "x2": 502.08,
@@ -5096,7 +5101,7 @@
         "page": 6,
         "path": "assets/paper_images/negative-gradient-grpo-2505-18830-figure-3.png",
         "caption": "Figure 3: Key insight: Tokens of negative samples (incorrect responses) can be logically or stepcorrect. Tokens with high NTHR tend to strongly correlate with these types of tokens (highlighted in red). The bold dots represent omitted reasoning.",
-        "caption_cn": "",
+        "caption_cn": "图 3：关键洞察：负样本（错误回答）的 token 也可能在逻辑上或步骤上是正确的。具有高 NTHR 的 token 往往与这些类型的 token 强相关（红色高亮）。加粗圆点表示被省略的推理。",
         "bbox": {
           "x1": 108.0,
           "x2": 505.2,
@@ -5178,7 +5183,7 @@
         "page": 1,
         "path": "assets/paper_images/demystifying-agentic-rl-2510-11701-figure-1.png",
         "caption": "Figure 1: An overview of our research on agentic RL.",
-        "caption_cn": "",
+        "caption_cn": "图 1：我们关于 agentic RL 研究的概览。",
         "bbox": {
           "x1": 108.0,
           "x2": 504.0,
@@ -5256,7 +5261,7 @@
         "page": 3,
         "path": "assets/paper_images/ikea-adaptive-search-2505-07596-figure-1.png",
         "caption": "Figure 1: The top of the figure illustrates the training process for Multi-turn Reinforcement Learning with Verifiable Reward for LLM-Agent. In the middle is Search-R1, and at the very bottom is IKEA. Search-R1 and IKEA are special types of LLM-agents. We highlight the differences from the training of general LLM-agents, and to save space, we have omitted the common parts, such as the calculation of KL and Advantage.",
-        "caption_cn": "",
+        "caption_cn": "图 1：图上方展示了面向 LLM-Agent 的、带可验证奖励的多轮强化学习训练过程。中间是 Search-R1，最下方是 IKEA。Search-R1 和 IKEA 是特殊类型的 LLM-agent。我们突出展示它们与通用 LLM-agent 训练的差异；为节省空间，省略了 KL 和 Advantage 计算等共同部分。",
         "bbox": {
           "x1": 108.0,
           "x2": 502.32,
@@ -5340,7 +5345,7 @@
         "page": 1,
         "path": "assets/paper_images/anchored-sft-2509-23753-figure-1.png",
         "caption": "Figure 1: Training dynamics comparison across fine-tuning methods on medical knowledge tasks. Left: MMLU accuracy (out-of-domain evaluation); Center: MedMCQA accuracy (in-domain evaluation); Right: KL divergence from base model. DFT exhibits severe distributional drift (high KL divergence) while ASFT maintains stability through KL anchoring and achieves superior performance on both tasks.",
-        "caption_cn": "",
+        "caption_cn": "图 1：医学知识任务上不同微调方法的训练动态对比。左：MMLU 准确率（域外评估）；中：MedMCQA 准确率（域内评估）；右：相对基础模型的 KL 散度。DFT 出现严重分布漂移（高 KL 散度），而 ASFT 通过 KL 锚定保持稳定，并在两个任务上取得更优性能。",
         "bbox": {
           "x1": 110.64,
           "x2": 502.08,
@@ -5427,7 +5432,7 @@
         "page": 2,
         "path": "assets/paper_images/asymmetric-ppo-2510-01656-figure-2.png",
         "caption": "Figure 2: Visual intuition behind AsyPPO. Small yet expressive critics can guide larger actors effectively when their representations are well-initialized. (a): A single critic struggles to align its value signal, leading to uncertain policy updates. Two small critics reach consensus (“This way”) and provide robust, low-variance guidance to the actor. (b): By leveraging representational priors and critic agreement, AsyPPO significantly outperforms classic PPO in terms of performance on various policy models, i.e., Qwen3-4b-Base and Qwen3-8b-Base. The Y-axis represents the improvement for the initial policy. The score calculation is the same as that in Figure 1.",
-        "caption_cn": "",
+        "caption_cn": "图 2：AsyPPO 的直观示意。小而表达能力强的 critic 在表示初始化良好时可以有效引导更大的 actor。(a) 单个 critic 难以对齐其价值信号，导致策略更新不确定。两个小 critic 达成共识（“This way”），为 actor 提供稳健、低方差的指导。(b) 通过利用表示先验和 critic 一致性，AsyPPO 在多种策略模型（如 Qwen3-4b-Base 和 Qwen3-8b-Base）上显著优于经典 PPO。Y 轴表示相对初始策略的提升。分数计算方式与图 1 相同。",
         "bbox": {
           "x1": 72.0,
           "x2": 529.1999999999999,
@@ -5524,7 +5529,7 @@
         "page": 2,
         "path": "assets/paper_images/bapo-jIeJJqG7dz-figure-3.png",
         "caption": "Figure 3: An illustration of our proposed BAPO. (Left) Baseline methods like GRPO use symmetric fixed clipping bounds, reinforcing high-probability positive tokens while penalizing excessive low-probability negatives, leading to sharp distributions and entropy collapse. (Right) BAPO dynamically adjusts the clipping bounds clow and chigh based on the loss contributions from positive",
-        "caption_cn": "",
+        "caption_cn": "图 3：我们提出的 BAPO 示意图。（左）GRPO 等基线方法使用对称固定 clipping 边界，在强化高概率正 token 的同时惩罚过多低概率负 token，导致尖锐分布和熵坍缩。（右）BAPO 根据正样本的损失贡献动态调整 clipping 边界 clow 和 chigh。",
         "bbox": {
           "x1": 128.4,
           "x2": 483.59999999999997,
@@ -5610,7 +5615,7 @@
         "page": 0,
         "path": "assets/paper_images/co-rewarding-fDk95XPsCU-figure-1.png",
         "caption": "Figure 1: Performance overview. Reasoning comparison of Pass@1 value and validation curves. Our Co-rewarding achieves better and more stable (without collapse) training than other baselines.",
-        "caption_cn": "",
+        "caption_cn": "图 1：性能概览。Pass@1 数值与验证曲线的推理能力对比。相比其他基线，我们的 Co-rewarding 训练效果更好且更稳定（无坍缩）。",
         "bbox": {
           "x1": 118.8,
           "x2": 495.12,
@@ -5691,7 +5696,7 @@
         "page": 1,
         "path": "assets/paper_images/sfpo-2510-04072-figure-1.png",
         "caption": "Figure 1: Pipeline of SFPO at iteration s. Starting from the current policy πθs,0 , we first generate rollouts for training. Stage I (Fast Trajectory): apply K successive gradient updates on the same batch to obtain θs,K . Stage II (Reposition): interpolate between θs,K and the starting point θs,0 to form θ̃s,K , controlling off-policy drift. Stage III (Slow Correction): perform one additional update on θ̃s,K , yielding πθs+1,0 for the next iteration.",
-        "caption_cn": "",
+        "caption_cn": "图 1：第 s 次迭代中 SFPO 的流程。从当前策略 πθs,0 出发，首先生成用于训练的 rollout。阶段 I（快速轨迹）：在同一批数据上连续进行 K 次梯度更新，得到 θs,K。阶段 II（重定位）：在 θs,K 与起点 θs,0 之间插值形成 θ̃s,K，以控制 off-policy 漂移。阶段 III（慢速校正）：在 θ̃s,K 上再执行一次更新，得到下一轮迭代的 πθs+1,0。",
         "bbox": {
           "x1": 108.0,
           "x2": 505.2,
@@ -5767,7 +5772,7 @@
         "page": 6,
         "path": "assets/paper_images/capo-2510-00819-figure-2.png",
         "caption": "Figure 2: Comparison with baseline methods on policy gradient stability. While the setup with more aggressive updates makes all methods more sample-efficient, it also leads the baselines to policy collapse. In contrast, CAPO prevents collapse and achieves up to 30× greater sample efficiency than GRPO under aggressive updates.",
-        "caption_cn": "",
+        "caption_cn": "图 2：与基线方法在策略梯度稳定性上的对比。更激进的更新设置使所有方法都更具样本效率，但也会导致基线方法发生策略坍缩。相比之下，CAPO 能防止坍缩，并在激进更新下达到最高比 GRPO 高 30 倍的样本效率。",
         "bbox": {
           "x1": 117.36,
           "x2": 494.4,
@@ -5847,7 +5852,7 @@
         "page": 2,
         "path": "assets/paper_images/istar-implicit-step-rewards-ooROvpmxMV-figure-1.png",
         "caption": "Figure 1: Overview of iStar. At each training step, an LLM agent interacts with the environment to generate multi-step rollouts ranked by an outcome reward verifier (or model) to construct positive-negative trajectory pairs. These pairs are used to train an implicit PRM via a multi-turn DPO objective, which generates implicit step rewards for each action produced by the agent. Finally, calculate step-level advantages using the implicit step rewards and episode-level advantages using outcome rewards to optimize the LLM agent (policy model) through RL.",
-        "caption_cn": "",
+        "caption_cn": "图 1：iStar 概览。在每个训练步骤中，LLM agent 与环境交互生成多步 rollout，并由结果奖励验证器（或模型）排序，以构造正负轨迹对。这些轨迹对用于通过多轮 DPO 目标训练隐式 PRM，该模型为 agent 产生的每个动作生成隐式步骤奖励。最后，使用隐式步骤奖励计算 step 级优势，并使用结果奖励计算 episode 级优势，通过 RL 优化 LLM agent（策略模型）。",
         "bbox": {
           "x1": 146.4,
           "x2": 464.4,
@@ -5926,7 +5931,7 @@
         "page": 1,
         "path": "assets/paper_images/tool-call-reward-model-LnBEASInVr-figure-1.png",
         "caption": "Figure 1: Overview of TRM for improving tool invocation in LLMs: (a) limitations of outcome-only reward, (b) benefits of tool call reward, and (c) performance gains from integrating tool call reward.",
-        "caption_cn": "",
+        "caption_cn": "图 1：用于提升 LLM 工具调用能力的 TRM 概览：(a) 仅使用结果奖励的局限，(b) 工具调用奖励的好处，(c) 集成工具调用奖励带来的性能提升。",
         "bbox": {
           "x1": 108.0,
           "x2": 504.0,
@@ -6019,7 +6024,7 @@
         "page": 2,
         "path": "assets/paper_images/spear-2509-22601-figure-2.png",
         "caption": "Figure 2. Overview of SPEAR. First, the agent interacts with the environment for a set of trajectories, which flow through intrinsic reward shaping and advantage estimation with on-policy updates. Second, they are selected and stored in a replay buffer, enabling off-policy updates via the proposed self-imitation scheme. This dual integration allows the maximal utility of past experiences, thereby expanding the effective exploration space, while simultaneously mitigating persistent uncertainty.",
-        "caption_cn": "",
+        "caption_cn": "图 2：SPEAR 概览。首先，agent 与环境交互生成一组轨迹，这些轨迹经过内在奖励塑形和优势估计，并进行 on-policy 更新。其次，轨迹被选择并存入 replay buffer，通过提出的自模仿机制进行 off-policy 更新。这种双重整合最大化利用历史经验，从而扩展有效探索空间，同时缓解持续不确定性。",
         "bbox": {
           "x1": 73.92,
           "x2": 538.0799999999999,
@@ -6097,7 +6102,7 @@
         "page": 1,
         "path": "assets/paper_images/t3-belief-deviation-r8hzDA3pUY-figure-1.png",
         "caption": "Figure 1: Overall framework of T3, where (bt, at, ot) denote the agent’s internal belief, its chosen action, and the resulting feedback at turn t, respectively. By truncating belief-trapped trajectories, we prevent the agent from entering the belief-trap region (BTR) where credit assignment is contaminated in RL training, allowing learning signals to concentrate on genuinely informative actions. As a result, policy optimization becomes more stable and effective under complex active reasoning.",
-        "caption_cn": "",
+        "caption_cn": "图 1：T3 的整体框架，其中 (bt, at, ot) 分别表示 agent 在第 t 轮的内部信念、所选动作和得到的反馈。通过截断陷入信念陷阱的轨迹，我们阻止 agent 进入会污染 RL 训练中信用分配的信念陷阱区域（BTR），使学习信号集中在真正有信息量的动作上。因此，在复杂主动推理中，策略优化会更加稳定有效。",
         "bbox": {
           "x1": 117.83999999999999,
           "x2": 494.15999999999997,
@@ -6173,7 +6178,7 @@
         "page": 3,
         "path": "assets/paper_images/rest-tool-use-gNZlaKRWki-figure-2.png",
         "caption": "Figure 2: Left: Overall accuracy on the API-Bank test set. Right: Overall accuracy on the BFCL test set. Axes are: NLST: None-Live Single Turn, MTLC: Multi-Turn Long Context, MTB: MultiTurn Base, MTMF: Multi-Turn w/ Missing Functions, LST: Live Single Turn, MTMP: Multi-Turn w/ Missing Parameters.",
-        "caption_cn": "",
+        "caption_cn": "图 2：左：API-Bank 测试集上的总体准确率。右：BFCL 测试集上的总体准确率。坐标轴含义：NLST：None-Live Single Turn；MTLC：Multi-Turn Long Context；MTB：MultiTurn Base；MTMF：Multi-Turn w/ Missing Functions；LST：Live Single Turn；MTMP：Multi-Turn w/ Missing Parameters。",
         "bbox": {
           "x1": 108.96,
           "x2": 502.08,
@@ -6250,7 +6255,7 @@
         "page": 0,
         "path": "assets/paper_images/triviaqa-2017-acl-p17-1147-figure-1.png",
         "caption": "Figure 1: Question-answer pairs with sample excerpts from evidence documents from TriviaQA exhibiting lexical and syntactic variability, and requiring reasoning from multiple sentences.",
-        "caption_cn": "",
+        "caption_cn": "图 1：TriviaQA 中的问题-答案对及证据文档示例片段，展示了词汇和句法上的多样性，并需要从多个句子中进行推理。",
         "bbox": {
           "x1": 306.96,
           "x2": 518.16,
@@ -6335,7 +6340,7 @@
         "page": 4,
         "path": "assets/paper_images/dpr-2020-emnlp-main-550-figure-1.png",
         "caption": "Figure 1: Retriever top-k accuracy with different numbers of training examples used in our dense passage retriever vs BM25. The results are measured on the development set of Natural Questions. Our DPR trained using 1,000 examples already outperforms BM25.",
-        "caption_cn": "",
+        "caption_cn": "图 1：使用不同数量训练样本时，我们的稠密段落检索器与 BM25 的 retriever top-k 准确率对比。结果在 Natural Questions 开发集上测得。仅使用 1,000 个样本训练的 DPR 已经超过 BM25。",
         "bbox": {
           "x1": 316.08,
           "x2": 515.04,
@@ -6420,7 +6425,7 @@
         "page": 1,
         "path": "assets/paper_images/rag-2020-knowledge-intensive-nlp-figure-1.png",
         "caption": "Figure 1: Overview of our approach. We combine a pre-trained retriever (Query Encoder + Document Index) with a pre-trained seq2seq model (Generator) and fine-tune end-to-end. For query x, we use Maximum Inner Product Search (MIPS) to find the top-K documents zi. For final prediction y, we treat z as a latent variable and marginalize over seq2seq predictions given different documents.",
-        "caption_cn": "",
+        "caption_cn": "图 1：我们方法的概览。我们将预训练检索器（Query Encoder + Document Index）与预训练 seq2seq 模型（Generator）结合，并进行端到端微调。对于查询 x，我们使用最大内积搜索（MIPS）找到 top-K 文档 zi。对于最终预测 y，我们将 z 视为隐变量，并对给定不同文档时的 seq2seq 预测进行边缘化。",
         "bbox": {
           "x1": 108.96,
           "x2": 503.03999999999996,
@@ -6504,7 +6509,7 @@
         "page": 6,
         "path": "assets/paper_images/hotpotqa-2018-emnlp-d18-1259-figure-3.png",
         "caption": "Figure 3: Our model architecture. Strong supervision over supporting facts is used in a multi-task setting.",
-        "caption_cn": "",
+        "caption_cn": "图 3：我们的模型架构。在多任务设置中使用对支持事实的强监督。",
         "bbox": {
           "x1": 78.96,
           "x2": 283.2,
@@ -6581,7 +6586,7 @@
         "page": 0,
         "path": "assets/paper_images/musique-2022-tacl-figure-1.png",
         "caption": "Figure 1: Generating connected multihop questions by composing carefully chosen pairs of single-hop questions. Left: A HotpotQA question that would have been filtered out by our approach for not requiring connected reasoning; it can be answered using just Q2 without knowing the answer to Q1 (since there is only one person mentioned in the context as being best known for a satirical novel). Right: A connected question that forces models to reason through both intended hops (since there are multiple people mentioned in the context as being best known for some novel).",
-        "caption_cn": "",
+        "caption_cn": "图 1：通过组合精心选择的单跳问题对，生成连通的多跳问题。左：一个 HotpotQA 问题会被我们的方法过滤掉，因为它不需要连通推理；只用 Q2 即可回答，而无需知道 Q1 的答案（因为上下文中只有一个人以讽刺小说闻名）。右：一个连通问题会迫使模型按预期的两个 hop 进行推理（因为上下文中有多个人以某部小说闻名）。",
         "bbox": {
           "x1": 307.92,
           "x2": 522.0,
@@ -6665,7 +6670,7 @@
         "page": 1,
         "path": "assets/paper_images/react-2023-iclr-figure-1.png",
         "caption": "Figure 1: (1) Comparison of 4 prompting methods, (a) Standard, (b) Chain-of-thought (CoT, Reason Only), (c) Act-only, and (d) ReAct (Reason+Act), solving a HotpotQA (Yang et al., 2018) question. (2) Comparison of (a) Act-only and (b) ReAct prompting to solve an AlfWorld (Shridhar et al., 2020b) game. In both domains, we omit in-context examples in the prompt, and only show task solving trajectories generated by the model (Act, Thought) and the environment (Obs).",
-        "caption_cn": "",
+        "caption_cn": "图 1：(1) 比较 4 种提示方法：(a) Standard，(b) Chain-of-thought（CoT，仅推理），(c) Act-only，(d) ReAct（Reason+Act），用于回答一个 HotpotQA（Yang 等，2018）问题。(2) 比较 (a) Act-only 与 (b) ReAct 提示在 AlfWorld（Shridhar 等，2020b）游戏中的表现。在两个领域中，我们省略了提示中的上下文示例，只展示模型（Act、Thought）和环境（Obs）生成的任务求解轨迹。",
         "bbox": {
           "x1": 111.83999999999999,
           "x2": 505.2,
@@ -6834,7 +6839,7 @@
         "page": 0,
         "path": "assets/paper_images/arpo-2025-arxiv-figure-1.png",
         "caption": "Figure 1: Overview of tool-use token entropy exploration and ARPO algorithm performance. Left: High entropy observed in the LLM following tool usage. Right: LLM performance comparison on deep search tasks using only 1k RL samples, along with a comparison of training tool-use budgets.",
-        "caption_cn": "",
+        "caption_cn": "图 1：工具使用 token 熵探索与 ARPO 算法性能概览。左：LLM 在工具使用后出现的高熵现象。右：仅使用 1k RL 样本时，LLM 在深度搜索任务上的性能对比，并同时比较训练阶段的工具使用预算。",
         "bbox": {
           "x1": 107.75999999999999,
           "x2": 462.47999999999996,
@@ -6920,7 +6925,7 @@
         "page": 1,
         "path": "assets/paper_images/simpletir-2025-arxiv-figure-1.png",
         "caption": "Figure 1: Starting from Qwen2.5-7B base model, The training dynamics of SimpleTIR are highly stable, and it clearly outperforms the baseline method without TIR (DAPO). The gradient norm remains well-behaved with almost no spikes. In contrast, Naive Multi-turn Training not only suffers from unstable dynamics and catastrophic gradient norm explosions, but also fails to match the performance of the baseline without TIR.",
-        "caption_cn": "",
+        "caption_cn": "图 1：从 Qwen2.5-7B 基础模型出发，SimpleTIR 的训练动态高度稳定，并且明显优于不使用 TIR 的基线方法（DAPO）。梯度范数表现良好，几乎没有尖峰。相比之下，Naive Multi-turn Training 不仅训练动态不稳定并出现灾难性的梯度范数爆炸，而且性能也无法达到不使用 TIR 的基线水平。",
         "bbox": {
           "x1": 82.56,
           "x2": 530.16,
@@ -7001,7 +7006,7 @@
         "page": 2,
         "path": "assets/paper_images/deepagent-2026-www-figure-3.png",
         "caption": "Figure 3: Overview of the DeepAgent framework. The main reasoning model autonomously discovers tools, executes actions, and folds previous memory to restart with structured memories, all within a unified thinking process. The DeepAgent is trained end-to-end with ToolPO, an RL method that uses a tool simulator to simulate large-scale real-world tool APIs, and rewards both final task success and correct intermediate tool calls through fine-grained advantage attribution.",
-        "caption_cn": "",
+        "caption_cn": "图 3：DeepAgent 框架概览。主推理模型在统一的思考过程中自主发现工具、执行动作，并折叠先前记忆以使用结构化记忆重新开始。DeepAgent 通过 ToolPO 进行端到端训练；ToolPO 是一种 RL 方法，使用工具模拟器模拟大规模真实世界工具 API，并通过细粒度优势归因同时奖励最终任务成功和正确的中间工具调用。",
         "bbox": {
           "x1": 72.0,
           "x2": 540.0,
@@ -7080,7 +7085,7 @@
         "page": 6,
         "path": "assets/paper_images/empirical-search-rl-agents-2025-arxiv-figure-2.png",
         "caption": "Figure 2: The study of underlying pretrained LLM for development of LLM-based search agents with RL. (a) Training reward with different type of LLMs - general-purpose LLM (Qwen2.5-7BBase) and reasoning LLM (DeepSeek-R1-Distill-Qwen-7B). We observe that general-purpose LLM performs better than reasoning LLMs with both PPO and GRPO. (b) # of Search engine calls with different type of LLMs: General LLM learns to call the search engine faster than the reasoning LLM. This potentially stems from the fact the general LLMs are better for following instructions. (c) Training reward with different size of LLMs: Larger LLMs can lead to higher training reward. (d) Test accuracy with different size of LLMs: On the challenging Bamboogle dataset [30], the performance increases consistently as the LLM size increases.",
-        "caption_cn": "",
+        "caption_cn": "图 2：用于通过 RL 开发基于 LLM 的搜索 agent 时，底层预训练 LLM 的研究。(a) 不同类型 LLM 的训练奖励：通用 LLM（Qwen2.5-7BBase）和推理 LLM（DeepSeek-R1-Distill-Qwen-7B）。我们观察到，通用 LLM 在 PPO 和 GRPO 下都优于推理 LLM。(b) 不同类型 LLM 的搜索引擎调用次数：通用 LLM 学会调用搜索引擎的速度快于推理 LLM。这可能源于通用 LLM 更擅长遵循指令。(c) 不同规模 LLM 的训练奖励：更大的 LLM 会带来更高训练奖励。(d) 不同规模 LLM 的测试准确率：在具有挑战性的 Bamboogle 数据集 [30] 上，随着 LLM 规模增大，性能持续提升。",
         "bbox": {
           "x1": 112.32,
           "x2": 497.03999999999996,
@@ -7168,7 +7173,7 @@
         "page": 1,
         "path": "assets/paper_images/tool-n1-2025-arxiv-figure-1.png",
         "caption": "Figure 1: Overview of the training pipeline for Nemotron-Research-Tool-N1 (Tool-N1). Starting from standard SFT tool-calling data comprising user queries and candidate tools, we train LLMs to produce structured reasoning and tool calls using a binary reward function within the GRPO algorithm. As supervision is only applied to the format and tool-call correctness, the training process does not require curated reasoning trajectories.",
-        "caption_cn": "",
+        "caption_cn": "图 1：Nemotron-Research-Tool-N1（Tool-N1）的训练流程概览。从包含用户查询和候选工具的标准 SFT 工具调用数据出发，我们在 GRPO 算法中使用二元奖励函数，训练 LLM 生成结构化推理和工具调用。由于监督只应用于格式和工具调用正确性，训练过程不需要人工整理的推理轨迹。",
         "bbox": {
           "x1": 68.88,
           "x2": 530.16,
@@ -7250,7 +7255,7 @@
         "page": 2,
         "path": "assets/paper_images/gtpo-grpo-s-2025-arxiv-figure-2.png",
         "caption": "Figure 2. A high-level comparison of the reward signaling process. Methods such as GRPO and DAPO use a static reward model to assign a uniform reward to an entire sequence. Our framework, encompassing GTPO and GRPO-S, introduces a Dynamic Entropy Weighting module that reshapes this signal into fine-grained rewards at either the token or sequence level before it is used by the policy model.",
-        "caption_cn": "",
+        "caption_cn": "图 2：奖励信号过程的高层对比。GRPO 和 DAPO 等方法使用静态奖励模型为整条序列分配统一奖励。我们的框架包含 GTPO 和 GRPO-S，引入动态熵加权模块，在奖励被策略模型使用之前，将该信号重塑为 token 级或序列级的细粒度奖励。",
         "bbox": {
           "x1": 56.879999999999995,
           "x2": 539.04,
@@ -7332,7 +7337,7 @@
         "page": 3,
         "path": "assets/paper_images/sfr-deepresearch-2025-arxiv-figure-1.png",
         "caption": "Figure 1: An example tool calling trajectory by our SFR-DR agentic workflow, catered for QwQ32B and Qwen3 models. The multi-turn interaction is framed as a single-turn contextual question answering problem, where there is always only 1 user turn. The previous tool calls and responses are packed as memory and placed in the user turn together with the question.",
-        "caption_cn": "",
+        "caption_cn": "图 1：我们面向 QwQ32B 和 Qwen3 模型的 SFR-DR agentic 工作流中的工具调用轨迹示例。多轮交互被表述为单轮上下文问答问题，其中始终只有 1 个用户轮次。先前的工具调用和响应被打包为记忆，并与问题一起放入用户轮次。",
         "bbox": {
           "x1": 108.0,
           "x2": 504.0,
@@ -7420,7 +7425,7 @@
         "page": 1,
         "path": "assets/paper_images/math-reasoning-survey-2025-acm-figure-1.png",
         "caption": "Figure 1: The rapid advancements in mathematical capabilities in recent years.",
-        "caption_cn": "",
+        "caption_cn": "图 1：近年来数学能力的快速进展。",
         "bbox": {
           "x1": 88.56,
           "x2": 517.1999999999999,
@@ -7571,7 +7576,7 @@
         "page": 14,
         "path": "assets/paper_images/rl-techniques-llm-survey-2025-arxiv-table-iii.png",
         "caption": "Table III PERFORMANCE OF OFFLINE ALIGNMENT METHODS (DPO, KTO, UNA VARIANTS) ON OLD OPEN LLM LEADERBOARD",
-        "caption_cn": "",
+        "caption_cn": "表 III：离线对齐方法（DPO、KTO、UNA 变体）在旧版 Open LLM Leaderboard 上的性能。",
         "bbox": {
           "x1": 51.839999999999996,
           "x2": 560.16,
@@ -7678,7 +7683,7 @@
         "page": 6,
         "path": "assets/paper_images/gpt3-few-shot-2020-arxiv-figure-2-1.png",
         "caption": "Figure 2.1: Zero-shot, one-shot and few-shot, contrasted with traditional fine-tuning. The panels above show four methods for performing a task with a language model – fine-tuning is the traditional method, whereas zero-, one-, and few-shot, which we study in this work, require the model to perform the task with only forward passes at test time. We typically present the model with a few dozen examples in the few shot setting. Exact phrasings for all task descriptions, examples and prompts can be found in Appendix G.",
-        "caption_cn": "",
+        "caption_cn": "图 2.1：零样本、单样本和少样本，与传统微调的对比。上方各面板展示了用语言模型执行任务的四种方式：微调是传统方法，而本文研究的零样本、单样本和少样本方式只需要模型在测试时进行前向计算。少样本设置下，我们通常向模型提供几十个示例。所有任务描述、示例和提示的确切措辞见附录 G。",
         "bbox": {
           "x1": 117.83999999999999,
           "x2": 494.15999999999997,
@@ -7837,7 +7842,7 @@
         "page": 7,
         "path": "assets/paper_images/coral-2403-06447-figure-2.png",
         "caption": "Figure 2: CoRAL’s (DFM and WDL) learning curves on Gift Cards and Prime Pantry datasets.",
-        "caption_cn": "",
+        "caption_cn": "图 2：CoRAL（DFM 和 WDL）在 Gift Cards 与 Prime Pantry 数据集上的学习曲线。",
         "bbox": {
           "x1": 56.64,
           "x2": 558.0,
@@ -7915,7 +7920,7 @@
         "page": 3,
         "path": "assets/paper_images/long-context-rag-2025-iclr-figure-1.png",
         "caption": "Figure 1: Impact of retrieved context size on RAG performance with 4 different LLMs on NQ. Increasing the number of retrieved passages initially improves performance but then leads to a decline. This degradation is more pronounced using a retriever (e5) that exhibits higher recall@k on NQ compared to BM25 (Recall@40 is 0.90 with e5 and 0.73 with BM25). The maximum number of retrieved passages varies across LLMs due to differences in their maximum token limits.",
-        "caption_cn": "",
+        "caption_cn": "图 1：检索上下文大小对 4 个不同 LLM 在 NQ 上 RAG 性能的影响。增加检索段落数量最初会提升性能，但随后会导致下降。相比 BM25，使用在 NQ 上 recall@k 更高的检索器（e5）时这种退化更明显（Recall@40：e5 为 0.90，BM25 为 0.73）。由于不同 LLM 的最大 token 限制不同，可检索段落的最大数量也有所差异。",
         "bbox": {
           "x1": 133.92,
           "x2": 479.03999999999996,
@@ -7992,7 +7997,7 @@
         "page": 20,
         "path": "assets/paper_images/rlhf-survey-2025-tmlr-figure-3.png",
         "caption": "Figure 3: RLHF diagram highlighting components discussed in this section.",
-        "caption_cn": "",
+        "caption_cn": "图 3：RLHF 示意图，突出展示本节讨论的组成部分。",
         "bbox": {
           "x1": 189.84,
           "x2": 419.03999999999996,
@@ -8081,7 +8086,7 @@
         "page": 1,
         "path": "assets/paper_images/score-self-correct-2024-arxiv-figure-1.png",
         "caption": "Figure 1 ∣ Left: SCoRe achieves state-of-the-art self-correction performance on MATH; Right: SCoRe inference-time scaling: spending samples on sequential self-correction becomes more effective than only on parallel direct samples (Section 6.2).",
-        "caption_cn": "",
+        "caption_cn": "图 1：左：SCoRe 在 MATH 上达到最先进的自我纠错性能；右：SCoRe 的推理时扩展规律：将采样预算用于顺序式自我纠错，比只用于并行直接采样更有效（第 6.2 节）。",
         "bbox": {
           "x1": 69.6,
           "x2": 540.0,
@@ -8172,7 +8177,7 @@
         "page": 42,
         "path": "assets/paper_images/rewardbench-2024-arxiv-figure-17.png",
         "caption": "Figure 17: Example 1 from the AlpacaEval Length subset, which was rejected due to hallucinations.",
-        "caption_cn": "",
+        "caption_cn": "图 17：AlpacaEval Length 子集中的示例 1，该示例因幻觉而被拒绝。",
         "bbox": {
           "x1": 111.83999999999999,
           "x2": 500.15999999999997,
@@ -8252,7 +8257,7 @@
         "page": 1,
         "path": "assets/paper_images/retrollm-2025-acl-figure-1.png",
         "caption": "Figure 1: Comparison of retrieval-augmented generation frameworks. (a) Traditional RAG uses a dense retriever for document matching, while (b) generative RAG relies on constrained DocID generation. Both require feeding retrieved document text into the LLM for answer generation. (c) Our RetroLLM unifies retrieval and generation in a single auto-regressive decoding process, leveraging FM-Index constraints to retrieve fine-grained evidence.",
-        "caption_cn": "",
+        "caption_cn": "图 1：检索增强生成框架对比。(a) 传统 RAG 使用稠密检索器进行文档匹配；(b) 生成式 RAG 依赖受约束的 DocID 生成。二者都需要将检索到的文档文本输入 LLM 以生成答案。(c) 我们的 RetroLLM 将检索和生成统一到单一自回归解码过程中，利用 FM-Index 约束检索细粒度证据。",
         "bbox": {
           "x1": 87.6,
           "x2": 507.59999999999997,
@@ -8340,7 +8345,7 @@
         "page": 4,
         "path": "assets/paper_images/llm4ir-survey-2025-tois-figure-3.png",
         "caption": "Fig. 3. An example of LLM-based query rewriter for conversational search (cited from LLMCS [89]) . An LLM is used to generate a query and system response based on the demonstrations and previous search context. N = 0 and N > 0 correspond to zero-shot and few-shot scenarios respectively.",
-        "caption_cn": "",
+        "caption_cn": "图 3：一个基于 LLM 的对话搜索查询重写器示例（引自 LLMCS [89]）。LLM 根据示例和先前搜索上下文生成查询与系统响应。N = 0 和 N > 0 分别对应零样本和少样本场景。",
         "bbox": {
           "x1": 314.88,
           "x2": 561.12,
@@ -8425,7 +8430,7 @@
         "page": 4,
         "path": "assets/paper_images/deepseekmath-2024-arxiv-figure-2.png",
         "caption": "Figure 2 | An iterative pipeline that collects mathematical web pages from Common Crawl.",
-        "caption_cn": "",
+        "caption_cn": "图 2：从 Common Crawl 收集数学网页的迭代式流程。",
         "bbox": {
           "x1": 76.56,
           "x2": 521.04,
@@ -8504,7 +8509,7 @@
         "page": 2,
         "path": "assets/paper_images/archrag-2025-arxiv-figure-2.png",
         "caption": "Figure 2: ArchRAG consists of two phases: offline indexing and online retrieval. For the online retrieval phase, we show an example of using ArchRAG to answer a question in the HotpotQA dataset.",
-        "caption_cn": "",
+        "caption_cn": "图 2：ArchRAG 包含两个阶段：离线索引和在线检索。对于在线检索阶段，图中展示了使用 ArchRAG 回答 HotpotQA 数据集中一个问题的示例。",
         "bbox": {
           "x1": 54.0,
           "x2": 559.1999999999999,
@@ -8583,7 +8588,7 @@
         "page": 19,
         "path": "assets/paper_images/qwen3-technical-report-2025-arxiv-figure-2.png",
         "caption": "Figure 2: Performance of Qwen3-235B-A22B with respect to the thinking budget.",
-        "caption_cn": "",
+        "caption_cn": "图 2：Qwen3-235B-A22B 在不同思考预算下的性能。",
         "bbox": {
           "x1": 75.84,
           "x2": 519.12,
@@ -8658,7 +8663,7 @@
         "page": 17,
         "path": "assets/paper_images/qwen25-technical-report-2024-arxiv-figure-3.png",
         "caption": "Figure 3: TTFT (Time To First Token) of Qwen2.5-Turbo and Qwen2.5-7B with Full Attention and Our Method.",
-        "caption_cn": "",
+        "caption_cn": "图 3：Qwen2.5-Turbo 和 Qwen2.5-7B 在 Full Attention 与我们方法下的 TTFT（首 token 时间）。",
         "bbox": {
           "x1": 115.92,
           "x2": 480.24,
@@ -8744,7 +8749,7 @@
         "page": 14,
         "path": "assets/paper_images/otc-po-2504-14870-figure-5.png",
         "caption": "Figure 5: The Out-of-domain performance of OTC-PO and Search-R1 in TP.",
-        "caption_cn": "",
+        "caption_cn": "图 5：OTC-PO 和 Search-R1 在 TP 上的域外性能。",
         "bbox": {
           "x1": 108.0,
           "x2": 505.2,
@@ -8844,7 +8849,7 @@
         "page": 3,
         "path": "assets/paper_images/agentic-rl-landscape-survey-2509-02547-figure-1.png",
         "caption": "Figure 1: The primary organizational structure of the survey.",
-        "caption_cn": "",
+        "caption_cn": "图 1：该综述的主要组织结构。",
         "bbox": {
           "x1": 79.2,
           "x2": 532.56,
@@ -8933,7 +8938,7 @@
         "page": 6,
         "path": "assets/paper_images/stabilizing-rl-with-llms-2512-01374-figure-1.png",
         "caption": "Figure 1: Results of on-policy training with gbs (global batch size) = mbs (mini-batch size) = 1, 024.",
-        "caption_cn": "",
+        "caption_cn": "图 1：gbs（全局批大小）= mbs（小批大小）= 1,024 时的 on-policy 训练结果。",
         "bbox": {
           "x1": 75.6,
           "x2": 520.0799999999999,
@@ -9018,7 +9023,7 @@
         "page": 3,
         "path": "assets/paper_images/tool-learning-with-llms-survey-2405-17935-figure-2.png",
         "caption": "Figure 2 The overall structure of this paper.",
-        "caption_cn": "",
+        "caption_cn": "图 2：本文的整体结构。",
         "bbox": {
           "x1": 49.92,
           "x2": 545.04,
@@ -9172,7 +9177,7 @@
         "page": 2,
         "path": "assets/paper_images/e5-text-embeddings-2212-03533-figure-1.png",
         "caption": "Figure 1: Overview of our data curation pipeline and model architecture.",
-        "caption_cn": "",
+        "caption_cn": "图 1：我们的数据整理流程和模型架构概览。",
         "bbox": {
           "x1": 129.84,
           "x2": 479.28,
@@ -9332,7 +9337,7 @@
         "page": 5,
         "path": "assets/paper_images/logic-rl-2502-14768-figure-2.png",
         "caption": "Figure 2: Comparison of GRPO (Blue), REINFORCE++ (Red), and PPO (Green) performance (averaged by sliding window = 50) in terms of training speed, accuracy, and reward gain.",
-        "caption_cn": "",
+        "caption_cn": "图 2：GRPO（蓝色）、REINFORCE++（红色）和 PPO（绿色）在训练速度、准确率和奖励增益方面的性能对比（滑动窗口 = 50 后取平均）。",
         "bbox": {
           "x1": 108.0,
           "x2": 504.0,
@@ -9412,7 +9417,7 @@
         "page": 2,
         "path": "assets/paper_images/inference-scaling-long-context-rag-2410-04343-figure-2.png",
         "caption": "Figure 2 | Evaluation accuracy of Gemini 1.5 Flash using different methods: zero-shot QA, many-shot QA, RAG (with an optimal number of documents), DRAG and IterDRAG on benchmark QA datasets. By scaling up inference compute (up to 5M tokens), DRAG consistently outperforms baselines, while IterDRAG improves upon DRAG through interleaving retrieval and iterative generation.",
-        "caption_cn": "",
+        "caption_cn": "图 2：Gemini 1.5 Flash 在基准问答数据集上使用不同方法的评估准确率：zero-shot QA、many-shot QA、RAG（使用最优文档数量）、DRAG 和 IterDRAG。通过扩展推理计算量（最高 5M token），DRAG 持续优于基线，而 IterDRAG 通过交替检索和迭代生成进一步优于 DRAG。",
         "bbox": {
           "x1": 61.919999999999995,
           "x2": 533.04,
@@ -9491,7 +9496,7 @@
         "page": 10,
         "path": "assets/paper_images/ppo-1707-06347-figure-6.png",
         "caption": "Figure 6: Comparison of PPO and A2C on all 49 ATARI games included in OpenAI Gym at the time of publication.",
-        "caption_cn": "",
+        "caption_cn": "图 6：PPO 与 A2C 在 OpenAI Gym 当时包含的全部 49 个 ATARI 游戏上的对比。",
         "bbox": {
           "x1": 128.88,
           "x2": 461.03999999999996,
@@ -9570,7 +9575,7 @@
         "page": 8,
         "path": "assets/paper_images/gae-1506-02438-figure-1.png",
         "caption": "Figure 1: Top figures: robot models used for 3D locomotion. Bottom figures: a sequence of frames from the learned gaits. Videos are available at https://sites.google.com/site/ gaepapersupp.",
-        "caption_cn": "",
+        "caption_cn": "图 1：上方图：用于 3D 运动控制的机器人模型。下方图：学到的步态的一系列帧。视频见 https://sites.google.com/site/ gaepapersupp。",
         "bbox": {
           "x1": 144.96,
           "x2": 467.03999999999996,
@@ -9741,7 +9746,7 @@
         "page": 0,
         "path": "assets/paper_images/rethinking-thinking-tokens-2510-01123-figure-1.png",
         "caption": "Figure 1 AIME 2024: Accuracy vs. sequential budgetBseq. We compare Long CoT, SR, and PDR; the dashed curve is an oracle upper bound (Oracle-PDR) that perfectly transmits any correct solutions under the same budgets to the compact workspace.",
-        "caption_cn": "",
+        "caption_cn": "图 1：AIME 2024：准确率与顺序预算 Bseq 的关系。我们比较 Long CoT、SR 和 PDR；虚线曲线是 oracle 上界（Oracle-PDR），表示在相同预算下能够完美地将任何正确解传递到紧凑工作区。",
         "bbox": {
           "x1": 276.0,
           "x2": 524.4,
@@ -9821,7 +9826,7 @@
         "page": 3,
         "path": "assets/paper_images/ets-energy-guided-test-time-scaling-2601-21484-figure-2.png",
         "caption": "Figure 2. Overview of Energy-Guided Test-Time Scaling (ETS). ETS performs iterative guidance on the unified MLM framework. At each guidance step (zoomed-in, right), the algorithm evaluates M candidates. Their associated energy E is estimated via Monte Carlo method using K independent completions of the corresponding candidate. We utilize an aligned lightweight model psmall with Importance Sampling (IS) correction to accelerate energy estimation while maintaining theoretical consistency with the target optimal distribution.",
-        "caption_cn": "",
+        "caption_cn": "图 2：Energy-Guided Test-Time Scaling（ETS）概览。ETS 在统一的 MLM 框架上执行迭代式引导。在每个引导步骤（右侧放大图）中，算法评估 M 个候选。每个候选对应的能量 E 通过 K 次独立补全的蒙特卡洛方法估计。我们使用经过对齐的轻量模型 psmall，并结合重要性采样（IS）校正，以在保持与目标最优分布理论一致性的同时加速能量估计。",
         "bbox": {
           "x1": 55.919999999999995,
           "x2": 540.0,
@@ -9898,7 +9903,7 @@
         "page": 0,
         "path": "assets/paper_images/toolomni-open-world-tool-use-2604-13787-figure-1.png",
         "caption": "Figure 1: Motivation for ToolOmni in Open-World Scenarios: Embedding retrieval methods struggle with Massive tools, often resulting in low retrieval accuracy due to shallow matching; Parameter memory methods fail to adapt to Evolving tools, suffering from poor generalization to unseen tools. ToolOmni overcomes these limitations via a unified agentic framework that couples Proactive Retrieval with Grounded Execution , enabling effective open-world tool use.",
-        "caption_cn": "",
+        "caption_cn": "图 1：ToolOmni 在开放世界场景中的动机：面对海量工具时，嵌入检索方法由于浅层匹配常常检索准确率较低；参数记忆方法难以适应不断演化的工具，对未见工具泛化较差。ToolOmni 通过统一的 agentic 框架克服这些限制，将主动检索与有依据的执行结合起来，从而实现有效的开放世界工具使用。",
         "bbox": {
           "x1": 306.0,
           "x2": 525.12,
@@ -9982,7 +9987,7 @@
         "page": 3,
         "path": "assets/paper_images/rewards-as-labels-rlvr-classification-2602-05630-figure-2.png",
         "caption": "Figure 2. Overview of our REAL framework. REAL formulates RLVR as a classification problem by treating rewards as explicit labels. s denotes the prediction score.",
-        "caption_cn": "",
+        "caption_cn": "图 2：REAL 框架概览。REAL 将奖励视为显式标签，从分类视角来表述 RLVR。s 表示预测分数。",
         "bbox": {
           "x1": 117.83999999999999,
           "x2": 473.28,
