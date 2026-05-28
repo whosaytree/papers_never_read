@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import json
+import re
 import shutil
 from collections import Counter, defaultdict
 from datetime import datetime, timezone
@@ -340,6 +341,16 @@ h3.sub-title{
   font-weight:700;
 }
 .extra-row .value{flex:1}
+.extra-row a{color:var(--accent-deep);font-weight:600}
+.note-link{
+  display:inline-flex;
+  align-items:center;
+  gap:6px;
+  color:var(--accent-deep);
+  font-weight:700;
+  text-decoration:none;
+}
+.note-link:hover{text-decoration:underline}
 .toggle-abs{
   display:inline-block;
   margin-top:12px;
@@ -502,6 +513,61 @@ footer{
 """
 
 
+NOTE_CSS = """
+:root{
+  --bg:#f5f7fa;
+  --surface:#ffffff;
+  --line:#d7dee7;
+  --text:#1e2933;
+  --muted:#637282;
+  --accent:#0f766e;
+  --accent-deep:#0d5b55;
+  --note:#fff7dd;
+}
+*{box-sizing:border-box}
+body{
+  margin:0;
+  font-family:"PingFang SC","Hiragino Sans GB","Microsoft YaHei","Noto Sans SC",sans-serif;
+  background:var(--bg);
+  color:var(--text);
+  line-height:1.75;
+}
+main{max-width:920px;margin:0 auto;padding:42px 22px 72px}
+article{
+  background:var(--surface);
+  border:1px solid var(--line);
+  border-radius:8px;
+  padding:30px;
+  box-shadow:0 10px 24px rgba(18,32,47,.06);
+}
+a{color:var(--accent-deep)}
+.back{
+  display:inline-block;
+  margin-bottom:18px;
+  color:var(--accent-deep);
+  font-weight:700;
+  text-decoration:none;
+}
+.back:hover{text-decoration:underline}
+h1{font-size:28px;line-height:1.25;margin:0 0 18px}
+h2{font-size:20px;margin:30px 0 10px;color:var(--accent-deep)}
+h3{font-size:16px;margin:22px 0 8px}
+p{margin:10px 0}
+ul{padding-left:22px;margin:8px 0 12px}
+li{margin:6px 0}
+code{background:#eef3f8;border-radius:5px;padding:1px 5px}
+pre{background:#17212b;color:#eef6f6;border-radius:8px;padding:14px;overflow:auto}
+pre code{background:transparent;color:inherit;padding:0}
+blockquote{
+  margin:14px 0;
+  padding:10px 14px;
+  border-left:3px solid var(--accent);
+  background:var(--note);
+  color:#5d4a05;
+}
+"""
+
+
 JS = """
 const search = document.getElementById('search');
 const cards = document.querySelectorAll('.paper');
@@ -654,6 +720,127 @@ def safe_text(value: str | None, default: str = "未提供") -> str:
     return cleaned if cleaned else default
 
 
+def inline_markdown(text: str) -> str:
+    escaped = escape(text)
+    escaped = re.sub(r"`([^`]+)`", r"<code>\1</code>", escaped)
+    return re.sub(
+        r"\[([^\]]+)\]\(([^)]+)\)",
+        lambda match: f'<a href="{escape(match.group(2))}" target="_blank" rel="noreferrer">{escape(match.group(1))}</a>',
+        escaped,
+    )
+
+
+def markdown_to_html(markdown: str) -> str:
+    html: list[str] = []
+    paragraph: list[str] = []
+    in_list = False
+    in_code = False
+    code_lines: list[str] = []
+
+    def flush_paragraph() -> None:
+        nonlocal paragraph
+        if paragraph:
+            html.append(f"<p>{inline_markdown(' '.join(paragraph))}</p>")
+            paragraph = []
+
+    def close_list() -> None:
+        nonlocal in_list
+        if in_list:
+            html.append("</ul>")
+            in_list = False
+
+    for raw_line in markdown.splitlines():
+        line = raw_line.rstrip()
+        stripped = line.strip()
+        if stripped.startswith("```"):
+            if in_code:
+                html.append(f"<pre><code>{escape(chr(10).join(code_lines))}</code></pre>")
+                code_lines = []
+                in_code = False
+            else:
+                flush_paragraph()
+                close_list()
+                in_code = True
+            continue
+        if in_code:
+            code_lines.append(line)
+            continue
+        if not stripped:
+            flush_paragraph()
+            close_list()
+            continue
+        if stripped.startswith("# "):
+            flush_paragraph()
+            close_list()
+            html.append(f"<h1>{inline_markdown(stripped[2:].strip())}</h1>")
+            continue
+        if stripped.startswith("## "):
+            flush_paragraph()
+            close_list()
+            html.append(f"<h2>{inline_markdown(stripped[3:].strip())}</h2>")
+            continue
+        if stripped.startswith("### "):
+            flush_paragraph()
+            close_list()
+            html.append(f"<h3>{inline_markdown(stripped[4:].strip())}</h3>")
+            continue
+        if stripped.startswith("- "):
+            flush_paragraph()
+            if not in_list:
+                html.append("<ul>")
+                in_list = True
+            html.append(f"<li>{inline_markdown(stripped[2:].strip())}</li>")
+            continue
+        if stripped.startswith("> "):
+            flush_paragraph()
+            close_list()
+            html.append(f"<blockquote>{inline_markdown(stripped[2:].strip())}</blockquote>")
+            continue
+        paragraph.append(stripped)
+
+    if in_code:
+        html.append(f"<pre><code>{escape(chr(10).join(code_lines))}</code></pre>")
+    flush_paragraph()
+    close_list()
+    return "\n".join(html)
+
+
+def build_note_pages(papers: list[dict]) -> None:
+    for paper in papers:
+        note = paper.get("analysis_note") or {}
+        source = safe_text(note.get("source"), "")
+        url = safe_text(note.get("url"), "")
+        if not source or not url:
+            continue
+        source_path = ROOT / source
+        output_path = OUTPUT_DIR / url
+        if not source_path.exists():
+            continue
+        output_path.parent.mkdir(parents=True, exist_ok=True)
+        markdown = source_path.read_text(encoding="utf-8")
+        title = escape(safe_text(note.get("title"), paper.get("title") or "论文笔记"))
+        html = markdown_to_html(markdown)
+        output_path.write_text(
+            f"""<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{title}</title>
+  <style>{NOTE_CSS}</style>
+</head>
+<body>
+  <main>
+    <a class="back" href="../index.html">返回论文库</a>
+    <article>{html}</article>
+  </main>
+</body>
+</html>
+""",
+            encoding="utf-8",
+        )
+
+
 def search_blob(paper: dict) -> str:
     parts = [
         paper.get("title", ""),
@@ -666,6 +853,7 @@ def search_blob(paper: dict) -> str:
         paper.get("note", ""),
         paper.get("abstract", ""),
         paper.get("code_url", ""),
+        (paper.get("analysis_note") or {}).get("title", ""),
         (paper.get("key_figure") or {}).get("caption", ""),
     ]
     return " ".join(part for part in parts if part)
@@ -774,6 +962,9 @@ def paper_card(paper: dict) -> str:
     keywords = paper.get("keywords", [])
     labels = paper.get("labels", [])
     note = safe_text(paper.get("note"), "暂无备注")
+    analysis_note = paper.get("analysis_note") or {}
+    analysis_note_url = (analysis_note.get("url") or "").strip()
+    analysis_note_title = safe_text(analysis_note.get("title"), "详细笔记")
     code_url = (paper.get("code_url") or "").strip()
     abstract = escape(safe_text(paper.get("abstract"), "暂无摘要"))
     tldr = escape(safe_text(paper.get("tldr"), "待补充一句话定位"))
@@ -785,6 +976,11 @@ def paper_card(paper: dict) -> str:
         f'<a href="{escape(code_url)}" target="_blank" rel="noreferrer">{escape(code_url)}</a>'
         if code_url
         else "暂无代码链接"
+    )
+    analysis_note_html = (
+        f'<a class="note-link" href="{escape(analysis_note_url)}" target="_blank" rel="noreferrer">{escape(analysis_note_title)}</a>'
+        if analysis_note_url
+        else "暂无详细笔记"
     )
     return f"""
 <article class="paper" data-search="{escape(search_blob(paper))}" data-has-code="{str(bool(code_url)).lower()}" data-has-note="{str(bool((paper.get('note') or '').strip())).lower()}" data-has-key-figure="{str(bool((key_figure.get('path') or '').strip())).lower()}">
@@ -801,6 +997,7 @@ def paper_card(paper: dict) -> str:
     <div class="extra-row"><div class="label">标签</div><div class="value">{label_html or "暂无标签"}</div></div>
     <div class="extra-row"><div class="label">关键词</div><div class="value">{keyword_html or "暂无关键词"}</div></div>
     <div class="extra-row"><div class="label">代码仓库</div><div class="value">{code_html}</div></div>
+    <div class="extra-row"><div class="label">详细笔记</div><div class="value">{analysis_note_html}</div></div>
     <div class="extra-row"><div class="label">我的备注</div><div class="value">{escape(note)}</div></div>
   </div>
   <span class="toggle-abs" onclick="this.parentElement.classList.toggle('expanded')">查看 Abstract</span>
@@ -1184,6 +1381,7 @@ def main() -> None:
     projects = load_projects()
     ensure_output_dir()
     copy_assets()
+    build_note_pages(library.get("papers", []))
     OUTPUT_FILE.write_text(render_page(library, blogs, projects), encoding="utf-8")
     print(f"Built {OUTPUT_FILE.relative_to(ROOT)}")
 

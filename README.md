@@ -38,6 +38,7 @@ https://whosaytree.github.io/papers_never_read/
 - `abstract`: 摘要
 - `summary_cn`: 六维中文总结
 - `note`: 你的备注
+- `analysis_note`: 可选详细笔记链接，包含 `title`、`source`、`url`
 - `code_url`: 代码仓库链接
 - `status`: `approved` 或其他状态
 - `added_at`: 入库时间
