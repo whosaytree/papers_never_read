@@ -171,6 +171,61 @@
       "my_note": "这篇对我有用的地方在于，它把 LLM RL 的效率瓶颈从“rollout 生成慢”进一步拆到了“policy 更新后如何快速把新权重同步给 rollout engine”。如果权重同步需要几十秒，那么再好的 RL 算法也会被系统关键路径拖慢。这个设计的核心不是更复杂的训练目标，而是把同步方式从 NCCL collective broadcast 改成 RDMA P2P shard transfer，并用 CPU replica 吸收模型并行、量化和 SGLang 权重格式的复杂性。它在 SGLang 里的地位应理解为大规模 RL 生态的重要版本亮点/高级能力，而不是普通 serving 核心模块；真正直接受益的是 miles 这类需要频繁 policy update + rollout 的训练系统。对后续看 agent/RL 系统很重要：训练吞吐不只取决于 GPU 算力，还取决于 rollout engine、weight update、network topology、parallelism mapping 和 stale policy 控制之间的整体配合。",
       "related_papers": [],
       "status": "approved"
+    },
+    {
+      "id": "lmsys-deepseek-v4-day0",
+      "title": "DeepSeek-V4 on Day 0: From Fast Inference to Verified RL with SGLang and Miles",
+      "url": "https://www.lmsys.org/blog/2026-04-25-deepseek-v4/",
+      "source": "LMSYS Blog",
+      "published_at": "2026-04-25",
+      "added_at": "2026-05-28",
+      "tags": [
+        "SGLang",
+        "Miles",
+        "DeepSeek-V4",
+        "inference system",
+        "RL training",
+        "hybrid sparse attention",
+        "MoE",
+        "long context",
+        "verified RL"
+      ],
+      "summary": "这篇 LMSYS 技术分享介绍了 SGLang 和 Miles 对 DeepSeek-V4 的 Day-0 支持：SGLang 负责快速推理和长上下文 serving，Miles 负责 verified RL 训练支持。DeepSeek-V4 的难点来自新架构组合，包括 hybrid sparse-attention、mHC、FP4 expert weights，以及 Pro/Flash 两个规模版本。文章的重点不是提出一个新模型，而是展示一套开源系统栈如何在模型发布当天同时支持高性能推理和 RL 训练。推理侧，SGLang 针对 DeepSeek-V4 的混合注意力做了 ShadowRadix、HiSparse、speculative decoding metadata in CUDA graph、FlashMLA、TRTLLM-Gen MoE、DeepGEMM Mega MoE、TileLang mHC、Flash Compressor、Lightning TopK、context parallelism 和 multi-stream overlap 等系统适配。RL 侧，Miles 在 Megatron-LM 后端支持 DeepSeek-V4 训练建模，并覆盖 DP/TP/SP/EP/PP/CP、FP8 rollout、BF16/FP8 training、attention QAT、R3、TIS/MIS 和实验性的 indexer replay。这里的 Miles 更像 SGLang 生态下的大规模 RL 工程框架：它和 SGLang rollout、Megatron training 深度耦合，重点解决超大 MoE、复杂 attention/indexer、训练-推理一致性和 verified RL 稳定性，而不是像 verl 那样更偏通用 RL 后训练编排。",
+      "key_points": [
+        "这篇文章不是单纯的模型介绍，而是 DeepSeek-V4 的 Day-0 系统适配报告，核心对象是 SGLang inference + Miles RL training 这套开源栈。",
+        "DeepSeek-V4 的新架构给 serving 带来复杂度：hybrid sparse-attention 同时涉及 sliding window、C4/C128 compressed KV、compression state pool 和 speculative decoding 下的状态一致性。",
+        "ShadowRadix 为 hybrid attention 提供 native prefix caching：逻辑上用统一 token slot 建 radix tree，物理上把不同 KV pool 和 compression-state pool 映射成 shadow，从而解耦不同池子的生命周期。",
+        "HiSparse 主要针对 C4 sparse attention，把大量当前不活跃的 compressed KV 放到 CPU memory，扩大 token capacity，并在长上下文 serving 下提升吞吐。",
+        "推理性能优化不是单点 kernel，而是一组系统组合：spec decoding metadata in CUDA graph、FlashMLA、TRTLLM-Gen MoE、DeepGEMM Mega MoE、TileLang mHC、Flash Compressor、Lightning TopK、context parallelism 和 multi-stream overlap。",
+        "Miles 侧重点是 verified RL 训练支持，包括 DeepSeek-V4 在 Megatron-LM 中的建模、多维并行、FP8 rollout/training、R3、TIS/MIS 和 indexer replay。",
+        "相对 verl 这类更通用的 RL post-training 框架，Miles 的特点是更深地绑定 SGLang rollout 和 Megatron training，面向大 MoE、长上下文、复杂路由和训练-推理一致性做工程优化。",
+        "文章特别关心 train-inference consistency：DeepSeek-V4 不只有 MoE routing，还有 sparse attention indexer 的 top-k 路径；如果 rollout 端和 training 端不 replay 或对齐这些路径，RL 中的 log-prob drift 和 KL 异常会被放大。",
+        "这篇 blog 的性质更像一次系统发布和工程能力展示：证明 SGLang/Miles 能在 DeepSeek-V4 发布当天同时跑通高性能推理和 verified RL，而不是提出一个全新的 RL 算法。"
+      ],
+      "quotes": [
+        {
+          "text": "Day-0 inference and RL",
+          "note": "说明文章主线是发布当天即支持推理和 RL 训练，不是单独介绍模型能力。"
+        },
+        {
+          "text": "native prefix caching mechanism",
+          "note": "这是推理侧最核心的新抽象之一，用来解决 hybrid attention 下传统 prefix cache 假设失效的问题。"
+        },
+        {
+          "text": "Rollout Routing Replay (R3)",
+          "note": "这是 RL 侧的重要关键词，表示训练要复现 rollout 时的路由/随机路径，降低 train-inference mismatch。"
+        },
+        {
+          "text": "train-inference diff ~0.02-0.03",
+          "note": "这说明 Miles/SGLang 这套 verified RL pipeline 特别重视 rollout 和 training 后端的一致性。"
+        }
+      ],
+      "my_note": "这篇对我有用的地方在于，它把“支持一个新 frontier MoE/long-context 模型”拆成了 inference 和 RL 两条系统链路。推理侧要解决 hybrid attention、KV cache、spec decoding、MoE kernel、长上下文并行等问题；RL 侧要解决训练后端建模、并行策略、数值精度、rollout/training 一致性和 routing/indexer replay。这里的 Miles 不是 RLVR 这种训练范式本身，也不只是通用 RL 编排框架；它更像 SGLang 生态下的大规模 verified RL 工程栈，直接面向 SGLang rollout + Megatron training 的复杂系统耦合。和上一篇 P2P weight transfer blog 放在一起看，这篇是 SGLang/Miles 对 DeepSeek-V4 的整体 Day-0 支持，上一篇则聚焦 RL pipeline 中 policy weight update 的单点关键路径优化。两者共同说明：大规模 LLM RL 的瓶颈不仅在 RL algorithm，还在 serving engine、训练后端、权重同步、路由 replay、attention indexer replay 和数值一致性这些工程层。",
+      "related_papers": [
+        "deepseek-v3-2-2512-02556",
+        "stabilizing-rl-with-llms-2512-01374"
+      ],
+      "status": "approved"
     }
   ]
 }
