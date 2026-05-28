@@ -61,14 +61,14 @@
         "leaderboard",
         "deduplication"
       ],
-      "summary": "这篇 LMSYS 技术分享介绍了 Chatbot Arena 新增的 Hard Prompts 分类。核心思路是从真实 Arena 用户提交的问题中筛出更复杂、更严苛的 prompt，用 specificity、domain knowledge、complexity、problem-solving、creativity、technical accuracy 和 real-world application 七个标准给 prompt 打硬度标签；满足多个标准的 prompt 会得到更高 hardness score。LMSYS 用 Llama-3-70B-Instruct 给超过 100 万条 Arena prompt 标注这些标准，但模型排名仍基于 Arena 用户偏好投票，而不是用 LLM judge 评价答案。Hard Prompts 分类会改变模型相对排名，例如一些在普通 English 类别表现接近强模型的小模型，在更难 prompt 上明显掉队；同时文章还强调了 prompt 去重，尤其要降低高频 greeting 类问题对排行榜分布的影响。",
+      "summary": "这篇 LMSYS 技术分享主要解决的是 Chatbot Arena 这类开放式 benchmark 中“到底在什么题目范围内评价模型”的问题。Arena 原始流量来自真实用户，里面既有复杂任务，也有大量简单问候、闲聊和低信息量问题；如果直接用全量投票计算排行榜，结果更像模型在普通混合流量上的平均偏好。LMSYS 因此新增 Hard Prompts 分类：先用 specificity、domain knowledge、complexity、problem-solving、creativity、technical accuracy 和 real-world application 七个标准给真实用户 prompt 标注难度，再把满足 6 个及以上标准的问题作为困难子集。需要注意的是，这个流程只改变“哪些 prompt 进入统计范围”，并不改变“如何评价回答质量”：模型答案优劣仍然来自 Chatbot Arena 的真实用户 pairwise preference votes，而不是由 LLM judge 自动打分。文章还补充了去重流程，用来降低高频 greeting 类 prompt 对排行榜分布的稀释。",
       "key_points": [
-        "Hard Prompts 不是人工另造一套封闭 benchmark，而是从 Chatbot Arena 的真实用户问题中按难度标准筛选出来。",
-        "prompt 硬度由七个标准刻画：具体性、领域知识、复杂性、问题求解、创造性、技术准确性和真实世界应用。",
-        "LMSYS 使用 Llama-3-70B-Instruct 给超过 100 万条 Arena prompt 标注标准是否满足，但不使用 LLM judge 给模型答案打分。",
-        "Hardness Score 按满足标准数量计算，分数大于等于 6 的 prompt 被用于构建 Hard Prompts 分类。",
-        "Hard Prompts 排行榜会揭示普通 English 分类中不明显的能力差异，例如小模型在复杂任务上相对排名可能显著下降。",
-        "去重流程会下采样最高频的 0.1% prompt，把常见问候语等冗余问题压到 99.9 分位频次附近，并移除约 8.6% 的投票，以降低分布偏斜。"
+        "这篇文章的核心不是提出新的答案评分器，而是定义一个更难的评价范围：从真实 Arena 流量中筛出 Hard Prompts 子集。",
+        "Hard Prompt 的难度由七个任务属性刻画，包括具体性、领域知识、复杂性、问题求解、创造性、技术准确性和真实世界应用。",
+        "LMSYS 使用 Llama-3-70B-Instruct 辅助标注 prompt 是否满足这些难度标准；LLM 的作用是筛题，不是评价模型回答。",
+        "回答质量评估仍沿用 Chatbot Arena 的机制：用户看到两个匿名模型回答后进行偏好投票，再用这些 pairwise votes 计算模型排名。",
+        "Hard Prompts 分类会改变模型相对排名，因为它更强调复杂、多约束、领域化任务，而不是普通 English 流量中的平均表现。",
+        "去重流程会下采样最高频的 0.1% prompt，把常见问候语等冗余问题压到 99.9 分位频次附近，并移除约 8.6% 的投票，以降低低信息量重复问题对排行榜的影响。"
       ],
       "quotes": [
         {
@@ -88,7 +88,7 @@
           "note": "去重不是小修小补，会实质改变 Arena 数据分布和排行榜统计。"
         }
       ],
-      "my_note": "这篇对我有用的地方在于，它把 benchmark 构造拆成两个层次：prompt selection 和 answer preference aggregation。Hard Prompts 的价值不只是“更难”，而是让排行榜更接近模型在复杂、多约束、领域化任务上的真实差异。对我后续整理 evaluation / RLVR 数据时也有启发：难例筛选可以基于任务属性和真实用户分布，而不是只按模型答错率；同时必须处理重复 prompt，否则 leaderboard 容易被低信息量高频请求稀释。",
+      "my_note": "这篇对我有用的地方在于，它清楚区分了 benchmark 的两个问题：先决定“用哪些题评价模型”，再决定“如何评价这些题上的回答质量”。Hard Prompts 主要解决前者，即从真实用户流量中切出一个更能暴露模型差异的困难题目范围；后者仍沿用 Arena 的人类偏好投票，而没有引入专家标注、标准答案、自动验证器或 LLM judge。因此它更像是 Chatbot Arena 的难题切片，而不是一个全新的可验证 benchmark。对我后续整理 evaluation / RLVR 数据时的启发是：难例筛选可以基于任务属性和真实用户分布，但如果任务需要严格正确性，仍要额外考虑答案评估机制是否足够可靠。",
       "related_papers": [],
       "status": "approved"
     }
