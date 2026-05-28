@@ -5931,6 +5931,54 @@
       },
       "status": "approved",
       "added_at": "2026-05-28"
+    },
+    {
+      "id": "toolomni-open-world-tool-use-2604-13787",
+      "title": "ToolOmni: Enabling Open-World Tool Use via Agentic learning with Proactive Retrieval and Grounded Execution",
+      "paper_url": "https://arxiv.org/abs/2604.13787",
+      "authors": [
+        "Shouzheng Huang",
+        "Meishan Zhang",
+        "Baotian Hu",
+        "Min Zhang"
+      ],
+      "venue": "ACL 2026",
+      "year": 2026,
+      "primary_area": "基础/前沿模型 (含LLM)",
+      "category": "Agent 与工具使用",
+      "keywords": [
+        "open-world tool use",
+        "tool retrieval",
+        "grounded execution",
+        "proactive retrieval",
+        "agentic learning",
+        "Decoupled Multi-Objective GRPO",
+        "ToolBench",
+        "ToolLLM",
+        "API calling",
+        "unseen tools"
+      ],
+      "labels": [
+        "Agentic RL",
+        "Tool Use",
+        "Tool Retrieval",
+        "GRPO",
+        "Open-world Tools"
+      ],
+      "code_url": "https://github.com/Huangsz2021/ToolOmni",
+      "note": "",
+      "tldr": "ToolOmni 是 ToolBench / ToolLLM 之后，把开放世界工具调用从“给定工具执行”推进到“主动检索 + 接地执行 + 解耦 RL 训练”的代表性论文；它把检索和执行放进同一个 agent 推理循环，并用 Decoupled Multi-Objective GRPO 缓解两类目标的梯度冲突。",
+      "abstract": "Large Language Models (LLMs) enhance their problem-solving capability by utilizing external tools. However, in open-world scenarios with massive and evolving tool repositories, existing methods relying on static embedding retrieval or parameter memorization of tools struggle to align user intent with tool semantics or generalize to unseen tools, respectively, leading to suboptimal accuracy of open-world tool retrieval and execution. To address these, we present ToolOmni, a unified agentic framework that enables LLMs for open-world tool use by proactive retrieval and grounded execution within a reasoning loop. First, we construct a cold-start multi-turn interaction dataset to instill foundational agentic capabilities via Supervised Fine-Tuning (SFT). Then, we introduce open-world tool learning based on a Decoupled Multi-Objective GRPO algorithm, which simultaneously optimizes LLMs for both tool retrieval accuracy and execution efficacy in online environments. Extensive experiments demonstrate that ToolOmni achieves state-of-the-art performance both in retrieval and execution, surpassing strong baselines by a significant margin of +10.8% in end-to-end execution success rate, while exhibiting exceptional robustness and generalization capabilities.",
+      "summary_cn": {
+        "研究动机": "开放世界工具使用比普通 function calling 更难：工具库巨大且持续变化，模型不能假设工具列表已经给定，也不可能把所有 API 都记进参数里。传统方法常把工具检索和工具执行拆成两个阶段，或只训练执行能力并默认工具已知，这在 10,000+ API 的动态工具库中会导致检索错、执行错，尤其难泛化到 unseen tools。ToolOmni 的动机是让 agent 在推理循环中主动找工具、读工具文档、接地执行，并根据结果继续迭代。",
+        "解决问题": "论文要解决两个问题：第一，如何让模型在不知道完整工具列表的情况下，主动判断需要什么工具、检索相关 API，并基于检索结果完成多步工具调用；第二，如何在训练中同时优化检索准确率和执行成功率。检索和执行虽然都服务于最终任务，但奖励信号并不完全一致，直接联合 GRPO 可能让两个目标互相污染：工具找得对但执行乱，或执行偶然成功但检索策略没学好。",
+        "现象分析": "ToolOmni 的位置不是工具调用领域的起点，而是 ToolBench / ToolLLM 这条线往开放世界 agentic RL 的一次升级。ToolBench 主要提供大规模真实 API 工具库、工具调用数据和评测体系；ToolOmni 进一步问，在这个大工具库里，模型如何主动检索工具、如何把检索和执行放在同一个闭环里学习，以及 RL 训练时如何处理多目标梯度冲突。它和 Search-R1 / AutoRefine 的关系也很近：后者学会什么时候搜索网页和利用文档，ToolOmni 则学会什么时候检索 API、检索哪些 API、如何根据工具文档执行。",
+        "主要方法": "ToolOmni 提出统一 agentic framework，把 Proactive Retrieval 和 Grounded Execution 整合到同一个推理循环中：agent 接收指令后分析需要什么工具，主动检索相关 API，基于检索结果和工具文档生成接地调用，观察执行反馈后判断是否继续检索或继续执行。训练分两阶段：先用冷启动 SFT 构造多轮交互数据，教模型何时检索、如何检索、如何执行；再用 Decoupled Multi-Objective GRPO 联合优化检索和执行。解耦 GRPO 分别计算检索奖励和执行奖励，通过 trajectory filtering 移除低质量 rollout，并用 separated update 避免两个目标的梯度互相干扰。",
+        "数据集与实验": "实验基于 ToolBench 风格的大规模 API 工具库。ToolBench 的 16,464 个 REST APIs 来自 RapidAPI：原始收集约 10,853 个 tools / 53,190 个 APIs，经过可用性、响应质量、响应时间等过滤后保留 3,451 个高质量 tools / 16,464 个 APIs，覆盖 49 个类别。ToolOmni 在该开放世界工具库上评估检索和端到端执行能力，端到端执行成功率相比强基线提升 +10.8%，检索和执行两个维度均达到 SOTA，并在 unseen 类别工具上表现出更好的鲁棒性和泛化能力。",
+        "主要贡献": "这篇论文的核心贡献是把开放世界工具使用从“给定工具集合内执行”推进到“主动检索 + 接地执行 + RL 闭环优化”。它的重要技术点不是简单使用 GRPO，而是用 Decoupled Multi-Objective GRPO 处理检索奖励和执行奖励的冲突。对工具调用 RL 研究而言，它提示评估不能只看最终执行成功率，还要同时看检索准确率、unseen tools 泛化、API 调用效率和多轮检索-执行闭环能力。"
+      },
+      "status": "approved",
+      "added_at": "2026-05-28"
     }
   ]
 }
