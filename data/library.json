@@ -294,6 +294,7 @@
         "page": 2,
         "path": "assets/paper_images/too-correct-to-learn-2604-18493-figure-1.png",
         "caption": "Figure 1: The Mixed-CUTS Framework. The framework combines exploitative rollouts (Gstd) and exploratory rollouts (GCUTS) to preserve advantage variance under saturated training conditions. The CUTS operator enforces uniform sampling within a constrained Top-K candidate set, decoupling generation from model bias.",
+        "caption_cn": "图 1：Mixed-CUTS 框架。该框架结合利用型 rollout（Gstd）和探索型 rollout（GCUTS），以在饱和训练条件下保持优势函数方差。CUTS 算子在受约束的 Top-K 候选集合内执行均匀采样，从而将生成过程与模型自身偏置解耦。",
         "bbox": {
           "x1": 99.84,
           "x2": 496.08,

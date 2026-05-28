@@ -301,6 +301,11 @@ h3.sub-title{
   font-size:12.5px;
   color:#44515e;
 }
+.key-figure-caption-cn{
+  margin-top:6px;
+  font-size:12.5px;
+  color:#263642;
+}
 .key-figure-meta{
   margin-top:8px;
   font-size:11.5px;
@@ -733,6 +738,7 @@ def key_figure_html(paper: dict) -> str:
     name = safe_text(str(key_figure.get("name", "")), "")
     page = safe_text(str(key_figure.get("page", "")), "")
     caption = safe_text(key_figure.get("caption"), "暂无图注")
+    caption_cn = safe_text(key_figure.get("caption_cn"), "")
     confidence = key_figure.get("confidence")
     review = bool(key_figure.get("needs_manual_review"))
     label = " ".join(part for part in [fig_type, name] if part).strip() or "Key figure"
@@ -750,6 +756,7 @@ def key_figure_html(paper: dict) -> str:
     <figcaption>
       <div class="key-figure-label">{escape(label)}</div>
       <div class="key-figure-caption">{escape(caption)}</div>
+      {f'<div class="key-figure-caption-cn">{escape(caption_cn)}</div>' if caption_cn else ''}
       {f'<div class="key-figure-meta">{meta}</div>' if meta else ''}
     </figcaption>
   </figure>

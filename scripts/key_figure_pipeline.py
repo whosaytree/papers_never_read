@@ -609,6 +609,7 @@ def build_key_figure_metadata(
         "page": candidate.get("page", selected.get("page")),
         "path": str(asset_path.relative_to(ROOT)) if asset_path else "",
         "caption": candidate.get("caption", ""),
+        "caption_cn": candidate.get("caption_cn", ""),
         "bbox": candidate.get("regionBoundary", {}),
         "caption_bbox": candidate.get("captionBoundary", {}),
         "source": "pdffigures2",
