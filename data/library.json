@@ -10010,6 +10010,74 @@
           }
         ]
       }
+    },
+    {
+      "id": "flowrl-matching-reward-distributions-2509-15207",
+      "title": "FlowRL: Matching Reward Distributions for LLM Reasoning",
+      "paper_url": "https://arxiv.org/abs/2509.15207",
+      "authors": [
+        "Xuekai Zhu",
+        "Daixuan Cheng",
+        "Dinghuai Zhang",
+        "Hengli Li",
+        "Kaiyan Zhang",
+        "Che Jiang",
+        "Youbang Sun",
+        "Ermo Hua",
+        "Yuxin Zuo",
+        "Xingtai Lv",
+        "Qizheng Zhang",
+        "Lin Chen",
+        "Fanghao Shao",
+        "Bo Xue",
+        "Yunchong Song",
+        "Zhenjie Yang",
+        "Ganqu Cui",
+        "Ning Ding",
+        "Jianfeng Gao",
+        "Xiaodong Liu",
+        "Bowen Zhou",
+        "Hongyuan Mei",
+        "Zhouhan Lin"
+      ],
+      "venue": "ICLR 2026 Poster",
+      "year": 2026,
+      "primary_area": "强化学习",
+      "category": "基于偏好/反馈的 RL",
+      "keywords": [
+        "FlowRL",
+        "reward distribution matching",
+        "LLM reasoning",
+        "GFlowNet",
+        "trajectory balance",
+        "partition function",
+        "reverse KL",
+        "GRPO",
+        "PPO",
+        "reasoning diversity",
+        "mode collapse"
+      ],
+      "labels": [
+        "RLVR",
+        "Distribution Matching",
+        "GFlowNet",
+        "Reasoning RL",
+        "Diversity"
+      ],
+      "code_url": "",
+      "note": "",
+      "tldr": "FlowRL 不再走 PPO/GRPO 的 reward → advantage → policy gradient 路线，而是用 reward 定义目标分布 π_target(y|x) ∝ exp(βr(x,y))π_ref(y|x)，再训练 policy 去匹配这个 reward-induced distribution，从而保留多条高奖励推理路径，缓解模式坍缩。",
+      "abstract": "Recent reinforcement learning methods for large language model reasoning typically maximize scalar rewards, which can over-concentrate probability mass on a few dominant reasoning paths and reduce diversity. FlowRL reframes reasoning RL as matching reward-induced distributions rather than only maximizing expected reward. It defines a target distribution proportional to the reference policy weighted by exponentiated rewards, and optimizes the policy with a flow-balanced objective inspired by GFlowNets. The method uses a learnable partition function, length normalization, and importance sampling to make distribution matching practical for long chain-of-thought trajectories. Experiments on mathematical and code reasoning benchmarks show that FlowRL improves over PPO and GRPO while maintaining greater reasoning-path diversity.",
+      "summary_cn": {
+        "研究动机": "PPO、GRPO 等 reasoning RL 方法通常优化期望奖励，会把概率质量不断推向当前最高 reward 的少数轨迹。这样虽然能提高短期 reward，但容易导致 reasoning path 多样性下降：模型反复强化高频模板化解法，忽略低频但同样正确、甚至更具泛化能力的推理路径。FlowRL 的动机是：LLM reasoning 不应该只追逐单个最高奖励模式，而应该覆盖与 reward 成比例的有效解空间。",
+        "解决问题": "论文要解决的是 reward maximization 带来的 mode collapse / diversity loss。传统 GRPO/PPO 会先把 reward 转成 advantage，再用 advantage 加权 log probability 更新策略，即 reward → advantage → policy gradient。FlowRL 认为问题出在目标本身：如果目标只是最大化期望 reward，训练自然会把概率集中到少数高 reward 样本上。因此它把目标改成 reward → target distribution → distribution matching。也就是说，reward 没有被丢掉，而是被用来构造一个 policy 应该匹配的目标分布。",
+        "现象分析": "这篇和 REAL、SeeUPO 都属于反思 GRPO/PPO-style reasoning RL 的论文，但切入点不同：REAL 认为 reward 不该只是 scalar advantage weight，可以当 label；SeeUPO 认为多轮 agent RL 不能直接套单轮 GRPO/PPO，需要收敛保证；FlowRL 则认为目标不该只是 reward maximization，而应该匹配 reward-induced distribution，避免 mode collapse。对工具调用或 RAG agent 来说，如果只有一个最终 reward，很容易学成单一检索/调用套路；FlowRL 提供了“多样性不是额外正则，而是目标分布本身”的视角。",
+        "主要方法": "FlowRL 定义 reward-induced target distribution：π_target(y|x) = exp(β r(x,y)) · π_ref(y|x) / Z(x)。其中 r(x,y) 是完整回答的 outcome reward，β 是温度/放大系数，π_ref 是 reference model 的原始生成分布，Z(x) 是 partition function。直观上，reward 越高，该轨迹在目标分布里的概率越大；但目标不是只保留最高 reward 的一个答案，而是让多个高 reward 答案都保留概率质量，同时用 reference model 约束目标分布不要偏离原模型可生成空间太远。由于所有可能输出 y 无法枚举，真实 Z(x) 不能直接计算，FlowRL 用可学习的 Z_φ(x) 来估计 partition function，并借鉴 GFlowNet / trajectory balance，把 distribution matching 写成类似平方误差的目标：(log Z_φ(x) + log π_θ(y|x) - β r(x,y) - log π_ref(y|x))²。针对长 CoT，方法还加入 length normalization 和 clipped importance sampling。",
+        "数据集与实验": "论文在数学推理和代码推理任务上评估 FlowRL。数学任务使用 7B 和 32B 规模模型，对比 PPO、GRPO 等 reward-maximization baseline；代码任务覆盖 LiveCodeBench、CodeForces、HumanEval+ 等 benchmark。结果显示，FlowRL 在数学 benchmark 上平均相比 GRPO 提升约 10.0%，相比 PPO 提升约 5.1%，在 7B 和 32B 模型规模上都稳定有效；代码推理任务上也表现更好。多样性分析显示，FlowRL 能探索更多不同的有效推理路径，而不是像 GRPO 那样反复强化少数模板化解法。",
+        "主要贡献": "论文的主要贡献是把 LLM reasoning RL 从 reward maximization 重新表述为 reward distribution matching，明确目标分布为 π_target(y|x) ∝ exp(βr(x,y))π_ref(y|x)。它借鉴 GFlowNet / trajectory balance，用可学习 partition function 近似不可枚举的归一化常数，并通过 length normalization 和 importance sampling 适配变长 CoT 训练。机制上，它说明提升多样性不一定只是加 entropy bonus，而可以直接来自目标分布的设计。"
+      },
+      "status": "approved",
+      "added_at": "2026-05-28"
     }
   ]
 }
