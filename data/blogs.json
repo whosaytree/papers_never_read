@@ -226,6 +226,59 @@
         "stabilizing-rl-with-llms-2512-01374"
       ],
       "status": "approved"
+    },
+    {
+      "id": "lmsys-hisparse-hierarchical-memory",
+      "title": "HiSparse: Turbocharging Sparse Attention with Hierarchical Memory",
+      "url": "https://www.lmsys.org/blog/2026-04-10-sglang-hisparse/",
+      "source": "LMSYS Blog",
+      "published_at": "2026-04-10",
+      "added_at": "2026-05-28",
+      "tags": [
+        "SGLang",
+        "HiSparse",
+        "sparse attention",
+        "KV cache",
+        "hierarchical memory",
+        "long context",
+        "serving system",
+        "CPU offloading"
+      ],
+      "summary": "这篇 LMSYS 技术分享介绍了 SGLang 里的 HiSparse，一个面向 sparse attention 长上下文推理的 hierarchical memory 机制。它要解决的问题不是 sparse attention 本身的计算复杂度，而是 sparse attention 仍然可能被 KV cache 容量卡住：虽然每个 decode step 只访问 top-k KV，但完整上下文的 KV cache 往往仍要常驻 GPU HBM，导致高并发长上下文 serving 很快被显存容量限制。HiSparse 的核心思路是把 sparse attention 的访问稀疏性转化成存储层级优化：GPU HBM 只保留 hot device buffer，host memory 保存更大的 inactive KV cache pool；解码时如果 top-k 需要的 KV 不在 GPU buffer 中，再通过 swap-in kernel 从 host memory 拉回，并用 LRU 策略选择 eviction。它不是通用 KV cache 框架，也不是普通 dense attention serving 的默认模块，而是 SGLang 针对 DeepSeek Sparse Attention (DSA) 类模型的高级 memory 优化。目前更适合 DeepSeek-V3.2、GLM-5.1 这类 DSA 模型，以及长上下文、高并发、GPU KV cache 容量受限的 serving 场景。",
+      "key_points": [
+        "Sparse attention 降低的是每步 attention 的访问量和计算量，但不自动降低完整 KV cache 的 GPU 常驻容量。",
+        "Dense attention 的 KV cache 模式默认把完整历史 KV 放在 GPU 上，因为每步几乎都会访问全部历史；在 sparse attention 下，这种模式还能用，但没有利用每步只访问 top-k 的稀疏访问模式。",
+        "HiSparse 的核心是 hierarchical memory：GPU HBM 保留 hot device buffer，CPU host memory 保存更大的 inactive KV cache pool。",
+        "解码时，系统根据 sparse attention 的 top-k 结果检查 cache miss；miss 的 KV entries 会从 host memory swap 回 GPU。",
+        "HiSparse 使用 LRU eviction policy 管理 GPU hot buffer；hot buffer 越大，miss count 越低，但占用的 GPU 显存也越多。",
+        "这套机制最适合高并发长上下文 serving：当 GPU HBM 的 KV cache 容量是瓶颈时，释放 GPU KV 容量可以换来更大的 batch size 和更高吞吐。",
+        "低并发或 cache miss 很高时，HiSparse 不一定划算，因为额外 host-device I/O 可能抵消显存节省带来的收益。",
+        "从应用程度看，sparse attention 已经进入 DeepSeek-V3.2 这类真实模型和 vLLM/SGLang 等 serving 适配，但还不是所有 LLM 的默认架构；HiSparse 的应用面更窄，是服务 DSA 类模型的 SGLang 高级优化。",
+        "这篇和 DeepSeek-V4 Day-0 blog 可以连起来看：DeepSeek-V4 里也提到 HiSparse，用来服务 hybrid sparse attention 中 C4 compressed KV 的 CPU-extended KV memory。"
+      ],
+      "quotes": [
+        {
+          "text": "capacity-bound rather than compute-bound",
+          "note": "这句话概括了本文的核心诊断：长上下文 sparse attention serving 可能主要卡在 GPU KV cache 容量，而不是 attention 计算本身。"
+        },
+        {
+          "text": "offloads inactive KV cache entries",
+          "note": "说明 HiSparse 的关键动作是主动把不活跃 KV 从 GPU 挪到 host memory。"
+        },
+        {
+          "text": "hot device buffer",
+          "note": "这是 HiSparse 的中心抽象：GPU 只保留当前更可能被访问的热 KV 区域。"
+        },
+        {
+          "text": "up to 5x throughput improvement",
+          "note": "这是文章报告的高并发长上下文收益，但应理解为特定容量受限场景下的结果。"
+        }
+      ],
+      "my_note": "这篇对我有用的地方在于，它把 sparse attention 的系统瓶颈讲清楚了：稀疏化 attention 只能说明每一步少读少算，但如果完整 KV cache 仍然常驻 GPU，serving 仍会被显存容量限制。HiSparse 的价值在于把访问稀疏性进一步转化成 memory hierarchy 优势：既然每步只访问少量 top-k KV，就没必要让所有 KV 都占 GPU HBM。它和普通 KV cache offloading 的区别在于，HiSparse 利用了 sparse attention 的访问模式，top-k 本身告诉系统哪些 KV 即将被访问，剩下大部分 KV 可以被视为 inactive candidates。技术栈层级上，可以理解为 sparse attention 是模型/attention 机制，DSA 是 DeepSeek 系列的具体 sparse attention 设计，HiSparse 则是 SGLang 针对 DSA 类模型的 serving memory system。",
+      "related_papers": [
+        "deepseek-v3-2-2512-02556"
+      ],
+      "status": "approved"
     }
   ]
 }
