@@ -110,6 +110,63 @@
         "lmsys-p2p-weight-transfer-rl"
       ],
       "status": "approved"
+    },
+    {
+      "id": "fastchat",
+      "name": "FastChat",
+      "repo_url": "https://github.com/lm-sys/FastChat",
+      "homepage_url": "",
+      "docs_url": "https://github.com/lm-sys/FastChat/tree/main/docs",
+      "demo_url": "https://lmarena.ai/",
+      "source": "lm-sys / FastChat",
+      "added_at": "2026-05-28",
+      "project_type": "chatbot platform / evaluation framework",
+      "domain": "LLM training / serving / evaluation",
+      "tags": [
+        "FastChat",
+        "Vicuna",
+        "Chatbot Arena",
+        "MT-Bench",
+        "LLM evaluation",
+        "LLM serving",
+        "fine-tuning",
+        "OpenAI-compatible API"
+      ],
+      "stack": [
+        "Python",
+        "PyTorch",
+        "Transformers",
+        "Gradio",
+        "FastAPI",
+        "Docker",
+        "FSDP"
+      ],
+      "summary": "FastChat 是 LMSYS 早期开源的 chat model 全栈平台，用于训练、服务和评测大语言模型聊天机器人。它既包含 Vicuna 等模型的微调代码，也包含多模型 serving、Web UI、OpenAI-compatible API、Chatbot Arena battle UI 和 MT-Bench / Arena 相关评测能力。",
+      "highlights": [
+        "是 Vicuna 和早期 Chatbot Arena 的 release repo。",
+        "覆盖训练、serving、评测三个环节，不只是推理服务。",
+        "支持分布式多模型 serving，包含 controller、model worker、Gradio web server 等组件。",
+        "提供 OpenAI-compatible RESTful API。",
+        "包含 Vicuna fine-tuning 示例，支持 FSDP、LoRA 等训练路径。",
+        "支持 MT-Bench、Chatbot Arena 等聊天模型评测工作流。",
+        "支持多种模型和多种硬件后端，包括 GPU、CPU、MPS、XPU、NPU 等。"
+      ],
+      "use_cases": [
+        "复现或理解 Vicuna / Chatbot Arena 早期系统栈。",
+        "搭建本地多模型聊天 demo 或 side-by-side battle UI。",
+        "研究 LLM chatbot 的训练、服务、评测一体化工程框架。",
+        "使用 MT-Bench / Arena 风格流程做模型评测。",
+        "对比 FastChat、vLLM、SGLang 在 serving 抽象和历史定位上的差异。"
+      ],
+      "setup_note": "README 提供 pip 和源码安装方式，常用安装命令是 pip3 install \"fschat[model_worker,webui]\"。如果需要训练，需要额外安装 .[train] 依赖，并按模型权重、数据路径和 GPU 资源配置 FSDP/LoRA 等训练脚本。相比 SGLang，FastChat 的 serving 性能不是当前核心卖点，但它保留了更完整的训练、评测和 Arena UI 代码路径。",
+      "license": "Apache-2.0",
+      "maintenance": "stable / mature",
+      "my_note": "",
+      "related_papers": [],
+      "related_blogs": [
+        "lmsys-hard-prompts-category"
+      ],
+      "status": "approved"
     }
   ]
 }
