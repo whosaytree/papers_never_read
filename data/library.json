@@ -10078,6 +10078,73 @@
       },
       "status": "approved",
       "added_at": "2026-05-28"
+    },
+    {
+      "id": "multiplex-thinking-2601-08808",
+      "title": "Multiplex Thinking: Reasoning via Token-wise Branch-and-Merge",
+      "paper_url": "https://arxiv.org/abs/2601.08808",
+      "authors": [
+        "Yao Tang",
+        "Li Dong",
+        "Yaru Hao",
+        "Qingxiu Dong",
+        "Furu Wei",
+        "Jiatao Gu"
+      ],
+      "venue": "arXiv",
+      "year": 2026,
+      "primary_area": "基础/前沿模型 (含LLM)",
+      "category": "推理与思维链",
+      "keywords": [
+        "multiplex thinking",
+        "continuous reasoning token",
+        "token-wise branch-and-merge",
+        "stochastic soft reasoning",
+        "continuous token",
+        "on-policy RL",
+        "GRPO",
+        "chain-of-thought",
+        "embedding aggregation",
+        "reasoning efficiency"
+      ],
+      "labels": [
+        "Reasoning",
+        "Thinking Tokens",
+        "Continuous Tokens",
+        "GRPO",
+        "Token Efficiency"
+      ],
+      "code_url": "https://github.com/GMLR-Penn/Multiplex-Thinking",
+      "note": "",
+      "tldr": "Multiplex Thinking 不是改 tokenizer 或 embedding table，而是在每个 thinking step 采样 K 个候选 token，把它们的 embedding 平均/加权平均成一个连续 multiplex token，再喂给 Transformer；这样一个 token 位置可以同时承载多条候选推理方向，并且保留随机采样轨迹以便进行 on-policy RL。",
+      "abstract": "Large language models often solve complex reasoning tasks more effectively with Chain-of-Thought (CoT), but at the cost of long, low-bandwidth token sequences. Humans, by contrast, often reason softly by maintaining a distribution over plausible next steps. Motivated by this, we propose Multiplex Thinking, a stochastic soft reasoning mechanism that, at each thinking step, samples K candidate tokens and aggregates their embeddings into a single continuous multiplex token. This preserves the vocabulary embedding prior and the sampling dynamics of standard discrete generation, while inducing a tractable probability distribution over multiplex rollouts. Consequently, multiplex trajectories can be directly optimized with on-policy reinforcement learning (RL). Importantly, multiplex thinking is self-adaptive: when the model is confident, the multiplex token is nearly discrete and behaves like standard CoT; when it is uncertain, it compactly represents multiple plausible next steps without increasing sequence length. Across challenging math reasoning benchmarks, multiplex thinking consistently outperforms strong discrete CoT and RL baselines from Pass@1 through Pass@1024, while producing shorter sequences.",
+      "summary_cn": {
+        "研究动机": "离散 CoT 的优点是路径清楚、可以采样、适合 RL，但缺点是推理序列很长，每条 rollout 都只沿着一条路径走。已有 continuous / soft thinking 方法试图把推理压缩成连续向量，但很多方法是 deterministic 的：同样输入和上下文会得到同一个连续 token，缺少随机性，容易导致 model collapse，也不适合依赖 on-policy 采样的 RL。这篇论文的动机是构造一种连续推理 token，同时具备随机性和压缩能力：同一上下文下可以采样出不同候选 token 组合，一个连续向量又能融合多个候选 token 的信息。",
+        "解决问题": "论文解决的是“单一路径离散 CoT”和“确定性连续 token”之间的矛盾。普通 CoT 每一步只采样一个 token：token id → embedding vector → Transformer。Multiplex Thinking 每一步采样多个 token：K 个 token id → K 个 embedding vectors → 聚合成 1 个 multiplex vector → Transformer。所以它不是新增词表 token，也不是训练新的 embedding 模型，而是改变 thinking 阶段输入给 Transformer 的连续表征。",
+        "现象分析": "这篇本质上是一个 stochastic continuous reasoning token construction 方法，而不是普通 embedding 方法。它和 Rethinking Thinking Tokens、FlowRL、REAL 可以放在一条“推理 token / RL 训练机制反思”的线上看：Rethinking Thinking Tokens 从推理流程上改造 thinking token，FlowRL 从训练目标上改造 RL，REAL 从梯度机制上改造 RLVR，Multiplex Thinking 则从 token 表示层面改造 CoT，把单个离散 token 替换成多个候选 token embedding 的聚合。它的核心风险也很清楚：输入给 Transformer 的向量分布变了，因此不是完全零训练方案，需要后训练/RL 适配。",
+        "主要方法": "在第 i 个 reasoning step，模型先根据当前上下文得到 next-token distribution，然后独立采样 K 个 token k_i,1 ... k_i,K。每个 token 通过原模型的 embedding table 得到向量 e(k_i,j)，再聚合成一个连续 multiplex token c_i。最简单的聚合是平均：c_i = (e1 + ... + eK) / K。论文里更一般的公式是 c_i = E^T(s_i ⊙ w_i)，其中 E 是原模型已有 embedding matrix，s_i 是这次采样到的 K 个 token 的经验分布，w_i 是权重，可以是 uniform averaging，也可以是 LM-head reweighting。重点是 multiplex vector 不需要转回某个离散 token，Transformer 本来吃的就是 embedding 向量，所以 c_i 可以直接作为当前位置的输入表征。等 thinking 阶段结束后，模型切回普通 LM head 生成离散 token，最终输出正常文本。",
+        "数据集与实验": "论文在数学推理任务上评估 Multiplex Thinking。实现基于 DeepSeek-R1-Distill-Qwen-1.5B 和 DeepSeek-R1-Distill-Qwen-7B 两个开源推理 backbone，训练使用 GRPO，训练集为 DeepScaleR-Preview-Dataset，约 40K 个问题。评测数据集包括 AIME 2024、AIME 2025、AMC 2023、MATH-500、Minerva Math 和 OlympiadBench。对比方法包括标准 Discrete CoT、Stochastic Soft Thinking 和标准 Discrete RL。",
+        "主要贡献": "论文的主要贡献是提出 token-wise branch-and-merge 推理机制，将多个采样 token 的 embedding 聚合为一个连续 multiplex token；保留随机采样，因此可定义 multiplex rollout 的 log probability；让 continuous thinking token 可以直接进行 on-policy RL 优化；并在数学推理任务上实现更好的准确率和 token efficiency。对 agent / RAG / tool-use 方向，它启发我们：如果训练中只有一条显式推理轨迹，模型容易学成单一路径；可以考虑在不线性增加 token 长度的情况下，让一个 reasoning step 保留多个候选方向。"
+      },
+      "status": "approved",
+      "added_at": "2026-05-29",
+      "key_figure": {
+        "type": "Figure",
+        "name": "1",
+        "page": 2,
+        "path": "assets/paper_images/multiplex-thinking-2601-08808-figure-1.png",
+        "caption": "Figure 1: Illustration of Multiplex Thinking. The model first generates an initial probability distribution conditioned on the prompt and the begin of thinking token [bot]. Instead of committing to a single discrete token or a deterministic soft average, token-wise branching and merging independently samples K discrete tokens and aggregates them into a continuous multiplex token. When one sampled token is [eot], the LLM continues discrete decoding to give the answer.",
+        "caption_cn": "图 1：Multiplex Thinking 示意图。模型在每个 thinking step 从当前分布中独立采样 K 个离散 token，并将它们聚合成一个连续 multiplex token；采样到 [eot] 后切回普通离散解码生成答案。",
+        "source": "manual-pdf-render",
+        "confidence": 0.95,
+        "needs_manual_review": false,
+        "contexts": [
+          {
+            "page": 2,
+            "text": "Figure 1 illustrates Multiplex Thinking: instead of committing to a single discrete token or deterministic soft average, the model samples K discrete tokens and aggregates them into a continuous multiplex token, then switches to discrete decoding after [eot]."
+          }
+        ]
+      }
     }
   ]
 }
