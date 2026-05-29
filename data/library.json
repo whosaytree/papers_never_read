@@ -2906,7 +2906,9 @@
         "loss-based filtering",
         "calculator",
         "search engine",
-        "external tools"
+        "external tools",
+        "API-augmented data",
+        "causal LM fine-tuning"
       ],
       "labels": [
         "Tool Use",
@@ -2914,16 +2916,21 @@
         "API"
       ],
       "code_url": "",
-      "note": "工具调用语言模型的早期核心论文。它定义了何时调用工具、调用哪个工具、传什么参数、如何使用返回结果这些基本问题；但训练主要是离线 self-supervised filtering，不涉及在线工具反馈、PPO/GRPO 或训练稳定性。",
-      "tldr": "Toolformer 用少量 API 示范和 loss-based filtering 自动构造工具调用数据，让语言模型学会调用 calculator、QA、search、translation、calendar 等工具，是 tool-use LLM 的基础背景工作。",
+      "note": "工具调用语言模型的早期核心论文。它把工具调用表示成文本中的特殊 API span，用少量 demonstration 让模型提出候选调用，再通过 loss-based filtering 离线筛选能帮助预测原文后续的调用；最终训练是 API-augmented corpus 上的 causal LM fine-tuning，不是在线 tool-use RL。",
+      "analysis_note": {
+        "title": "详细笔记：Toolformer 的离线工具调用数据构造",
+        "source": "docs/paper_notes/toolformer-2302-04761.md",
+        "url": "paper_notes/toolformer-2302-04761.html"
+      },
+      "tldr": "Toolformer 用少量 API 示范在普通文本中采样候选工具调用，真实执行工具后用“是否显著降低原文后续 token loss”筛掉无用调用，再把保留的单次 API 调用插回文本做 SFT/causal LM fine-tuning。它能自举出基础工具调用能力，但不是 RL，也不直接保证最终答案正确。",
       "abstract": "Language models (LMs) exhibit remarkable abilities to solve new tasks from just a few examples or textual instructions, especially at scale. They also, paradoxically, struggle with basic functionality, such as arithmetic or factual lookup, where much simpler and smaller models excel. In this paper, we show that LMs can teach themselves to use external tools via simple APIs and achieve the best of both worlds. We introduce Toolformer, a model trained to decide which APIs to call, when to call them, what arguments to pass, and how to best incorporate the results into future token prediction. This is done in a self-supervised way, requiring nothing more than a handful of demonstrations for each API. We incorporate a range of tools, including a calculator, a question answering system, a search engine, a translation system, and a calendar, and demonstrate improved zero-shot performance across a variety of downstream tasks, often matching the performance of much larger models, without sacrificing its core language modeling abilities.",
       "summary_cn": {
-        "研究动机": "大语言模型具备强 few-shot 能力，但在算术、事实查询等基础功能上仍可能不如专门工具。作者希望让模型保留语言能力的同时，学会在需要时调用外部 API 来补足这些能力缺口。",
-        "解决问题": "论文要解决的是工具调用学习：模型需要决定何时调用工具、调用哪个 API、传入什么参数，以及如何把工具返回结果整合进后续生成。这些能力不能只靠模型参数知识解决。",
-        "现象分析": "工具调用可以看成文本生成过程中的特殊 span，但不是所有候选调用都有价值。只有能降低后续 token prediction loss、真正帮助生成的 API 调用，才应被保留下来作为训练信号。",
-        "主要方法": "Toolformer 从少量 API demonstrations 出发，在普通文本中采样候选 API 调用，执行这些调用并观察返回结果是否改善后续 token 预测。通过 loss-based filtering 保留有用调用，再用 API-augmented data 继续微调语言模型。",
-        "数据集与实验": "论文接入 calculator、question answering system、search engine、translation system、calendar 等工具，并在多个 zero-shot downstream tasks 上评估。结果显示模型工具调用后性能提升，同时基本保持原有语言建模能力。",
-        "主要贡献": "这篇论文的主要贡献是把工具调用以自监督方式纳入语言模型训练，奠定 tool-use LLM 的基本任务形式。后续 Search-R1、ToolRL 等工作可以看作把离线工具调用数据构造进一步推进到在线 RL rollout 和环境反馈优化。"
+        "研究动机": "大语言模型具备强 few-shot 能力，但在算术、事实查询、日期、翻译等基础功能上仍可能不如专门工具。作者希望不依赖大规模人工标注轨迹，让模型在保留原有语言能力的同时，学会在合适位置调用外部 API 来补足这些能力缺口。",
+        "解决问题": "论文要解决的是离线工具调用数据构造：给定普通文本语料，如何自动发现哪里应该插入 API 调用、调用哪个工具、传什么参数，以及工具返回结果是否真的对后续生成有帮助。这里没有 gold answer 或在线 reward，核心难点是从自然文本中挖出可用于 SFT 的工具调用监督。",
+        "现象分析": "工具调用可以看成文本生成过程中的特殊 span，但普通语料的大多数后文并不依赖工具结果，因此不能把模型采样出的候选调用全部当成训练数据。Toolformer 的假设是：在海量文本中存在少量局部片段，其后续 token 与工具返回结果强相关；如果加入返回结果能显著降低原文后续 token loss，这个调用才更可能是真正有用的监督信号。",
+        "主要方法": "对每个 API 先手写少量 demonstrations；然后扫描普通文本，在每个位置计算生成 <API> 的概率并保留高概率插入点；在这些位置采样多个候选 API 调用；真实执行工具得到返回结果；最后比较“不调用/只看到调用/看到调用和结果”三种条件下预测原文后续的 loss，只有返回结果显著降低 loss 的调用才会被插回文本，形成 API-augmented corpus。训练阶段是普通 causal LM fine-tuning，不是生成一段、筛选后再继续 rollout，也不是 PPO/GRPO。",
+        "数据集与实验": "论文在 CCNet 子集上构造工具调用数据，接入 calculator、question answering system、Wikipedia search、translation system 和 calendar 等工具，并在 LAMA、数学 word problem、open-domain QA、翻译等 zero-shot tasks 上评估。收益最大的是 calculator/数学类任务，因为工具返回的数字往往直接帮助预测后文结果；事实查询也有提升，但受限于单次简单检索和缺少多轮验证。",
+        "主要贡献": "这篇论文的主要贡献是提出一种低标注成本的 tool-use bootstrapping 方式：用少量示范让模型提出候选 API 调用，用后续 token loss 改善作为弱监督过滤信号，再用保留下来的单次 API 调用样本做 SFT。它奠定了 tool-use LLM 的基本表示形式，但也暴露出正确性监督弱、依赖原文质量、难以覆盖复杂多步工具使用等局限；后续 Search-R1、ToolRL、WebDancer 等工作可以看作进一步引入明确任务、环境反馈、verifier 或 RL 来补足这些问题。"
       },
       "status": "approved",
       "added_at": "2026-05-11",
