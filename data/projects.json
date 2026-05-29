@@ -167,6 +167,62 @@
         "lmsys-hard-prompts-category"
       ],
       "status": "approved"
+    },
+    {
+      "id": "specforge",
+      "name": "SpecForge",
+      "repo_url": "https://github.com/sgl-project/SpecForge",
+      "homepage_url": "https://sgl-project.github.io/SpecForge/",
+      "docs_url": "https://sgl-project.github.io/SpecForge/",
+      "demo_url": "",
+      "source": "sgl-project / SpecForge",
+      "added_at": "2026-05-29",
+      "project_type": "training framework",
+      "domain": "Speculative decoding / LLM inference acceleration",
+      "tags": [
+        "SpecForge",
+        "SGLang",
+        "speculative decoding",
+        "draft model",
+        "EAGLE3",
+        "SpecBundle",
+        "LLM serving",
+        "inference acceleration"
+      ],
+      "stack": [
+        "Python",
+        "PyTorch",
+        "FSDP",
+        "tensor parallelism",
+        "SGLang",
+        "Hugging Face"
+      ],
+      "summary": "SpecForge 是 SGLang 生态里的 speculative decoding draft model 训练框架。它不是训练主模型，也不是直接替代 SGLang 做 serving，而是训练一个“小型预测助手”draft model，让 SGLang 在推理时先快速猜多个后续 token，再由原始大模型一次性验证，从而减少逐 token decoding 的次数。",
+      "highlights": [
+        "帮助理解 draft model 这类推理加速组件：它不是最终回答模型，而是给 target model 提前猜 token 的辅助模型。",
+        "训练出的 draft model 可直接接入 SGLang serving，用于 EAGLE3 speculative decoding。",
+        "官方提供 SpecBundle，即一批已训练好的 EAGLE3 draft model checkpoints。",
+        "支持 online / offline 两种训练路径，在 GPU 显存和磁盘空间之间做不同权衡。",
+        "支持 tensor parallelism 和 FSDP，面向大模型 / MoE draft model 训练。",
+        "官方公开数据中，SpecBundle draft models 在 SGLang 上最高达到 4.48x end-to-end inference speedup。",
+        "实际收益依赖任务分布、batch size、draft acceptance rate 和 serving 配置；生产中更现实的预期通常是 1.5x-2.5x。"
+      ],
+      "use_cases": [
+        "理解 speculative decoding 和 draft model 的工程角色。",
+        "为 SGLang serving 训练或选择 EAGLE3 draft model。",
+        "给 Qwen、Llama、Kimi、GPT-OSS 等主流模型配置推理加速 draft。",
+        "研究 draft model 训练 recipe、token acceptance rate、端到端 speedup。",
+        "在长输出、批量生成、RL rollout 或高成本在线 serving 场景里降低生成成本。"
+      ],
+      "setup_note": "SpecForge 是 draft model 训练框架，不是 serving 框架。训练侧可走 online 或 offline：online 在训练时即时生成 hidden states，减少磁盘占用但需要更多 GPU 资源；offline 先生成并落盘 hidden states，训练时读取，磁盘占用很大但 GPU 要求更低。部署侧仍需要 SGLang，通过 sglang.launch_server 传入 target model、--speculative-algorithm EAGLE3 和 --speculative-draft-model-path 等参数使用训练好的 draft model。",
+      "license": "MIT",
+      "maintenance": "active",
+      "my_note": "",
+      "related_papers": [],
+      "related_blogs": [
+        "lmsys-deepseek-v4-day0"
+      ],
+      "status": "approved"
     }
   ]
 }
