@@ -279,6 +279,59 @@
         "deepseek-v3-2-2512-02556"
       ],
       "status": "approved"
+    },
+    {
+      "id": "lmsys-qwen3-mi300x-latency",
+      "title": "Unleashing Computational Power: Ultimate Latency Optimization of Qwen3 and Qwen3-VL on AMD MI300X Series",
+      "url": "https://www.lmsys.org/blog/2026-02-11-Qwen-latency/",
+      "source": "LMSYS Blog",
+      "published_at": "2026-02-11",
+      "added_at": "2026-05-29",
+      "tags": [
+        "SGLang",
+        "Qwen3",
+        "Qwen3-VL",
+        "AMD MI300X",
+        "ROCm",
+        "low latency inference",
+        "FP8 quantization",
+        "MoE serving",
+        "multimodal inference",
+        "AITER"
+      ],
+      "summary": "这篇 LMSYS 技术分享介绍了 Qwen C-end Infrastructure Engineering Team 和 AMD AI Framework Team 如何在 AMD MI300X/MI308 GPU 平台上，用 SGLang 对 Qwen3-235B 和 Qwen3-VL-235B 做低延迟推理优化。它的重点不是 Qwen3 模型算法本身，而是一个大模型在特定硬件、推理框架、量化格式、MoE operator、attention kernel 和多模态预处理链路上的端到端工程适配。文本模型侧，文章采用 PTPC-FP8 量化、TP8 并行、AITER MHA/PagedAttention、KV cache layout、MoE kernel 优化和 kernel fusion，把 Qwen3-235B 的 TTFT 从 756.54ms 降到 450.59ms，TPOT 从 26.44ms 降到 12.44ms。多模态模型侧，文章针对 Qwen3-VL-235B 额外优化了 rocJPEG GPU 解码、ROCm backend 下的 CUDA IPC GPU direct transfer，以及 ViT data parallelism，把 TTFT 从 1764ms 降到 1084.59ms，TPOT 从 23.7ms 降到 12.48ms。整体来看，这篇更适合作为研究推理系统、硬件后端适配和低延迟 serving 的材料，而不是作为模型能力或训练方法材料。",
+      "key_points": [
+        "这篇文章的对象是推理系统优化：在 AMD MI300X/MI308 平台上用 SGLang 服务 Qwen3-235B 和 Qwen3-VL-235B。",
+        "优化目标偏 C-end 低延迟场景，评测设置是 single request、长输入、固定输出长度，因此更关注 TTFT 和 TPOT，而不是高并发吞吐。",
+        "Qwen3-235B 的核心优化包括 PTPC-FP8 量化、TP8 tensor parallelism、AITER attention kernels、专门的 KV cache layout、MoE operator tuning 和 kernel fusion。",
+        "PTPC-FP8 使用 per-token activation + per-channel weight 的量化方式，相比普通 BlockScale FP8 更贴合硬件 GEMM tile 和通道并行结构。",
+        "TP8 在低并发场景中把模型权重分散到 8 张 GPU 上，降低单卡权重访问压力，也缓解 MoE expert hotspot 带来的尾延迟。",
+        "Attention 优化不是只换一个 kernel，还包括 KV cache layout、prefill/decode 的混合精度策略，以及避免 decode 阶段额外 layout conversion。",
+        "Qwen3-VL-235B 的额外瓶颈来自多模态链路：host-side image decoding、跨进程/跨设备数据传输，以及 ViT encoder 计算。",
+        "rocJPEG 把 JPEG 解码从 CPU 转到 GPU，CUDA IPC on ROCm backend 减少 multimodal tensor 在 Tokenizer 和 Scheduler 之间的 CPU 中转，ViT DP 则用于多图/视频场景的视觉编码并行。",
+        "文章报告的收益是 Qwen3-235B TTFT 1.67x、TPOT 2.12x，Qwen3-VL-235B TTFT 1.62x、TPOT 1.90x；这些数字应放在特定硬件、模型权重、量化 recipe 和 low-concurrency 测试场景下理解。"
+      ],
+      "quotes": [
+        {
+          "text": "ultra-low-latency inference",
+          "note": "点明这篇文章的主要目标是低延迟推理，而不是训练或模型能力提升。"
+        },
+        {
+          "text": "PTPC (Per Token Activation, Per Channel Weight)",
+          "note": "这是文本模型侧最核心的量化策略，用来兼顾 FP8 性能和精度。"
+        },
+        {
+          "text": "MoE model inference is typically memory-bound",
+          "note": "解释为什么 HBM 带宽、TP8、MoE operator tuning 会直接影响低延迟表现。"
+        },
+        {
+          "text": "CUDA IPC on ROCm backend",
+          "note": "这是多模态侧的重要工程点：减少视觉数据在进程和设备之间传输的额外开销。"
+        }
+      ],
+      "my_note": "这篇对我后续有价值的地方在于，它把“让一个大模型在某类硬件上跑得快”拆得很具体：量化格式、并行策略、attention KV layout、MoE kernel、operator fusion、图片解码、IPC 和 ViT 并行都会影响最终 TTFT/TPOT。它也提醒我，推理优化不是一个抽象的 SGLang 开关，而是模型结构、硬件特性、ROCm/AITER kernel、数据链路和业务负载共同决定的系统工程。和之前 DeepSeek-V4、HiSparse、GB300 long-context 这些材料放在一起看，可以形成一条更清晰的线索：模型发布后真正能服务线上用户，往往还需要大量硬件后端和 serving stack 适配。",
+      "related_papers": [],
+      "status": "approved"
     }
   ]
 }
