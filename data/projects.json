@@ -1134,6 +1134,85 @@
       "related_papers": [],
       "related_blogs": [],
       "status": "approved"
+    },
+    {
+      "id": "factscore",
+      "name": "FActScore",
+      "repo_url": "https://github.com/shmsw25/factscore",
+      "homepage_url": "https://arxiv.org/abs/2305.14251",
+      "docs_url": "https://github.com/shmsw25/factscore#readme",
+      "demo_url": "",
+      "source": "shmsw25 / FActScore",
+      "added_at": "2026-05-31",
+      "project_type": "factuality evaluation package",
+      "domain": "Long-form generation factuality / Atomic fact checking",
+      "tags": [
+        "FActScore",
+        "factuality evaluation",
+        "long-form generation",
+        "atomic facts",
+        "fact checking",
+        "factual precision",
+        "hallucination detection",
+        "biography generation",
+        "Wikipedia",
+        "retrieval-augmented verification",
+        "ChatGPT evaluator",
+        "Inst-LLAMA",
+        "EMNLP 2023"
+      ],
+      "stack": [
+        "Python",
+        "spaCy",
+        "OpenAI API",
+        "LLaMA",
+        "Wikipedia",
+        "JSONL",
+        "pip package"
+      ],
+      "summary": "FActScore 是 EMNLP 2023 论文对应的事实性评估工具，用于评估长文本生成的 factual precision。它的核心思想是把模型生成的长文本拆成一组 atomic facts，然后逐个检查这些事实是否被可靠知识源支持，最后计算 supported atomic facts 占全部 atomic facts 的比例。它最初主要用于人物传记类长文本生成评估，默认知识源是 Wikipedia，也支持自定义 knowledge source。它不是 RAG pipeline 评测框架，也不是通用 LLM app 测试框架；它更聚焦最终生成文本里的事实正确率。",
+      "highlights": [
+        "核心指标是 factual precision：supported atomic facts / all atomic facts。",
+        "先把长文本生成拆成 atomic facts，而不是把整段回答粗暴判成对或错。",
+        "每个 atomic fact 会被单独检索和验证，判断是否被可靠知识源支持。",
+        "默认知识源是 Wikipedia，原始实验重点是人物 biography generation。",
+        "官方推荐的自动评估器包括 retrieval+ChatGPT 和 retrieval+llama+npm。",
+        "输出包括 score、init_score、respond_ratio、num_facts_per_response 和 per-fact decisions。",
+        "score 是带长度惩罚的 FActScore；init_score 是不带长度惩罚的 factual precision。",
+        "respond_ratio 衡量模型是否倾向拒答；num_facts_per_response 衡量每个回答平均提供多少事实。",
+        "repo 提供 pip package，也提供命令行 JSONL 输入方式。",
+        "论文报告自动估计器与人工 FActScore 的误差较小，用于把大规模长文本 factuality 评估成本从人工标注中降下来。"
+      ],
+      "use_cases": [
+        "评估模型生成的人物传记、百科式回答、长解释、长摘要里的事实正确率。",
+        "比较不同 LLM 在 long-form generation 上的 factual precision。",
+        "把长回答拆成可审查的 atomic facts，查看具体哪些事实被支持、哪些不被支持。",
+        "对生成模型是否靠少说、拒答来提高事实精度做辅助分析。",
+        "作为 hallucination evaluation 的细粒度事实检查基线。",
+        "和 RAG 输出结合使用时，评估最终回答中的事实是否能被外部知识源支持；但它本身不诊断 retriever。"
+      ],
+      "setup_note": "基础安装是 pip install --upgrade factscore，并下载 spaCy 的 en_core_web_sm。官方数据下载命令是 python -m factscore.download_data --llama_7B_HF_path \"llama-7B\"，会下载知识源和示例数据；如果使用 retrieval+llama+npm，还需要 LLaMA 7B 权重来重建 Inst-LLAMA。最常见的 Python 用法是 from factscore.factscorer import FactScorer，初始化 FactScorer(openai_key=\"...\")，然后调用 fs.get_score(topics, generations, gamma=10)。命令行也可以读取 JSONL，每行包含 topic 和 output。topic 通常是实体名，output 是模型生成的长文本；若使用自定义知识源，需要准备包含 title 和 text 字段的 JSONL。",
+      "practice_notes": [
+        "FActScore 值得记录的点是 atomic fact 这一层粒度。",
+        "它避免了把一整段回答粗暴判成对/错，而是允许一段话里有的事实正确、有的事实错误。",
+        "它主要回答的问题是：这段长回答里有多少具体事实是真的。",
+        "它不是 RAG pipeline 体检工具，不拆 retriever / generator，也不评估检索上下文排序或召回。",
+        "和 RAGChecker 的关系：RAGChecker 专门评估 RAG，并把问题归因到检索端和生成端；FActScore 更像最终文本 factual precision 评估器。",
+        "和 DeepEval 的关系：DeepEval 是通用 LLM app 测试框架；FActScore 是一个更窄的 factuality metric / package。",
+        "和 ARES 的关系：ARES 强调训练 judge + PPI 校正系统级 RAG 评估；FActScore 强调 atomic fact 分解和外部知识源验证。",
+        "和 TruLens / RAGAS 的关系：TruLens / RAGAS 更围绕 RAG 的 context relevance、groundedness、answer relevance；FActScore 更围绕 long-form factual precision。",
+        "需要注意的是，它主要衡量 factual precision，不直接衡量 factual recall。",
+        "模型少说但都说对，也可能得到较高 FActScore；所以要同时看 respond_ratio 和 num_facts_per_response。",
+        "如果一个回答很短、事实少、但都正确，它的 FActScore 可能高，但这不代表它完整覆盖了主题。",
+        "它默认以 Wikipedia 等可靠知识源为参照；知识源缺失或过时会影响支持/不支持判断。",
+        "它适合 biography / encyclopedia-like generation 这类 fact-dense 文本；对强主观、推理型或非百科型回答要谨慎解释。"
+      ],
+      "license": "MIT",
+      "maintenance": "stable / research implementation",
+      "my_note": "FActScore 值得记录的点是 atomic fact 这一层粒度。它避免了把一整段回答粗暴判成对/错，而是允许一段话里有的事实正确、有的事实错误。需要注意的是，它主要衡量 factual precision，不衡量 factual recall；模型少说但都说对，也可能得高分。因此使用时要同时看 FActScore、respond ratio 和 num_facts_per_response。",
+      "related_papers": [],
+      "related_blogs": [],
+      "status": "approved"
     }
   ]
 }
