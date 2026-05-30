@@ -10797,6 +10797,95 @@
           }
         ]
       }
+    },
+    {
+      "id": "ragchecker-fine-grained-rag-diagnostics-2024-neurips",
+      "title": "RAGChecker: A Fine-grained Framework for Diagnosing Retrieval-Augmented Generation",
+      "paper_url": "https://arxiv.org/abs/2408.08067",
+      "pdf_url": "https://arxiv.org/pdf/2408.08067",
+      "authors": [
+        "Dongyu Ru",
+        "Lin Qiu",
+        "Xiangkun Hu",
+        "Tianhang Zhang",
+        "Peng Shi",
+        "Shuaichen Chang",
+        "Cheng Jiayang",
+        "Cunxiang Wang",
+        "Shichao Sun",
+        "Huanyu Li",
+        "Zizhao Zhang",
+        "Binjie Wang",
+        "Jiarong Jiang",
+        "Tong He",
+        "Zhiguo Wang",
+        "Pengfei Liu",
+        "Yue Zhang",
+        "Zheng Zhang"
+      ],
+      "venue": "NeurIPS",
+      "year": 2024,
+      "primary_area": "数据集与基准",
+      "category": "其他",
+      "keywords": [
+        "RAGChecker",
+        "retrieval augmented generation",
+        "RAG evaluation",
+        "fine-grained diagnosis",
+        "claim-level entailment",
+        "retriever evaluation",
+        "generator evaluation",
+        "faithfulness",
+        "hallucination",
+        "noise sensitivity",
+        "context utilization",
+        "reward proxy"
+      ],
+      "labels": [
+        "RAG",
+        "Evaluation",
+        "Diagnostic Metrics",
+        "Claim-level",
+        "Hallucination",
+        "NeurIPS"
+      ],
+      "code_url": "https://github.com/amazon-science/RAGChecker",
+      "note": "",
+      "tldr": "RAGChecker 是一个基于 claim-level entailment 的 RAG 细粒度诊断框架，把最终回答质量拆成检索端和生成端的多组指标，用来定位 RAG 失败到底来自缺证据、噪声、上下文未利用还是幻觉。",
+      "abstract": "RAGChecker is a fine-grained evaluation framework for retrieval-augmented generation systems. It evaluates long-form RAG responses at the claim level, then decomposes system quality into holistic answer metrics, retriever metrics, and generator metrics. The framework uses claim extraction and entailment checking to measure answer precision, answer recall, retrieval claim recall, context precision, faithfulness, hallucination, noise sensitivity, self-knowledge, and context utilization. Meta-evaluation shows stronger correlation with human judgments than several existing RAG evaluation metrics, and experiments across 8 RAG systems reveal retriever-generator trade-offs and tuning effects.",
+      "summary_cn": {
+        "研究动机": "RAG 系统的最终答案分数往往只能说明“答得好不好”，但很难说明“为什么失败”。失败可能来自检索没找回关键证据，也可能来自检索结果噪声太多、生成器没有利用有用上下文、生成器误信噪声、或者模型凭参数知识答对但没有被检索证据支持。RAGChecker 的目标是把这些原因拆开，形成可诊断的 RAG evaluation。",
+        "解决问题": "论文解决的是 RAG 系统的细粒度评估与故障归因问题。它不是只给一个最终得分，而是同时评估 retriever 和 generator：retriever 端看是否找回支撑 ground-truth claims 的证据以及上下文精度；generator 端看回答是否忠实、是否幻觉、是否受相关或无关噪声影响，以及是否真正利用了有用上下文。",
+        "现象分析": "RAGChecker 揭示了几个重要现象：更强检索器通常提升答案质量，但也可能带来更多可被误用的噪声；相关噪声比无关噪声更危险，因为模型更容易相信“看起来相关但局部错误”的证据；开放模型更容易盲目信任上下文，而 GPT-4 在利用上下文和抑制噪声之间更平衡；增加 chunk 数量或 chunk size 会提升 claim recall 和 faithfulness，但也会增加噪声敏感性。",
+        "主要方法": "方法核心是 claim-level entailment checking。给定 query、retrieved chunks、model response 和 ground-truth answer，RAGChecker 先从回答和标准答案中抽取 claims，再判断这些 claims 是否被检索上下文或标准答案支持。整体指标包括 answer precision、answer recall 和 F1；检索指标包括 Claim Recall 和 Context Precision；生成指标包括 Faithfulness、Hallucination、Relevant/Irrelevant Noise Sensitivity、Self-Knowledge 和 Context Utilization。",
+        "数据集与实验": "论文构建了 4,162 个查询，覆盖 Wikipedia、AI Science、Novel、Biomedical、Finance、Lifestyle、Recreation、Science、Technology、Writing 等 10 个领域。实验评估 8 个 RAG 系统，由 2 个 retriever 和 4 个 generator 组合而成；retriever 包括 BM25 和 E5-Mistral，generator 包括 GPT-4、Mixtral-8x7B、Llama3-8B 和 Llama3-70B。claim extraction 和 entailment checking 使用基于 Llama3-70B 的 RefChecker。在 280 个 response pair 的 human meta-evaluation 中，RAGChecker 的 overall Spearman correlation 达到 60.90，高于 BLEU、ROUGE-L、BERTScore、TruLens、ARES 和 RAGAS 的对应整体相关性。",
+        "主要贡献": "主要贡献是把 RAG 评估系统化拆成 claim-level 的 overall、retriever 和 generator 三层诊断指标，并进一步把生成失败细分为 faithfulness、hallucination、relevant/irrelevant noise sensitivity、self-knowledge 和 context utilization。它的机器分数也可以作为 proxy reward 或伪机器 reward：例如把 answer F1、faithfulness、context utilization 作为正向信号，把 hallucination 和 noise sensitivity 作为负向信号。但这不是训练好的 RL reward model，而是自动评价器给出的近似信号，仍有 judge error 和 reward hacking 风险。"
+      },
+      "status": "approved",
+      "added_at": "2026-05-31",
+      "key_figure": {
+        "type": "Figure",
+        "name": "Diagnostic framework",
+        "page": 1,
+        "path": "assets/paper_images/ragchecker-2024-diagnostic-framework.png",
+        "caption": "RAGChecker evaluates RAG at claim level, then decomposes quality into overall answer scores, retriever metrics, and generator diagnostic metrics.",
+        "caption_cn": "RAGChecker 在 claim 粒度评估 RAG，把质量拆成整体答案分数、检索器指标和生成器诊断指标。",
+        "bbox": {},
+        "caption_bbox": {},
+        "source": "manual-summary-from-paper-diagnostic-framework",
+        "confidence": 0.9,
+        "needs_manual_review": false,
+        "contexts": [
+          {
+            "page": 1,
+            "text": "RAGChecker incorporates a suite of diagnostic metrics for both the retrieval and generation modules."
+          },
+          {
+            "page": 3,
+            "text": "The framework evaluates response claims and ground-truth claims with claim extraction and entailment checking."
+          }
+        ]
+      }
     }
   ]
 }
