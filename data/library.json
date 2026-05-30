@@ -10421,6 +10421,80 @@
           }
         ]
       }
+    },
+    {
+      "id": "craft-your-dataset-2025-tacl",
+      "title": "CRAFT Your Dataset: Task-Specific Synthetic Dataset Generation Through Corpus Retrieval and Augmentation",
+      "paper_url": "https://aclanthology.org/2025.tacl-1.76/",
+      "pdf_url": "https://aclanthology.org/2025.tacl-1.76.pdf",
+      "authors": [
+        "Ingo Ziegler",
+        "Abdullatif Köksal",
+        "Desmond Elliott",
+        "Hinrich Schütze"
+      ],
+      "venue": "TACL",
+      "year": 2025,
+      "primary_area": "基础/前沿模型 (含LLM)",
+      "category": "训练数据构造与合成",
+      "keywords": [
+        "synthetic dataset generation",
+        "corpus retrieval",
+        "data augmentation",
+        "instruction tuning",
+        "few-shot examples",
+        "retrieval augmented data generation",
+        "Self-Instruct",
+        "Evol-Instruct",
+        "Mistral 7B Instruct",
+        "LoRA fine-tuning",
+        "QA data synthesis"
+      ],
+      "labels": [
+        "Synthetic Data",
+        "Dataset Generation",
+        "Retrieval Augmentation",
+        "Instruction Tuning",
+        "QA Data",
+        "TACL"
+      ],
+      "code_url": "https://github.com/ziegler-ingo/CRAFT",
+      "note": "",
+      "tldr": "CRAFT 用少量人工 few-shot 样例去检索大规模真实语料，再让 instruction-tuned LLM 把检索文档改造成目标任务格式，从而生成可用于微调的任务专用合成数据集。",
+      "abstract": "Building high-quality datasets for specialized tasks is a time-consuming and resource-intensive process that often requires specialized domain knowledge. CRAFT, or Corpus Retrieval and Augmentation for Fine-Tuning, generates synthetic datasets from a small number of user-written few-shot examples. It retrieves relevant human-written documents from large-scale public corpora using similarity search, then uses instruction-tuned LLMs to augment the retrieved documents into custom-formatted task samples for fine-tuning. Experiments on biology, medicine, commonsense QA, and summarization show that CRAFT-based models can match or outperform general LLMs on QA tasks, exceed human-curated summarization-data baselines by 46 preference points, and outperform Self-Instruct and Evol-Instruct.",
+      "summary_cn": {
+        "研究动机": "很多特定任务需要 fine-tuning，但高质量标注数据成本高，尤其是专业领域和新任务。直接用 LLM 自生成数据虽然便宜，但容易重复、事实错误、格式漂移或生成风格单一。作者希望把真实语料的内容 grounding 和 LLM 的格式化能力结合起来，只用少量人工 few-shot 样例生成可用于微调的大规模任务数据。",
+        "解决问题": "论文解决的是任务专用 synthetic dataset generation：给定少量用户手写 few-shot 示例，如何从大规模未标注公共语料中自动找到相关真实文档，并把这些文档转成目标任务需要的 instruction-output 样本，最终支持下游模型微调。",
+        "现象分析": "CRAFT 的核心判断是，合成数据不应该完全从 LLM 参数中凭空生成。真实语料负责提供领域事实、主题覆盖和自然文本分布，LLM 主要负责把检索文档改写、压缩、结构化成任务格式。这样比 Self-Instruct 更有 factual grounding，也比人工构造大规模数据更便宜。但检索增强生成也有上限：当检索规模继续扩大，后续文档相关性会下降，数据质量可能反而变差。",
+        "主要方法": "CRAFT 流程包括五步。第一，用户写少量 few-shot，每个样例包含文本、任务指令或问题、期望答案格式，这些样例同时定义任务、提供检索 query 和输出格式示例。第二，作者用 C4、English Wikipedia、Stack Exchange、WikiHow 等语料构建约 3.83 亿篇文档的 embedding database，使用 MiniLM/SentenceTransformers 生成 384 维向量。第三，用 few-shot 做相似度检索，其中一半文档来自各 few-shot 单独检索的 top-k，另一半来自所有 few-shot 平均 embedding 的 top-k。第四，用 Mistral 7B Instruct v0.2 把检索文档增强为 JSON 格式任务样本。第五，用 fuzzy string matching 去重和过滤，再用 100、500、5000、25000 等规模数据对 Mistral 7B 或 Llama 3 8B 做 LoRA 微调。",
+        "数据集与实验": "实验覆盖 BioQA、MedQA、CSQA、Summarization 和 RecipeGen。主要对比包括 instruction model 直接推理、in-domain human-curated 数据微调、Self-Instruct 和 Evol-Instruct。CRAFT 在多数任务上随数据规模扩大稳定提升：BioQA 从 65.7 到 80.4，CSQA 从 55.3 到 62.1，MedQA 从 39.1 到 48.0，Summarization 从 43.7 到 97.9。摘要任务中 CRAFT 超过 human-curated CNN-DailyMail 数据训练模型 46 preference points。RecipeGen 是一个负面案例，数据从 100/500 扩到 25000 后质量下降，说明检索相关性衰减会伤害生成数据质量。",
+        "主要贡献": "论文的主要贡献是提出 CRAFT，把 synthetic data generation 从纯 LLM 自生成改成真实语料检索 + LLM 增强。few-shot 在其中同时承担任务定义、检索 query 和格式示例三种作用。实验表明，CRAFT 能在 QA 和摘要任务上生成可用于实际微调的数据，并优于 Self-Instruct / Evol-Instruct。更重要的是，它明确指出检索增强数据生成不是越多越好，需要去重、质量控制和停止准则。"
+      },
+      "status": "approved",
+      "added_at": "2026-05-30",
+      "key_figure": {
+        "type": "Figure",
+        "name": "Pipeline",
+        "page": 1,
+        "path": "assets/paper_images/craft-dataset-2025-pipeline.png",
+        "caption": "CRAFT pipeline: few-shot task seeds retrieve related documents from large public corpora; instruction-tuned LLMs then augment retrieved documents into task-specific training samples for fine-tuning.",
+        "caption_cn": "CRAFT 流程：少量 few-shot 样例先从大规模公共语料中检索相关真实文档，再由 instruction-tuned LLM 将检索文档增强为任务专用训练样本，用于后续微调。",
+        "bbox": {},
+        "caption_bbox": {},
+        "source": "manual-summary-from-paper-method",
+        "confidence": 0.9,
+        "needs_manual_review": false,
+        "contexts": [
+          {
+            "page": 1,
+            "text": "CRAFT uses large-scale public web-crawled corpora and similarity-based document retrieval to find relevant human-written documents."
+          },
+          {
+            "page": 1,
+            "text": "Instruction-tuned LLMs augment the retrieved documents into custom-formatted task samples, which can then be used for fine-tuning."
+          }
+        ]
+      }
     }
   ]
 }
