@@ -10202,6 +10202,87 @@
           }
         ]
       }
+    },
+    {
+      "id": "better-qg-metric-2018-emnlp",
+      "title": "Towards a Better Metric for Evaluating Question Generation Systems",
+      "paper_url": "https://aclanthology.org/D18-1429/",
+      "pdf_url": "https://aclanthology.org/D18-1429.pdf",
+      "authors": [
+        "Preksha Nema",
+        "Mitesh M. Khapra"
+      ],
+      "venue": "EMNLP",
+      "year": 2018,
+      "primary_area": "应用：CV/音频/语言等",
+      "category": "自然语言处理",
+      "keywords": [
+        "automatic question generation",
+        "question generation evaluation",
+        "answerability",
+        "Q-BLEU",
+        "Q-METEOR",
+        "Q-ROUGE",
+        "Q-NIST",
+        "human correlation",
+        "SQuAD",
+        "WikiMovies",
+        "VQA"
+      ],
+      "labels": [
+        "Question Generation",
+        "Evaluation Metric",
+        "Answerability",
+        "Q-Metric",
+        "Early NLP"
+      ],
+      "code_url": "https://github.com/PrekshaNema25/Answerability-Metric",
+      "note": "用于检查生成问题是否符合要求的早期 QG 评价指标文献。它把“问题是否可回答”拆成 question type、named entities、content words、function words 等可计算要素，再和 BLEU/METEOR/ROUGE/NIST 组合。适合用在生成 QA 数据或评估 QG 系统时，筛掉缺实体、缺关系词、问题类型错误、虽然表面相似但不可回答的问题。",
+      "tldr": "这篇论文指出 BLEU/METEOR/ROUGE/NIST 只看表面相似度，不能可靠判断生成问题是否可回答；作者提出把 answerability 显式加入指标，形成 Q-BLEU、Q-METEOR、Q-ROUGE、Q-NIST，使自动分数更接近人类对“问题是否符合要求”的判断。",
+      "abstract": "Towards a Better Metric for Evaluating Question Generation Systems examines whether common n-gram based metrics are suitable for evaluating automatic question generation. The paper shows that BLEU, METEOR, ROUGE, and NIST do not always correlate well with human judgments of question answerability. It introduces an answerability scoring function based on important question components such as question type, named entities, content words, and function words, and combines this score with existing metrics to form Q-Metrics. Experiments on SQuAD, WikiMovies, and VQA show that these modified metrics correlate better with human judgments and better reflect the downstream usefulness of generated questions for QA training.",
+      "summary_cn": {
+        "研究动机": "早期 question generation 系统常用 BLEU、METEOR、ROUGE、NIST 评估，但这些指标主要看生成问题和参考问题的表面 n-gram 相似度。对 QG 来说，更关键的是生成问题是否符合使用要求：问题类型是否正确，实体、关系词和必要上下文是否完整，以及人或 QA 系统能不能据此回答。",
+        "解决问题": "论文要解决的是自动指标无法可靠检查生成问题可回答性的问题。一个生成问题即使和参考问题有较高词面重叠，也可能因为缺少实体、关系词或 Wh-type 而不可回答；反过来，一个语法不完整但保留了关键实体和关系的问题，可能 BLEU 低但仍然可回答。",
+        "现象分析": "作者在 SQuAD、WikiMovies、VQA 上构造 noisy questions，并让人工按 answerability 打分。实验发现传统 n-gram 指标与人工判断相关性普遍偏低，部分相关性不显著。这说明 QG 评估不能只问“像不像参考问题”，还要问“是否保留足够信息让问题可回答”。",
+        "主要方法": "论文提出 answerability scoring function，把问题中的关键信息分成 relevant content words、named entities、question types、function words 四类。对每类计算加权 precision 和 recall，再用 F-score 形式得到 answerability score。随后将该分数和原始指标线性组合，例如 Q-BLEU4 = δ * Answerability + (1 - δ) * BLEU4；同理可得到 Q-METEOR、Q-ROUGE、Q-NIST。各类词权重和 δ 通过少量人工标注数据调参学习，并可随文档 QA、知识库 QA、视觉 QA 场景变化。",
+        "数据集与实验": "实验覆盖 SQuAD、WikiMovies、VQA 三类 QG 场景。作者先比较 BLEU、METEOR、ROUGE-L、NIST 与人工 answerability 分数的 Pearson / Spearman 相关性，再比较加入 answerability 后的 Q-Metrics。结果显示 Q-Metrics 与人类判断显著更相关。论文还做了 extrinsic evaluation：用不同类型 noisy questions 训练 QA 模型，并观察指标分数是否能预测下游 Hit@1、F1、Accuracy 表现；Q-BLEU4 的趋势通常比 BLEU4 更符合下游效果。",
+        "主要贡献": "论文的主要贡献是把“生成问题是否符合要求”从主观人工检查推进到可计算指标：不仅评估文本相似度，还显式检查问题是否可回答、是否保留关键实体、关系和问题类型。它补齐了早期 QG 脉络中的评价环节，适合和 Learning to Ask、Question Generation for Question Answering 一起作为 neural QG、QG-for-QA、合成 QA 数据过滤的基础背景。"
+      },
+      "status": "approved",
+      "added_at": "2026-05-30",
+      "key_figure": {
+        "type": "Figure",
+        "name": "1",
+        "page": 5,
+        "path": "assets/paper_images/better-qg-metric-2018-emnlp-figure-1.png",
+        "caption": "Figure 1: Human-Human Correlation for SQUAD, WikiMovies and VQA respectively.",
+        "caption_cn": "图 1：SQuAD、WikiMovies 和 VQA 上的人类标注者之间的相关性，用来说明 answerability 人工评分具有可用的一致性。",
+        "bbox": {
+          "x1": 72.0,
+          "x2": 526.0799999999999,
+          "y1": 61.68,
+          "y2": 177.12
+        },
+        "caption_bbox": {
+          "x1": 110.4530029296875,
+          "x2": 487.09344482421875,
+          "y1": 189.63656616210938,
+          "y2": 195.6390380859375
+        },
+        "source": "pdffigures2",
+        "confidence": 0.95,
+        "needs_manual_review": false,
+        "contexts": [
+          {
+            "page": 5,
+            "text": "Figure 1 indicates that there is a linear correla- tion between the two ratings for each question and hence we measured the correlation using Pearson coefficient. For completeness, we also measure the monotonic correlation using Spearman coef- ficient. The Spearman coefficient is slightly lower than the Pearson coefficient because the inter- annotator agreement is stronger at the tail of the distribution i.e., when the quest"
+          },
+          {
+            "page": 6,
+            "text": "3955 Figure 1: Human-Human Correlation for SQUAD, WikiMovies and VQA respectively."
+          }
+        ]
+      }
     }
   ]
 }
