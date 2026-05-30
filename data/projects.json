@@ -479,6 +479,75 @@
         "lmsys-hard-prompts-category"
       ],
       "status": "approved"
+    },
+    {
+      "id": "fastchat-llm-judge",
+      "name": "FastChat LLM Judge",
+      "repo_url": "https://github.com/lm-sys/FastChat/tree/main/fastchat/llm_judge",
+      "homepage_url": "https://arxiv.org/abs/2306.05685",
+      "docs_url": "https://github.com/lm-sys/FastChat/tree/main/fastchat/llm_judge",
+      "demo_url": "https://huggingface.co/spaces/lmsys/mt-bench",
+      "source": "lm-sys / FastChat / fastchat.llm_judge",
+      "added_at": "2026-05-30",
+      "project_type": "evaluation framework",
+      "domain": "LLM evaluation / LLM-as-a-Judge",
+      "tags": [
+        "FastChat",
+        "LLM Judge",
+        "MT-Bench",
+        "LLM-as-a-Judge",
+        "single-answer grading",
+        "pairwise evaluation",
+        "Chatbot Arena",
+        "human preference",
+        "GPT-4 judge"
+      ],
+      "stack": [
+        "Python",
+        "OpenAI API",
+        "Anthropic API",
+        "Hugging Face Transformers",
+        "vLLM",
+        "Gradio"
+      ],
+      "summary": "FastChat LLM Judge 是 FastChat 仓库里的模型评测子模块，路径是 fastchat/llm_judge。FastChat 整体已经覆盖训练、serving 和评测；这个子模块单独值得记录，是因为它集中实现了 MT-Bench 和 LLM-as-a-Judge 评测流程：先让待评模型回答 MT-Bench 多轮开放题，再调用 GPT-4 等 judge，根据公开 judge prompt 给单个回答打 1-10 分，或对两个回答做 pairwise 比较，最后汇总模型分数、胜率和可浏览的答案/裁判结果。",
+      "highlights": [
+        "它不是独立 repo，而是 FastChat 大项目里的评测子模块；source 应理解为 lm-sys / FastChat / fastchat.llm_judge。",
+        "MT-Bench 是一组 challenging multi-turn open-ended questions，用于评估 chat assistants。",
+        "默认推荐 single-answer grading：GPT-4 judge 直接给每个回答按 1-10 分打分，再汇总平均分。",
+        "也支持 pairwise-baseline 和 pairwise-all 两类 win-rate 评测。",
+        "judge prompt 公开在 data/judge_prompts.jsonl 中，包括 general、math、single、pairwise、多轮等不同模板。",
+        "general single-answer 不需要 ground truth，输入是 question + assistant answer，维度包括 helpfulness、relevance、accuracy、depth、creativity 和 level of detail。",
+        "math single-answer 会额外使用 reference answer，重点检查 correctness 和 helpfulness，因此正确性评估更可靠。",
+        "如果只有问题、原文和回答，也可以打分，但建议自定义 source-grounded judge prompt，让 judge 根据原文检查 faithfulness、completeness、relevance、clarity 和 conciseness。",
+        "论文报告 GPT-4 judge 与人类偏好达到 80% 以上 agreement，接近人类之间一致性水平。"
+      ],
+      "use_cases": [
+        "给单个模型生成一个比较直观的 MT-Bench 1-10 平均分。",
+        "比较多个 chat model 或多个 checkpoint 的开放式多轮回答质量。",
+        "分析模型在 writing、roleplay、reasoning、math、coding、extraction、STEM、humanities 等 MT-Bench 类别上的表现。",
+        "用 pairwise-baseline 模式评估新模型相对 GPT-3.5 / GPT-4 / 旧 checkpoint 的胜率。",
+        "复用 judge prompt，搭建自己的 LLM-as-a-Judge 评测脚本。",
+        "对摘要、阅读理解、信息抽取类任务改造 source-grounded rubric，让 judge 基于原文检查回答是否忠实和完整。"
+      ],
+      "setup_note": "安装方式是克隆 FastChat 后运行 pip install -e \".[model_worker,llm_judge]\"。典型 MT-Bench 流程：先运行 python gen_model_answer.py --model-path [MODEL-PATH] --model-id [MODEL-ID] 生成模型回答；再设置 OPENAI_API_KEY，运行 python gen_judgment.py --model-list [MODEL-ID] --parallel [N] 调用 GPT-4 judge；最后运行 python show_result.py 查看分数。也可以用 python gen_api_answer.py --model [MODEL-NAME] 评测 API 模型，或通过 vLLM OpenAI-compatible endpoint 加速本地模型回答生成。如果要评估有原文依据的单回答质量，需要修改 judge prompt，把原文放入 prompt 并明确 faithfulness / completeness 等维度。",
+      "practice_notes": [
+        "如果你只有一个模型并想要具体分数，FastChat LLM Judge 比 Arena-Hard-Auto 更直接，因为它原生支持 single-answer 1-10 打分。",
+        "没有 ground truth 的 general prompt 也能打分，但 accuracy 依赖 judge 自己判断；有 reference answer 或 source text 时，可靠性通常更高。",
+        "评测数学题时建议使用 math judge prompt，因为它会参考标准答案并重点检查 correctness。",
+        "如果只有问题和原文，适合把原文作为 evidence 放入自定义 judge prompt，而不是直接套 MT-Bench general prompt。",
+        "项目提供 download_mt_bench_pregenerated.py 和 qa_browser.py，可以先查看已有模型的答案与 judge 结果，再评估自己的模型。",
+        "LLM judge 有已知偏差，包括位置偏置、verbosity bias、self-enhancement bias 和有限推理能力；论文和 prompt 设计尝试缓解，但不能完全消除。",
+        "和 Arena-Hard-Auto 的实践差异：FastChat LLM Judge 更适合快速给 checkpoint 一个 MT-Bench 分数；Arena-Hard-Auto 更适合用 hard prompts 和 pairwise win rate 近似 Arena 排名。"
+      ],
+      "license": "Apache-2.0",
+      "maintenance": "stable / mature",
+      "my_note": "",
+      "related_papers": [],
+      "related_blogs": [
+        "lmsys-hard-prompts-category"
+      ],
+      "status": "approved"
     }
   ]
 }
