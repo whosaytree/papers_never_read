@@ -138,6 +138,103 @@
       "status": "approved"
     },
     {
+      "id": "databricks-synthetic-agent-evaluation",
+      "title": "Streamline AI Agent Evaluation with New Synthetic Data Capabilities",
+      "url": "https://www.databricks.com/blog/streamline-ai-agent-evaluation-with-new-synthetic-data-capabilities",
+      "source": "Databricks Blog / Databricks Docs",
+      "published_at": "2024-12-09",
+      "added_at": "2026-05-30",
+      "tags": [
+        "Databricks",
+        "Mosaic AI Agent Evaluation",
+        "synthetic data",
+        "agent evaluation",
+        "RAG evaluation",
+        "MLflow",
+        "generate_evals_df",
+        "expected_facts",
+        "expected_retrieved_context",
+        "rubric"
+      ],
+      "summary": "这篇 Databricks 技术分享介绍 Mosaic AI Agent Evaluation 的 synthetic data generation API。它和 Red Hat SDG Hub 一样都在解决“如何从自己的文档生成评测集”，但 Databricks 版本更像托管平台能力：用户不直接看到内部 prompt 或 flow，只通过 `databricks.agents.evals.generate_evals_df` 提供文档、agent 任务描述和问题风格约束，生成可直接接入 MLflow / Agent Evaluation 的 synthetic eval set。具体输入是包含 `content` 和 `doc_uri` 两列的 Pandas 或 Spark DataFrame；可选控制项包括 `num_evals`、`agent_description` 和 `question_guidelines`。输出在 MLflow 3 里包含 `request_id`、`inputs` 和 `expectations`，其中 `expectations.expected_facts` 是回答应覆盖的事实点列表，`expectations.expected_retrieved_context` 是生成该 eval 所依据的文档内容和 URI。因而它生成的不是传统完整 reference answer，而更像事实型 rubric / checklist：评测时看 agent 回答是否覆盖这些 expected facts，并可结合 retrieved context 判断是否基于正确证据。",
+      "key_points": [
+        "这篇不是学术论文，也不是开源生成算法，而是 Databricks Mosaic AI Agent Evaluation 的产品能力介绍；当前可验证细节主要来自官方文档和 Python SDK。",
+        "核心 API 是 `databricks.agents.evals.generate_evals_df`，用于从企业文档中合成 agent / RAG agent 的 evaluation dataset。",
+        "输入 DataFrame 至少需要 `content` 和 `doc_uri` 两列；前者是已解析文档文本，后者用于保留证据来源。",
+        "`num_evals` 控制总生成数量，Databricks 会尝试按文档大小分配覆盖；如果小于文档数，一部分文档不会生成 eval。",
+        "`agent_description` 是 agent 的任务描述，用来限定哪些问题属于目标 agent 的能力范围。",
+        "`question_guidelines` 是公开的 prompt-like 控制项，是 free-form string，会用于引导 synthetic question generation，例如用户 persona、示例问题和问题风格。",
+        "内部生成 pipeline 和内部 prompts 没有公开；公开资料只展示 API 合同、输入输出 schema 和调用示例。",
+        "MLflow 3 输出的 `inputs` 使用 Chat Completion API 格式，代表合成用户请求。",
+        "`expected_facts` 是事实点 checklist，可近似看作 factual rubric；它不是完整标准答案，也不是多维评分 rubric。",
+        "`expected_retrieved_context` 保留该 eval 来源文档内容和 `doc_uri`，用于把问题和证据来源绑定起来。"
+      ],
+      "standards": [
+        {
+          "name": "输入",
+          "description": "`content` 和 `doc_uri`；文档可以来自 Pandas DataFrame 或 Spark DataFrame。"
+        },
+        {
+          "name": "控制项",
+          "description": "`num_evals` 控制数量，`agent_description` 限定任务范围，`question_guidelines` 控制问题风格。"
+        },
+        {
+          "name": "输出结构",
+          "description": "MLflow 3 下输出 `request_id`、`inputs`、`expectations.expected_facts` 和 `expectations.expected_retrieved_context`。"
+        },
+        {
+          "name": "事实型 rubric",
+          "description": "`expected_facts` 相当于答案必须覆盖的事实 checklist，而不是完整标准答案或人工评分细则。"
+        },
+        {
+          "name": "实现透明度",
+          "description": "用户可见 API 和控制参数，但内部 prompt、过滤逻辑和生成链路没有公开。"
+        },
+        {
+          "name": "使用边界",
+          "description": "官方说明 synthetic data 用于评估 agent applications，不应用于训练、改进或微调 LLM。"
+        }
+      ],
+      "quotes": [
+        {
+          "text": "generate_evals_df",
+          "note": "Databricks 暴露给用户的 synthetic evaluation set 生成 API。"
+        },
+        {
+          "text": "question_guidelines",
+          "note": "公开的 prompt-like 控制项，用 free-form string 引导问题生成。"
+        },
+        {
+          "text": "expected_facts",
+          "note": "核心输出之一：回答中应该覆盖的事实点列表。"
+        },
+        {
+          "text": "expected_retrieved_context",
+          "note": "核心输出之一：该 eval 所依据的源文档内容和 doc_uri。"
+        },
+        {
+          "text": "not used for any model training",
+          "note": "官方强调发送到 synthetic data service 的数据不会用于模型训练。"
+        },
+        {
+          "text": "should not be used to train, improve, or fine-tune an LLM",
+          "note": "官方给出的使用边界：synthetic eval 输出用于评估，不用于训练或微调。"
+        }
+      ],
+      "my_note": "这篇对我有价值的地方在于，它把“生成 QA 对”改成了更适合 agent evaluation 的“生成请求 + 事实 checklist + gold context”。如果只生成完整 reference answer，LLM judge 容易被表达差异影响；`expected_facts` 更像最小事实覆盖要求，可以让 Correctness 这类 scorer 判断回答是否覆盖关键事实。和 Red Hat SDG Hub 对比，Databricks 的优势是和 MLflow、Agent Evaluation、Databricks 文档/平台一体化，能很快形成生产 agent 的 regression test；劣势是内部 prompt 和过滤流程不透明，不能像 SDG Hub 那样检查 topic/question/critic/context extraction 每一步。对我后续整理 RAG/agent evaluation 时，这篇应该放在 synthetic eval set generation 的“托管平台方案”位置。",
+      "analysis_note": {
+        "title": "详细笔记：Databricks Synthetic Agent Evaluation",
+        "source": "docs/blog_notes/databricks-synthetic-agent-evaluation.md",
+        "url": "blog_notes/databricks-synthetic-agent-evaluation.html"
+      },
+      "related_papers": [
+        "ragas-automated-rag-evaluation-2024-eacl",
+        "ares-automated-rag-evaluation-2024-naacl",
+        "rgb-benchmarking-llms-rag-2024-aaai"
+      ],
+      "status": "approved"
+    },
+    {
       "id": "lmsys-hard-prompts-category",
       "title": "Introducing Hard Prompts Category in Chatbot Arena",
       "url": "https://www.lmsys.org/blog/2024-05-17-category-hard/",
