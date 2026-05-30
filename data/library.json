@@ -10119,6 +10119,89 @@
           }
         ]
       }
+    },
+    {
+      "id": "question-generation-for-question-answering-2017-emnlp",
+      "title": "Question Generation for Question Answering",
+      "paper_url": "https://aclanthology.org/D17-1090/",
+      "pdf_url": "https://aclanthology.org/D17-1090.pdf",
+      "authors": [
+        "Nan Duan",
+        "Duyu Tang",
+        "Peng Chen",
+        "Ming Zhou"
+      ],
+      "venue": "EMNLP",
+      "year": 2017,
+      "primary_area": "应用：CV/音频/语言等",
+      "category": "自然语言处理",
+      "keywords": [
+        "question generation",
+        "question answering",
+        "answer sentence selection",
+        "Community-QA",
+        "YahooAnswers",
+        "question pattern mining",
+        "CNN ranking",
+        "RNN generation",
+        "SQuAD",
+        "MS MARCO",
+        "WikiQA"
+      ],
+      "labels": [
+        "Question Generation",
+        "Question Answering",
+        "Answer Selection",
+        "Synthetic QA Data",
+        "Early NLP"
+      ],
+      "code_url": "",
+      "note": "早期 QG-for-QA 背景文献。它不是生成完整 <question, answer> 合成数据对，而是对候选答案句子生成可能的问题，再用生成问题与用户原问题的相似度辅助 answer sentence selection。适合和 Learning to Ask 放在一起看：后者重点是阅读理解 QG 本身，这篇重点是 QG 反哺 QA 排序。",
+      "tldr": "这篇早期 NLP 论文把 question generation 用作 QA 的辅助排序信号：从 Community-QA 挖掘问题模式，基于候选答案句子生成可能的问题，再用生成问题与用户原问题的相似度提升 answer sentence selection。",
+      "abstract": "Question Generation for Question Answering studies neural question generation as a component for improving text-based QA. The paper automatically constructs large-scale training data from Community-QA resources, explores both retrieval-style and generation-style QG models, and then uses generated questions as additional evidence for answer sentence selection. Across SQuAD, MS MARCO, and WikiQA, adding QG-based matching features improves QA ranking performance, showing that a candidate answer can be judged partly by whether it can generate a question similar to the user's original question.",
+      "summary_cn": {
+        "研究动机": "问答系统需要大量高质量训练数据和可靠的答案排序信号，但人工构造问答对成本高。作者注意到 Community-QA 网站中已经存在大量真实用户问题和回答，因此希望从这些数据中学习 question generation，并让生成的问题反过来帮助 QA。",
+        "解决问题": "论文解决的是 QG 与 QA 的连接问题：给定一个 passage 或候选答案句子，如何生成可能由它回答的问题；以及这些生成问题能否作为额外匹配信号，提升 answer sentence selection。",
+        "现象分析": "这篇论文里的生成问题通常没有独立生成答案。系统输入本身就是 passage 或候选答案句子，生成的问题用于判断该候选答案是否与用户问题匹配。因此它更像 answer-to-question matching，而不是现代常见的完整 <question, answer> 合成数据生成。",
+        "主要方法": "方法先从 YahooAnswers 的 question clusters 中挖掘高频 question patterns，再为给定 passage 预测合适的问题模式。作者实现了两类 QG：一种是 attention-based CNN 检索式排序，从候选 question patterns 中选择；另一种是 BiGRU seq2seq 生成式模型。生成问题时还会选择 passage 中的 question topic 填入占位符，并用 pattern score、topic score、QA matching score、词重叠和 pattern frequency 等特征排序。QA 阶段则对每个候选答案生成 top-10 问题，并把生成问题与原始问题的相似度加入答案排序。",
+        "数据集与实验": "训练数据来自 YahooAnswers，作者构造了约 198 万个 <answer, question pattern, question topic> 实例。QG 与 QA 评估覆盖 SQuAD、MS MARCO 和 WikiQA。生成式 QG 在 BLEU-4 上优于检索式方法；在 QA 任务中，加入 QG 特征后的 QA+QG 在三个数据集的 MAP、MRR、ACC@1 等指标上均有提升，其中 MS MARCO 的收益最明显。",
+        "主要贡献": "论文的主要贡献是较早把神经 question generation 接入 downstream QA：QG 不只是单独生成自然问题，而是被用作答案候选的相关性检验信号。它为后续 synthetic QA data、QG-for-QA、dual QA/QG 和 answer-aware data generation 提供了早期背景，但和今天的 LLM 数据合成相比，答案一致性与可控性仍然比较弱。"
+      },
+      "status": "approved",
+      "added_at": "2026-05-30",
+      "key_figure": {
+        "type": "Figure",
+        "name": "1",
+        "page": 2,
+        "path": "assets/paper_images/question-generation-for-question-answering-2017-emnlp-figure-1.png",
+        "caption": "Figure 1: Examples of frequently-asked question patterns with corresponding historical question topics.",
+        "caption_cn": "图 1：高频问题模式及其对应历史问题主题示例。",
+        "bbox": {
+          "x1": 72.0,
+          "x2": 526.0799999999999,
+          "y1": 62.879999999999995,
+          "y2": 195.12
+        },
+        "caption_bbox": {
+          "x1": 72.46599578857422,
+          "x2": 525.0844116210938,
+          "y1": 211.0592803955078,
+          "y2": 217.63201904296875
+        },
+        "source": "pdffigures2",
+        "confidence": 0.95,
+        "needs_manual_review": false,
+        "contexts": [
+          {
+            "page": 2,
+            "text": "Table 1 shows statistics of question patterns mined from YahooAnswers, and Figure 1 gives ex- amples of frequently-asked question patterns with their corresponding historical question topics. We have two interesting observations: 1. Most frequently-asked question patterns (fre- quency>=10,000) are with high quality, and reflect the most common user intentions; 2. Most historical question topics extracted are entities. This is achieved without using any prior semantic knowledge base or dictionary. 2"
+          },
+          {
+            "page": 3,
+            "text": "Figure 1: Examples of frequently-asked question patterns with corresponding historical question topics."
+          }
+        ]
+      }
     }
   ]
 }
