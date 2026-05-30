@@ -405,6 +405,80 @@
       "related_papers": [],
       "related_blogs": [],
       "status": "approved"
+    },
+    {
+      "id": "arena-hard-auto",
+      "name": "Arena-Hard-Auto",
+      "repo_url": "https://github.com/lmarena/arena-hard-auto",
+      "homepage_url": "https://www.lmsys.org/blog/2024-04-19-arena-hard/",
+      "docs_url": "https://github.com/lmarena/arena-hard-auto",
+      "demo_url": "https://huggingface.co/spaces/lmarena-ai/arena-hard-browser",
+      "source": "lmarena / arena-hard-auto",
+      "added_at": "2026-05-30",
+      "project_type": "evaluation benchmark",
+      "domain": "LLM evaluation / Human preference approximation",
+      "tags": [
+        "Arena-Hard-Auto",
+        "LMArena",
+        "Chatbot Arena",
+        "LLM evaluation",
+        "LLM-as-a-Judge",
+        "pairwise preference",
+        "benchmark construction",
+        "hard prompts",
+        "BenchBuilder",
+        "style control",
+        "Bradley-Terry"
+      ],
+      "stack": [
+        "Python",
+        "OpenAI API",
+        "Gemini API",
+        "Anthropic API",
+        "SGLang",
+        "vLLM",
+        "Gradio",
+        "Hugging Face Datasets"
+      ],
+      "summary": "Arena-Hard-Auto 是 LMArena / LMSYS 开源的自动化 LLM benchmark。它不是训练框架，也不是 serving 框架，而是用一批从真实 Arena 流量里筛出的 hard prompts，让待评模型生成回答，再用公开的 pairwise judge prompt 调用 GPT-4.1、Gemini-2.5 等 LLM judge 比较回答质量，最后输出 win rate、置信区间和 leaderboard。它评测阶段判断的是回答质量；问题质量筛选由 repo 里的 BenchBuilder 流水线负责。",
+      "highlights": [
+        "目标是用自动评测近似 Chatbot Arena 的人类偏好排名，同时比真实 Arena 人类投票更快、更便宜。",
+        "Arena-Hard-v2.0-Preview 包含 500 个 fresh hard real-world user queries，以及 250 个 creative writing queries。",
+        "问题质量筛选部分有开源代码：BenchBuilder 包含 topic_clustering.py、label.py、category.py 和 filter.py。",
+        "BenchBuilder 会先做 topic clustering，再用 LLM 标注 prompt 是否满足 specificity、domain knowledge、complexity、problem-solving、creativity、technical accuracy、real-world application 七个 criteria。",
+        "筛题时按 prompt_score 和 topic cluster 平均分过滤，再抽样形成最终 benchmark prompts。",
+        "回答质量判断不是绝对 0-10 打分，而是同题下的 A/B pairwise preference。",
+        "公开 judge prompt 要求 judge 先自己回答，再比较 A/B，检查错误、不准确信息、helpfulness、relevance、conciseness、必要时的 creativity / novelty，以及遗漏的重要信息。",
+        "最终 verdict 是五档：[[A>>B]]、[[A>B]]、[[A=B]]、[[B>A]]、[[B>>A]]；gen_judgment.py 会交换 A/B 顺序跑两轮以减轻 position bias。",
+        "支持 OpenAI-compatible endpoint，也可以用 vLLM / SGLang 自部署待评模型。"
+      ],
+      "use_cases": [
+        "在模型上线 Chatbot Arena 前，先离线估计它在 Arena 风格开放式偏好评测中的表现。",
+        "比较不同 instruction tuning / RLHF / RLVR checkpoint 的开放式回答质量。",
+        "评估模型在 hard prompts、代码、数学、复杂真实用户请求和创意写作上的偏好表现。",
+        "用固定 baseline 评估单个模型，例如 your model vs GPT-4.1 / o3-mini / previous checkpoint，得到 win rate 和置信区间。",
+        "复用 BenchBuilder，从自己的 prompt 池或公开数据中筛选更难、更有区分度的评测题。",
+        "给本地 SGLang / vLLM 服务的模型做自动化 benchmark，并生成可浏览的答案和 judge 结果。"
+      ],
+      "setup_note": "基本评测流程是克隆仓库并安装 requirements，然后在 config/api_config.yaml 配置待评模型 endpoint；待评模型可以是 OpenAI-compatible API，也可以由 vLLM / SGLang 本地 serving。之后在 config/gen_answer_config.yaml 添加 model_list，运行 python gen_answer.py 生成答案；再在 config/arena-hard-v2.0.yaml 配置 model_list 和 judge_model，运行 python gen_judgment.py 生成判断；最后用 python show_result.py 输出 win rate 和置信区间。若要做问题质量筛选，可进入 BenchBuilder：先运行 topic_clustering.py，再用 label.py 调 LLM 标注七个 hard criteria，最后用 filter.py 按 prompt_threshold 和 cluster_threshold 过滤。评测成本主要来自待评模型生成和 LLM judge 调用。",
+      "practice_notes": [
+        "官方快速路径：下载 Hugging Face 上预生成的 model answers / judgments 数据，复制到 data 目录后直接运行 python show_result.py 查看 leaderboard。",
+        "评测自有模型：先把模型作为 OpenAI-compatible endpoint 暴露出来，例如用 SGLang 或 vLLM serving，再在 config/api_config.yaml 注册模型。",
+        "生成答案阶段：运行 python gen_answer.py；项目实现了缓存，已有答案会跳过，适合断点续跑。",
+        "生成判断阶段：运行 python gen_judgment.py；可选择 GPT-4.1 或 Gemini-2.5 作为 judge，也可以分别跑多个 judge 后做 ensemble。",
+        "结果查看：python show_result.py --judge-names gpt-4.1 --control-features markdown length 可以输出带 style control 的 win rate；qa_browser.py 可用 Gradio 浏览 prompt、答案和判断。",
+        "如果只有一个模型，也建议补一个固定 baseline 回答一起做 pairwise；项目原生输出的是相对 baseline 的 win rate，不是单回答绝对分。",
+        "问题筛选实践：BenchBuilder 可以用于自己的 prompt 池，但完整复现 Chatbot Arena 原始流量筛题需要对应原始数据访问。",
+        "和 Chatbot Arena Hard Prompts 分类的区别：Hard Prompts 分类主要是在真实 Arena 投票里筛选难题子集；Arena-Hard-Auto 则是一个离线自动 benchmark，用 LLM judge 近似人类偏好。"
+      ],
+      "license": "Apache-2.0",
+      "maintenance": "active",
+      "my_note": "",
+      "related_papers": [],
+      "related_blogs": [
+        "lmsys-hard-prompts-category"
+      ],
+      "status": "approved"
     }
   ]
 }
