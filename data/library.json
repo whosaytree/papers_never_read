@@ -10719,6 +10719,84 @@
           }
         ]
       }
+    },
+    {
+      "id": "ragtruth-hallucination-corpus-2024-acl",
+      "title": "RAGTruth: A Hallucination Corpus for Developing Trustworthy Retrieval-Augmented Language Models",
+      "paper_url": "https://aclanthology.org/2024.acl-long.585/",
+      "pdf_url": "https://aclanthology.org/2024.acl-long.585.pdf",
+      "authors": [
+        "Cheng Niu",
+        "Yuanhao Wu",
+        "Juno Zhu",
+        "Siliang Xu",
+        "KaShun Shum",
+        "Randy Zhong",
+        "Juntong Song",
+        "Tong Zhang"
+      ],
+      "venue": "ACL",
+      "year": 2024,
+      "primary_area": "数据集与基准",
+      "category": "其他",
+      "keywords": [
+        "RAGTruth",
+        "hallucination corpus",
+        "retrieval augmented generation",
+        "RAG evaluation",
+        "word-level annotation",
+        "span-level hallucination",
+        "answer faithfulness",
+        "hallucination detection",
+        "conflict",
+        "baseless information",
+        "trustworthy RAG"
+      ],
+      "labels": [
+        "RAG",
+        "Dataset",
+        "Hallucination",
+        "Evaluation",
+        "Span Annotation",
+        "ACL"
+      ],
+      "code_url": "https://github.com/ParticleMedia/RAGTruth",
+      "note": "",
+      "tldr": "RAGTruth 是一个面向 RAG 场景的幻觉检测语料，对近 18,000 条 RAG 生成回答做 response-level 和 word/span-level 人工标注，用于训练和评估 hallucination detector。",
+      "abstract": "RAGTruth is a corpus for analyzing hallucinations in retrieval-augmented generation. It contains nearly 18,000 naturally generated RAG responses from diverse LLMs across question answering, data-to-text writing, and summarization. The responses are manually annotated at both response and word levels, with hallucination intensity and hallucinated spans. The paper benchmarks hallucination frequencies across LLMs, evaluates hallucination detection methods, and shows that fine-tuning a smaller LLM on RAGTruth can achieve competitive or better detection performance than prompt-based approaches using GPT-4 while also helping mitigate hallucinations in generated responses.",
+      "summary_cn": {
+        "研究动机": "RAG 能缓解 LLM hallucination，但不能消除幻觉。即使模型拿到了检索文档，仍可能生成没有证据支持、与文档矛盾、数字时间实体错误或过度推断的内容。已有幻觉数据集往往不是自然 RAG 输出，或者只做 response-level 标注，无法定位具体哪个 span 出错，因此需要一个面向 RAG 场景、细粒度到词/片段级别的幻觉语料。",
+        "解决问题": "论文解决的是 RAG hallucination 的标注、检测和缓解问题。它构造 RAGTruth，让研究者不仅能判断整条回答是否有幻觉，还能知道具体哪些词或片段是 hallucinated span、属于哪类幻觉，并据此训练 hallucination detector 或 answer reranker。",
+        "现象分析": "RAGTruth 的核心判断是，RAG 幻觉不只是整条回答对错的问题，而是细粒度 grounding 问题。很多错误发生在数字、时间、实体、范围条件、隐含推断或无依据补充上。只做 response-level 判断无法支持精确诊断和过滤；span-level 标注可以直接告诉系统哪个短语和 reference 冲突，哪个信息根本没有证据支持。",
+        "主要方法": "数据覆盖 Question Answering、Data-to-text Writing 和 Summarization 三类 RAG 任务，其中摘要包含 CNN/DailyMail 和 recent news。作者使用 GPT-3.5-turbo-0613、GPT-4-0613、Llama-2-7B-chat、Llama-2-13B-chat、Llama-2-70B-chat、Mistral-7B-Instruct 生成 responses。标注分为 response-level 和 word/span-level 两层：先判断整条回答是否包含 hallucination，再标出具体 hallucinated span、幻觉类型和强度。幻觉类型主要分为 Conflict 与 Baseless Information，并进一步区分 Evident 与 Subtle。",
+        "数据集与实验": "RAGTruth 包含 2,965 个 instances、17,790 条 responses，其中 7,664 条 response 含幻觉，占 43.1%，共标注 14,289 个 hallucination spans。QA 有 5,934 条 response，幻觉率 29.1%；Data-to-text 有 6,198 条 response，幻觉率 68.6%；CNN/DM 摘要幻觉率 30.9%；recent news 摘要幻觉率 27.6%。response-level 两名标注者一致率为 91.8%，span-level 一致率为 78.8%。检测实验中，GPT-4-turbo prompt-based 方法平均 F1 为 63.4%，SelfCheckGPT with GPT-3.5 为 58.8%，用 RAGTruth 微调的 Llama-2-13B response-level 平均 F1 达到 78.7%，span-level 平均 F1 达到 52.7%。",
+        "主要贡献": "论文的主要贡献是构造了近 18,000 条自然生成 RAG responses 的细粒度 hallucination corpus，并证明这些标注可以训练有效 detector。它适合和 RGB、RAGAs、ARES 放在一起：RGB 评测 RAG 能力，RAGAs/ARES 评估 RAG 输出质量，RAGTruth 则标注 RAG 幻觉具体发生在哪里。它也展示了 detector 可用于 answer selection / reranking，从多个回答中选择 hallucination 更少的输出，从而实际降低 RAG 输出幻觉率。"
+      },
+      "status": "approved",
+      "added_at": "2026-05-30",
+      "key_figure": {
+        "type": "Figure",
+        "name": "Corpus",
+        "page": 1,
+        "path": "assets/paper_images/ragtruth-2024-hallucination-corpus.png",
+        "caption": "RAGTruth provides response-level and word/span-level hallucination annotations for nearly 18,000 naturally generated RAG responses across QA, data-to-text writing, and summarization.",
+        "caption_cn": "RAGTruth 为近 18,000 条自然生成的 RAG responses 提供 response-level 和 word/span-level 幻觉标注，覆盖 QA、data-to-text writing 和 summarization 三类任务。",
+        "bbox": {},
+        "caption_bbox": {},
+        "source": "manual-summary-from-paper-corpus",
+        "confidence": 0.9,
+        "needs_manual_review": false,
+        "contexts": [
+          {
+            "page": 1,
+            "text": "RAGTruth comprises nearly 18,000 naturally generated responses from diverse LLMs using RAG with annotations at both individual case and word levels."
+          },
+          {
+            "page": 4,
+            "text": "The hallucination taxonomy includes conflict and baseless information, each with evident and subtle cases."
+          }
+        ]
+      }
     }
   ]
 }
