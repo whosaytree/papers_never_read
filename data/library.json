@@ -10568,6 +10568,83 @@
           }
         ]
       }
+    },
+    {
+      "id": "ares-automated-rag-evaluation-2024-naacl",
+      "title": "ARES: An Automated Evaluation Framework for Retrieval-Augmented Generation Systems",
+      "paper_url": "https://aclanthology.org/2024.naacl-long.20/",
+      "pdf_url": "https://aclanthology.org/2024.naacl-long.20.pdf",
+      "authors": [
+        "Akari Asai",
+        "Zexuan Zhong",
+        "Danqi Chen",
+        "Pang Wei Koh",
+        "Luke Zettlemoyer",
+        "Hannaneh Hajishirzi",
+        "Wen-tau Yih"
+      ],
+      "venue": "NAACL",
+      "year": 2024,
+      "primary_area": "数据集与基准",
+      "category": "其他",
+      "keywords": [
+        "RAG evaluation",
+        "retrieval augmented generation",
+        "ARES",
+        "automated evaluation",
+        "LM judge",
+        "synthetic data generation",
+        "Prediction-Powered Inference",
+        "PPI",
+        "context relevance",
+        "answer faithfulness",
+        "answer relevance"
+      ],
+      "labels": [
+        "RAG",
+        "Evaluation",
+        "LLM-as-a-Judge",
+        "Synthetic Data",
+        "PPI",
+        "NAACL"
+      ],
+      "code_url": "https://github.com/stanford-futuredata/ARES",
+      "note": "",
+      "tldr": "ARES 是一个更严谨的 RAG 自动评估框架：用合成数据训练轻量级 LM judge，再用少量人工标注通过 Prediction-Powered Inference 校正评估结果。",
+      "abstract": "ARES is an automated evaluation framework for Retrieval-Augmented Generation systems. It evaluates RAG outputs along context relevance, answer faithfulness, and answer relevance. Instead of relying only on prompt-based LLM judging, ARES uses synthetic data generation to train lightweight judges and Prediction-Powered Inference to calibrate system-level estimates with a small human-labeled validation set, reducing labeling cost while providing statistically grounded evaluation.",
+      "summary_cn": {
+        "研究动机": "RAG 系统需要评估检索文档是否相关、生成答案是否忠实于文档、答案是否真正回答问题。人工标注成本高，而直接使用 GPT judge 或手写 prompt judge 又容易受提示词、领域迁移和 judge 偏差影响。作者希望构建一种既自动化、又能用少量人工标注校正偏差的 RAG 评估框架。",
+        "解决问题": "论文解决的是如何低成本、可靠地评估 RAG 系统。具体来说，ARES 希望在只有少量人工标注验证集、大量未标注 query-document-answer triples 和少量 few-shot 示例的条件下，评估 RAG 系统在 Context Relevance、Answer Faithfulness、Answer Relevance 三个维度上的表现，并给出统计上更可信的系统级估计。",
+        "现象分析": "ARES 的核心判断是，自动评估不能只依赖大模型 judge 的裸预测。LLM judge 可以扩大评估规模，但它本身有系统偏差；少量人工标注虽然昂贵，但可以用来估计这种偏差。通过 Prediction-Powered Inference，可以把大量自动预测和少量人工标签结合起来，得到比直接 judge 打分更可靠的平均评估结果和置信区间。",
+        "主要方法": "ARES 包含三步。第一，Synthetic Data Generation：根据用户文档和 few-shot 示例生成 query-document-answer triples，并为 context relevance、answer faithfulness、answer relevance 构造正负样本。第二，Fine-tuned Lightweight LM Judges：用合成数据微调轻量级语言模型 judge，每个 judge 作为分类器判断对应维度是否通过。第三，Prediction-Powered Inference：让 judge 在大量未标注 RAG 输出上打分，同时用少量人工标注验证集估计 judge 偏差并校正系统级分数，输出带统计置信的评估结果。",
+        "数据集与实验": "论文在 8 个知识密集型任务上评估 ARES，覆盖 KILT、SuperGLUE 和 AIS 等数据来源，并比较多个 RAG 系统配置。实验表明，ARES 只需要几百个人工标注样本，就能较准确地估计系统表现；经过 PPI 校正后，相比直接使用 LM judge 的预测更可靠。作者还分析了 domain shift，显示训练后的 judge 在 query 类型或 document 类型变化时仍有较好的评估能力。",
+        "主要贡献": "ARES 的主要贡献是把 RAG 自动评估从简单的 prompt-based LLM judge 推进到合成数据训练 judge + 少量人工标注校正的框架。它评估 Context Relevance、Answer Faithfulness、Answer Relevance 三个维度，适合和 RAGAs 对照阅读：RAGAs 更像快速诊断工具，ARES 更适合正式评测和领域迁移，但流程更重，需要合成训练数据、judge 微调和少量人工标注。"
+      },
+      "status": "approved",
+      "added_at": "2026-05-30",
+      "key_figure": {
+        "type": "Figure",
+        "name": "Framework",
+        "page": 1,
+        "path": "assets/paper_images/ares-2024-evaluation-framework.png",
+        "caption": "ARES evaluation framework: synthetic data generation trains task-specific lightweight judges, and Prediction-Powered Inference calibrates system-level RAG evaluation with a small labeled validation set.",
+        "caption_cn": "ARES 评估框架：先用合成数据训练任务定制的轻量级 judge，再用少量人工标注通过 Prediction-Powered Inference 校正系统级 RAG 评估结果。",
+        "bbox": {},
+        "caption_bbox": {},
+        "source": "manual-summary-from-paper-framework",
+        "confidence": 0.9,
+        "needs_manual_review": false,
+        "contexts": [
+          {
+            "page": 1,
+            "text": "ARES combines synthetic data generation with fine-tuned classifiers to evaluate context relevance, answer faithfulness, and answer relevance."
+          },
+          {
+            "page": 1,
+            "text": "ARES employs Prediction-Powered Inference to refine evaluations with statistical confidence using a small human preference validation set."
+          }
+        ]
+      }
     }
   ]
 }
