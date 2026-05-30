@@ -877,6 +877,88 @@
       "related_papers": [],
       "related_blogs": [],
       "status": "approved"
+    },
+    {
+      "id": "ragchecker",
+      "name": "RAGChecker",
+      "repo_url": "https://github.com/amazon-science/RAGChecker",
+      "homepage_url": "https://www.amazon.science/publications/ragchecker-a-fine-grained-framework-for-diagnosing-retrieval-augmented-generation",
+      "docs_url": "https://github.com/amazon-science/RAGChecker/blob/main/tutorial/ragchecker_tutorial_en.md",
+      "demo_url": "",
+      "source": "amazon-science / RAGChecker",
+      "added_at": "2026-05-31",
+      "project_type": "RAG evaluation and diagnostic framework",
+      "domain": "RAG evaluation / Claim-level diagnostics",
+      "tags": [
+        "RAGChecker",
+        "RAG evaluation",
+        "RAG diagnostics",
+        "claim-level checking",
+        "claim-level entailment",
+        "retriever evaluation",
+        "generator evaluation",
+        "hallucination detection",
+        "faithfulness",
+        "context utilization",
+        "LLM-as-a-Judge",
+        "RefChecker",
+        "LlamaIndex integration"
+      ],
+      "stack": [
+        "Python",
+        "spaCy",
+        "LiteLLM",
+        "AWS Bedrock",
+        "OpenAI-compatible LLMs",
+        "Llama 3",
+        "JSON"
+      ],
+      "summary": "RAGChecker 是 Amazon Science 开源的 RAG 自动评测与诊断框架。它不是 RAG 系统、不是 QA 生成器，也不是 benchmark 生成框架；它的核心用途是给定问题、标准答案、RAG 系统回答和检索上下文后，对整个 RAG pipeline 做端到端体检，并进一步拆分出 retrieval 和 generation 两个模块的问题。它通过 claim-level checking 把标准答案和模型回答拆成原子事实，再计算 overall precision/recall/F1、retriever claim recall/context precision，以及 generator 的 context utilization、noise sensitivity、hallucination、self-knowledge、faithfulness 等指标。",
+      "highlights": [
+        "输入格式简单明确：query、gt_answer、response 和 retrieved_context。",
+        "整体评测不只是给一个总分，而是把 RAG 系统拆成端到端表现、检索器表现和生成器表现三层指标。",
+        "核心方法是 claim-level checking：先抽取回答和标准答案中的 atomic claims，再判断这些 claims 是否被标准答案或检索上下文支持。",
+        "Overall metrics 包括 precision、recall 和 F1，用来衡量回答是否正确、是否完整。",
+        "Retriever metrics 包括 claim_recall 和 context_precision，用来衡量检索结果是否覆盖答案事实、是否带来太多无关 chunk。",
+        "Generator metrics 包括 context_utilization、noise_sensitivity_in_relevant、noise_sensitivity_in_irrelevant、hallucination、self_knowledge 和 faithfulness。",
+        "可以定位常见 RAG 失败来源：没检索到、检索到了但没用、被相关噪声误导、被无关噪声干扰、上下文不支持但回答编造、模型凭参数知识作答。",
+        "支持 CLI 和 Python API，也可以通过 LiteLLM 接 Bedrock、OpenAI、SageMaker、自部署 vLLM 等模型作为 claim extractor / checker。",
+        "官方也提供 LlamaIndex 集成，方便把它接到已有 LlamaIndex RAG pipeline 里。",
+        "论文在 NeurIPS 2024 Dataset and Benchmark Track 展示，并给出 4k 级、10 个领域的 RAGChecker benchmark。"
+      ],
+      "use_cases": [
+        "给已有 RAG 系统做端到端评测，快速知道整体回答质量是否达标。",
+        "诊断 RAG 失败到底来自 retriever 还是 generator。",
+        "比较不同 retriever、reranker、chunk size、top-k、prompt 或 generator 组合的效果。",
+        "在 RAG 系统迭代中把 hallucination、faithfulness、context utilization 等指标作为回归测试。",
+        "只想评估回答质量时，可以使用 response + gt_answer 计算 overall precision/recall/F1。",
+        "想评估检索器时，需要提供 gt_answer + retrieved_context。",
+        "想评估生成器是否忠于上下文时，需要提供 response + retrieved_context。",
+        "作为 EnterpriseRAG-Bench、YourBench 或自有 QA benchmark 后面的评测器。"
+      ],
+      "setup_note": "基础安装是 pip install ragchecker，并下载 spaCy 的 en_core_web_sm。使用时先把自己的测试集和 RAG 输出整理成 examples/checking_inputs.json 类似格式：每条包含 query_id、query、gt_answer、response 和 retrieved_context。然后通过 ragchecker-cli 指定 input_path、output_path、extractor_name、checker_name、batch_size 和 metrics；也可以在 Python 里用 RAGResults.from_json(...) 加载数据，再初始化 RAGChecker 并调用 evaluator.evaluate(rag_results, all_metrics)。评测过程会调用 LLM 做 claim extraction 和 claim checking，因此需要配置 Bedrock、OpenAI、SageMaker、自部署 vLLM 或 custom_llm_api_func；如果样本较多，应使用 batch 或异步并发来控制评测时间和成本。",
+      "practice_notes": [
+        "这个项目更像 RAG 系统的端到端体检工具，优点是使用方式简单明确。",
+        "它不负责生成 QA 数据，也不负责构建 RAG；它评估的是已有 RAG pipeline 的输出。",
+        "最小理解方式：给它 question、ground truth answer、RAG answer、retrieved chunks，它就把问题拆成整体质量、检索质量和生成质量三层指标。",
+        "overall precision / recall / F1 只需要 response 和 gt_answer，不需要 retrieved_context，因此也可以当成有标准答案的回答质量评测器。",
+        "retriever 指标需要 gt_answer 和 retrieved_context，因为它要看检索上下文是否覆盖了标准答案里的 claims。",
+        "generator 指标需要 response 和 retrieved_context，因为它要看回答是否真的使用上下文、是否忠于上下文、是否从上下文外编造。",
+        "RAGChecker 的强项是诊断，而不是生产最终排行榜；分项指标比单个总分更有用。",
+        "和 RAGAS 的关系：二者都是 RAG evaluation 框架；RAGChecker 更强调 claim-level 细粒度诊断和 retriever / generator 归因。",
+        "和 EnterpriseRAG-Bench 的关系：EnterpriseRAG-Bench 更像固定企业场景 benchmark 数据集和评测 harness；RAGChecker 是可接入任意 QA + RAG 输出的通用评测器。",
+        "和 YourBench 的关系：YourBench 从用户文档生成 benchmark；RAGChecker 用已有 benchmark 和 RAG 输出计算指标。",
+        "和 FastChat LLM Judge 的关系：FastChat Judge 更偏通用回答偏好/打分；RAGChecker 专门面向 RAG，会把 retrieved context 纳入诊断。",
+        "它的结果依赖 claim extractor / checker 的 LLM 能力，因此评测不是完全无偏的确定性指标；生产使用时仍应抽样人工复核。"
+      ],
+      "license": "Apache-2.0",
+      "maintenance": "active",
+      "my_note": "这个项目更像 RAG 系统的端到端体检工具，优点是使用方式简单明确：只要准备问题、标准答案、RAG 回答和检索上下文，就能同时看到整体回答质量、检索器覆盖情况、生成器是否利用上下文以及是否幻觉。它不是负责生成数据或构建 RAG，而是把已有 RAG pipeline 的输出做结构化诊断。",
+      "related_papers": [
+        "ragchecker-fine-grained-rag-diagnostics-2024-neurips"
+      ],
+      "related_blogs": [],
+      "status": "approved"
     }
   ]
 }
