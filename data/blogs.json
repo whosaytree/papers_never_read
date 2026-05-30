@@ -123,6 +123,93 @@
       "status": "approved"
     },
     {
+      "id": "lmsys-arena-hard-pipeline",
+      "title": "From Live Data to High-Quality Benchmarks: The Arena-Hard Pipeline",
+      "url": "https://www.lmsys.org/blog/2024-04-19-arena-hard/",
+      "source": "LMSYS Blog",
+      "published_at": "2024-04-19",
+      "added_at": "2026-05-30",
+      "tags": [
+        "Arena-Hard",
+        "Chatbot Arena",
+        "LLM evaluation",
+        "benchmark construction",
+        "LLM-as-a-Judge",
+        "Bradley-Terry model",
+        "separability",
+        "human preference",
+        "BenchBuilder"
+      ],
+      "summary": "这篇 LMSYS 博客介绍 Arena-Hard Pipeline，目标是从 Chatbot Arena 的真实用户请求中构造一个高质量、低成本、可频繁更新的 LLM benchmark。作者认为聊天模型 benchmark 应该同时满足三点：与真实人类偏好一致、能够稳定地区分模型、题目足够新鲜以减少 test leakage。为此，他们从约 200,000 条 Arena 用户 query 出发，先用 embedding、UMAP、HDBSCAN、BERTopic 等方法做 topic clustering，再用 LLM judge 按 specificity、domain knowledge、complexity、problem-solving、creativity、technical accuracy、real-world application 七个标准给 prompt 打分。最终选择高分 topic cluster，每个 cluster 抽样 prompt，形成 500 条 Arena-Hard-Auto-v0.1 benchmark prompts。评估阶段采用 LLM-as-a-Judge 的 pairwise comparison：待评模型和 GPT-4-0314 baseline 在同一 prompt 上生成回答，由 GPT-4-Turbo 或 Claude-3-Opus 作为 judge 判断 A/B 谁更好，并输出五档偏好标签。为了减轻 position bias，每个 prompt 会交换 A/B 顺序做两次判断。最后使用 Bradley-Terry 模型聚合所有比较结果，并通过 bootstrap 计算 95% confidence interval。文章强调，benchmark 不应只看 Spearman correlation 或单一排名，还要看 separability，即能否在置信区间意义上稳定地区分模型。",
+      "key_points": [
+        "这篇文章不是只发布一个 leaderboard，而是在讲如何从真实 Arena 流量中生产一个可复现、低成本、可更新的自动 benchmark。",
+        "作者提出三个 benchmark 目标：agreement to human preference、separability 和 freshness，分别对应贴近真实偏好、能区分模型、避免过拟合或测试集泄漏。",
+        "Arena-Hard Pipeline 先从约 200,000 条 Chatbot Arena 用户 query 出发，通过 topic modeling 保证题目覆盖多样领域。",
+        "Topic clustering 使用 embedding、UMAP、HDBSCAN、BERTopic 等工具，并由 GPT-4-Turbo 总结 topic。",
+        "Prompt quality scoring 使用七个标准筛题：具体性、领域知识、复杂性、问题求解、创造性、技术准确性和真实世界应用。",
+        "最终 Arena-Hard-Auto-v0.1 选取 250 个高质量 topic cluster，每个 cluster 抽 2 条 prompt，形成 500 条 benchmark prompts。",
+        "回答质量评估使用 LLM-as-a-Judge 的 pairwise comparison：待评模型对比 GPT-4-0314 baseline，由强 judge 模型给出五档偏好判断。",
+        "每个 prompt 交换 A/B 位置做两次判断，用来减轻 position bias；最终每个模型评估包含 1000 次 judgments。",
+        "最终分数不是简单 win rate，而是用 Bradley-Terry 模型聚合比较结果，再用 bootstrap 计算置信区间。",
+        "文章明确讨论了局限：LLM judge 可能有 verbosity bias、自我偏好、prompt selection bias，不同 judge 的打分风格也可能不同。"
+      ],
+      "standards": [
+        {
+          "name": "Agreement",
+          "description": "benchmark 的模型排序是否和 Chatbot Arena 人类偏好排序一致。"
+        },
+        {
+          "name": "Separability",
+          "description": "benchmark 是否能在置信区间意义上稳定地区分模型，而不是只给出一个不确定的排名。"
+        },
+        {
+          "name": "Freshness",
+          "description": "题目是否足够新鲜、可频繁更新，以降低 test leakage 和 benchmark overfitting。"
+        },
+        {
+          "name": "Prompt quality",
+          "description": "通过七个标准筛出更具体、更复杂、更贴近真实任务、也更能拉开模型差距的 prompt。"
+        },
+        {
+          "name": "LLM-as-a-Judge",
+          "description": "用强模型近似人类偏好判断，降低评测成本，但需要注意 judge bias 和 verbosity bias。"
+        },
+        {
+          "name": "Bradley-Terry + bootstrap",
+          "description": "用 pairwise judgments 聚合模型强度，并通过 bootstrap 给出不确定性。"
+        }
+      ],
+      "quotes": [
+        {
+          "text": "Agreement to Human preference",
+          "note": "核心指标之一：自动 benchmark 要尽量贴近真实用户偏好。"
+        },
+        {
+          "text": "Separability",
+          "note": "这篇文章最重要的统计视角：benchmark 要能有置信度地区分模型。"
+        },
+        {
+          "text": "Freshness",
+          "note": "强调 benchmark 需要持续更新，避免被模型训练或调参过拟合。"
+        },
+        {
+          "text": "500 high-quality benchmark prompts",
+          "note": "Arena-Hard-Auto-v0.1 的最终题目规模。"
+        },
+        {
+          "text": "LLM as a judge",
+          "note": "评估阶段用强模型近似专家或人类偏好判断。"
+        },
+        {
+          "text": "Viewing Benchmarking as a Forecasting Problem",
+          "note": "把 benchmark 看作对真实长期人类偏好的低成本预测器。"
+        }
+      ],
+      "my_note": "这篇对我有价值的地方在于，它把“真实用户偏好”转化成了一个可复现的自动评测流程：Chatbot Arena 提供真实分布，prompt scoring 负责筛出有区分度的难题，LLM-as-a-Judge 降低评测成本，Bradley-Terry 和 bootstrap 提供排名与不确定性。它和 Hard Prompts、Style Control 可以合在一起看：Hard Prompts 讨论什么样的问题更难，Arena-Hard Pipeline 把难题筛选和自动评测工程化，Style Control 则进一步提醒偏好票里可能混入长度、Markdown 等风格因素。对后续研究 LLM evaluation / RLHF / RLVR 来说，这篇更适合作为 benchmark 构造方法论，而已有的 Arena-Hard-Auto 项目页则负责记录工具如何运行和复现实验。",
+      "related_papers": [],
+      "status": "approved"
+    },
+    {
       "id": "lmsys-arena-style-control",
       "title": "Does style matter? Disentangling style and substance in Chatbot Arena",
       "url": "https://www.lmsys.org/blog/2024-08-28-style-control/",
