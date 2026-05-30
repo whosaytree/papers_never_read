@@ -343,6 +343,68 @@
         "lmsys-hard-prompts-category"
       ],
       "status": "approved"
+    },
+    {
+      "id": "lookahead-decoding",
+      "name": "LookaheadDecoding",
+      "repo_url": "https://github.com/hao-ai-lab/LookaheadDecoding",
+      "homepage_url": "https://www.lmsys.org/blog/2023-11-21-lookahead-decoding/",
+      "docs_url": "https://github.com/hao-ai-lab/LookaheadDecoding",
+      "demo_url": "",
+      "source": "hao-ai-lab / LookaheadDecoding",
+      "added_at": "2026-05-30",
+      "project_type": "decoding algorithm",
+      "domain": "LLM inference acceleration / Parallel decoding",
+      "tags": [
+        "Lookahead Decoding",
+        "LLM inference",
+        "parallel decoding",
+        "Jacobi decoding",
+        "n-gram verification",
+        "teacher forcing verification",
+        "speculative decoding alternative",
+        "FlashAttention",
+        "Hugging Face Transformers"
+      ],
+      "stack": [
+        "Python",
+        "PyTorch",
+        "Hugging Face Transformers",
+        "FlashAttention",
+        "CUDA"
+      ],
+      "summary": "LookaheadDecoding 是一个用于加速 LLM 自回归生成的并行解码算法实现。它不是训练框架，也不需要 draft model；核心思路是用同一个大模型在未来窗口里并行试探 n-gram 候选，再用 teacher forcing 式的一次并行验证判断候选是否符合原模型的标准 greedy 解码，从而把多轮串行 decode forward 压缩成较少轮更宽的 forward。",
+      "highlights": [
+        "本质是推理阶段的 decoding 加速，不涉及训练，也不会更新模型权重。",
+        "不需要额外训练 draft model，也不依赖外部 datastore。",
+        "和 speculative decoding 一样有“猜测 + 验证”的味道，但猜测来自原始模型的 Jacobi decoding 轨迹，而不是单独的小模型。",
+        "Lookahead branch 负责在二维窗口中并行生成未来 n-gram 候选，verification branch 负责验证候选 n-gram。",
+        "验证不是把候选 token 一个个重新跑多次完整前向，而是把候选 n-gram 一次性作为输入，用 causal mask / teacher forcing 同时得到每个位置的 next-token logits。",
+        "如果候选 A B C 被验证通过，就可以一次性把 A B C 追加到输出里；如果只匹配 A B，就只前进两个 token，失败时退化到普通单 token 前进。",
+        "收益来自用一次更宽的 forward 替代多次串行 decode forward；它通常会增加单步计算量，但可能减少总串行轮数和 latency。",
+        "官方报告在单 GPU 场景下可获得约 1.5x-2.3x latency speedup；论文摘要中还报告代码补全多 GPU strong scaling 场景最高约 4x。"
+      ],
+      "use_cases": [
+        "理解不依赖 draft model 的 LLM decoding 加速路线。",
+        "对比 Lookahead Decoding、SpecForge / EAGLE speculative decoding、Medusa、Jacobi decoding 等推理加速方法。",
+        "在 Hugging Face Transformers generate 流程里实验并行解码加速。",
+        "研究用额外 FLOPs 换更少 sequential steps / 更低 latency 的推理系统 tradeoff。",
+        "在代码生成、长回复和低延迟 chatbot 场景中评估 decoding step 压缩收益。"
+      ],
+      "setup_note": "项目可通过 pip install lade 安装，也可从源码安装 requirements 后 pip install -e .。最小示例中，普通生成运行 python minimal.py；启用 lookahead decoding 可使用 USE_LADE=1 LOAD_LADE=1 python minimal.py。接入自有代码时需要 import lade、lade.augment_all()、lade.config_lade(...)，并设置 USE_LADE=1。关键参数包括 LEVEL、WINDOW_SIZE 和 GUESS_SET_SIZE，需要按模型、硬件和 latency 目标调参；如使用 FlashAttention，还需要安装对应的 flash-attention-lookahead 版本并启用 USE_FLASH。",
+      "practice_notes": [
+        "官方最小实践：运行 minimal.py 对比普通 generate 和 USE_LADE=1 LOAD_LADE=1 的 lookahead decoding，README 中给出的 LLaMA 示例约 1.6x speedup。",
+        "官方聊天实践：用 applications/chatbot.py 加载 Llama-2-7b-chat-hf，通过 USE_LADE=1 / USE_LADE=0 对比开启和关闭 lookahead 的交互体验。",
+        "自有代码接入路径：在 Hugging Face Transformers 生成前调用 lade.augment_all() 和 lade.config_lade(...)，之后仍使用 model.generate(...)。",
+        "实践上更适合本地或自部署模型；如果使用闭源 API，通常无法改它的 decoding internals，因此不能直接接入。",
+        "和 SpecForge 的实践成本不同：LookaheadDecoding 省掉 draft model 训练，但需要模型实现适配和解码参数调优；SpecForge 需要训练或选择 draft model，但更接近服务框架中的 speculative decoding 路径。"
+      ],
+      "license": "Apache-2.0",
+      "maintenance": "stable / research prototype",
+      "my_note": "",
+      "related_papers": [],
+      "related_blogs": [],
+      "status": "approved"
     }
   ]
 }
