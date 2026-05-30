@@ -626,6 +626,77 @@
       "related_papers": [],
       "related_blogs": [],
       "status": "approved"
+    },
+    {
+      "id": "yourbench",
+      "name": "YourBench",
+      "repo_url": "https://github.com/huggingface/yourbench",
+      "homepage_url": "https://huggingface.co/yourbench",
+      "docs_url": "https://github.com/huggingface/yourbench/tree/main/docs",
+      "demo_url": "https://huggingface.co/spaces/yourbench/demo",
+      "source": "huggingface / yourbench",
+      "added_at": "2026-05-30",
+      "project_type": "benchmark generation framework",
+      "domain": "LLM evaluation / Custom benchmark generation",
+      "tags": [
+        "YourBench",
+        "Hugging Face",
+        "LLM evaluation",
+        "custom benchmark",
+        "synthetic QA",
+        "single-hop question",
+        "multi-hop question",
+        "cross-document question",
+        "citation grounding",
+        "LightEval",
+        "Hugging Face Datasets"
+      ],
+      "stack": [
+        "Python",
+        "Pydantic",
+        "Hugging Face Datasets",
+        "LightEval",
+        "OpenAI-compatible API",
+        "uv",
+        "YAML"
+      ],
+      "summary": "YourBench 是 Hugging Face OpenEvals 团队推出的自定义 LLM benchmark 生成框架。它可以从用户自己的 PDF、Word、HTML 或文本文件中生成领域相关的 QA 评测集，覆盖 single-hop、multi-hop 和 cross-document 问题，并保留 citations、source chunks、ground truth answer、difficulty、question category 等字段。它的目标不是训练模型，也不是直接构建 RAG 系统，而是帮助用户用自己的真实资料快速生成 benchmark，从而比较不同模型在特定领域或任务上的表现。",
+      "highlights": [
+        "解决的问题是：通用 benchmark 可能过时、被污染或与真实业务不匹配，用户需要基于自己的文档生成定制化评测集。",
+        "输入是 source documents，例如 PDF、Word、HTML、Markdown、纯文本等。",
+        "输出是结构化 benchmark dataset，可以保存到本地，也可以推送到 Hugging Face Hub。",
+        "核心 pipeline 包括 ingestion、summarization、chunking、single-hop question generation、multi-hop question generation、cross-document question generation、deduplication、analysis 和 export。",
+        "支持自定义 Pydantic schema，因此问题/答案格式可以从默认 QA 扩展成多选题、带难度、带类别或业务自定义字段。",
+        "生成样本包含 citations，用来追踪问题和答案是否有源文档依据。",
+        "支持 citation score filtering 和 embedding-based deduplication，用于过滤不够 grounded 或重复的问题。",
+        "可输出 LightEval 兼容格式，方便直接跑模型评测和排行榜。",
+        "支持不同 pipeline 阶段使用不同模型，也支持 OpenAI-compatible endpoint、本地 vLLM / Ollama 等接入方式。",
+        "论文报告用少量 source text 复现 7 个 MMLU 子集，总推理成本低于 15 美元，并保持原 benchmark 的模型相对排序。"
+      ],
+      "use_cases": [
+        "从企业内部文档、产品手册、技术文档、政策文件或领域资料中生成专属模型评测集。",
+        "比较多个 LLM 在自己业务资料上的真实表现，而不是只看 MMLU、Arena、MT-Bench 等通用榜单。",
+        "为模型选型、模型升级、prompt 改动或 RAG 系统改动建立离线 regression benchmark。",
+        "生成 single-hop、multi-hop、cross-document 问题，测试模型是否能理解单段信息、跨段推理和跨文档关联。",
+        "把生成结果推到 Hugging Face Hub，配合 LightEval 或 leaderboard 做可复现评测。",
+        "用 citations 和 source chunks 人工抽检生成题目是否真正 grounded。"
+      ],
+      "setup_note": "基本使用方式是安装 Python 3.12+ 环境，然后通过 uvx --from yourbench yourbench run example/default_example/config.yaml --debug 直接运行示例，或 pip install yourbench 后运行 yourbench run config.yaml。最小配置需要 hf_configuration、model_list 和 pipeline，其中 pipeline 至少包含 ingestion、summarization、chunking、single_hop_question_generation、prepare_lighteval 等阶段。用户把文档放入 source_documents_dir，配置模型 API key 后即可生成 benchmark。若要控制输出格式，可以在 question generation 阶段指定 question_schema，schema 文件需要导出 Pydantic DataFormat class。",
+      "practice_notes": [
+        "它和 RAGAS testset generation 很像，都是从文档生成评测数据；但 RAGAS 更偏 RAG pipeline metrics，YourBench 更偏模型 benchmark 和模型选型。",
+        "YourBench 的 prepared_lighteval 子集会统一 single-hop、multi-hop 和 cross-document 问题，并包含 question、ground_truth_answer、gold、choices、kind、estimated_difficulty、citations、chunks、document_summary 等字段。",
+        "single-hop 问题只依赖一个 chunk；multi-hop 问题依赖同一文档内多个 chunk；cross-document 问题依赖多个不同文档的 chunk。",
+        "citations 是它比较重要的质量控制信号：每道题会带源文档摘录，后续可以用 citation_score 判断答案和引用是否足够匹配。",
+        "如果你的目标是评估 RAG 检索器和生成器，RAGAS 接 metrics 更直接；如果你的目标是给自己的领域文档生成一套模型 benchmark，YourBench 更完整。",
+        "长文档场景下，成本和速度主要取决于文档数量、chunk 数、生成题目数量、是否开启 multi-hop / cross-document、以及使用的生成模型。",
+        "生成出的 benchmark 仍然是 synthetic data，不等于人工 gold benchmark；重要场景下需要人工抽样检查问题质量、答案正确性和 citation grounding。"
+      ],
+      "license": "Apache-2.0",
+      "maintenance": "active",
+      "my_note": "",
+      "related_papers": [],
+      "related_blogs": [],
+      "status": "approved"
     }
   ]
 }
