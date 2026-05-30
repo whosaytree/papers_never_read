@@ -332,6 +332,63 @@
       "my_note": "这篇对我后续有价值的地方在于，它把“让一个大模型在某类硬件上跑得快”拆得很具体：量化格式、并行策略、attention KV layout、MoE kernel、operator fusion、图片解码、IPC 和 ViT 并行都会影响最终 TTFT/TPOT。它也提醒我，推理优化不是一个抽象的 SGLang 开关，而是模型结构、硬件特性、ROCm/AITER kernel、数据链路和业务负载共同决定的系统工程。和之前 DeepSeek-V4、HiSparse、GB300 long-context 这些材料放在一起看，可以形成一条更清晰的线索：模型发布后真正能服务线上用户，往往还需要大量硬件后端和 serving stack 适配。",
       "related_papers": [],
       "status": "approved"
+    },
+    {
+      "id": "lmsys-int4-qat-rl-rollout",
+      "title": "Squeezing 1TB Model Rollout into a Single H200: INT4 QAT RL End-to-End Practice",
+      "url": "https://www.lmsys.org/blog/2026-01-26-int4-qat/",
+      "source": "LMSYS Blog",
+      "published_at": "2026-01-26",
+      "added_at": "2026-05-30",
+      "tags": [
+        "SGLang",
+        "slime",
+        "Miles",
+        "INT4 QAT",
+        "RL training",
+        "rollout",
+        "train-infer consistency",
+        "W4A16",
+        "quantization",
+        "MoE"
+      ],
+      "summary": "这篇 LMSYS 技术分享介绍了在大规模 LLM RL 中如何用 INT4 Quantization-Aware Training (QAT) 构建低成本、低显存、且 train-infer 行为一致的 rollout pipeline。它的目标不是普通离线量化，而是在 RL 闭环中让训练端提前适应 INT4 推理噪声：训练侧保留 BF16 master weights，在 forward 中插入 fake quantization/QDQ 来模拟 INT4 误差，并用 STE 让梯度穿过不可导的 rounding；权重更新侧把 Megatron/HuggingFace 风格权重动态转换为 SGLang Marlin INT4 kernel 所需的 packed/permuted 格式；推理侧则用 SGLang W4A16，即 INT4 weights + BF16 activations，执行 rollout。文章的关键结论是，训练侧 fake quantization 和推理侧 real INT4 quantization 必须成对启用：只做 PTQ 会造成严重 train-infer mismatch，而 QAT 后再用 BF16 rollout 也会因为移除量化噪声而产生分布偏移。INT4 在 H 系列 GPU 上没有原生 INT4 Tensor Core，因此主要收益不是 compute 加速，而是权重显存和带宽压缩，使 1TB 级 MoE 模型可以减少甚至绕开跨节点 rollout 通信瓶颈。",
+      "key_points": [
+        "这篇文章关注的是 RL 训练闭环里的 rollout 推理，而不是普通模型部署或离线 PTQ。",
+        "INT4 QAT 的核心目的不是单纯把模型压小，而是让训练阶段提前适应推理阶段的 INT4 量化误差，从而保持 train-infer consistency。",
+        "训练侧维护 BF16 master weights，并在 forward 中使用 fake quantization/QDQ 注入 INT4 量化噪声；backward 通过 STE 让梯度直接穿过 rounding 操作。",
+        "文章的 ablation 说明 QAT 和 INT4 inference 必须配套：QAT training + BF16 rollout 会移除模型已经补偿的噪声，no-QAT training + INT4 rollout 则相当于 PTQ，会造成更严重分布偏移。",
+        "权重更新阶段要解决训练格式和推理格式之间的 gap：训练输出接近标准权重格式，而 SGLang Marlin INT4 kernel 需要 packed/permuted 的高效内存格式。",
+        "SGLang 通过 restore_weights_before_loading、post_process_weights、gptq_marlin_moe_repack 等机制，在频繁 RL weight update 中动态完成格式恢复和推理格式转换。",
+        "推理侧采用 W4A16：权重以 INT4 packed format 存储，activation 仍用 BF16，底层主要依赖 BF16 Tensor Cores。",
+        "在 H200/H 系列 GPU 上，INT4 没有原生 INT4 Tensor Core，所以相对 FP8 的逐步 latency 优势有限；它真正重要的收益是显存压缩和减少跨节点通信。",
+        "对于 Kimi-K2/Qwen3-235B 这类 1TB 级 MoE 模型，INT4 可以让 rollout 从跨节点转向单节点或更少节点，从系统层面显著降低通信瓶颈和 rollout 成本。"
+      ],
+      "quotes": [
+        {
+          "text": "fake quantization during training with real quantization at inference",
+          "note": "概括了这篇文章最核心的 QAT 闭环：训练模拟量化，推理真实量化。"
+        },
+        {
+          "text": "train–infer consistency comparable to BF16",
+          "note": "说明评价重点不是只看压缩率，而是 RL rollout 和 training 行为是否对齐。"
+        },
+        {
+          "text": "training-side fake quantization and inference-side real quantization must be enabled together",
+          "note": "这是文章最重要的经验结论：QAT 和 INT4 rollout 不能拆开使用。"
+        },
+        {
+          "text": "single-node rollout for ~1TB-scale models",
+          "note": "点明 INT4 的系统价值：显存压缩后可以绕开跨节点 rollout 通信。"
+        },
+        {
+          "text": "H-series GPUs do not have native INT4 Tensor Cores",
+          "note": "解释为什么这篇里的 INT4 主要提升显存/带宽与通信，而不是直接带来原生 INT4 计算加速。"
+        }
+      ],
+      "my_note": "这篇对我有价值的地方在于，它把量化问题放回了 RL 系统闭环里：rollout engine 不是一个独立推理服务，而是 policy training 的一部分。如果 rollout 端因为 INT4 量化和训练端 BF16 行为不一致，RL 看到的 logprob、KL 和生成分布都会漂移，训练稳定性会受到影响。因此这里的 QAT 不是普通压缩技巧，而是为了让低比特 rollout 不破坏 RL 训练语义。和 P2P weight transfer、DeepSeek-V4 Day-0、Miles 这些材料连起来看，这篇补上的是 rollout engine 本身如何低成本运行：P2P 解决权重怎么同步，Miles/SGLang 解决大模型 RL 框架和推理后端怎么协同，INT4 QAT 则解决 rollout 推理怎样在显存/通信成本下降的同时保持 train-infer consistency。",
+      "related_papers": [],
+      "status": "approved"
     }
   ]
 }
