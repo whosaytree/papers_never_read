@@ -805,9 +805,9 @@ def markdown_to_html(markdown: str) -> str:
     return "\n".join(html)
 
 
-def build_note_pages(papers: list[dict]) -> None:
-    for paper in papers:
-        note = paper.get("analysis_note") or {}
+def build_note_pages(items: list[dict], default_title: str = "论文笔记", back_label: str = "返回论文库") -> None:
+    for item in items:
+        note = item.get("analysis_note") or {}
         source = safe_text(note.get("source"), "")
         url = safe_text(note.get("url"), "")
         if not source or not url:
@@ -818,7 +818,7 @@ def build_note_pages(papers: list[dict]) -> None:
             continue
         output_path.parent.mkdir(parents=True, exist_ok=True)
         markdown = source_path.read_text(encoding="utf-8")
-        title = escape(safe_text(note.get("title"), paper.get("title") or "论文笔记"))
+        title = escape(safe_text(note.get("title"), item.get("title") or default_title))
         html = markdown_to_html(markdown)
         output_path.write_text(
             f"""<!doctype html>
@@ -831,7 +831,7 @@ def build_note_pages(papers: list[dict]) -> None:
 </head>
 <body>
   <main>
-    <a class="back" href="../index.html">返回论文库</a>
+    <a class="back" href="../index.html">{escape(back_label)}</a>
     <article>{html}</article>
   </main>
 </body>
@@ -876,6 +876,7 @@ def blog_search_blob(post: dict) -> str:
         ),
         " ".join(quote_parts),
         post.get("my_note", ""),
+        (post.get("analysis_note") or {}).get("title", ""),
         " ".join(post.get("related_papers", [])),
     ]
     return " ".join(part for part in parts if part)
@@ -1020,6 +1021,9 @@ def blog_card(post: dict, papers_by_id: dict[str, dict]) -> str:
     standards = post.get("standards", [])
     quotes = post.get("quotes", [])
     related_papers = post.get("related_papers", [])
+    analysis_note = post.get("analysis_note") or {}
+    analysis_note_url = (analysis_note.get("url") or "").strip()
+    analysis_note_title = safe_text(analysis_note.get("title"), "详细笔记")
     tag_html = "".join(f'<span class="badge">{escape(item)}</span>' for item in tags)
     points_html = "".join(f"<li>{escape(item)}</li>" for item in key_points)
     standards_html = "".join(
@@ -1039,6 +1043,11 @@ def blog_card(post: dict, papers_by_id: dict[str, dict]) -> str:
         related_html.append(
             f'<a class="badge label" href="{escape(safe_text(paper.get("paper_url"), "#"))}" target="_blank" rel="noreferrer">{escape(label)}</a>'
         )
+    analysis_note_html = (
+        f'<a class="note-link" href="{escape(analysis_note_url)}" target="_blank" rel="noreferrer">{escape(analysis_note_title)}</a>'
+        if analysis_note_url
+        else "暂无详细笔记"
+    )
     return f"""
 <article class="blog" data-search="{escape(blog_search_blob(post))}" data-has-related="{str(bool(related_papers)).lower()}" data-has-quotes="{str(bool(quotes)).lower()}">
   <div class="blog-title"><a href="{url}" target="_blank" rel="noreferrer">{title}</a></div>
@@ -1057,6 +1066,10 @@ def blog_card(post: dict, papers_by_id: dict[str, dict]) -> str:
   <div class="blog-block">
     <h4>我的备注</h4>
     <div class="blog-summary">{my_note}</div>
+  </div>
+  <div class="blog-block">
+    <h4>详细笔记</h4>
+    <div class="related-links">{analysis_note_html}</div>
   </div>
   <div class="blog-block">
     <h4>关联论文</h4>
@@ -1404,7 +1417,8 @@ def main() -> None:
     projects = load_projects()
     ensure_output_dir()
     copy_assets()
-    build_note_pages(library.get("papers", []))
+    build_note_pages(library.get("papers", []), default_title="论文笔记", back_label="返回论文库")
+    build_note_pages(blogs.get("posts", []), default_title="技术分享笔记", back_label="返回论文库")
     OUTPUT_FILE.write_text(render_page(library, blogs, projects), encoding="utf-8")
     print(f"Built {OUTPUT_FILE.relative_to(ROOT)}")
 

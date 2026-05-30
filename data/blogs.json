@@ -47,6 +47,97 @@
       "status": "approved"
     },
     {
+      "id": "redhat-sdg-hub-rag-evaluation",
+      "title": "Synthetic data for RAG evaluation: Why your RAG system needs better testing",
+      "url": "https://developers.redhat.com/articles/2026/02/23/synthetic-data-rag-evaluation-why-your-rag-system-needs-better-testing",
+      "source": "Red Hat Developer",
+      "published_at": "2026-02-23",
+      "added_at": "2026-05-30",
+      "tags": [
+        "RAG evaluation",
+        "synthetic data",
+        "SDG Hub",
+        "ground truth context",
+        "retrieval evaluation",
+        "faithfulness",
+        "question generation",
+        "groundedness filtering",
+        "RAGAs"
+      ],
+      "summary": "这篇 Red Hat Developer 博客介绍 SDG Hub 的 RAG Evaluation Dataset Flow。它的核心不是泛泛论证 RAG 为什么需要评测，而是给出一个开源工程流程：输入知识库中的 `document` 和对应的 `document_outline`，通过一串 YAML-defined blocks 生成 `question`、`response` 和 `ground_truth_context`，再把这批数据用于 RAG pipeline 的离线评测。公开仓库显示，这个 flow 并没有使用复杂的检索聚类或人工标注流程，而是用 LLM prompt 串联完成 topic extraction、question generation、question evolution、answer generation、groundedness filtering 和 context extraction。具体来说，topic extraction 让 LLM 从单个 document 中输出一个 specific topic；question generation 基于 document、outline 和 topic 生成一个只能由原文回答的 reasoning question；question evolution 将问题改写得更短、更间接；answer generation 要求答案完全基于 context；groundedness critic 对 answer 相对 context 打 1-5 分，只保留 4 或 5 分样本；context extraction 最后从原始 context 中逐句抽取能支撑答案的 exact sentences，作为 `ground_truth_context`。",
+      "key_points": [
+        "SDG Hub 是 Red Hat AI Innovation Team 开源的 synthetic data generation 框架，RAG evaluation flow 的代码、YAML 和 prompts 都在 GitHub 仓库中。",
+        "这篇博客对应的不是独立论文，而是 Red Hat Developer 文章、SDG Hub 文档、GitHub flow 配置和 OpenShift AI 文档中的工程能力。",
+        "RAG Evaluation Dataset Flow 的输入要求是 `document` 和 `document_outline` 两列；其中 `document` 应尽量对应线上 RAG 的 chunk、section 或文档片段。",
+        "flow 开始会把 `document` 复制成 `context`，后续 answer generation、critic 和 context extraction 都围绕这个 context 运行。",
+        "Topic extraction 的公开实现是 LLM prompt：从 document 中识别一个 specific topic，并且只输出 topic。",
+        "Question generation 使用 document、document_outline 和 topic，要求生成一个 reasoning question，且只能用给定文本回答。",
+        "Question evolution 的实现比博客描述更简单：它把问题改写得更 indirect、更 compressed、更 short，可使用 abbreviation，但必须保持核心含义可回答。",
+        "Groundedness filtering 使用 LLM critic 对 context/question/answer 打 1-5 分，flow 只保留 4 或 5 分样本。",
+        "Context extraction 使用 extractive prompt，从原始 context 中逐句复制能回答问题的 exact sentences，形成 `ground_truth_context`。",
+        "和 RAGAs 的关系是互补的：SDG Hub 更关注 evaluation dataset 怎么生成，RAGAs 更关注已有 question/answer/context 后如何计算 faithfulness、answer relevance、context relevance 等指标。"
+      ],
+      "standards": [
+        {
+          "name": "输入",
+          "description": "`document` 是待检索的知识单元，`document_outline` 是意图级标题或摘要，用来引导问题生成。"
+        },
+        {
+          "name": "生成主线",
+          "description": "LLM 依次生成 topic、conceptual question、evolved question 和 grounded answer。"
+        },
+        {
+          "name": "过滤标准",
+          "description": "LLM critic 给 groundedness 打 1-5 分，只保留 4 或 5 分。"
+        },
+        {
+          "name": "输出",
+          "description": "最终列名是 `question`、`response` 和 `ground_truth_context`，可进一步接入 RAG evaluation framework。"
+        },
+        {
+          "name": "定位",
+          "description": "它是 RAG 离线测试集生成器和 regression test 工具，不是最终用户满意度评估，也不是 RAG 评测理论论文。"
+        }
+      ],
+      "quotes": [
+        {
+          "text": "RAG Evaluation Dataset Flow",
+          "note": "这是 SDG Hub 中对应的内置 flow 名称。"
+        },
+        {
+          "text": "question-answer-context triplets",
+          "note": "文章对最终数据形态的概括；公开 flow 最终字段为 question、response、ground_truth_context。"
+        },
+        {
+          "text": "Topic extraction",
+          "note": "公开实现是 LLM 从 document 中抽一个 specific topic，而不是复杂聚类算法。"
+        },
+        {
+          "text": "Question evolution",
+          "note": "公开 prompt 主要做压缩和间接化，不是复杂多轮问题演化。"
+        },
+        {
+          "text": "Groundedness filtering",
+          "note": "真实实现是 critic 打分后只保留 4/5 分样本。"
+        },
+        {
+          "text": "gold reference context",
+          "note": "RAG 评测的关键：知道标准证据片段后，才能单独评估检索是否命中。"
+        }
+      ],
+      "my_note": "这篇对我有价值的地方在于，它把 RAG evaluation dataset generation 的工程细节暴露出来了：不是只说“用 LLM 生成测试题”，而是明确每个测试题都要绑定一个可以验证的 source context。看完公开 flow 后，我需要修正一个理解：它的 question evolution 不是复杂的多样化增强，而主要是把问题压缩、间接化；真正的质量门禁在 groundedness critic 和后面的 extractive context extraction。和 RAGAs、ARES、RGB 放在一起看，这篇的位置更偏数据生成和回归测试：RAGAs 评估已有 RAG 输出，ARES 训练和校正 judge，RGB 定义 RAG 能力缺陷，而 SDG Hub 这篇解决的是如何从自己的知识库中持续生成带 gold context 的离线测试集。",
+      "analysis_note": {
+        "title": "详细笔记：SDG Hub RAG Evaluation Dataset Flow",
+        "source": "docs/blog_notes/redhat-sdg-hub-rag-evaluation.md",
+        "url": "blog_notes/redhat-sdg-hub-rag-evaluation.html"
+      },
+      "related_papers": [
+        "ragas-automated-rag-evaluation-2024-eacl",
+        "ares-automated-rag-evaluation-2024-naacl"
+      ],
+      "status": "approved"
+    },
+    {
       "id": "lmsys-hard-prompts-category",
       "title": "Introducing Hard Prompts Category in Chatbot Arena",
       "url": "https://www.lmsys.org/blog/2024-05-17-category-hard/",
