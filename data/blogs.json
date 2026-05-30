@@ -123,6 +123,85 @@
       "status": "approved"
     },
     {
+      "id": "lmsys-arena-style-control",
+      "title": "Does style matter? Disentangling style and substance in Chatbot Arena",
+      "url": "https://www.lmsys.org/blog/2024-08-28-style-control/",
+      "source": "LMSYS Blog",
+      "published_at": "2024-08-29",
+      "added_at": "2026-05-30",
+      "tags": [
+        "Chatbot Arena",
+        "LLM evaluation",
+        "style control",
+        "human preference",
+        "Bradley-Terry model",
+        "length bias",
+        "markdown bias",
+        "leaderboard",
+        "evaluation bias"
+      ],
+      "summary": "这篇 LMSYS 技术分享研究 Chatbot Arena 排行榜中的 style confounder：人类 pairwise preference votes 不只反映回答内容质量，也会受到回答长度、Markdown 标题、加粗、列表等表达风格影响。文章在 Arena 原本的 Bradley-Terry 排名回归中加入额外 style features，把模型强度和风格优势同时建模：原始 Arena Score 只用对战胜负估计每个模型的 strength coefficient；style control 版本则额外加入两边回答的 token length difference、Markdown header count、bold count、list element count 等变量，让能被“更长”“更多 Markdown”解释的胜率部分由 style coefficients 吸收，剩下的 model coefficients 更接近控制风格后的模型能力。结果显示 style 对排行榜影响明显，其中长度是最强的 style factor。控制长度和 Markdown 后，GPT-4o-mini、Grok-2-mini 等模型排名下降，Claude 3.5 Sonnet、Claude Opus、Llama-3.1-405B 排名上升；在 Hard Prompt 子集里，Claude 3.5 Sonnet 与 chatgpt-4o-latest 并列第一，Llama-3.1-405B 升到第三。作者也强调，这仍然是 observational control，不是因果实验，仍可能存在未观测混杂因素，例如长回答有时确实包含更多真实推理或更完整内容。",
+      "key_points": [
+        "这篇文章解决的是 Chatbot Arena 偏好票中的解释问题：模型赢票到底来自 substance，还是来自更讨喜的 style。",
+        "Arena 的人类偏好本身会混合内容质量和表达方式；这不一定是坏事，但会影响我们对模型真实能力的解释。",
+        "原始 Bradley-Terry 排名只用 pairwise win/loss 估计模型强度；style control 在同一个回归里加入 style features。",
+        "文章第一版控制的 style features 包括回答 token length、Markdown header count、Markdown bold count 和 Markdown list element count。",
+        "方法上，style feature 用两边回答的相对差异表示，并和模型对战向量一起进入 logistic regression。",
+        "回归得到两类系数：model coefficients 表示控制风格后的模型强度，style coefficients 表示某类风格变量本身对人类偏好的影响。",
+        "实验发现 length 是最主要的 style factor，Markdown 列表、标题、加粗等影响相对二阶。",
+        "控制 style 后排行榜会明显变化，说明部分模型原始 Arena 表现可能受长回答和排版风格放大。",
+        "Hard Prompts blog 解决“用哪些 prompt 评价”；这篇 Style Control 解决“同一批偏好票中有多少优势来自回答风格”。",
+        "文章局限是它仍然是观察性分析；如果长度和真实内容质量正相关，只靠回归控制不能完全分离因果效应。"
+      ],
+      "standards": [
+        {
+          "name": "原始 Bradley-Terry",
+          "description": "只根据 pairwise vote 的胜负估计每个模型的 Arena strength。"
+        },
+        {
+          "name": "Style features",
+          "description": "把回答长度差、Markdown 标题数、加粗数、列表数等作为额外变量。"
+        },
+        {
+          "name": "Style-controlled regression",
+          "description": "同时估计 model coefficients 和 style coefficients，让模型强度在控制风格后再比较。"
+        },
+        {
+          "name": "观测性控制",
+          "description": "能减少已建模风格变量的影响，但不能排除未观测混杂，也不等于因果结论。"
+        }
+      ],
+      "quotes": [
+        {
+          "text": "not just what you say, but how you say it",
+          "note": "概括人类偏好评价会同时受到内容和表达方式影响。"
+        },
+        {
+          "text": "controlled for the effect of length and markdown",
+          "note": "说明文章第一版主要控制的是长度和 Markdown 排版特征。"
+        },
+        {
+          "text": "style as an independent variable",
+          "note": "方法核心：把 style feature 当作回归中的独立变量。"
+        },
+        {
+          "text": "length was the dominant style factor",
+          "note": "最重要的经验发现：回答长度对人类偏好有很强影响。"
+        },
+        {
+          "text": "observational",
+          "note": "作者明确提醒这不是随机化因果实验。"
+        },
+        {
+          "text": "unobserved confounders",
+          "note": "控制长度和 Markdown 后，仍可能有未建模因素影响排名。"
+        }
+      ],
+      "my_note": "这篇对我有价值的地方在于，它提醒我 Arena leaderboard 不是纯正确性排行榜，而是人类对“内容 + 风格”的综合偏好排行榜。如果目标是理解真实用户喜欢什么，style 本身就是产品能力的一部分；但如果目标是比较模型的 substantive ability，例如事实性、推理、代码正确性和任务完成度，就需要知道有多少胜率来自长度和排版。它和 Hard Prompts blog 正好构成 evaluation 的两个维度：Hard Prompts 先决定题目范围，Style Control 再解释偏好票中的风格混杂。对后续看 LLM-as-judge、Arena-Hard、AlpacaEval LC 或偏好优化时，这篇可以作为 length bias / presentation bias 的背景材料。",
+      "related_papers": [],
+      "status": "approved"
+    },
+    {
       "id": "lmsys-p2p-weight-transfer-rl",
       "title": "Updating 1T parameters in seconds: P2P weight transfer in Large Scale Distributed RL",
       "url": "https://www.lmsys.org/blog/2026-04-29-p2p-update/",
