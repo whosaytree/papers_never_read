@@ -463,6 +463,64 @@
         "deepseek-v3-2-2512-02556"
       ],
       "status": "approved"
+    },
+    {
+      "id": "lmsys-gpt-oss-dgx-spark-local",
+      "title": "Optimizing GPT-OSS on NVIDIA DGX Spark: Getting the Most Out of Your Spark",
+      "url": "https://www.lmsys.org/blog/2025-11-03-gpt-oss-on-nvidia-dgx-spark/",
+      "source": "LMSYS Blog",
+      "published_at": "2025-11-03",
+      "added_at": "2026-05-30",
+      "tags": [
+        "GPT-OSS",
+        "SGLang",
+        "NVIDIA DGX Spark",
+        "open-weight model",
+        "local inference",
+        "self-hosting",
+        "Open WebUI",
+        "LMRouter",
+        "coding agent",
+        "Docker"
+      ],
+      "summary": "这篇 LMSYS 技术分享介绍了如何在 NVIDIA DGX Spark 上用 SGLang 部署 OpenAI 的 GPT-OSS 20B/120B，并把它接入本地聊天和 coding agent workflow。GPT-OSS 的定位需要先分清：它不是 ChatGPT 网页端，也不是 Codex 产品本身，而是 OpenAI 发布的 open-weight reasoning models，权重可下载，可在本地机器、私有服务器或第三方托管环境中运行。ChatGPT/Codex 是产品系统，包含 UI、账号、工具编排、代码工作区、安全策略、模型路由等；GPT-OSS 更像可自托管的模型后端或模型原材料。文章的实操部分包括下载 OpenAI Harmony 相关 tokenizer encoding，用 lmsysorg/sglang:spark Docker 镜像启动 GPT-OSS 20B/120B，通过 OpenAI-compatible /v1/chat/completions 接口测试服务，把 Open WebUI 接到本地 SGLang endpoint，以及用 LMRouter 把 Claude Code 等 Anthropic-style 请求转成 OpenAI-compatible 请求，让本地 GPT-OSS 成为 coding agent 后端。它的技术深度不如 MiniMax M2 attention 或 INT4 QAT，但对理解开放权重模型如何变成本地可用的 ChatGPT-like / Codex-like 后端有价值。",
+      "key_points": [
+        "GPT-OSS 是 OpenAI 发布的开放权重 reasoning model，而不是 ChatGPT 网页端或 Codex 的完整开源版。",
+        "它更接近模型后端：你可以下载权重，在自己控制的硬件或云环境里运行，并自行负责 serving、工具接入、权限、安全和成本。",
+        "ChatGPT/Codex 是完整产品系统；GPT-OSS 只是其中“模型能力层”可以类比的部分，不包含网页产品、代码工作区、工具编排和托管服务体验。",
+        "OpenAI 对 GPT-OSS 的官方定位是 120B/20B open-weight reasoning models；120B 大致对标 o4-mini 附近的核心 reasoning benchmark 档位，20B 更偏低延迟、本地或资源受限场景。",
+        "这篇 blog 的主要内容是 DGX Spark 上的本地部署流程，而不是 GPT-OSS 的训练方法或模型架构解析。",
+        "SGLang 在这里承担 OpenAI-compatible serving backend 的角色，让本地 GPT-OSS 可以被普通 chat completion 客户端调用。",
+        "Open WebUI 负责把本地 SGLang endpoint 包装成 ChatGPT-like 聊天界面。",
+        "LMRouter 的作用是协议转换：把 Claude Code 等工具的 Anthropic-style request 转成 OpenAI-compatible request，从而接到本地 GPT-OSS。",
+        "文章报告 GPT-OSS 20B 约 70 tokens/s、GPT-OSS 120B 约 50 tokens/s，应理解为 DGX Spark + SGLang 镜像下的部署展示数字。",
+        "这篇适合归档为本地开放权重模型部署和 agent backend 接入案例，而不是模型方法或深度推理系统优化文章。"
+      ],
+      "quotes": [
+        {
+          "text": "GPT-OSS 20B and GPT-OSS 120B support",
+          "note": "说明文章主线是 SGLang 在 DGX Spark 上支持 GPT-OSS 两个开放权重模型。"
+        },
+        {
+          "text": "OpenAI-compatible requests",
+          "note": "这是把本地模型接入现有应用和工具链的关键接口形式。"
+        },
+        {
+          "text": "around 70 tokens/s",
+          "note": "文章给出的 GPT-OSS 20B 在 DGX Spark 上的主要性能数字。"
+        },
+        {
+          "text": "around 50 tokens/s",
+          "note": "文章给出的 GPT-OSS 120B 在 DGX Spark 上的主要性能数字。"
+        },
+        {
+          "text": "No internet required",
+          "note": "点明本地开放权重部署的价值：数据和推理都可以留在自己控制的环境中。"
+        }
+      ],
+      "my_note": "这篇本身更像部署教程，但经过补充定位后仍值得保留：它帮助我区分 GPT-OSS、ChatGPT 和 Codex。GPT-OSS 不是“开源 ChatGPT”或“开源 Codex”，而是 OpenAI 提供的开放权重模型；ChatGPT/Codex 则是围绕模型构建的完整产品和 agent 系统。对后续理解本地模型部署很有用的一点是：只拿到权重并不等于拿到产品能力，还需要 SGLang/vLLM 这类 serving backend、OpenAI-compatible API、UI、协议转换、工具调用、上下文管理和安全策略。它和 SGLang 项目条目可以连起来看：SGLang 把开放权重模型变成可调用的推理服务，而 Open WebUI/LMRouter/Claude Code 这类上层工具再把它变成聊天或 coding agent 工作流。",
+      "related_papers": [],
+      "status": "approved"
     }
   ]
 }
