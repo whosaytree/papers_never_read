@@ -223,6 +223,60 @@
         "lmsys-deepseek-v4-day0"
       ],
       "status": "approved"
+    },
+    {
+      "id": "s-lora",
+      "name": "S-LoRA",
+      "repo_url": "https://github.com/S-LoRA/S-LoRA",
+      "homepage_url": "",
+      "docs_url": "https://github.com/S-LoRA/S-LoRA",
+      "demo_url": "",
+      "source": "S-LoRA / S-LoRA",
+      "added_at": "2026-05-30",
+      "project_type": "serving system",
+      "domain": "LoRA serving / LLM inference",
+      "tags": [
+        "S-LoRA",
+        "LoRA",
+        "adapter serving",
+        "LLM serving",
+        "heterogeneous batching",
+        "Unified Paging",
+        "tensor parallelism",
+        "CUDA kernels"
+      ],
+      "stack": [
+        "Python",
+        "PyTorch",
+        "CUDA",
+        "Triton",
+        "C++",
+        "LightLLM"
+      ],
+      "summary": "S-LoRA 是一个面向大量 LoRA adapter 并发服务的 LLM serving 系统。它不是训练 LoRA 的框架，而是在已有 base model 和大量 LoRA adapter 的场景下，通过 adapter 调度、统一分页内存管理、异构 batching、自定义 CUDA kernel 和 tensor parallelism，让同一套 serving 系统可以同时服务很多个任务专属 adapter。",
+      "highlights": [
+        "目标场景是一个 base model 对应大量 LoRA adapter 的在线推理服务。",
+        "把 adapter 权重主要放在 CPU 主存中，只把当前请求需要的 adapter 动态搬到 GPU。",
+        "提出 Unified Paging，用统一内存池同时管理 LoRA adapter 权重和 KV cache，减少显存碎片。",
+        "支持不同 rank 的 LoRA adapter 异构 batching，避免每个 adapter 单独起一个 serving worker。",
+        "使用自定义 CUDA kernel 优化 LoRA 额外计算。",
+        "提供面向多 GPU 的 S-LoRA tensor parallelism 策略。",
+        "论文报告相比 Hugging Face PEFT 和朴素 vLLM LoRA serving 最高可提升约 4x throughput，并把可服务 adapter 数量提升数个数量级。"
+      ],
+      "use_cases": [
+        "理解多 LoRA adapter serving 的系统问题。",
+        "研究 adapter 权重调度、KV cache 和 LoRA 权重共存时的显存管理。",
+        "构建多租户、个性化、任务专属 LoRA 模型服务的系统基线。",
+        "对比 S-LoRA、Punica、vLLM LoRA、SGLang multi-LoRA batching 等方案。",
+        "理解 LoRA 从训练产物变成线上服务能力时需要哪些推理系统支持。"
+      ],
+      "setup_note": "S-LoRA 需要 CUDA 11.8 兼容 GPU，README 推荐 Ampere 系列 GPU，并要求 PyTorch 1.13 到 2.0.1、triton 2.1.0。仓库基于 LightLLM 构建，目前已归档，更适合作为多 LoRA serving 系统设计和论文复现参考；实际生产使用时可同时对比 vLLM / SGLang 当前的 LoRA serving 支持。",
+      "license": "Apache-2.0",
+      "maintenance": "archived",
+      "my_note": "",
+      "related_papers": [],
+      "related_blogs": [],
+      "status": "approved"
     }
   ]
 }
