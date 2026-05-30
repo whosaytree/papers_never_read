@@ -517,6 +517,106 @@
       "status": "approved"
     },
     {
+      "id": "ragas-v0121-testset-generation",
+      "title": "Synthetic Test Data generation",
+      "url": "https://docs.ragas.io/en/v0.1.21/concepts/testset_generation.html",
+      "source": "RAGAS Docs v0.1.21 / RAGAS source",
+      "published_at": "2024-10-03",
+      "added_at": "2026-05-31",
+      "tags": [
+        "RAGAS",
+        "RAG evaluation",
+        "synthetic testset generation",
+        "evolutionary generation",
+        "Evol-Instruct",
+        "simple",
+        "reasoning",
+        "multi_context",
+        "conditional",
+        "critic LLM"
+      ],
+      "summary": "这篇 RAGAS v0.1.21 文档介绍了 RAGAS 早期的 synthetic testset generation 机制。它的核心问题是：手工为 RAG 系统构造大量 `question-context-answer` 样本成本高，而且人工问题往往不够多样、难度不够覆盖生产场景。RAGAS 的做法是从用户提供的 LangChain / LlamaIndex documents 中抽取 keyphrases，先生成可由 context 回答的 seed questions，再通过 evolutionary generation 把问题系统性改写成不同类型，包括 simple、reasoning、multi_context、conditional 和 conversational。生成过程中，`generator_llm` 负责 keyphrase extraction、seed question、question evolution、relevant context selection 和 ground truth answer generation；`critic_llm` 负责 NodeFilter、QuestionFilter 和 EvolutionFilter 等质量控制。最终 testset 输出 `question`、`contexts`、`ground_truth`、`evolution_type` 和 metadata，可用于后续 RAGAS metrics 或其他 RAG evaluation pipeline。需要注意的是，这是 v0.1.21 的旧版机制；后续 RAGAS 文档已经转向更明确的 Knowledge Graph based testset generation。",
+      "key_points": [
+        "这篇是 RAGAS v0.1.21 的官方文档和对应源码机制，不是论文或普通博客；日期按 v0.1.21 tag 对应提交日期记录。",
+        "目标是降低人工构造 RAG QA 测试集的成本，并提高问题类型和难度覆盖。",
+        "RAGAS 使用 evolutionary generation paradigm，灵感来自 Evol-Instruct：先生成 seed question，再系统性演化成更难问题。",
+        "基础流程是文档切分、keyphrase extraction、seed question generation、question evolution、filtering、relevant context selection、answer generation。",
+        "`simple` 问题从单个 context 生成可回答的基础问题，用于测试基础单段问答能力。",
+        "`reasoning` 问题要求基于上下文做多步逻辑连接，测试模型的上下文内推理能力。",
+        "`multi_context` 问题会找到相似 node，并要求问题需要 context1 和 context2 的信息才能回答。",
+        "`conditional` 问题给原始问题加入条件约束，用于测试更复杂的 query handling。",
+        "Filtering 包含 NodeFilter、QuestionFilter 和 EvolutionFilter：分别检查 context 质量、问题清晰/独立/可回答性，以及 evolution 是否真的改变了问题深度和约束。",
+        "Answer generation 先用 LLM 从候选 contexts 中选 relevant contexts，再基于合并后的 context 生成 JSON answer 和 `verdict`；如果答案不在 context 中，`ground_truth` 会被置为 NaN。",
+        "用户可以通过 distribution 控制不同问题类型比例，例如文档示例中的 simple 0.5、multi_context 0.4、reasoning 0.1。",
+        "版本上要注意：v0.2+ / v0.4+ 的 RAGAS testset generation 已更偏 Knowledge Graph based pipeline。"
+      ],
+      "standards": [
+        {
+          "name": "输入",
+          "description": "LangChain 或 LlamaIndex documents；默认会切分进 docstore 并抽取 keyphrases。"
+        },
+        {
+          "name": "Evolution 类型",
+          "description": "`simple`、`reasoning`、`multi_context`、`conditional` 和 conversational 等问题改写策略。"
+        },
+        {
+          "name": "质量过滤",
+          "description": "NodeFilter 评 context，QuestionFilter 评问题清晰度和独立性，EvolutionFilter 评演化是否有效。"
+        },
+        {
+          "name": "答案生成",
+          "description": "先选择 relevant contexts，再生成 ground truth answer；若 context 无答案则标记无效。"
+        },
+        {
+          "name": "输出",
+          "description": "`question`、`contexts`、`ground_truth`、`evolution_type`、`metadata`。"
+        },
+        {
+          "name": "版本边界",
+          "description": "这是 v0.1.21 的 evolutionary generation 机制，不等同于新版 Knowledge Graph based testset generation。"
+        }
+      ],
+      "quotes": [
+        {
+          "text": "evolutionary generation paradigm",
+          "note": "RAGAS v0.1.21 testset generation 的核心设计。"
+        },
+        {
+          "text": "simple",
+          "note": "基础问题类型，从单个 context 生成可回答问题。"
+        },
+        {
+          "text": "reasoning",
+          "note": "把问题改写成需要多步逻辑连接的问题。"
+        },
+        {
+          "text": "multi_context",
+          "note": "让问题需要多个相关 chunks 才能回答。"
+        },
+        {
+          "text": "QuestionFilter",
+          "note": "critic LLM 判断问题是否清楚、独立、可回答。"
+        },
+        {
+          "text": "verdict",
+          "note": "answer generation 阶段标记答案是否存在于 context 中。"
+        }
+      ],
+      "my_note": "这篇对我有价值的地方在于，它解释了 RAGAS synthetic testset generation 的早期核心思想：不要只从文档直接生成一批普通 QA，而是先生成基础问题，再有意识地把它们演化成不同难度和不同检索形态的问题。尤其 `multi_context` 很重要，因为真实 RAG 经常不是单 chunk 命中就能回答，而需要跨段聚合信息。和 AWS、Red Hat、Label Studio 对比，RAGAS 的特色是把“问题类型分布”显式暴露给用户；这让测试集不只是数量更多，而是覆盖更可控。局限是 v0.1.21 这套机制已经不是当前最新版 RAGAS 的全部形态，后续阅读新版时要和 Knowledge Graph based pipeline 区分开。",
+      "analysis_note": {
+        "title": "详细笔记：RAGAS v0.1.21 Testset Generation",
+        "source": "docs/blog_notes/ragas-v0121-testset-generation.md",
+        "url": "blog_notes/ragas-v0121-testset-generation.html"
+      },
+      "related_papers": [
+        "ragas-automated-rag-evaluation-2024-eacl",
+        "ares-automated-rag-evaluation-2024-naacl",
+        "rgb-benchmarking-llms-rag-2024-aaai",
+        "ragtruth-hallucination-corpus-2024-acl"
+      ],
+      "status": "approved"
+    },
+    {
       "id": "lmsys-hard-prompts-category",
       "title": "Introducing Hard Prompts Category in Chatbot Arena",
       "url": "https://www.lmsys.org/blog/2024-05-17-category-hard/",
