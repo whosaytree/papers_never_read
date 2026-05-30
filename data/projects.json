@@ -959,6 +959,94 @@
       ],
       "related_blogs": [],
       "status": "approved"
+    },
+    {
+      "id": "ares",
+      "name": "ARES",
+      "repo_url": "https://github.com/stanford-futuredata/ARES",
+      "homepage_url": "https://ares-ai.vercel.app/",
+      "docs_url": "https://ares-ai.vercel.app/",
+      "demo_url": "https://colab.research.google.com/github/stanford-futuredata/ARES/blob/main/ARES_Tutorial.ipynb",
+      "source": "stanford-futuredata / ARES",
+      "added_at": "2026-05-31",
+      "project_type": "RAG evaluation framework",
+      "domain": "RAG evaluation / Statistical judge calibration",
+      "tags": [
+        "ARES",
+        "RAG evaluation",
+        "automated evaluation",
+        "context relevance",
+        "answer faithfulness",
+        "answer relevance",
+        "synthetic data generation",
+        "LM judge",
+        "fine-tuned judge",
+        "Prediction-Powered Inference",
+        "PPI",
+        "DeBERTa",
+        "FLAN-T5",
+        "confidence interval",
+        "human validation set"
+      ],
+      "stack": [
+        "Python",
+        "PyTorch",
+        "Transformers",
+        "DeBERTa-v3",
+        "FLAN-T5",
+        "OpenAI API",
+        "TogetherAI API",
+        "vLLM",
+        "TSV"
+      ],
+      "summary": "ARES 是 Stanford FutureData 开源的 RAG 自动评估框架，用于评估 RAG 系统的 Context Relevance、Answer Faithfulness 和 Answer Relevance。它不是 RAG 构建框架，也不是单纯 QA 生成器；它的核心价值是把 RAG 评测做得更统计可靠：先从领域文档和 few-shot 示例生成合成 query-document-answer 数据，用这些数据训练轻量级 LM judge，再用少量人工标注验证集通过 Prediction-Powered Inference 校正 judge 的系统性偏差，并输出带置信区间的系统级评估结果。",
+      "highlights": [
+        "评估三个维度：Context Relevance、Answer Faithfulness、Answer Relevance。",
+        "Context Relevance 判断检索到的 passage 是否和问题相关、是否有助于回答问题。",
+        "Answer Faithfulness 判断回答是否忠于检索上下文，是否包含 document 不支持的 hallucinated 或 extrapolated statements。",
+        "Answer Relevance 判断回答是否真正回答了问题，即使回答内容都来自文档，也可能因为没有答到问题而被判为不相关。",
+        "流程比 RAGChecker / RAGAS 更重：需要 few-shot examples、少量人工标注 validation set、大量未标注 RAG 输出，以及可选的 judge 微调。",
+        "使用 synthetic data generation 构造正负样本，训练针对领域和指标的轻量级 judge。",
+        "默认思路是用 FLAN-T5 XXL 生成合成 query / answer，用 DeBERTa-v3-Large 训练二分类 judge。",
+        "Prediction-Powered Inference 用少量人工标注校正 judge 偏差，给出比裸 LLM judge 更可靠的系统级估计和置信区间。",
+        "论文实验显示 ARES 可以在只使用几百个人工标注样本的情况下评估多个 RAG 系统，并在 KILT、SuperGLUE、AIS 等任务上优于 RAGAS 和普通 GPT judge baseline。",
+        "支持 OpenAI / TogetherAI API，也支持通过 vLLM 调用本地模型。"
+      ],
+      "use_cases": [
+        "严肃比较多个 RAG 系统、retriever、reranker、chunking 策略或 generation prompt 的系统级表现。",
+        "在目标领域里用少量人工标注替代大量人工评测，同时保留统计置信区间。",
+        "为企业或研究项目训练领域定制的 RAG judge，而不是直接依赖通用 prompt-based LLM judge。",
+        "评估检索上下文是否相关、回答是否忠于上下文、回答是否真正对题。",
+        "在论文实验或 benchmark 里给 RAG 系统排名，并报告经过 PPI 校正的结果。",
+        "当评测成本高、人工标注少、但未标注 RAG 输出很多时，用 ARES 扩大评测规模。",
+        "和 RAGChecker / RAGAS / EnterpriseRAG-Bench 组合使用：前者做诊断或快速评估，ARES 做更正式的校正评估。"
+      ],
+      "setup_note": "安装方式是 pip install ares-ai，也可以从 GitHub clone 后 pip install -e .。官方 quick start 需要准备三类文件：few-shot prompt TSV、少量人工标注的 query-document-answer triples、较大的未标注 RAG 输出 TSV。最轻量路径是用已有 few-shot 文件和 labeled/unlabeled output 文件直接跑 ues_idp 或 evaluate_RAG；完整路径包括 synthetic_query_generator 生成 synthetic queries，classifier_model 训练 judge checkpoint，再用 ppi 配置 evaluation_datasets、checkpoints、labels、gold_label_path 调用 evaluate_RAG。生产或正式实验中，人工验证集官方建议至少 50 条，几百条更理想；论文里常使用约 150 到 300 条人工标注来做 PPI 校正。若不想依赖外部 API，可以用 vLLM 暴露本地 OpenAI-compatible endpoint。",
+      "practice_notes": [
+        "这个项目最值得记录的点是：它不是简单让 LLM judge 打分，而是把自动评估做成“训练 judge + 小规模人工标注校正”的流程。",
+        "ARES 比 RAGChecker/RAGAS 更重，但也更适合严肃 benchmark、论文实验或需要置信校正的 RAG 系统比较。",
+        "如果只是快速看个人 RAG pipeline 哪里坏了，RAGChecker 更直接；如果要低成本替代大量人工评测，ARES 的思路更完整。",
+        "Answer Faithfulness 关注“有没有乱说”：回答中的内容是否被 retrieved document 支持，是否加入了文档没有的事实，是否和文档矛盾。",
+        "Answer Relevance 关注“有没有答题”：回答是否直接解决 query 的需求，是否覆盖问题要求的方面。",
+        "一个回答可以 faithful 但不 relevant：说的都是真的、都来自文档，但没有回答用户真正问的问题。",
+        "一个回答也可以看起来 relevant 但不 faithful：形式上像是在回答问题，但关键事实没有被上下文支持。",
+        "ARES 的三个 label 本质上都是 query-document-answer triple 上的二分类判断，输出 Yes / No 或 0 / 1，再汇总成系统级比例。",
+        "ARES 的 synthetic generation 不是主要为了给用户生成最终 benchmark，而是为了构造训练 judge 的正负样本。",
+        "弱负样本通常来自随机不相关 passage 或其他 passage 的答案；强负样本会选择更相似的 passage 或让模型生成 contradictory answer。",
+        "PPI 的作用是承认 judge 会犯错，再用少量人工标注估计并校正这种偏差。",
+        "和 RAGAS 的关系：RAGAS 更轻、更像 prompt-based 快速指标；ARES 通过领域合成数据训练 judge，并用 PPI 让结果更有统计可信度。",
+        "和 RAGChecker 的关系：RAGChecker 更像端到端体检工具，直接做 claim-level 诊断；ARES 更像正式评测方案，强调系统排名和置信区间。",
+        "和 EnterpriseRAG-Bench 的关系：EnterpriseRAG-Bench 提供企业场景 benchmark；ARES 可以作为评估方法接在某个 benchmark 或自有评测集后面。",
+        "它的代价是工程链路明显更长：要准备 few-shot、人工标注集、未标注 RAG 输出，必要时还要训练 checkpoint。"
+      ],
+      "license": "Apache-2.0",
+      "maintenance": "active",
+      "my_note": "ARES 值得记录的点是它不是简单让 LLM judge 打分，而是把自动评估做成“训练 judge + 小规模人工标注校正”的流程。它比 RAGChecker/RAGAS 更重，但也更适合严肃 benchmark、论文实验或需要置信校正的 RAG 系统比较。如果只是快速看一个个人 RAG pipeline 哪里坏了，RAGChecker 更直接；如果要低成本替代大量人工评测，ARES 的思路更完整。",
+      "related_papers": [
+        "ares-automated-rag-evaluation-2024-naacl"
+      ],
+      "related_blogs": [],
+      "status": "approved"
     }
   ]
 }
