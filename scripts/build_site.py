@@ -1202,16 +1202,32 @@ def render_sections(library: dict) -> tuple[str, str]:
     nav_blocks = []
     main_blocks = []
     has_papers = False
+    taxonomy_primary_names = {entry["primary_area"] for entry in taxonomy}
+    ordered_primary_entries = [
+        *taxonomy,
+        *(
+            {"primary_area": primary, "subcategories": []}
+            for primary in sorted(grouped)
+            if primary not in taxonomy_primary_names
+        ),
+    ]
 
-    for primary_entry in taxonomy:
+    for primary_entry in ordered_primary_entries:
         primary = primary_entry["primary_area"]
         subcategories = primary_entry["subcategories"]
         primary_id = f"pri-{slug(primary)}"
-        primary_count = sum(len(grouped[primary][sub]) for sub in subcategories)
+        extra_subcategories = sorted(sub for sub in grouped[primary] if sub not in subcategories)
+        display_subcategories = [
+            *(sub for sub in subcategories if grouped[primary][sub]),
+            *extra_subcategories,
+        ]
+        primary_count = sum(len(grouped[primary][sub]) for sub in display_subcategories)
+        if primary_count == 0:
+            continue
         nav_sub_links = []
         sub_sections = []
 
-        for sub in subcategories:
+        for sub in display_subcategories:
             section_id = f"sub-{slug(primary)}-{slug(sub)}"
             items = grouped[primary][sub]
             nav_sub_links.append(
