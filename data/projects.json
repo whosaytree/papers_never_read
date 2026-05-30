@@ -548,6 +548,84 @@
         "lmsys-hard-prompts-category"
       ],
       "status": "approved"
+    },
+    {
+      "id": "ragas-testset-generation",
+      "name": "Ragas Testset Generation",
+      "repo_url": "https://github.com/vibrantlabsai/ragas",
+      "homepage_url": "https://docs.ragas.io/en/latest/getstarted/rag_testset_generation/",
+      "docs_url": "https://docs.ragas.io/en/latest/getstarted/rag_testset_generation/",
+      "demo_url": "",
+      "source": "vibrantlabsai / ragas / testset generation",
+      "added_at": "2026-05-30",
+      "project_type": "test data generation module",
+      "domain": "RAG evaluation / Synthetic testset generation",
+      "tags": [
+        "Ragas",
+        "RAGAS",
+        "RAG evaluation",
+        "testset generation",
+        "synthetic QA",
+        "Knowledge Graph",
+        "document chunking",
+        "single-hop query",
+        "multi-hop query",
+        "reference answer",
+        "LangChain",
+        "LlamaIndex"
+      ],
+      "stack": [
+        "Python",
+        "LangChain",
+        "LlamaIndex",
+        "OpenAI API",
+        "Google Gemini",
+        "AWS Bedrock",
+        "Azure OpenAI",
+        "Embeddings"
+      ],
+      "summary": "Ragas Testset Generation 是 Ragas 里的 RAG 评测数据生成能力。它不是训练框架，也不是直接给模型回答打分的 judge，而是从用户自己的文档语料中自动合成 RAG evaluation testset：先把文档切分并构建 Knowledge Graph，再基于图中的节点、关系、persona、query style 和 query length 等场景生成问题、参考上下文和参考答案，用于后续评估 RAG pipeline 的 retrieval 和 generation 质量。",
+      "highlights": [
+        "解决的问题是：没有人工标注 QA 集时，如何从自己的文档里自动生成 RAG 评测集。",
+        "输入是文档集合、生成用 LLM、embedding model，以及可选的 query distribution / synthesizer 配置。",
+        "输出是 Testset / EvaluationDataset，可导出成 pandas DataFrame，用于后续 RAGAS metrics 或其他评测流程。",
+        "核心流程分两步：KnowledgeGraph Creation 和 Testset Generation。",
+        "KnowledgeGraph Creation 不是把整篇长文一次塞给 LLM，而是先把文档或 chunk 变成节点，再用 transforms 给节点补摘要、关键词、实体、标题、embedding 等属性。",
+        "Relationship builder 会根据实体重合、关键词相似度或 embedding 相似度等信号，把相关节点连成边；后续 multi-hop 题目就可以从有关联的多个节点合成。",
+        "官方示例里，10 个原始 document 节点经过 default_transforms 后变成 48 个 nodes 和 605 条 relationships，说明它会拆分和增强原始文档，而不是只保存原文。",
+        "默认 query distribution 包括 SingleHopSpecificQuerySynthesizer、MultiHopAbstractQuerySynthesizer 和 MultiHopSpecificQuerySynthesizer。",
+        "生成出来的不只是问题，还包括 reference contexts 和 reference answer，因此更适合做 RAG 评测，而不是普通开放式 LLM 打分。",
+        "支持 LangChain / LlamaIndex 文档加载，也可以接 OpenAI、Bedrock、Gemini、Azure OpenAI 或其他 LangChain-compatible LLM。",
+        "它和 FastChat LLM Judge / Arena-Hard-Auto 不同：后两者主要评回答质量；Ragas testset generation 主要先构造评测数据。"
+      ],
+      "use_cases": [
+        "从公司文档、产品文档、论文库、知识库中自动生成 RAG 评测问题。",
+        "为 RAG pipeline 建立初始 evaluation dataset，避免完全手写 QA 标注集。",
+        "覆盖 single-hop、multi-hop、specific、abstract 等不同检索难度的问题类型。",
+        "测试 retriever 是否能找回正确上下文，以及 generator 是否能基于上下文给出忠实答案。",
+        "在改 chunking、embedding、reranker、retriever、prompt 或 generation model 后，对比 RAG 系统质量变化。",
+        "把 synthetic testset 先作为候选集，再人工筛选出高质量评测题。"
+      ],
+      "setup_note": "基本使用方式是安装 ragas 和文档加载依赖，加载自己的文档，然后配置 generator_llm 和 generator_embeddings。示例流程：用 LangChain DirectoryLoader 或 LlamaIndex 加载文档；用 LangchainLLMWrapper 包装生成模型；用 TestsetGenerator(llm=generator_llm, embedding_model=generator_embeddings) 初始化生成器；再调用 generate_with_langchain_docs(docs, testset_size=N) 或基于 KnowledgeGraph 调用 generate(...)。更可控的路径是手动创建 KnowledgeGraph，把文档或预切好的 chunk 作为 DOCUMENT nodes 加进去，然后用 default_transforms(documents=docs, llm=transformer_llm, embedding_model=embedding_model) 和 apply_transforms(kg, trans) 生成节点属性与关系，最后保存为 knowledge_graph.json。生成质量强依赖文档切分、embedding、LLM 能力和 query distribution；生产使用时通常需要人工抽检。",
+      "practice_notes": [
+        "官方 quickstart：加载 Markdown 文档，配置 GPT-4o 和 OpenAI embeddings，然后调用 TestsetGenerator.generate_with_langchain_docs(docs, testset_size=10)。",
+        "KnowledgeGraph Creation 的实际顺序是：文档切 chunk / 创建 Node，extractors 提取摘要、关键词、实体和 embedding，relationship builders 根据这些属性建边，然后 query synthesizer 遍历图生成 scenario 和样本。",
+        "如果文档很长，不建议把整篇长文作为一个巨大 page_content 直接送入；更合理的是复用你真实 RAG pipeline 的 chunking 策略，比如几百到一千多 tokens 一个 chunk。",
+        "可用规模主要取决于 chunk 数，而不是原始文件个数。几十页到几百页文档可以先小规模试跑；几千页手册、整站知识库或代码仓库级材料应分主题、分批次生成。",
+        "长上下文会明显变慢和变贵，因为每个 chunk 可能要做 LLM extraction、embedding，建关系还要计算相似度，multi-hop 生成也会额外调用 LLM。",
+        "如果已经有现成 chunk，可以优先用 generate_with_chunks(chunks, testset_size=N)，减少重复切分并让评测集更贴近真实检索系统。",
+        "更可控的路径：先手动创建 KnowledgeGraph，把文档作为 DOCUMENT nodes 加进去，再用 default_transforms 提取实体、关键词和关系，保存为 knowledge_graph.json，后续重复生成时复用。",
+        "生成阶段可以使用 default_query_distribution，默认包含 0.5 single-hop specific、0.25 multi-hop abstract、0.25 multi-hop specific。",
+        "如果业务文档结构特殊，应该自定义 splitter、extractor 或 query synthesizer，否则生成的问题可能覆盖不到真正重要的业务场景。",
+        "它生成的是 synthetic evaluation candidates，不等于高质量 gold set；最好人工抽样审核 reference context、reference answer 和问题可回答性。",
+        "和 LLM Judge 的关系：Ragas testset generation 负责造题和参考答案；后续评估时可以再用 Ragas metrics、LLM judge 或人工审核来判断 RAG 系统回答质量。"
+      ],
+      "license": "Apache-2.0",
+      "maintenance": "active",
+      "my_note": "",
+      "related_papers": [],
+      "related_blogs": [],
+      "status": "approved"
     }
   ]
 }
