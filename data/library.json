@@ -10283,6 +10283,71 @@
           }
         ]
       }
+    },
+    {
+      "id": "recent-advances-neural-question-generation-1905-08949",
+      "title": "Recent Advances in Neural Question Generation",
+      "paper_url": "https://arxiv.org/abs/1905.08949",
+      "authors": [
+        "Liangming Pan",
+        "Wenqiang Lei",
+        "Tat-Seng Chua",
+        "Min-Yen Kan"
+      ],
+      "venue": "arXiv",
+      "year": 2019,
+      "primary_area": "应用：CV/音频/语言等",
+      "category": "自然语言处理",
+      "keywords": [
+        "neural question generation",
+        "question generation survey",
+        "answer-aware QG",
+        "answer-unaware QG",
+        "SQuAD",
+        "deep question generation",
+        "cognitive level",
+        "input modalities",
+        "multi-task learning",
+        "QA data synthesis"
+      ],
+      "labels": [
+        "Survey",
+        "Question Generation",
+        "QA Data",
+        "Answer-aware QG",
+        "Deep QG"
+      ],
+      "code_url": "",
+      "note": "这篇是 2019 年 NQG 综述，具体方法已被现代 Transformer/LLM QG 取代，但适合作为早期 QG 领域入口。它的价值在于把 NQG 按 learning paradigm、input modality、cognitive level 三条线组织起来，并明确指出 SQuAD-style factoid QG 不能代表真正的深层问题生成。当前主要作为 QA 数据合成、answer-aware QG、deep question generation 的历史综述参考。",
+      "tldr": "2019 年 Neural Question Generation 综述，系统梳理 NQG 的数据集、方法和评估，并把领域趋势概括为学习范式变化、输入模态扩展和深层问题生成。",
+      "abstract": "Emerging research in Neural Question Generation (NQG) has started to integrate a larger variety of inputs, and generating questions requiring higher levels of cognition. These trends point to NQG as a bellwether for NLP, about how human intelligence embodies the skills of curiosity and integration. We present a comprehensive survey of neural question generation, examining the corpora, methodologies, and evaluation methods. From this, we elaborate on what we see as emerging in NQG's trend: in terms of the learning paradigms, input modalities, and cognitive levels considered by NQG. We end by pointing out potential directions ahead.",
+      "summary_cn": {
+        "研究动机": "2017-2019 年 neural question generation 快速发展，但当时缺少一篇系统综述来统一梳理数据集、方法组件、评估方式和未来趋势。论文希望说明 NQG 如何从传统规则式 QG 转向端到端学习，并进一步走向多输入模态和更高认知层级的问题生成。",
+        "解决问题": "这篇不提出新模型，而是回答 NQG 领域如何组织的问题：answer-aware 与 answer-unaware QG 有什么区别；SQuAD、NewsQA、MS MARCO、RACE、LearningQ、NarrativeQA 等数据集对应什么认知层级和答案类型；BLEU/METEOR/ROUGE 是否适合评估问题质量；以及当前模型为什么擅长 factoid question 但不擅长 deep question。",
+        "现象分析": "综述的核心判断是：SQuAD-style QG 主要是 shallow factoid question，答案通常是 passage 中的 text span，因此不能代表真正高质量 QA 数据生成。深层问题生成需要建模多句关系、推理模式和人类提问机制，而当时的 seq2seq/attention/copy 模型在这些方面仍很弱。这个判断放到今天仍然有参考价值，因为 LLM 生成 QA 数据时同样需要区分浅层事实问答和需要推理、评价、综合的深层问题。",
+        "主要方法": "论文从三条线组织 NQG：第一是 learning paradigm，从传统 content selection + question construction pipeline 转向端到端 seq2seq、attention、copy/self-attention 和 multi-task learning；第二是 input modality，从 sentence/passage 扩展到 answer span、knowledge base triples、images 和多模态输入；第三是 cognitive level，用 Bloom's taxonomy 区分 shallow、medium、deep question。方法部分进一步梳理 encoding answers、question word generation、paragraph-level contexts、answer-unaware QG 和 technical components。",
+        "数据集与实验": "作为综述论文，本文没有提出新实验模型。它整理了多个 NQG 数据集：SQuAD 约 97,888 个问题、NewsQA 119,633、MS MARCO 3,563,535、RACE 72,547、LearningQ 231,470、NarrativeQA 46,765，并按认知层级和答案类型分组。论文也总结了当时 SQuAD 上的模型表现和技术组件，指出 Zhao et al. 2018 的 gated self-attention 方法是当时 SOTA。",
+        "主要贡献": "论文的主要贡献是给早期 NQG 领域提供一个清晰框架：从 learning paradigm、input modality、cognitive level 三个角度梳理数据集、方法和评价；指出自动指标与人工问题质量之间存在错位；强调 answer-aware QG、paragraph-level context、multi-task learning 和 deep question generation 是关键方向；并提出未来需要研究 when to ask、personalized QG 和更高层级认知问题生成。"
+      },
+      "status": "approved",
+      "added_at": "2026-05-30",
+      "key_figure": {
+        "type": "Table",
+        "name": "1",
+        "page": 3,
+        "path": "assets/paper_images/recent-advances-nqg-1905-08949-table-1.png",
+        "caption": "Table 1: NQG datasets grouped by their cognitive level and answer type, where the number of documents, the number of questions, and the average number of questions per document are listed.",
+        "caption_cn": "表 1：按认知层级和答案类型整理的 NQG 数据集，列出文档数、问题数和平均每文档问题数。",
+        "source": "manual-table-render-from-paper",
+        "confidence": 0.92,
+        "needs_manual_review": false,
+        "contexts": [
+          {
+            "page": 3,
+            "text": "Table 1 lists NQG datasets grouped by cognitive level and answer type, including SQuAD, NewsQA, MS MARCO, RACE, LearningQ and NarrativeQA."
+          }
+        ]
+      }
     }
   ]
 }
