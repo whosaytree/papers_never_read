@@ -423,6 +423,100 @@
       "status": "approved"
     },
     {
+      "id": "labelstudio-rag-system-production-data",
+      "title": "Building a RAG System with Label Studio",
+      "url": "https://labelstud.io/blog/building-a-rag-system-with-label-studio/",
+      "source": "Label Studio Blog / HumanSignal",
+      "published_at": "2025-04-10",
+      "added_at": "2026-05-31",
+      "tags": [
+        "Label Studio",
+        "HumanSignal",
+        "RAG",
+        "synthetic QA",
+        "human-in-the-loop",
+        "Label Studio Prompts",
+        "ChromaDB",
+        "functional equivalence",
+        "XML labeling config",
+        "data curation"
+      ],
+      "summary": "这篇 Label Studio 技术博客介绍 HumanSignal / Label Studio 在构建 AskAI RAG agent 时的一套 production-driven 数据构造和评估流程。它的核心不是提出新的 RAG 指标，而是展示如何把一个复杂产品问答任务拆成更小的结构化子任务：从 GitHub community discussions 中抽取用户需求和 validated labeling configurations，经过 PII 清洗和人工审核后，用 Label Studio Prompts 生成 synthetic QA pairs。这里的 QA 并不是普通自然语言问答，而是 `human_question -> labeling_config`：用户问题对应一个 Label Studio XML 标注界面配置。随后，团队在 Label Studio 中人工审核 synthetic data，并切分为 90% train / 10% test；RAG 部分使用 ChromaDB，chunk size 500，只对 `human_question` 字段做 `openai-3-large` embedding，检索 top-10 后把对应完整文档放入 LLM context，最终生成 XML config、sample task 和解释。测试阶段则用 test questions 跑 RAG，再用另一个 LLM 判断生成 config 和人工确认 config 是否功能等价，输出 yes/no 并平均为 accuracy。",
+      "key_points": [
+        "这篇是生产实践案例，不是论文，也不是通用 RAG benchmark；对象是 Label Studio 的 AskAI agent。",
+        "任务不是普通问答，而是根据用户需求生成 Label Studio XML labeling config、sample task 和解释。",
+        "作者强调先把复杂产品支持问题拆成结构化子任务，避免让 RAG 一次性解决过大的端到端任务。",
+        "原始数据来自 GitHub community discussions，需要去除无关内容、PII 和敏感信息，并经过人工审核。",
+        "Label Studio 的作用贯穿数据清洗、synthetic data review 和 human-in-the-loop 质量控制，而不只是标注 UI。",
+        "Synthetic QA prompt 明确包含 input field description、task goal、JSON output schema 和 few-shot examples。",
+        "生成字段包括 `human_question`、`labeling_config`、`sensitive_data` 和 `correctness`；其中 `labeling_config` 必须是以 `<View>` 开始和结束的 XML。",
+        "RAG 检索时只 embed `human_question` 字段，避免 XML tags 和配置结构干扰语义检索。",
+        "测试指标是 labeling config 的功能等价性：用另一个 LLM 判断生成 config 和人工确认 config 是否 functionally identical。",
+        "局限是文章没有公开完整可复现代码，评估 prompt 也只给出大意，没有完整模板。"
+      ],
+      "standards": [
+        {
+          "name": "任务拆解",
+          "description": "先把产品支持大任务拆成 labeling configurations、用户描述等结构化中间结果。"
+        },
+        {
+          "name": "数据清洗",
+          "description": "从 GitHub discussions 收集数据，去除无关内容、PII 和敏感信息，再人工审核。"
+        },
+        {
+          "name": "Synthetic QA",
+          "description": "用 Label Studio Prompts 生成 `human_question -> labeling_config`，并带上安全和正确性字段。"
+        },
+        {
+          "name": "人工审核",
+          "description": "在 Label Studio 中审查和修正 synthetic data，然后按 90% / 10% 切分 train/test。"
+        },
+        {
+          "name": "RAG 接入",
+          "description": "用 ChromaDB 检索，只对 `human_question` 做 embedding，top-10 结果拼接进 LLM context。"
+        },
+        {
+          "name": "任务型评估",
+          "description": "用 LLM 判断生成 XML config 和人工确认 config 是否功能等价，并计算 accuracy。"
+        }
+      ],
+      "quotes": [
+        {
+          "text": "human_question",
+          "note": "用于语义检索的用户意图字段。"
+        },
+        {
+          "text": "labeling_config",
+          "note": "最终要生成的 Label Studio XML 标注界面配置。"
+        },
+        {
+          "text": "sensitive_data",
+          "note": "生成阶段内置的数据安全检查字段。"
+        },
+        {
+          "text": "correctness",
+          "note": "生成阶段内置的配置正确性检查字段。"
+        },
+        {
+          "text": "functionality",
+          "note": "测试阶段用来比较两个 labeling configurations 是否等价的核心标准。"
+        }
+      ],
+      "my_note": "这篇对我有价值的地方在于，它展示了一个很实际的 RAG 数据工程闭环：不是直接把杂乱文档丢进向量库，而是先把任务拆小、抽结构化中间结果、人工清洗，再生成可审核的 synthetic QA。尤其值得记住的是，它的检索对象是用户意图字段 `human_question`，而不是最终 XML 配置；这说明 RAG 的 embedding 字段应该服务于检索意图，而不是机械地把所有字段都塞进去。评估上，它没有走通用 RAG 指标，而是围绕业务任务定义“功能等价 accuracy”，这一点比普通 answer similarity 更有实际意义。局限是这篇更像工程经验总结，复现细节不如 Red Hat / AWS 那样完整。",
+      "analysis_note": {
+        "title": "详细笔记：Label Studio Production RAG System",
+        "source": "docs/blog_notes/labelstudio-rag-system-production-data.md",
+        "url": "blog_notes/labelstudio-rag-system-production-data.html"
+      },
+      "related_papers": [
+        "ragas-automated-rag-evaluation-2024-eacl",
+        "ares-automated-rag-evaluation-2024-naacl",
+        "rgb-benchmarking-llms-rag-2024-aaai",
+        "ragtruth-hallucination-corpus-2024-acl"
+      ],
+      "status": "approved"
+    },
+    {
       "id": "lmsys-hard-prompts-category",
       "title": "Introducing Hard Prompts Category in Chatbot Arena",
       "url": "https://www.lmsys.org/blog/2024-05-17-category-hard/",
