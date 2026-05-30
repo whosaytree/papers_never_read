@@ -673,6 +673,86 @@
       "my_note": "这篇对我有价值的地方在于，它把“可复现性”从一句设 seed 拆成了完整系统问题。对普通聊天产品来说，一点非确定性可能可以接受；但对 evaluation、debugging、RL training 和科学实验来说，batching 噪声会让结论变脏。尤其在 RL 里，rollout 是 policy 数据来源，如果同一 policy 因为 serving batch composition 不同而产生不同轨迹，on-policy 假设会被悄悄削弱。和 INT4 QAT、P2P weight transfer、PD-Multiplexing 连起来看，这篇补的是 rollout/inference 的数值一致性：INT4 QAT 解决低比特推理和训练分布一致，P2P 解决新 policy 权重如何同步到 rollout engine，PD-Multiplexing 解决 prefill/decode 资源调度，而 deterministic inference 解决同一输入和同一 seed 是否真的能得到同一条 rollout。",
       "related_papers": [],
       "status": "approved"
+    },
+    {
+      "id": "lmsys-slime-sglang-native-rl",
+      "title": "slime: An SGLang-Native Post-Training Framework for RL Scaling",
+      "url": "https://www.lmsys.org/blog/2025-07-09-slime/",
+      "source": "LMSYS Blog / slime Team",
+      "published_at": "2025-07-09",
+      "added_at": "2026-05-30",
+      "tags": [
+        "slime",
+        "SGLang",
+        "Megatron-LM",
+        "Ray",
+        "RL post-training",
+        "rollout",
+        "agent environments",
+        "async training",
+        "weight update",
+        "Megatron-to-SGLang"
+      ],
+      "summary": "这篇 LMSYS 技术分享介绍 slime，一个面向 RL scaling 的 SGLang-native post-training framework。它的定位不是替代 SGLang 或 Megatron-LM，而是把 SGLang rollout inference、Megatron-LM training backend、Ray resource orchestration 和用户自定义 data generation 组织成一个可扩展的 RL/post-training pipeline。SGLang 负责高性能 rollout sampling 和 OpenAI-compatible serving；Megatron-LM 负责训练侧的 model update、optimizer、并行策略和 MFU 监控；Ray 负责 colocated/decoupled GPU 部署、资源管理和异步执行；slime 则负责把 rollout、training、weight update、自定义 agent environment 和 checkpoint/format conversion 串成训练闭环。文章强调 slime 的三类设计目标：customizable rollout interface，让用户自由接入工具调用、多轮交互和 agent environments；SGLang-native / Megatron-native，把 SGLang 和 Megatron 参数透传进框架，尽量保留底层高性能库的原生调参体验；lightweight and extensible，不把所有任务逻辑塞进厚重 trainer class，而是暴露相对直接的 train loop，方便用户扩展 RL、SFT、rejection sampling 等 post-training workflow。",
+      "key_points": [
+        "slime 是 SGLang-native 的 RL post-training framework，不是 serving engine，也不是单独的训练后端。",
+        "SGLang 在 slime 中负责 rollout inference / sampling；训练框架通过 OpenAI-compatible endpoint 或 SGLang server 调用当前 policy 生成样本。",
+        "Megatron-LM 在 slime 中负责模型训练更新，包括 optimizer、并行策略、训练吞吐和大模型训练能力。",
+        "Ray 负责资源编排，让训练和推理可以 colocated 共用 GPU，也可以 decoupled 分开部署，并支持异步执行。",
+        "slime 的 customizable rollout interface 允许用户把 agent environment、tool calling、多轮交互、异步采样等逻辑接到 SGLang server 上。",
+        "sgl-router 对外暴露单一 endpoint，背后可以管理多个 SGLang servers，使复杂 agent environment 不需要感知底层 rollout server 数量。",
+        "SGLang 参数可以通过 --sglang 前缀透传，包括 EP MoE、DP attention、DeepEP MoE 等 serving 优化选项，从而保持 SGLang-native 调优体验。",
+        "Megatron 参数也可以透传，保留 Megatron 原有 TP/PP/EP/CP 等并行和训练配置能力。",
+        "weight update 是 slime 的关键工程路径：trainer 更新完权重后，需要把新 policy 同步给 SGLang rollout engine。",
+        "/abort_request 面向 oversampling、DAPO 等场景，可以中止还在生成的 request 并回收 partial rollout，避免无用生成拖慢训练闭环。"
+      ],
+      "standards": [
+        {
+          "name": "SGLang",
+          "description": "负责 rollout inference / sampling，是 slime 里的高性能推理和 serving backend。"
+        },
+        {
+          "name": "Megatron-LM",
+          "description": "负责训练侧 model update、optimizer、大模型并行和训练吞吐。"
+        },
+        {
+          "name": "Ray",
+          "description": "负责资源管理、colocated/decoupled GPU 部署和异步任务执行。"
+        },
+        {
+          "name": "slime",
+          "description": "把 rollout、training、weight update、自定义数据生成和 checkpoint conversion 组织成 RL/post-training pipeline。"
+        }
+      ],
+      "quotes": [
+        {
+          "text": "post-training framework for RL scaling",
+          "note": "这是 slime 的核心定位：面向 RL scaling 的后训练框架。"
+        },
+        {
+          "text": "customizable rollout interface",
+          "note": "说明 slime 不强制固定 rollout 模板，而是让用户接入自己的环境和数据生成逻辑。"
+        },
+        {
+          "text": "integrating SGLang for inference and Megatron-LM for training",
+          "note": "概括 slime 的基础架构关系：推理和训练分别交给高性能专用后端。"
+        },
+        {
+          "text": "SGLang-native experience",
+          "note": "说明 slime 追求保留 SGLang standalone 的参数和性能调优体验。"
+        },
+        {
+          "text": "colocated or decoupled",
+          "note": "表示训练和推理可以同卡部署，也可以分离部署。"
+        },
+        {
+          "text": "weight updates between training and inference",
+          "note": "这是 RL pipeline 的关键工程链路，也是后续 P2P weight transfer 等优化的背景。"
+        }
+      ],
+      "my_note": "这篇对我有价值的地方在于，它把 slime 的地位讲清楚了：slime 不是 SGLang 的替代品，而是围绕 SGLang rollout backend 和 Megatron training backend 搭起来的 RL post-training 编排层。它和 verl 这类更通用的 RLHF/RLVR 框架相比，更强调 SGLang-native + Megatron-native，不试图把所有底层差异都抽象掉，而是通过参数透传和轻量训练 loop 保持对高性能库的直接控制。和前面几篇连起来看，slime 是总框架：P2P weight transfer 解决 trainer-to-rollout 权重同步，INT4 QAT 解决 rollout 低显存且 train-infer 一致，deterministic inference 解决 rollout 和 GRPO 训练可复现，PD-Multiplexing 解决 serving scheduler 的 SLO/goodput 问题；这些能力都可以成为 slime 这类大规模 RL pipeline 的组成部分。",
+      "related_papers": [],
+      "status": "approved"
     }
   ]
 }
