@@ -10645,6 +10645,80 @@
           }
         ]
       }
+    },
+    {
+      "id": "rgb-benchmarking-llms-rag-2024-aaai",
+      "title": "Benchmarking Large Language Models in Retrieval-Augmented Generation",
+      "paper_url": "https://ojs.aaai.org/index.php/AAAI/article/view/29728",
+      "pdf_url": "https://ojs.aaai.org/index.php/AAAI/article/download/29728/31250",
+      "authors": [
+        "Jiawei Chen",
+        "Hongyu Lin",
+        "Xianpei Han",
+        "Le Sun"
+      ],
+      "venue": "AAAI",
+      "year": 2024,
+      "primary_area": "数据集与基准",
+      "category": "其他",
+      "keywords": [
+        "RGB",
+        "retrieval augmented generation benchmark",
+        "RAG evaluation",
+        "noise robustness",
+        "negative rejection",
+        "information integration",
+        "counterfactual robustness",
+        "bilingual benchmark",
+        "English Chinese",
+        "hallucination",
+        "retrieved documents"
+      ],
+      "labels": [
+        "RAG",
+        "Benchmark",
+        "Evaluation",
+        "Robustness",
+        "Bilingual",
+        "AAAI"
+      ],
+      "code_url": "https://github.com/chen700564/RGB",
+      "note": "",
+      "tldr": "RGB 是一个中英双语 RAG benchmark，把 RAG 场景下 LLM 的基础能力拆成抗噪声、拒答、多文档整合和反事实鲁棒性四个维度。",
+      "abstract": "Retrieval-Augmented Generation (RAG) can mitigate hallucination in large language models, but it is unclear how robust different LLMs are when using retrieved documents. This paper introduces the Retrieval-Augmented Generation Benchmark (RGB), a bilingual English-Chinese benchmark that evaluates four fundamental RAG abilities: noise robustness, negative rejection, information integration, and counterfactual robustness. Experiments on six representative LLMs show that although RAG can improve response accuracy, current LLMs still struggle with rejecting unanswerable retrieved contexts, integrating information across documents, and resisting false retrieved evidence.",
+      "summary_cn": {
+        "研究动机": "RAG 通常被认为可以缓解 LLM hallucination，但真实检索结果并不总是干净可靠。检索文档可能包含相似噪声、没有答案、需要多文档整合，甚至包含事实错误。已有评估如果只看最终问答准确率，很难判断 LLM 是否真正具备可靠使用 retrieved documents 的能力。",
+        "解决问题": "论文提出 RGB，用来系统评估 LLM 在 RAG 场景中的四种基础能力：Noise Robustness、Negative Rejection、Information Integration 和 Counterfactual Robustness。目标不是评估单个 RAG pipeline 的工程效果，而是诊断 LLM 在面对外部文档时有哪些能力短板。",
+        "现象分析": "RGB 的核心判断是，RAG 并不天然可靠。模型可能从噪声文档中抽错答案，在没有答案时强行回答，看到多篇文档却无法整合，或者过度相信检索内容而被错误证据带偏。这说明 RAG 可能把 hallucination 从参数知识问题转移成检索证据误信问题，因此评估必须覆盖检索噪声、拒答、多文档综合和错误证据抵抗。",
+        "主要方法": "RGB 构造四个 testbed。Noise Robustness 让外部文档同时包含 positive documents 和相似 noisy documents，测试模型能否选对证据。Negative Rejection 只提供不含答案的噪声文档，测试模型是否拒答。Information Integration 要求模型从多篇文档中抽取不同信息并合并成答案。Counterfactual Robustness 在检索文档中放入事实错误，并通过 instruction 提醒风险，测试模型是否会盲目信任 retrieved context。数据构造基于近期新闻，先用 ChatGPT 生成事件、问题、答案和证据，再通过 Google Search API 获取相关网页、切分 chunks，并按是否包含答案划分 positive/negative documents。",
+        "数据集与实验": "RGB 覆盖 English 和 Chinese。实验评估 6 个代表性 LLM：ChatGPT/gpt-3.5-turbo、ChatGLM-6B、ChatGLM2-6B、Vicuna-7B-v1.3、Qwen-7B-Chat、BELLE-7B-2M。每个问题提供 5 篇外部文档，Noise Robustness 和 Information Integration 中噪声比例从 0 到 0.8 变化。结果显示 RAG 能提升准确率，但高噪声会显著降低性能；Negative Rejection 最弱，英文最高拒答率仅 45%，中文最高 43.33%；Information Integration 即使无噪声最高也只有英文 60%、中文 67%；Counterfactual Robustness 中模型容易过度相信错误检索文档。",
+        "主要贡献": "论文的主要贡献是提出 RGB 中英双语 RAG benchmark，并把 LLM 使用检索文档的能力拆解为四个可测维度。它指出 RAG 不只是检索召回和最终 QA accuracy 的问题，更涉及抗噪声、拒答、多文档整合和错误证据识别。它适合和 RAGAs、ARES 放在一起：RGB 定义 RAG 应该评测哪些能力，RAGAs 提供快速 reference-free 诊断指标，ARES 提供训练 judge + PPI 校正的正式自动评估框架。"
+      },
+      "status": "approved",
+      "added_at": "2026-05-30",
+      "key_figure": {
+        "type": "Figure",
+        "name": "Abilities",
+        "page": 1,
+        "path": "assets/paper_images/rgb-2024-rag-abilities.png",
+        "caption": "RGB evaluates four core RAG abilities: noise robustness, negative rejection, information integration, and counterfactual robustness.",
+        "caption_cn": "RGB 将 RAG 场景下 LLM 的基础能力拆成四类：抗相似噪声、无答案时拒答、多文档信息整合，以及抵抗错误检索证据的反事实鲁棒性。",
+        "bbox": {},
+        "caption_bbox": {},
+        "source": "manual-summary-from-paper-abilities",
+        "confidence": 0.9,
+        "needs_manual_review": false,
+        "contexts": [
+          {
+            "page": 1,
+            "text": "RGB evaluates four fundamental abilities required for RAG: noise robustness, negative rejection, information integration, and counterfactual robustness."
+          },
+          {
+            "page": 5,
+            "text": "LLMs still struggle significantly with negative rejection, information integration, and dealing with false information in retrieved documents."
+          }
+        ]
+      }
     }
   ]
 }
