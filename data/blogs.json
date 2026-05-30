@@ -389,6 +389,80 @@
       "my_note": "这篇对我有价值的地方在于，它把量化问题放回了 RL 系统闭环里：rollout engine 不是一个独立推理服务，而是 policy training 的一部分。如果 rollout 端因为 INT4 量化和训练端 BF16 行为不一致，RL 看到的 logprob、KL 和生成分布都会漂移，训练稳定性会受到影响。因此这里的 QAT 不是普通压缩技巧，而是为了让低比特 rollout 不破坏 RL 训练语义。和 P2P weight transfer、DeepSeek-V4 Day-0、Miles 这些材料连起来看，这篇补上的是 rollout engine 本身如何低成本运行：P2P 解决权重怎么同步，Miles/SGLang 解决大模型 RL 框架和推理后端怎么协同，INT4 QAT 则解决 rollout 推理怎样在显存/通信成本下降的同时保持 train-infer consistency。",
       "related_papers": [],
       "status": "approved"
+    },
+    {
+      "id": "lmsys-minimax-m2-efficient-attention",
+      "title": "\"No Free Lunch\": Deconstruct Efficient Attention with MiniMax M2",
+      "url": "https://www.lmsys.org/blog/2025-11-04-miminmax-m2/",
+      "source": "LMSYS Blog / MiniMax LLM Team",
+      "published_at": "2025-11-04",
+      "added_at": "2026-05-30",
+      "tags": [
+        "MiniMax M2",
+        "efficient attention",
+        "full attention",
+        "linear attention",
+        "sparse attention",
+        "SWA",
+        "long context",
+        "agent tasks",
+        "SGLang",
+        "inference system"
+      ],
+      "summary": "这篇 LMSYS 技术分享以 SGLang 对 MiniMax M2 的首日支持为切入点，但真正有价值的部分是 MiniMax 团队对 efficient attention 的负结果复盘。MiniMax M2 是一个面向 coding 和 agentic tasks 的 MoE 模型，约 230B 总参数、10B 激活参数；相比此前 M1/MiniMax-01 中探索过的 efficient attention 路线，M2 最终回到了 full attention。文章的核心观点是：efficient attention 在理论上可以降低复杂度，但在工业级 LLM 中还没有稳定证明自己能在质量、训练、推理和系统集成上全面替代 full attention。标准 benchmark 可能是能力的有损抽象，小规模实验中看似接近 full attention 的 hybrid/linear/sparse 方案，放大后可能在 complex multi-hop reasoning、agent tasks 和长上下文任务中暴露短板。系统层面，当前硬件和软件生态也越来越围绕 full attention 优化；很多 efficient attention 方法理论上节省计算，但实际训练可能 memory-bound，推理侧还要兼容 prefix caching、low-precision state storage 和 speculative decoding。MiniMax 在 M2 训练中尝试过 Hybrid Sliding Window Attention，并测试了不同 SWA/full attention 比例、ROPE/NoPE 设置、层内/层间混合、global attention pattern 调整和 sink token，但在继续预训练数千亿到万亿 token 后，agent tasks 和复杂长上下文评测仍然表现很差。",
+      "key_points": [
+        "这篇文章表面是 MiniMax M2 的 SGLang day-one support，实质是对 efficient attention 在工业级 LLM 中落地困难的经验复盘。",
+        "MiniMax M2 最终回到 full attention，说明团队在质量、训练稳定性、推理系统复杂度之间做了保守选择。",
+        "作者认为 standard benchmark 是能力的 leaky abstraction：MMLU、BBH、LongBench 等指标不能完整覆盖真实 agent、多轮工具调用和复杂长上下文能力。",
+        "小规模实验中看起来接近 full attention 的 attention 变体，放大后可能在 multi-hop reasoning、agent tasks 和长上下文依赖上掉得很明显。",
+        "Efficient attention 的验证成本本身很高：它旨在省算力，但要证明它在大模型上不伤能力，往往需要消耗大量训练 compute。",
+        "系统层面，linear/sparse/SWA 等方法的理论复杂度优势可能被 memory-bound、IO、kernel 实现和 GPU 利用率问题抵消。",
+        "推理侧还要考虑 prefix caching、speculative decoding、low-precision KV/state、kernel 支持和硬件生态；新 attention 机制不是只要训练能跑就能线上服务。",
+        "MiniMax 在 M2 中尝试 Hybrid Sliding Window Attention，是因为 SWA 相对其他 efficient attention 工程复杂度更低，也可能缓解 pipeline parallelism 和 attention data parallel group 的负载不均衡。",
+        "他们尝试了 SWA/full attention 比例、ROPE/NoPE、层内/层间混合、global attention pattern 和 sink token 等设计，但在大规模继续预训练后，agent 和复杂长上下文表现仍未达标。",
+        "文章的结论不是 full attention 永远最好，而是 efficient attention 要真正进入 frontier model 主干架构，需要 evaluation、data 和 infrastructure 同时成熟。"
+      ],
+      "standards": [
+        {
+          "name": "质量",
+          "description": "小 benchmark 不掉点不代表复杂 reasoning、agent、多轮工具调用和长上下文依赖也不掉点。"
+        },
+        {
+          "name": "训练",
+          "description": "Efficient attention 可能引入新的 scaling 问题；负结果往往要到很大规模继续预训练后才显现。"
+        },
+        {
+          "name": "推理系统",
+          "description": "新 attention 结构还要接入 prefix cache、spec decoding、低精度 KV/state、kernel 和硬件生态。"
+        }
+      ],
+      "quotes": [
+        {
+          "text": "MiniMax M2 model ultimately reverted to full attention",
+          "note": "这是文章最核心的事实：M2 在大规模实践中从 efficient attention 路线回到 full attention。"
+        },
+        {
+          "text": "Benchmarks as a leaky abstraction",
+          "note": "说明标准 benchmark 可能掩盖真实复杂任务中的能力缺陷。"
+        },
+        {
+          "text": "memory-bound, even during training",
+          "note": "解释为什么理论复杂度更低的 attention 结构，实际训练中未必更高效。"
+        },
+        {
+          "text": "co-exist with prefix caching and speculative decoding",
+          "note": "点明 attention 机制不仅是模型结构问题，也是推理系统集成问题。"
+        },
+        {
+          "text": "evaluation, data, and infrastructure",
+          "note": "作者认为 efficient attention 真正成熟需要这三类条件共同改善。"
+        }
+      ],
+      "my_note": "这篇对我有价值的地方在于，它提供了一个很真实的负结果：efficient attention 不是理论上没吸引力，而是目前很难在工业级大模型里稳定替代 full attention。它提醒我，attention 架构选择不能只看复杂度公式，也不能只看小规模 benchmark。对开放场景 LLM 来说，质量是第一约束；如果一个更省算的 attention 机制在 agent tasks、复杂 reasoning 或长上下文任务上有隐藏短板，那么推理省下来的成本很可能不值得。和 HiSparse / DeepSeek-V4 这些材料对照看，这篇解释的是为什么很多 efficient attention 机制在进入 frontier model 主干前会卡住；HiSparse 则是在 sparse attention 已经成为模型机制后，进一步做 serving memory system。",
+      "related_papers": [
+        "deepseek-v3-2-2512-02556"
+      ],
+      "status": "approved"
     }
   ]
 }
