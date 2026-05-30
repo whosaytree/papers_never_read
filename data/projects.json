@@ -277,6 +277,72 @@
       "related_papers": [],
       "related_blogs": [],
       "status": "approved"
+    },
+    {
+      "id": "routellm",
+      "name": "RouteLLM",
+      "repo_url": "https://github.com/lm-sys/RouteLLM",
+      "homepage_url": "https://www.lmsys.org/blog/2024-07-01-routellm/",
+      "docs_url": "https://github.com/lm-sys/RouteLLM",
+      "demo_url": "",
+      "source": "lm-sys / RouteLLM",
+      "added_at": "2026-05-30",
+      "project_type": "routing framework",
+      "domain": "LLM routing / Cost-quality optimization",
+      "tags": [
+        "RouteLLM",
+        "LLM routing",
+        "model routing",
+        "request-level routing",
+        "preference data",
+        "Chatbot Arena",
+        "cost optimization",
+        "OpenAI-compatible API",
+        "Ollama"
+      ],
+      "stack": [
+        "Python",
+        "PyTorch",
+        "LiteLLM",
+        "OpenAI-compatible API",
+        "Hugging Face",
+        "FastAPI / Uvicorn",
+        "Ollama"
+      ],
+      "summary": "RouteLLM 是 LMSYS 开源的 LLM router serving 和评测框架。它不是 MoE，也不是 SGLang / vLLM 这类底层推理引擎，而是在模型外部做 request-level routing：根据每个用户请求的难度和成本阈值，在强模型和弱模型之间选择调用对象，让简单请求走更便宜的模型，困难请求再交给更强模型，从而在尽量保持质量的同时降低调用成本。",
+      "highlights": [
+        "定位是模型外部的路由层，不是模型内部的 MoE expert routing。",
+        "可以作为 OpenAI client 的 drop-in replacement，也可以启动 OpenAI-compatible routing server。",
+        "个人也能使用：既可以路由到两个 API 模型，也可以让简单请求走本地 Ollama 小模型、复杂请求走 GPT-4 / Claude。",
+        "RouteLLM 自身通常不是内存瓶颈；使用推荐的 mf router 时，主要只是一个轻量 Python 服务，真正的资源开销来自被调用的本地 weak model 或外部 API。",
+        "提供基于 Chatbot Arena 偏好数据训练好的 routers，推荐默认使用轻量的 matrix factorization router。",
+        "支持 matrix factorization、similarity-weighted ranking、BERT classifier、causal LLM classifier 和 random baseline 等 router。",
+        "通过 cost threshold 控制强模型调用比例，从而调节成本和质量的 tradeoff。",
+        "官方报告在 MT-Bench 等 benchmark 上可在保持约 95% GPT-4 表现的同时显著降低成本。"
+      ],
+      "use_cases": [
+        "给个人脚本、agent、chatbot 或 API 网关增加模型选择层。",
+        "在 GPT-4 / Claude 等强模型和 Mixtral、Llama、Qwen、本地 Ollama 模型等便宜模型之间做动态路由。",
+        "用本地小模型处理简单问题，只在复杂问题上调用昂贵闭源模型。",
+        "理解 LLM routing 如何把模型能力差异转化为成本优化。",
+        "研究 preference data 如何用于训练 query-level router。",
+        "对比 RouteLLM、商业 router、手写规则路由和随机路由的成本收益。"
+      ],
+      "setup_note": "RouteLLM 可通过 pip install \"routellm[serve,eval]\" 安装。接入方式有两种：一种是在 Python 里用 Controller 替换 OpenAI client；另一种是启动 routellm.openai_server，把现有应用的 OpenAI base_url 指向本地 RouteLLM server。使用推荐的 mf router 时仍需要 OPENAI_API_KEY，因为它会调用 OpenAI embedding 给 prompt 做向量化；如果 weak model 用本地 Ollama，需要先启动对应模型，例如 ollama run llama3，再把 weak_model 配成 ollama_chat/llama3。实际部署前应基于自己的请求分布校准 threshold，否则强弱模型调用比例可能和预期不一致。",
+      "practice_notes": [
+        "官方个人级示例：用 GPT-4 作为 strong model，用本地 Ollama Llama 3 8B 作为 weak model。RouteLLM 先判断请求难度，简单请求走本地 Llama 3，复杂请求再走 GPT-4。",
+        "官方服务级示例：启动 routellm.openai_server，暴露 OpenAI-compatible API。已有应用只需要把 OpenAI client 的 base_url 改到本地 RouteLLM server，并把 model 写成 router-mf-0.11593 这类格式。",
+        "系统级集成示例：F5 Intelligent AI Load Balancing 文档把 RouteLLM 作为 routing strategy，用 router-mf-0.5、router-mf-0.9 等阈值表达 balanced、cost、quality 等策略。",
+        "更适合个人的实践路径：先用 mf router + 一个便宜 API 模型 / 本地 Ollama 模型作为 weak model，再用 GPT-4 或 Claude 作为 strong model；不建议一开始使用 causal_llm router，因为它会额外加载较大的 LLM 分类器，抵消省钱和轻量部署的优势。"
+      ],
+      "license": "Apache-2.0",
+      "maintenance": "active",
+      "my_note": "",
+      "related_papers": [],
+      "related_blogs": [
+        "lmsys-hard-prompts-category"
+      ],
+      "status": "approved"
     }
   ]
 }

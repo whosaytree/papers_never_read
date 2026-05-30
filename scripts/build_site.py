@@ -897,6 +897,7 @@ def project_search_blob(project: dict) -> str:
         " ".join(project.get("highlights", [])),
         " ".join(project.get("use_cases", [])),
         project.get("setup_note", ""),
+        " ".join(project.get("practice_notes", [])),
         project.get("license", ""),
         project.get("maintenance", ""),
         project.get("my_note", ""),
@@ -1084,6 +1085,7 @@ def project_card(project: dict, papers_by_id: dict[str, dict], blogs_by_id: dict
     stack = project.get("stack", [])
     highlights = project.get("highlights", [])
     use_cases = project.get("use_cases", [])
+    practice_notes = project.get("practice_notes", [])
     related_papers = project.get("related_papers", [])
     related_blogs = project.get("related_blogs", [])
     title_url = repo_url or homepage_url or docs_url or demo_url or "#"
@@ -1091,6 +1093,7 @@ def project_card(project: dict, papers_by_id: dict[str, dict], blogs_by_id: dict
     stack_html = "".join(f'<span class="badge label">{escape(item)}</span>' for item in stack)
     highlights_html = "".join(f"<li>{escape(item)}</li>" for item in highlights)
     use_cases_html = "".join(f"<li>{escape(item)}</li>" for item in use_cases)
+    practice_notes_html = "".join(f"<li>{escape(item)}</li>" for item in practice_notes)
     link_items = []
     for label, url in [
         ("Repo", repo_url),
@@ -1136,6 +1139,10 @@ def project_card(project: dict, papers_by_id: dict[str, dict], blogs_by_id: dict
   <div class="project-block">
     <h4>使用备注</h4>
     <div class="project-summary">{setup_note}</div>
+  </div>
+  <div class="project-block">
+    <h4>实践案例</h4>
+    <ul class="project-points">{practice_notes_html or '<li>待补充</li>'}</ul>
   </div>
   <div class="project-block">
     <h4>维护信息</h4>
