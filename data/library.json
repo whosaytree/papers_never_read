@@ -10495,6 +10495,79 @@
           }
         ]
       }
+    },
+    {
+      "id": "ragas-automated-rag-evaluation-2024-eacl",
+      "title": "RAGAs: Automated Evaluation of Retrieval Augmented Generation",
+      "paper_url": "https://aclanthology.org/2024.eacl-demo.16/",
+      "pdf_url": "https://aclanthology.org/2024.eacl-demo.16.pdf",
+      "authors": [
+        "Shahul Es",
+        "Jithin James",
+        "Luis Espinosa Anke",
+        "Steven Schockaert"
+      ],
+      "venue": "EACL Demo",
+      "year": 2024,
+      "primary_area": "数据集与基准",
+      "category": "其他",
+      "keywords": [
+        "RAG evaluation",
+        "retrieval augmented generation",
+        "reference-free evaluation",
+        "LLM-as-a-judge",
+        "faithfulness",
+        "answer relevance",
+        "context relevance",
+        "hallucination detection",
+        "answer grounding",
+        "WikiEval"
+      ],
+      "labels": [
+        "RAG",
+        "Evaluation",
+        "LLM-as-a-Judge",
+        "Hallucination",
+        "Retrieval Quality",
+        "EACL"
+      ],
+      "code_url": "https://github.com/explodinggradients/ragas",
+      "note": "",
+      "tldr": "RAGAs 是面向 RAG 系统的 reference-free 自动评估框架，用 LLM-as-a-judge 分别评估答案是否忠实于检索内容、是否回答问题，以及检索上下文是否相关和精炼。",
+      "abstract": "RAGAs introduces a reference-free evaluation framework for Retrieval Augmented Generation pipelines. RAG systems combine retrieval and LLM-based generation, so evaluation must consider whether the retrieval module identifies relevant and focused contexts, whether the LLM exploits those contexts faithfully, and whether the generated answer is useful. RAGAs proposes metrics for these dimensions without requiring ground-truth human annotations, enabling faster evaluation cycles for RAG architectures.",
+      "summary_cn": {
+        "研究动机": "RAG 系统由检索器和生成模型共同组成，只看最终答案是否正确很难定位问题来源。系统可能因为检索不到相关文档、上下文噪声太多、答案没有利用检索内容、回答跑题或 hallucination 而失败。人工评估成本高，也不适合快速迭代 RAG pipeline，因此需要可自动化、无需标准答案的评估框架。",
+        "解决问题": "论文解决的是 reference-free RAG evaluation：在没有人工标准答案或人工标注的情况下，如何自动评估 RAG 系统的不同环节，并把错误拆解为上下文相关性、答案相关性和答案忠实性几个维度。",
+        "现象分析": "RAG 评估不能只问最终答案好不好，而要拆成三个问题：检索内容有没有用，答案有没有围绕问题，答案能不能被检索上下文支持。不同指标对应不同优化方向：Context Relevance 低通常说明 retriever、chunking 或 reranker 有问题；Faithfulness 低说明生成模型没有被上下文约束住；Answer Relevance 低说明问题理解、query rewriting 或回答格式存在问题。",
+        "主要方法": "RAGAs 提出三个主要指标。Faithfulness 先用 LLM 把答案拆成 atomic statements，再判断每个 statement 是否能由 retrieved context 支持，分数为被支持 statement 占比。Answer Relevance 给定答案后让 LLM 反向生成若干可能问题，再用 embedding 计算这些问题和原问题的相似度。Context Relevance 给定 question 和 context，让 LLM 从 context 中抽取有助于回答问题的关键句子，并用有效句子占比衡量上下文是否聚焦。",
+        "数据集与实验": "作者构造 WikiEval 评估集：选取 50 个 Wikipedia 页面，偏向 2022 年之后发生或近期编辑的事件，让 ChatGPT 根据页面 introduction 生成问题，再基于对应 context 生成答案，并由两名人工标注者评估 faithfulness、answer relevance 和 context relevance。实验使用 gpt-3.5-turbo-16k 作为 evaluator，text-embedding-ada-002 计算 answer relevance 中的问题相似度。与 GPT Score、GPT Ranking 相比，RAGAs 在 WikiEval 上与人工判断一致率更高：Faithfulness 0.95、Answer Relevance 0.78、Context Relevance 0.70。",
+        "主要贡献": "论文的主要贡献是把 RAG 质量拆成可诊断的多个维度，并提供可直接使用的开源评估工具。Faithfulness 用 statement decomposition 检查回答是否被上下文支持，Answer Relevance 用 answer-to-question 反向生成检查是否对题，Context Relevance 评估检索上下文是否聚焦。它适合作为 RAG evaluation、LLM-as-a-judge、answer grounding 和 hallucination detection 的基础文献，但指标仍依赖 evaluator LLM，且 Faithfulness 只判断是否被 context 支持，不判断 context 本身是否真实。"
+      },
+      "status": "approved",
+      "added_at": "2026-05-30",
+      "key_figure": {
+        "type": "Figure",
+        "name": "Metrics",
+        "page": 1,
+        "path": "assets/paper_images/ragas-2024-metrics.png",
+        "caption": "RAGAs decomposes RAG evaluation into context relevance, faithfulness, and answer relevance, enabling failure attribution across retrieval and generation stages.",
+        "caption_cn": "RAGAs 将 RAG 评估拆成 Context Relevance、Faithfulness 和 Answer Relevance 三个维度，用于定位检索、上下文噪声、答案跑题和回答不忠实等不同失败来源。",
+        "bbox": {},
+        "caption_bbox": {},
+        "source": "manual-summary-from-paper-metrics",
+        "confidence": 0.9,
+        "needs_manual_review": false,
+        "contexts": [
+          {
+            "page": 1,
+            "text": "RAGAs introduces a suite of metrics that can evaluate different RAG dimensions without relying on ground truth human annotations."
+          },
+          {
+            "page": 2,
+            "text": "The core metrics include faithfulness, answer relevance, and context relevance for evaluating RAG pipelines."
+          }
+        ]
+      }
     }
   ]
 }
