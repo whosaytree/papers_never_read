@@ -329,6 +329,100 @@
       "status": "approved"
     },
     {
+      "id": "llamaindex-qa-system-evaluation",
+      "title": "Building and Evaluating a QA System with LlamaIndex",
+      "url": "https://www.llamaindex.ai/blog/building-and-evaluating-a-qa-system-with-llamaindex-3f02e9d87ce1",
+      "source": "LlamaIndex Blog / Medium / LlamaIndex v0.6.0 source",
+      "published_at": "2023-05-07",
+      "added_at": "2026-05-31",
+      "tags": [
+        "LlamaIndex",
+        "RAG evaluation",
+        "QA evaluation",
+        "label-free evaluation",
+        "LLM-as-a-judge",
+        "ResponseEvaluator",
+        "QueryResponseEvaluator",
+        "source nodes",
+        "faithfulness",
+        "relevancy"
+      ],
+      "summary": "这篇 LlamaIndex 早期技术博客介绍如何构建并评估一个 QA / RAG 系统。它的核心不是提出新的 benchmark，而是给出一个无标注评估流程：先用 `DatasetGenerator` 从文档中自动生成 questions，再用 LlamaIndex `QueryEngine` 回答这些问题并返回 `response` 和 `source_nodes`，最后用 LLM evaluator 判断 query、response 和 retrieved context 是否一致。文章把评估拆成三类：只看 `response + source_nodes` 是否匹配，用于发现答案是否脱离检索上下文；同时看 `query + response + source_nodes` 是否匹配，用于判断答案和上下文是否真正回答问题；以及逐个检查 source node 是否支撑回答，用于 evidence attribution 和检索结果诊断。根据 LlamaIndex v0.6.0 源码，这三类评估都是 prompt-driven 的 LLM judge，默认用 GPT-4 一类模型输出 `YES/NO`，而不是人工 label、embedding 相似度或统计校准。文章里的 API 已经偏旧，但“question generation -> RAG answering -> response/context/query 一致性评估”的分解方式仍然有参考价值。",
+      "key_points": [
+        "这篇文章发表于 2023 年 5 月，属于 LlamaIndex 早期 QA/RAG evaluation 教程；`DatasetGenerator`、`GPTVectorStoreIndex`、`ServiceContext` 等代码接口已经比较旧。",
+        "流程第一步是 question generation：从文档节点中自动生成 synthetic questions，用来构造没有人工 label 的初始评测输入。",
+        "流程第二步是让 LlamaIndex QueryEngine 回答这些问题，并保留 `response` 和用于生成回答的 `source_nodes`。",
+        "第一类评估是 `ResponseEvaluator.evaluate(response)`：只比较答案和 source nodes，不看原始 query，适合发现答案是否被上下文支持。",
+        "第二类评估是 `QueryResponseEvaluator.evaluate(query, response)`：把 query、answer 和 source context 放在一起判断，适合检查回答是否真正回答了用户问题。",
+        "第三类评估是 `QueryResponseEvaluator.evaluate_source_nodes(query, response)`：逐个 source node 判断其是否支撑 query-response，对引用展示和检索诊断有用。",
+        "三类评估都是 prompt-driven LLM judge；v0.6.0 源码中默认 prompt 要求 judge 判断信息或 query-response 是否被 context 支持，并输出 `YES/NO`。",
+        "多 source nodes 场景下，旧版 evaluator 会用 refine prompt 在多个上下文上逐步合并判断；只要已有或新增 context 支持信息，就倾向输出 `YES`。",
+        "这篇比 AWS Bedrock 那篇更接近 answer-level evaluation，因为 evaluator 明确把生成的 `response` 放入 judge prompt。",
+        "局限是它没有 reference answer、没有连续分数、没有 human calibration，也没有单独统计 retrieval precision/recall；更适合开发阶段 sanity check 和轻量回归测试。"
+      ],
+      "standards": [
+        {
+          "name": "Question Generation",
+          "description": "用 LLM 从文档生成 synthetic questions，降低手工构造评测输入的成本。"
+        },
+        {
+          "name": "RAG Answering",
+          "description": "用 QueryEngine 对问题生成 `response`，并保留参与回答的 `source_nodes`。"
+        },
+        {
+          "name": "Response + Sources",
+          "description": "只判断答案是否被 retrieved source nodes 支持，不考虑 query。"
+        },
+        {
+          "name": "Query + Response + Sources",
+          "description": "判断答案和上下文是否共同回答了用户 query，比单纯 faithfulness 更完整。"
+        },
+        {
+          "name": "Per-source Evaluation",
+          "description": "逐个 source node 判断是否支撑 query-response，用于证据归因和检索结果分析。"
+        },
+        {
+          "name": "Prompt-driven YES/NO Judge",
+          "description": "旧版 evaluator 通过 LLM prompt 输出二元判断，不依赖人工 reference answer。"
+        }
+      ],
+      "quotes": [
+        {
+          "text": "Question Generation",
+          "note": "流程第一步：从文档自动生成评测问题。"
+        },
+        {
+          "text": "ResponseEvaluator",
+          "note": "旧版接口中用于检查 response 是否被 source nodes 支持的 evaluator。"
+        },
+        {
+          "text": "QueryResponseEvaluator",
+          "note": "旧版接口中用于把 query、response 和 source context 一起评估的 evaluator。"
+        },
+        {
+          "text": "YES/NO",
+          "note": "这篇的评估输出主要是二元判断，而不是连续分数或人工标注等级。"
+        },
+        {
+          "text": "source nodes",
+          "note": "LlamaIndex Response 对象中保留的检索上下文，是这篇评估方法的核心证据来源。"
+        }
+      ],
+      "my_note": "这篇应该放在 synthetic RAG evaluation 这一组里，但它的位置比 Red Hat、Databricks、AWS 更早期。它的价值在于把 RAG 评估对象拆开了：问题从文档来，答案由 RAG 系统生成，评估时不只看答案文本，还要看 source nodes。尤其第二种 `query + response + source_nodes` 的评估方式很重要，因为一个答案可能忠实于 source nodes，却没有真正回答 query。需要注意的是，这套方案没有人工标准答案，适合早期 sanity check 和回归测试雏形，不适合作为最终高可信评测。当前如果实现，应参考新版 LlamaIndex evaluation docs，而不是直接照抄 2023 年博客代码。",
+      "analysis_note": {
+        "title": "详细笔记：LlamaIndex QA System Evaluation",
+        "source": "docs/blog_notes/llamaindex-qa-system-evaluation.md",
+        "url": "blog_notes/llamaindex-qa-system-evaluation.html"
+      },
+      "related_papers": [
+        "ragas-automated-rag-evaluation-2024-eacl",
+        "ares-automated-rag-evaluation-2024-naacl",
+        "rgb-benchmarking-llms-rag-2024-aaai",
+        "ragtruth-hallucination-corpus-2024-acl"
+      ],
+      "status": "approved"
+    },
+    {
       "id": "lmsys-hard-prompts-category",
       "title": "Introducing Hard Prompts Category in Chatbot Arena",
       "url": "https://www.lmsys.org/blog/2024-05-17-category-hard/",
