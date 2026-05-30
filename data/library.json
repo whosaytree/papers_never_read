@@ -10152,6 +10152,76 @@
           }
         ]
       }
+    },
+    {
+      "id": "toa-epistemically-necessary-tools-2506-00886",
+      "title": "Position: Agent Should Invoke External Tools ONLY When Epistemically Necessary",
+      "paper_url": "https://arxiv.org/abs/2506.00886",
+      "authors": [
+        "Hongru Wang",
+        "Cheng Qian",
+        "Manling Li",
+        "Jiahao Qiu",
+        "Boyang Xue",
+        "Mengdi Wang",
+        "Heng Ji",
+        "Amos Storkey",
+        "Kam-Fai Wong"
+      ],
+      "venue": "arXiv",
+      "year": 2026,
+      "primary_area": "基础/前沿模型 (含LLM)",
+      "category": "Agent 与工具使用",
+      "keywords": [
+        "Theory of Agent",
+        "tool use",
+        "epistemic necessity",
+        "knowledge boundary",
+        "tool-use decision boundary",
+        "internal cognitive tools",
+        "external physical tools",
+        "over-delegation",
+        "overacting",
+        "metacognition"
+      ],
+      "labels": [
+        "Agent",
+        "Tool Use",
+        "Theory",
+        "Epistemic Necessity",
+        "Position Paper"
+      ],
+      "code_url": "",
+      "note": "参考价值在于：作为一篇纯理论文章，它展示了如何从问题定义、概念边界、形式化变量、命题和设计原则来构建 agent tool-use 的理论框架。本文无独立实证实验，主要通过理论建模、概念框架、图示和引用已有工作现象来支撑观点。",
+      "tldr": "ToA 提出 agent 只有在认识论上必要时才应调用外部工具：thinking / reasoning 是 internal cognitive tool，search、API、代码执行器等是 external physical tool，核心能力是判断当前不确定性应由内部推理解决还是外部交互解决。",
+      "abstract": "As large language models evolve into tool-augmented agents, a central question remains unresolved: when is external tool use actually justified? Existing agent frameworks typically treat tools as ordinary actions and optimize for task success or reward, offering little principled distinction between epistemically necessary interaction and unnecessary delegation. This position paper argues that agents should invoke external tools only when epistemically necessary. Here, epistemic necessity means that a task cannot be completed reliably via the agent's internal reasoning over its current context, without any external interaction. We introduce the Theory of Agent (ToA), a framework that treats agents as making sequential decisions about whether remaining uncertainty should be resolved internally or delegated externally. From this perspective, common agent failure modes (e.g., overthinking and overacting) arise from miscalibrated decisions under uncertainty rather than deficiencies in reasoning or tool execution alone. We further discuss implications for training, evaluation, and agent design, highlighting that unnecessary delegation not only causes inefficiency but can impede the development of internal reasoning capability. Our position provides a normative criterion for tool use that complements existing decision-theoretic models and is essential for building agents that are not only correct, but increasingly intelligent.",
+      "summary_cn": {
+        "研究动机": "工具增强 LLM agent 已经能进行搜索、API 调用、代码执行和环境交互，但现有框架通常把工具调用当作普通 action，只优化任务成功率、成本或 reward。这样会导致一个关键问题被忽略：外部工具什么时候是真的必要，什么时候只是模型把本可内部解决的问题外包出去。论文认为，过度工具调用不仅低效，还会让模型失去通过内部推理巩固能力的训练机会。",
+        "解决问题": "论文要解决的是 agent tool-use 的决策原则问题：当前不确定性应该由内部 reasoning 解决，还是必须通过外部 acting / tool use 获取新信息。它把 overthinking、overacting、underacting、hallucination 等 failure mode 统一解释为 knowledge boundary 和 tool-use decision boundary 没有对齐，而不是单纯的推理能力差或工具执行差。",
+        "现象分析": "这篇不是提出新训练算法的实验论文，而是 position / theory paper。它对 OTC-PO、Search-R1、ToolOmni 等工作有解释价值：减少工具调用不只是工程成本优化，而是在避免不具备 epistemic necessity 的外部委托；RAG / search agent 的关键也不是会不会搜，而是能否判断什么时候必须搜。",
+        "主要方法": "论文提出 Theory of Agent (ToA)，在标准 POMDP agent 形式上给 action space 加一层认识论标注：T = T_int ∪ T_ext。T_int 是 internal cognitive tools，如 CoT、reflection、decomposition、planning；T_ext 是 external physical tools，如 search、API、UI action、代码执行器和环境交互。内部工具查询模型自己的 internal world model，外部工具查询外部世界。进一步定义 internal task set、world task set、knowledge boundary，以及内部可解性估计 p_int(q,m,context)。一个简单决策规则是：当 p_int ≥ α 时继续内部推理，当 p_int < α 时调用外部工具。",
+        "数据集与实验": "本文无独立实证实验。没有训练新的 ToA agent，也没有 benchmark 主表、模型规模、训练集或 ablation。论文主要通过理论定义、命题、图示，以及对已有工作现象（如 OTC-PO 中工具过度调用与效率优化）的引用来支撑观点。",
+        "主要贡献": "论文的主要贡献是把 reasoning 和 acting 统一为知识获取工具，提出“外部工具只有在 epistemically necessary 时才应调用”的规范性标准；定义 knowledge boundary 和 tool-use decision boundary；把 overthinking / overacting 解释为 effort allocation misalignment；并给 agent 训练、评估和设计提出原则：不能只看最终正确性，还要看工具调用是否必要、内部能力是否被保留和发展。"
+      },
+      "status": "approved",
+      "added_at": "2026-05-30",
+      "key_figure": {
+        "type": "Figure",
+        "name": "3",
+        "page": 4,
+        "path": "assets/paper_images/toa-2506-00886-figure-3.png",
+        "caption": "Figure 3: A high-level illustration of epistemic effort allocation and failure modes in tool-augmented agents for: (a) task in the internal task set; and (b) task in the external task set. Point A represents pure delegation, Point B denotes the ideal frontier, and Point C represents pure internal reasoning without any external interaction.",
+        "caption_cn": "图 3：工具增强 agent 中 internal reasoning 与 external acting 的认识论努力分配。A 表示纯外部委托，B 表示外部任务的理想边界，C 表示纯内部推理；阴影区域对应 overthinking、overacting、underthinking、underacting 等错配模式。",
+        "source": "arxiv-source-figure",
+        "confidence": 0.94,
+        "needs_manual_review": false,
+        "contexts": [
+          {
+            "page": 4,
+            "text": "The figure illustrates epistemic effort allocation and failure modes in tool-augmented agents, showing how internal reasoning and external acting should be balanced for internal and external task sets."
+          }
+        ]
+      }
     }
   ]
 }
