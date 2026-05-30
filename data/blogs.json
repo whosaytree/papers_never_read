@@ -521,6 +521,82 @@
       "my_note": "这篇本身更像部署教程，但经过补充定位后仍值得保留：它帮助我区分 GPT-OSS、ChatGPT 和 Codex。GPT-OSS 不是“开源 ChatGPT”或“开源 Codex”，而是 OpenAI 提供的开放权重模型；ChatGPT/Codex 则是围绕模型构建的完整产品和 agent 系统。对后续理解本地模型部署很有用的一点是：只拿到权重并不等于拿到产品能力，还需要 SGLang/vLLM 这类 serving backend、OpenAI-compatible API、UI、协议转换、工具调用、上下文管理和安全策略。它和 SGLang 项目条目可以连起来看：SGLang 把开放权重模型变成可调用的推理服务，而 Open WebUI/LMRouter/Claude Code 这类上层工具再把它变成聊天或 coding agent 工作流。",
       "related_papers": [],
       "status": "approved"
+    },
+    {
+      "id": "lmsys-pd-multiplexing-greencontext",
+      "title": "PD-Multiplexing: Unlocking High-Goodput LLM Serving with GreenContext",
+      "url": "https://www.lmsys.org/blog/2025-09-28-pdmux/",
+      "source": "LMSYS Blog",
+      "published_at": "2025-09-28",
+      "added_at": "2026-05-30",
+      "tags": [
+        "SGLang",
+        "PD-Multiplexing",
+        "GreenContext",
+        "LLM serving",
+        "goodput",
+        "SLO",
+        "prefill-decode scheduling",
+        "chunked prefill",
+        "PD disaggregation",
+        "GPU resource partitioning"
+      ],
+      "summary": "这篇 LMSYS 技术分享提出 PD-Multiplexing，一种基于 NVIDIA GreenContext 的 LLM serving 调度范式，目标是在满足延迟 SLO 的前提下提高 goodput。LLM 推理的 prefill 阶段负责处理输入 prompt 和建立 KV cache，通常计算密集；decode 阶段负责逐 token 生成输出，通常持续时间长且对 ITL/TBT 很敏感。传统方案要么用 PD-disaggregation 把 prefill 和 decode 拆到不同实例/GPU，但会带来静态资源切分和跨实例 KV cache 迁移；要么用 chunked prefill 把长 prefill 切小并插入 decode，但 chunk size 很难同时兼顾 ITL SLO 和 GPU 利用率。PD-Multiplexing 提供第三种思路：在同一个 serving instance、同一个 KV cache pool 内，通过 GreenContext 给不同 CUDA streams 分配不同 SM，让 prefill 和 decode 做 intra-GPU spatial sharing。系统给 decode 分配刚好满足 ITL SLO 的 SM，剩余 SM 尽量给 prefill，并把 prefill 切成 prefill blocks 以消除 multiplexing 中的 GPU bubbles。由于 GreenContext 只划分 SM、不划分 memory bandwidth，文章还用 offline profiling 和 latency predictor 支撑 SLO-aware scheduling。实验显示，在 Mooncake-Tool&Agent trace 上，相比 chunked prefill 最高提升 3.06x goodput，相比 PD-disaggregation 最高提升 1.62x。",
+      "key_points": [
+        "这篇文章解决的是 LLM serving 中 prefill/decode 共享 GPU 时的 SLO 与 goodput 冲突。",
+        "Prefill 需要大块计算来尽快处理 prompt 和建立 KV cache；decode 需要稳定逐 token 输出，不能被长 prefill 拖慢 ITL。",
+        "PD-disaggregation 能隔离 prefill 和 decode，但资源静态切分，并且需要处理跨实例 KV cache 迁移和高速互联依赖。",
+        "Chunked prefill 通过切小 prefill 来保护 decode latency，但 chunk size 太小会浪费 GPU，太大又会违反 ITL SLO。",
+        "PD-Multiplexing 的核心是 intra-GPU spatial sharing：在同一个实例里把 GPU SM 动态分给 prefill 和 decode，而不是把两者拆到不同实例。",
+        "GreenContext 允许同一进程中多个 CUDA streams 拥有不同 SM allocations，是实现 PD-Multiplexing 的关键底层能力。",
+        "Bubble-less multiplex engine 通过把 prefill 切成更小的 prefill blocks，减少 prefill launch 和 decode 非确定长度带来的 GPU idle bubbles。",
+        "SLO-aware dispatcher 的调度直觉是：给 decode 分配刚好满足 ITL SLO 的 SM，把剩余 SM 尽量留给 prefill，以扩大后续 decode batch size。",
+        "GreenContext 只划分 SM、不划分 memory bandwidth，因此 prefill 和 decode 仍会在显存带宽上相互影响；调度需要针对模型和硬件做 offline profiling。",
+        "实验显示，PD-Multiplexing 在 tight ITL SLO 下比 chunked prefill 更容易保持低 TTFT 和高 GPU 利用率，在真实 trace 上也能显著提高 SLO-compliant goodput。"
+      ],
+      "standards": [
+        {
+          "name": "PD-disaggregation",
+          "description": "把 prefill 和 decode 放到不同实例或 GPU，隔离资源但引入静态切分、KV cache 迁移和通信复杂度。"
+        },
+        {
+          "name": "Chunked prefill",
+          "description": "把长 prefill 切成小块穿插到 decode 之间，易实现但 chunk size 会在 ITL SLO 与 GPU 利用率之间拉扯。"
+        },
+        {
+          "name": "PD-Multiplexing",
+          "description": "在同一实例内用 GreenContext 做 GPU SM 空间复用，共享 KV cache pool，并动态平衡 prefill/decode 资源。"
+        }
+      ],
+      "quotes": [
+        {
+          "text": "higher goodput in LLM serving",
+          "note": "点明文章的核心指标：不是单请求延迟，而是满足 SLO 下的有效吞吐。"
+        },
+        {
+          "text": "prefill and decode interleave on the same serving instance",
+          "note": "说明问题来源：两个阶段在同一实例上争抢 GPU 资源。"
+        },
+        {
+          "text": "intra-GPU spatial sharing",
+          "note": "概括 PD-Multiplexing 的核心机制：在同一 GPU 内做空间资源划分。"
+        },
+        {
+          "text": "split the prefill phase into smaller prefill blocks",
+          "note": "这是消除 GPU bubbles 的关键工程手段。"
+        },
+        {
+          "text": "does not partition memory bandwidth",
+          "note": "GreenContext 的重要限制：只分 SM，不分显存带宽，因此调度仍需 profiling。"
+        },
+        {
+          "text": "up to 3.06×",
+          "note": "文章报告的相对 chunked prefill 的最高 goodput 提升。"
+        }
+      ],
+      "my_note": "这篇对我有价值的地方在于，它把 LLM serving 的核心调度矛盾讲得很清楚：prefill 想大块跑满 GPU，decode 想小步稳定输出；如果两者简单共用同一 GPU，就会在 TTFT、ITL 和 GPU utilization 之间相互牵制。PD-Multiplexing 的重要性在于给出第三条路：既不是把 prefill/decode 物理拆开的 PD-disaggregation，也不是只靠时间切片的 chunked prefill，而是在同一实例、同一 KV cache pool 中做 GPU 空间复用。和 HiSparse、P2P weight transfer、INT4 QAT、SGLang-Jax 连起来看，这篇补的是 serving scheduler 层：HiSparse 解决 KV memory hierarchy，P2P 解决 RL 权重同步，INT4 QAT 解决低成本 rollout 一致性，而 PD-Multiplexing 解决线上推理中 prefill/decode 资源如何在 SLO 下动态分配。",
+      "related_papers": [],
+      "status": "approved"
     }
   ]
 }
