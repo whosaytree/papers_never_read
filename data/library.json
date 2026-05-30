@@ -10348,6 +10348,79 @@
           }
         ]
       }
+    },
+    {
+      "id": "nqg-survey-methods-applications-prospects-2402-18267",
+      "title": "A Survey on Neural Question Generation: Methods, Applications, and Prospects",
+      "paper_url": "https://arxiv.org/abs/2402.18267",
+      "pdf_url": "https://arxiv.org/pdf/2402.18267",
+      "authors": [
+        "Shasha Guo",
+        "Lizi Liao",
+        "Cuiping Li",
+        "Tat-Seng Chua"
+      ],
+      "venue": "IJCAI Survey Track / arXiv",
+      "year": 2024,
+      "primary_area": "应用：CV/音频/语言等",
+      "category": "自然语言处理",
+      "keywords": [
+        "neural question generation",
+        "question generation survey",
+        "text-based question generation",
+        "visual question generation",
+        "knowledge base question generation",
+        "hybrid question generation",
+        "PLM",
+        "LLM prompting",
+        "QA data augmentation",
+        "intelligent tutoring"
+      ],
+      "labels": [
+        "Survey",
+        "Question Generation",
+        "QA Data",
+        "Text-based QG",
+        "Visual QG",
+        "LLM Limitation"
+      ],
+      "code_url": "https://github.com/PersistenceForever/Neural-Question-Generation-Survey-List",
+      "note": "这篇是 2024 年 NQG 综述，比 2019 年综述更适合作为当前问题生成领域地图，因为它纳入了结构化 KBQG、非结构化 TQG/VQG、Hybrid QG、PLM/LLM 和应用场景。但它对 LLM 直接基于 prompt 生成 question/query/QA 数据的覆盖不足：文章概念上承认 LLM 和 ICL，但更多把 LLM 当作 PLM 路线的延伸，只在 KBQG 中明确列出 LLM-based 方法，在 Unstructured TQG 中仍主要沿着 Seq2Seq、Graph、PLM fine-tuning 的传统脉络写。因此它适合用来理解传统 NQG 任务分类、输入模态和评价体系，不足以代表当前大模型时代 QA 数据合成的主流实践。",
+      "tldr": "2024 年 Neural Question Generation 综述，按输入来源把 NQG 重新整理为 Structured、Unstructured 和 Hybrid 三类；适合作为传统 NQG 领域地图，但对 LLM prompt-based QA 数据合成覆盖不足。",
+      "abstract": "This survey reviews advances in Neural Question Generation (NQG), which uses neural network methods to generate questions from diverse inputs such as knowledge bases, natural language texts, and images. It introduces the background of NQG, including problem formulation, datasets, evaluation metrics, and applications, then classifies methods into structured NQG, unstructured NQG, and hybrid NQG. The paper analyzes representative neural models for each category, discusses their strengths and limitations, and outlines future directions such as proactive, multimodal, controllable, and better-evaluated question generation. It also provides a curated resource list of related papers, datasets, and code.",
+      "summary_cn": {
+        "研究动机": "Question Generation 已经从早期规则式方法发展到神经网络、预训练模型和部分 LLM prompting 方法，输入也从纯文本扩展到知识库、图片和多模态数据。已有综述多集中在 2019 年前的 Seq2Seq 文本问题生成，难以覆盖 KBQG、VQG 和 Hybrid QG 等新分支，因此需要一个更新的领域地图。",
+        "解决问题": "论文解决的是 NQG 领域如何重新组织的问题：不同输入模态下的问题生成任务如何分类，常用数据集和评价指标是什么，Structured NQG、Unstructured NQG、Hybrid NQG 分别有哪些代表方法，以及未来问题生成应该往主动、多模态、可控和更可靠评估方向如何发展。",
+        "现象分析": "文章的核心判断是，NQG 不能再只等同于 SQuAD-style 文本问题生成。结构化场景需要处理知识库和自然语言之间的语义鸿沟；非结构化场景中，TQG 的关键从生成流畅问题转向选择有价值的信息点、答案或 rationale，并控制问题类型，VQG 的关键则是定位 answer-related regions、理解区域关系并避免生成泛泛问题；Hybrid QG 更贴近真实应用，但不同模态和结构的信息融合仍然不足。",
+        "主要方法": "综述按输入来源分为三类。Structured NQG 主要是 KBQG，包括传统 Seq2Seq、Graph2Seq、PLM-based 和 LLM-based 方法，重点是把 SPARQL、子图、知识图谱结构转成自然语言问题。Unstructured NQG 包括 TQG 和 VQG：TQG 覆盖 RNN/Transformer Seq2Seq、Graph-based models、UNILM/T5/BERTGen 等预训练模型；VQG 覆盖 CNN-based、GNN-based 和 VAE/latent-space 等 generative networks。Hybrid NQG 结合结构化与非结构化输入，例如图文、文本加知识库或教育材料，当前仍处于 under-explored 状态。",
+        "数据集与实验": "作为综述论文，本文没有提出新模型或新实验。它整理了 KBQG、TQG、VQG 常用数据集：WebQuestions、PathQuestions、GrailQA，SQuAD、MS MARCO、NewsQA、HotpotQA、CoQA，以及 VQA、VQG-COCO。评价指标部分总结了 BLEU、ROUGE、METEOR 等 n-gram 指标，Distinct-n 多样性指标和 BERTScore 语义相似度指标，同时指出随着 LLM 生成多样性增强，传统重合度指标已不足以评价问题质量。",
+        "主要贡献": "论文的主要贡献是提供了 2024 年视角下的 NQG 分类框架：按输入模态统一整理 Structured、Unstructured 和 Hybrid NQG，并把 QA 数据增强、智能教育、对话系统、事实验证等应用纳入讨论。它比 2019 年综述更完整，但对 LLM direct prompting / LLM-as-teacher 生成 QA 数据这一现代范式覆盖不足，尤其没有在 Unstructured TQG 中把大模型直接生成 question/query 作为独立主线展开。"
+      },
+      "status": "approved",
+      "added_at": "2026-05-30",
+      "key_figure": {
+        "type": "Figure",
+        "name": "1",
+        "page": 2,
+        "path": "assets/paper_images/nqg-survey-2024-taxonomy.png",
+        "caption": "Taxonomy of Neural Question Generation summarized from Figure 1: Structured NQG, Unstructured NQG, and Hybrid NQG.",
+        "caption_cn": "图 1：NQG 分类框架。论文按输入模态把问题生成分为 Structured NQG、Unstructured NQG 和 Hybrid NQG；这里手工整理了各分支的核心任务、方法路线和局限。",
+        "bbox": {},
+        "caption_bbox": {},
+        "source": "manual-summary-from-paper-taxonomy",
+        "confidence": 0.92,
+        "needs_manual_review": false,
+        "contexts": [
+          {
+            "page": 2,
+            "text": "The taxonomy of NQG classifies the field into Structured NQG, Unstructured NQG, and Hybrid NQG based on input modalities."
+          },
+          {
+            "page": 2,
+            "text": "The survey mentions LLMs and in-context learning, but Unstructured TQG is organized mainly around traditional Seq2Seq, graph-based models, and pre-trained Seq2Seq models."
+          }
+        ]
+      }
     }
   ]
 }
