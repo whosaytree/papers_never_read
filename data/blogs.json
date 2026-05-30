@@ -597,6 +597,82 @@
       "my_note": "这篇对我有价值的地方在于，它把 LLM serving 的核心调度矛盾讲得很清楚：prefill 想大块跑满 GPU，decode 想小步稳定输出；如果两者简单共用同一 GPU，就会在 TTFT、ITL 和 GPU utilization 之间相互牵制。PD-Multiplexing 的重要性在于给出第三条路：既不是把 prefill/decode 物理拆开的 PD-disaggregation，也不是只靠时间切片的 chunked prefill，而是在同一实例、同一 KV cache pool 中做 GPU 空间复用。和 HiSparse、P2P weight transfer、INT4 QAT、SGLang-Jax 连起来看，这篇补的是 serving scheduler 层：HiSparse 解决 KV memory hierarchy，P2P 解决 RL 权重同步，INT4 QAT 解决低成本 rollout 一致性，而 PD-Multiplexing 解决线上推理中 prefill/decode 资源如何在 SLO 下动态分配。",
       "related_papers": [],
       "status": "approved"
+    },
+    {
+      "id": "lmsys-sglang-deterministic-inference",
+      "title": "Towards Deterministic Inference in SGLang and Reproducible RL Training",
+      "url": "https://www.lmsys.org/blog/2025-09-22-sglang-deterministic/",
+      "source": "LMSYS Blog / SGLang Team",
+      "published_at": "2025-09-22",
+      "added_at": "2026-05-30",
+      "tags": [
+        "SGLang",
+        "deterministic inference",
+        "reproducible RL",
+        "slime",
+        "batch-invariant kernels",
+        "CUDA graphs",
+        "radix cache",
+        "chunked prefill",
+        "non-greedy sampling",
+        "GRPO"
+      ],
+      "summary": "这篇 LMSYS 技术分享介绍了 SGLang 的 deterministic inference 能力，以及它和 slime 结合实现 reproducible RL training 的路径。文章要解决的核心问题是：即使 temperature=0，同一个 prompt 在不同请求批次中也可能得到不同输出。原因不是 sampling seed，而是动态 batching、radix cache、chunked prefill、attention reduction 和 matmul/norm/log-softmax 等 kernel 的浮点计算路径会随 batch composition 改变；浮点加法不满足结合律，微小 logits 差异经过 autoregressive decoding 会被放大成不同 token 轨迹。SGLang 的方案分三层：推理侧集成 batch-invariant kernels，包括 mean、log-softmax、matrix multiplication 和 deterministic attention backend；serving 侧让 deterministic mode 继续兼容 chunked prefill、CUDA graph、radix cache 和多 attention backend；RL 侧通过 seeded multinomial sampling 和 slime/GRPO 集成，使 temperature > 0 的 rollout 也能在给定 seed 下复现，并进一步支持端到端 reproducible RL training。文章同时强调确定性不是免费的：offline RL rollout workload 下 deterministic mode 仍有明显性能开销，FlashInfer 和 FA3 平均 slowdown 约 34.35%，但 CUDA graph 可以带来约 2.79x 到 2.93x 的加速来抵消部分开销。",
+      "key_points": [
+        "这篇文章解释了为什么 temperature=0 仍然不等于 deterministic inference：它只消除了 sampling 随机性，没有消除底层数值路径差异。",
+        "动态 batching 会改变 batch size 和 kernel reduction 切分方式，使 attention、matmul、mean、log-softmax 等操作的浮点求和顺序发生变化。",
+        "浮点数不满足结合律，因此很小的 logits 差异也可能在 top logits 接近时改变 argmax；一旦某一步 token 不同，后续生成轨迹会整体分叉。",
+        "SGLang 集成 batch-invariant ops，让 mean、log-softmax、matmul 等 kernel 的结果不随 batch composition 改变。",
+        "Deterministic attention backend 分别适配 FlashInfer、FlashAttention-3 和 Triton，通过固定 split-KV size、num-splits 或 decoding split size 来稳定 attention reduction。",
+        "Chunked prefill 本身也可能引入不确定性，因为同一 sequence 在不同 batch 下可能被截断到不同位置；SGLang 通过把 truncation point 对齐 split_kv_size 的整数倍来稳定 kernel 输入。",
+        "Deterministic mode 有性能开销，但 CUDA graph 可以降低 kernel launch overhead；文章报告 Qwen3-8B/H100 上约 2.79x 到 2.93x throughput speedup。",
+        "对于 temperature > 0 的 RL rollout，SGLang 引入 multinomial_with_seed，用 seeded hash 生成 Gumbel noise，使同一 input + seed 可以得到同样采样结果。",
+        "SGLang deterministic inference 和 slime 的 GRPO pipeline 集成后，可以让 rollout responses、loss values 乃至完整训练曲线在严格配置下复现。",
+        "这篇的价值不只是 debugging；对 evaluation、scientific experiments 和 on-policy RL 来说，batching 噪声都会污染结论或削弱训练假设。"
+      ],
+      "standards": [
+        {
+          "name": "Sampling 随机性",
+          "description": "由 temperature、top-p、multinomial sampling 等采样策略引入；可以通过 seed 控制，但只控制这一层不够。"
+        },
+        {
+          "name": "数值非确定性",
+          "description": "由 batch size、reduction 顺序、attention split、chunked prefill 等计算路径变化引入；temperature=0 也无法自动消除。"
+        },
+        {
+          "name": "训练可复现性",
+          "description": "RL 还要同时控制 rollout、backward、NCCL、CUBLAS、NVTE、PyTorch 等训练链路，才能做到端到端 reproducibility。"
+        }
+      ],
+      "quotes": [
+        {
+          "text": "temperature down to 0",
+          "note": "说明文章讨论的不是普通随机采样问题，而是 greedy decoding 下仍可能不确定。"
+        },
+        {
+          "text": "varying batch sizes",
+          "note": "动态 batching 是推理非确定性的关键来源之一。"
+        },
+        {
+          "text": "batch-invariant implementation",
+          "note": "核心解决思路：让 kernel 行为不依赖 batch composition。"
+        },
+        {
+          "text": "same (inputs, seed) pair always yields the same sample",
+          "note": "说明非贪心采样也可以在给定 seed 下复现，这对 RL rollout 很重要。"
+        },
+        {
+          "text": "100% reproducible RL training",
+          "note": "文章把确定性推理进一步接到 slime/GRPO 的训练复现链路。"
+        },
+        {
+          "text": "performance overhead",
+          "note": "提醒确定性不是免费能力，系统需要在复现性和吞吐之间权衡。"
+        }
+      ],
+      "my_note": "这篇对我有价值的地方在于，它把“可复现性”从一句设 seed 拆成了完整系统问题。对普通聊天产品来说，一点非确定性可能可以接受；但对 evaluation、debugging、RL training 和科学实验来说，batching 噪声会让结论变脏。尤其在 RL 里，rollout 是 policy 数据来源，如果同一 policy 因为 serving batch composition 不同而产生不同轨迹，on-policy 假设会被悄悄削弱。和 INT4 QAT、P2P weight transfer、PD-Multiplexing 连起来看，这篇补的是 rollout/inference 的数值一致性：INT4 QAT 解决低比特推理和训练分布一致，P2P 解决新 policy 权重如何同步到 rollout engine，PD-Multiplexing 解决 prefill/decode 资源调度，而 deterministic inference 解决同一输入和同一 seed 是否真的能得到同一条 rollout。",
+      "related_papers": [],
+      "status": "approved"
     }
   ]
 }
