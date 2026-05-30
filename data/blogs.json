@@ -235,6 +235,100 @@
       "status": "approved"
     },
     {
+      "id": "aws-bedrock-synthetic-rag-evaluation",
+      "title": "Generate synthetic data for evaluating RAG systems using Amazon Bedrock",
+      "url": "https://aws.amazon.com/blogs/machine-learning/generate-synthetic-data-for-evaluating-rag-systems-using-amazon-bedrock/",
+      "source": "AWS Machine Learning Blog / AWS Samples",
+      "published_at": "2024-09-23",
+      "added_at": "2026-05-31",
+      "tags": [
+        "AWS",
+        "Amazon Bedrock",
+        "RAG evaluation",
+        "synthetic data",
+        "Claude 3 Haiku",
+        "LangChain",
+        "question generation",
+        "source sentence extraction",
+        "critique agents",
+        "groundedness"
+      ],
+      "summary": "这篇 AWS Machine Learning Blog 介绍如何用 Amazon Bedrock 上的 Claude 3 Haiku 和 LangChain，从企业文档中合成 RAG evaluation dataset。它的价值不在于提出新的评测指标，而在于把一个可运行的生成链路讲清楚：先用线上 RAG 类似的方式加载和切分文档，再从每个 chunk 生成 question、基于 context 生成 reference answer、抽取 source sentence、把问题改写成更短更间接的用户式表达，最后用 critique agents 给样本质量打分。和 Databricks 的托管 API 相比，AWS 这篇更透明：博客和 GitHub notebook 都展示了主要 prompt 模板；和 Red Hat SDG Hub 相比，它更轻量，更像一份可改造的 Bedrock + LangChain notebook。需要特别注意的是，AWS 文中把后处理指标称为 question relevance 和 answer groundedness，但示例 groundedness prompt 实际只输入 `context` 和 `question`，没有输入生成的 `answer`。因此它严格评的是 question 是否能由 context 回答，而不是 generated answer 是否忠实于 context。",
+      "key_points": [
+        "示例知识库是 Amazon shareholder letters，目标用户被设定为阅读这些股东信的金融和商业分析师。",
+        "文档加载使用 LangChain 的 `PyPDFDirectoryLoader`，切分使用 `RecursiveCharacterTextSplitter`，示例 chunk 大约在 1,500-2,000 tokens。",
+        "question generation prompt 要求问题可脱离上下文理解、只能由给定 context 回答、聚焦 context 中重要信息、难度适中、少于 10 个词，并避免用 `and` 生成复合问题。",
+        "answer generation prompt 输入 `context` 和 `question`，要求答案只基于 context、精确简洁、只回答当前问题，通常以一句话输出。",
+        "source sentence extraction 要求从 context 中逐句复制能回答问题的原文句子，不改写、不解释，用来绑定 gold evidence。",
+        "question evolution prompt 把原始问题改写得更短、更间接，并尽可能使用缩写，让 synthetic questions 更接近真实用户表达。",
+        "critique agents 包含 groundedness 和 relevance 两类打分；前者判断 question 是否能由 context 回答，后者判断 question 对目标业务用户是否有价值。",
+        "AWS 文中称 groundedness 是 answer groundedness，但公开 prompt 没有把 `answer` 传给 judge，因此不能等同于完整的 answer faithfulness evaluation。",
+        "博客给出了成本和速度参考：使用 Claude 3 Haiku 生成 1,000 组 question/answer/source sentence/evolved question 约 2.80 美元，单组平均约 2.6 秒。",
+        "这篇适合和 Red Hat SDG Hub、Databricks Synthetic Agent Evaluation 对比：三者都做 synthetic eval set generation，但透明度、平台绑定程度和输出 schema 不同。"
+      ],
+      "standards": [
+        {
+          "name": "输入",
+          "description": "源文档被加载并按 RAG 应用类似的方式切成 chunks；示例使用 Amazon shareholder letters。"
+        },
+        {
+          "name": "生成主线",
+          "description": "`chunk -> question -> answer -> source sentence -> evolved question -> critique score`。"
+        },
+        {
+          "name": "Question 约束",
+          "description": "问题要能独立理解、只能由 context 回答、聚焦重要信息、难度适中、少于 10 个词，并避免复合问题。"
+        },
+        {
+          "name": "Answer 约束",
+          "description": "参考答案由 LLM 基于 `context + question` 生成，要求只使用 context 中的信息。"
+        },
+        {
+          "name": "证据绑定",
+          "description": "source sentence extraction 从原文中复制支撑答案的句子，形成可追溯 evidence。"
+        },
+        {
+          "name": "Critique 边界",
+          "description": "公开 prompt 主要给 question 的可回答性和业务相关性打分；没有真正把 generated answer 放入 judge prompt 做 faithfulness 检查。"
+        }
+      ],
+      "quotes": [
+        {
+          "text": "critique agents",
+          "note": "AWS 用 LLM judge 对合成样本做质量筛选的名称。"
+        },
+        {
+          "text": "question relevance",
+          "note": "判断合成问题对目标用户是否有业务价值。"
+        },
+        {
+          "text": "answer groundedness",
+          "note": "文章中的说法；但示例 prompt 实际没有输入 answer，严格说更像 question groundedness。"
+        },
+        {
+          "text": "source sentence",
+          "note": "从原文抽出的证据句，用来连接 synthetic QA 和 gold context。"
+        },
+        {
+          "text": "AWS rev YoY growth in '21?",
+          "note": "文章展示的 evolved question 示例，体现压缩、缩写和真实用户风格。"
+        }
+      ],
+      "my_note": "这篇对我有价值的地方在于，它把 synthetic RAG evaluation dataset 的 prompt pipeline 展开得比较清楚。相比只说“让 LLM 生成 QA”，它强调了三个工程细节：第一，问题要从生产 RAG 类似的 chunk 中生成；第二，必须抽取 source sentence，把每个问题和原文证据绑定；第三，合成后还需要 critique agents 做质量筛选。不过我需要特别记住它的局限：AWS 示例的 groundedness critique 并没有真正评估 generated answer，只是在判断 question 是否能被 context 支持。后续如果我要做更严格的 RAG eval dataset，应补一个 `context + question + answer` 的 answer faithfulness judge，或者接入 RAGAs / ARES 这类更完整的评测框架。",
+      "analysis_note": {
+        "title": "详细笔记：AWS Bedrock Synthetic RAG Evaluation",
+        "source": "docs/blog_notes/aws-bedrock-synthetic-rag-evaluation.md",
+        "url": "blog_notes/aws-bedrock-synthetic-rag-evaluation.html"
+      },
+      "related_papers": [
+        "ragas-automated-rag-evaluation-2024-eacl",
+        "ares-automated-rag-evaluation-2024-naacl",
+        "rgb-benchmarking-llms-rag-2024-aaai",
+        "ragtruth-hallucination-corpus-2024-acl"
+      ],
+      "status": "approved"
+    },
+    {
       "id": "lmsys-hard-prompts-category",
       "title": "Introducing Hard Prompts Category in Chatbot Arena",
       "url": "https://www.lmsys.org/blog/2024-05-17-category-hard/",
