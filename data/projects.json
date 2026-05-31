@@ -1297,6 +1297,92 @@
       "related_papers": [],
       "related_blogs": [],
       "status": "approved"
+    },
+    {
+      "id": "selfcheckgpt",
+      "name": "SelfCheckGPT",
+      "repo_url": "https://github.com/potsawee/selfcheckgpt",
+      "homepage_url": "https://arxiv.org/abs/2303.08896",
+      "docs_url": "https://github.com/potsawee/selfcheckgpt#readme",
+      "demo_url": "",
+      "source": "potsawee / selfcheckgpt",
+      "added_at": "2026-05-31",
+      "project_type": "zero-resource hallucination detection package",
+      "domain": "Black-box LLM factuality / Sampling consistency",
+      "tags": [
+        "SelfCheckGPT",
+        "hallucination detection",
+        "factuality evaluation",
+        "zero-resource evaluation",
+        "black-box LLM",
+        "sampling consistency",
+        "self-consistency",
+        "sentence-level factuality",
+        "NLI",
+        "BERTScore",
+        "MQAG",
+        "n-gram",
+        "LLM prompting",
+        "WikiBio",
+        "EMNLP 2023"
+      ],
+      "stack": [
+        "Python",
+        "PyTorch",
+        "spaCy",
+        "Transformers",
+        "DeBERTa",
+        "BERTScore",
+        "NLI",
+        "OpenAI API",
+        "Groq API",
+        "Hugging Face datasets",
+        "PyPI package"
+      ],
+      "summary": "SelfCheckGPT 是 EMNLP 2023 论文对应的 zero-resource black-box 幻觉检测工具。它不依赖外部 reference、不需要访问模型 logits，也不要求标准答案；核心做法是对同一个 prompt 多次随机采样生成回答，然后检查主回答中的每个句子是否被这些 sampled passages 支持。直觉是：如果模型真的稳定知道某个事实，多次采样会在关键事实上相互一致；如果某句话是幻觉或模型知识不稳定，采样结果更容易缺失、发散或互相矛盾。代码包提供 NLI、LLM Prompt、BERTScore、MQAG/QA 和 n-gram 等多种 self-check 实现。",
+      "highlights": [
+        "核心设定是 zero-resource black-box hallucination detection：只需要多次调用生成模型，不需要 reference、ground truth 或 token probability。",
+        "输入通常包括原始 passage、切分后的 sentences，以及同一 prompt 生成的 sampled_passages。",
+        "输出是 sentence-level non-factuality / hallucination score，分数越高表示该句越可疑。",
+        "SelfCheck-NLI 是 README 中标出的推荐用法，用 DeBERTa-v3-large Multi-NLI 类模型计算 contradiction probability。",
+        "SelfCheck-Prompt 用 LLM 判断 sentence 是否被 sampled passage 支持，Yes 记 0、No 记 1、N/A 记 0.5，再取平均作为不一致分数。",
+        "SelfCheck-BERTScore 用句子和采样回答之间的语义相似度估计可疑程度。",
+        "SelfCheck-MQAG / QA 通过生成和回答问题来比较主回答句子与采样回答的一致性。",
+        "SelfCheck-Ngram 基于 sampled passages 的 n-gram 统计输出句子级和文档级分数。",
+        "官方数据集 wiki_bio_gpt3_hallucination 包含 GPT-3 生成的 WikiBio passages、人工句子级标注和 sampled passages。",
+        "README 报告 SelfCheck-Prompt with gpt-3.5-turbo 在 WikiBio 数据上取得最高的 NonFact AUC-PR 和 passage ranking 相关性。",
+        "项目提供 pip install selfcheckgpt，也提供 demo notebooks 和 Hugging Face dataset 使用方式。"
+      ],
+      "use_cases": [
+        "在没有 reference、没有标准答案、拿不到 logprob 的黑盒 LLM API 场景下估计幻觉风险。",
+        "对长回答、人物传记、百科式生成做 sentence-level factuality screening。",
+        "用多次采样的一致性作为事实稳定性的弱信号。",
+        "给每个句子标出 hallucination risk score，辅助人工复核。",
+        "作为 RefChecker / FActScore / RAGChecker 之外的 zero-resource hallucination baseline。",
+        "在 RAG 场景中作为补充信号，但不能替代基于检索证据的 grounding / faithfulness 检查。"
+      ],
+      "setup_note": "基础安装是 pip install selfcheckgpt。典型流程是先用 spaCy 把主回答 passage 切成 sentences，再准备同一 prompt 下随机采样得到的 sampled_passages。NLI 用法是 from selfcheckgpt.modeling_selfcheck import SelfCheckNLI，初始化 SelfCheckNLI(device=...) 后调用 predict(sentences=..., sampled_passages=...)；输出是每个句子的分数。BERTScore、MQAG 和 n-gram 版本分别使用 SelfCheckBERTScore、SelfCheckMQAG、SelfCheckNgram。LLM Prompt 版本可以用 Hugging Face 模型，也可以通过 SelfCheckAPIPrompt 接 OpenAI 或 Groq；默认 prompt 是让模型判断给定 sentence 是否被 context 支持。官方数据集可通过 load_dataset(\"potsawee/wiki_bio_gpt3_hallucination\") 读取。",
+      "practice_notes": [
+        "SelfCheckGPT 的核心假设是自一致性：稳定掌握的事实跨采样更一致，幻觉或不稳定知识跨采样更容易发散。",
+        "它检测的是采样间不一致，不是严格的事实真伪；如果模型稳定重复同一个错误事实，它可能检测不出来。",
+        "它的优势是完全不需要外部知识源，因此适合只有黑盒 API 的场景。",
+        "它的代价是需要对同一个 prompt 多次采样，评估成本会随 sample 数增加。",
+        "和 RefChecker 的关系：RefChecker 是 reference-based，判断 claim 是否被材料支持；SelfCheckGPT 是 reference-free，只看同一模型多次回答是否一致。",
+        "和 FActScore 的关系：FActScore 用外部知识源验证 atomic facts，SelfCheckGPT 用模型自身采样分布近似观察事实稳定性。",
+        "和 RAGChecker 的关系：RAGChecker 诊断 RAG pipeline，SelfCheckGPT 不诊断 retriever，也不检查 retrieved context 是否充分。",
+        "和 RAGTruth 的关系：RAGTruth 是带人工 span 标注的数据集和 detector 训练资源；SelfCheckGPT 是不依赖人工标注和外部 reference 的检测方法。",
+        "在 RAG 应用里，它可以作为辅助 uncertainty signal，但真正的 faithfulness 仍然要看回答是否被 context 支持。",
+        "采样温度、sample 数量、生成多样性和 NLI/LLM checker 的质量都会影响最终分数。",
+        "NLI 版本更轻、更可复现；LLM Prompt 版本通常理解力更强，但成本和 judge 偏差也更高。"
+      ],
+      "license": "MIT",
+      "maintenance": "stable / research implementation",
+      "my_note": "SelfCheckGPT 值得记录的点是它把幻觉检测做成了黑盒自一致性问题：不用 reference、不用 logprob，只看同一个 prompt 多次采样出的回答是否互相支持。它和 RefChecker/FActScore 的区别很关键：后两者更像外部证据核查，SelfCheckGPT 更像从模型输出分布里观察事实稳定性。因此它适合作为无材料场景下的 hallucination risk signal，但不能替代真正的证据级事实核查。",
+      "related_papers": [
+        "selfcheckgpt-2303-08896"
+      ],
+      "related_blogs": [],
+      "status": "approved"
     }
   ]
 }
