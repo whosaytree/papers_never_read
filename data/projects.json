@@ -1747,6 +1747,99 @@
         "arize-production-llm-as-judge-evaluators"
       ],
       "status": "approved"
+    },
+    {
+      "id": "distilabel",
+      "name": "distilabel",
+      "repo_url": "https://github.com/argilla-io/distilabel",
+      "homepage_url": "https://distilabel.argilla.io",
+      "docs_url": "https://distilabel.argilla.io",
+      "demo_url": "https://huggingface.co/datasets?other=distilabel",
+      "source": "argilla-io / distilabel",
+      "added_at": "2026-05-31",
+      "project_type": "Synthetic data and AI feedback pipeline framework",
+      "domain": "Synthetic data / AI feedback / Data curation / Preference data",
+      "tags": [
+        "distilabel",
+        "Argilla",
+        "synthetic data",
+        "AI feedback",
+        "data curation",
+        "instruction tuning",
+        "preference data",
+        "DPO",
+        "RLHF",
+        "RLAIF",
+        "LLM-as-a-Judge",
+        "data filtering",
+        "deduplication",
+        "text clustering",
+        "Hugging Face datasets"
+      ],
+      "stack": [
+        "Python",
+        "Hugging Face Datasets",
+        "OpenAI",
+        "Anthropic",
+        "Cohere",
+        "Mistral AI",
+        "LiteLLM",
+        "vLLM",
+        "Ollama",
+        "Transformers",
+        "Ray",
+        "FAISS",
+        "MinHash",
+        "Argilla"
+      ],
+      "summary": "distilabel 是 Argilla 的 Python 框架，用来构建 synthetic data 和 AI feedback pipeline。它不是 observability 平台，也不是 benchmark harness；更像一个合成数据生产和数据筛选流水线框架。用户可以把已有 dataset、seed prompts、documents、candidate responses 或 preference candidates 输入 pipeline，通过不同 LLM provider 和处理步骤生成 instruction/response、dialogue、preference pairs、judge scores、critique、feedback、filtered dataset 或去重/聚类后的数据，服务于 SFT、DPO、RLHF/RLAIF 和数据质量改进。",
+      "highlights": [
+        "官方 README 定位为 framework for synthetic data and AI feedback，面向 fast、reliable、scalable pipelines。",
+        "目标是用 verified research papers 中的方法来生成和评价数据，而不是只做一次性 prompt generation。",
+        "适用于传统 NLP 数据构造，例如 classification、extraction，也适用于 LLM 场景，例如 instruction following、dialogue generation 和 judging。",
+        "核心思路是用 programmatic pipeline 组合生成、评价、过滤、去重、聚类和导出步骤。",
+        "支持统一 API 接入多种 LLM provider，包括 OpenAI、Anthropic、Cohere、Groq、Mistral AI、Hugging Face Inference Endpoints、LiteLLM、Ollama、vLLM、Transformers、llama.cpp 等。",
+        "支持 structured generation extras，例如 outlines 和 instructor。",
+        "支持数据处理 extras，例如 Ray 分布式执行、FAISS、sentence-transformers、text clustering、MinHash duplicate detection。",
+        "输出可以形成 Hugging Face dataset / Distiset，并可 push_to_hub。",
+        "README 举例包括 1M OpenHermesPreferences、distilabeled Intel Orca DPO pairs、改进后的 OpenHermes 模型和 haiku DPO data。",
+        "截至 2026-05-31 GitHub API 显示约 3.2k stars、242 forks，主语言 Python，许可证 Apache-2.0。",
+        "README 顶部说明 original authors have moved on to other projects，目前由社区 collaborators 维护，并建议查看 develop branch 获取最新修复和改进。"
+      ],
+      "use_cases": [
+        "批量生成 instruction / response 数据，用于 instruction tuning 或 SFT。",
+        "生成多个候选回答，再用 LLM judge 或规则步骤构造 preference pairs。",
+        "为 DPO、RLHF 或 RLAIF 准备偏好数据和 AI feedback 数据。",
+        "对已有数据集做 LLM-based 评分、critique、过滤和质量控制。",
+        "去除低质量样本、重复样本或过于相似的样本，提高训练数据质量。",
+        "对文本数据做聚类和覆盖分析，减少数据分布单一或重复。",
+        "把生成和筛选后的数据推到 Hugging Face Hub，作为可复现训练集或评测集。",
+        "把 ProGen / SuperGen / AlpaGasus 这类 synthetic data 和 data filtering 思路工程化成可运行 pipeline。"
+      ],
+      "setup_note": "基础安装是 pip install distilabel --upgrade，要求 Python 3.9+。如果需要特定模型或处理能力，可安装 extras，例如 distilabel[openai]、distilabel[anthropic]、distilabel[litellm]、distilabel[vllm]、distilabel[hf-inference-endpoints]、distilabel[ray]、distilabel[text-clustering]、distilabel[minhash] 等。典型用法是用 Pipeline 定义一组 steps，例如 TextGeneration、judge / feedback step、filtering step、deduplication step，再把 Hugging Face dataset 或自有数据传入 pipeline.run。输出通常是 Distiset / dataset，可进一步 push_to_hub。生产中建议把每一步的 prompt、模型、温度、过滤阈值、judge rubric 和随机种子固定下来，否则 synthetic data pipeline 很容易因为模型或 prompt 变化而不可复现。",
+      "practice_notes": [
+        "distilabel 的价值在于把 synthetic data generation 和 AI feedback 做成工程流水线，而不是一次性 prompt 生成。",
+        "它和 Langfuse / Phoenix 不同：后者记录和评估线上应用运行过程，distilabel 更偏训练数据生产和数据质量控制。",
+        "它和 DeepEval / AgentEvals 不同：后者更像 eval harness，distilabel 更像 data pipeline。",
+        "它和 RAGAS / YourBench / DataMorgana 有交集，但后者更偏 QA/RAG benchmark generation；distilabel 的覆盖面更广，包括 instruction、dialogue、preference、judge feedback 和数据过滤。",
+        "和 ProGen / SuperGen 的关系：ProGen/SuperGen 是较早的 synthetic training data 方法思想，distilabel 是今天更工程化的数据合成与反馈框架。",
+        "和 AlpaGasus 的关系：AlpaGasus 强调用强 LLM 给 instruction data 打分过滤；distilabel 可以承载类似 LLM-as-data-filter 的流程。",
+        "它适合用来批量生成 instruction/response、构造 preference pairs、让 LLM judge 打分、过滤低质量样本、去重或聚类。",
+        "真正重要的是 pipeline 中每一步的质量标准：prompt、rubric、过滤阈值、去重策略和覆盖约束。",
+        "如果只生成更多数据而不做反馈、过滤和覆盖控制，distilabel 也可能放大噪声和重复。",
+        "LLM judge 打分仍然会继承 judge model 的偏好和偏差，最好配合人工抽检或小规模 gold set 校准。",
+        "它很适合作为 synthetic data / preference data 的工程工具，但不是自动保证数据质量的魔法工具。",
+        "项目当前维护状态要继续观察：README 明确说原作者已转向其他项目，目前由社区 collaborators 接手维护。",
+        "许可证是 Apache-2.0，相比 Phoenix 的 ELv2 更宽松。"
+      ],
+      "license": "Apache-2.0",
+      "maintenance": "community-maintained / active but watch",
+      "my_note": "distilabel 的价值在于把 synthetic data generation 和 AI feedback 做成工程流水线，而不是一次性 prompt 生成。它适合用来批量生成 instruction/response、构造 preference pairs、让 LLM judge 打分、过滤低质量样本、去重或聚类，并最终形成可用于 SFT/DPO/RLHF/RLAIF 的训练数据。它和 Langfuse/Phoenix 不同：后者记录和评估线上应用运行过程，distilabel 更偏“训练数据生产”。和 ProGen/SuperGen 的关系是：ProGen/SuperGen 是早期方法思想，distilabel 是今天更工程化的数据合成与反馈框架。需要注意的是项目当前由社区维护，原作者已转向其他项目，后续活跃度和稳定性要继续观察。",
+      "related_papers": [
+        "progen-progressive-zero-shot-dataset-generation-2210-12329"
+      ],
+      "related_blogs": [],
+      "status": "approved"
     }
   ]
 }
