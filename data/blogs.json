@@ -918,6 +918,108 @@
       "status": "approved"
     },
     {
+      "id": "humanloop-llm-as-a-judge-overview",
+      "title": "LLM as a Judge: Automating AI Evaluations",
+      "url": "https://humanloop.com/blog/llm-as-a-judge",
+      "source": "Humanloop Blog",
+      "published_at": "2025-05-04",
+      "added_at": "2026-05-31",
+      "tags": [
+        "Humanloop",
+        "LLM-as-a-Judge",
+        "LLM evaluation",
+        "AI evaluators",
+        "offline evaluation",
+        "online evaluation",
+        "pairwise comparison",
+        "reference-guided scoring",
+        "prompt evaluation",
+        "evaluation platform"
+      ],
+      "summary": "这篇 Humanloop 文章是一篇 LLM-as-a-Judge 入门型 explainer。它先定义 LLM-as-a-Judge：用一个 LLM 评估另一个 LLM 或 AI 应用的输出，适合 chatbot response、summarization、code generation 这类开放式任务，因为传统 accuracy、BLEU/ROUGE 等指标很难覆盖语义质量、语气、相关性和主观偏好。文章把基本流程拆成 evaluation criteria、evaluation prompt、input analysis、scoring/labeling 和 feedback generation：先明确要评 factual accuracy、helpfulness、conciseness、tone 等维度，再把 query、model response、可选 reference/context 交给 judge，最后输出 score、label 或 explanation。它最有用的部分是三类 evaluator 和两种运行模式：single output scoring 可无 reference 评格式、清晰度、礼貌，也可有 reference 对比标准答案；pairwise comparison 比较两个 prompt/model 输出，适合开发期版本选择；reference-guided scoring 把 gold answer、source document 或 RAG context 放进 prompt，用于 grounding / factuality / hallucination 检查。offline evaluator 用 curated / golden dataset 做上线前验证和 prompt experimentation；online evaluator 在生产中评估 live interactions，持续监控 hallucination、bias、安全风险或满意度变化。",
+      "key_points": [
+        "这篇是 Humanloop 的 LLM-as-a-Judge 基础概念文章，不是论文；技术深度弱于 Arize 那篇，但适合做入门总览。",
+        "LLM-as-a-Judge 的基本对象是开放式 AI 输出，例如聊天回复、摘要、代码生成和 RAG 回答。",
+        "基本流程包括定义 evaluation criteria、写 evaluation prompt、准备输入、让 judge 打分/分类、可选生成解释性 feedback。",
+        "Evaluation criteria 可以包括 factual accuracy、helpfulness、conciseness、tone、relevance 等。",
+        "Single output scoring 评估单个输出；无 reference 时适合评 tone、politeness、format、conciseness，有 reference 时可评 factual correctness 或 semantic equivalence。",
+        "Pairwise comparison 对同一输入下的两个回答做相对比较，适合比较 prompt version 或 model version；优点是相对判断通常比绝对评分稳定，缺点是组合成本高。",
+        "Reference-guided scoring 给 judge 提供 reference answer、source document 或 RAG retrieved context，用来评估 grounding、factuality 和 hallucination。",
+        "Offline evaluator 用在开发期和上线前，基于 curated / golden dataset 做 prompt experimentation、pre-deployment validation 和 regression testing。",
+        "Online evaluator 用在生产环境，实时或持续监控 live user interactions，发现偏差、幻觉、安全风险或用户满意度下降。",
+        "Humanloop 平台流程是准备 prompt versions、dataset 和 evaluator，创建 evaluation run，再用 stats / review 视图比较版本和调试 logs。",
+        "文章列出的挑战包括 verbosity bias、position bias、self-enhancement bias、judge 不一致、复杂任务能力不足、prompt sensitivity 和 limited explainability。",
+        "缓解方法包括 labeled dataset 校准、pairwise 随机响应顺序、few-shot examples、多次运行聚合、human oversight、迭代优化 judge prompt，并要求 judge 输出 explanation。",
+        "和 Arize 文章相比，这篇更偏概念分类和平台流程；Arize 更偏 production measurement infrastructure、trace context、human calibration 和 judge monitoring。"
+      ],
+      "standards": [
+        {
+          "name": "Evaluation Criteria",
+          "description": "先定义要评估的属性，例如 factual accuracy、helpfulness、conciseness、tone 和 relevance。"
+        },
+        {
+          "name": "Evaluation Prompt",
+          "description": "把 criteria 写成 judge LLM 可执行的指令，明确输入、标签或评分方式。"
+        },
+        {
+          "name": "Single Output Scoring",
+          "description": "对单个输出打分或分类，可无 reference 评风格/格式，也可有 reference 评正确性。"
+        },
+        {
+          "name": "Pairwise Comparison",
+          "description": "比较同一输入下两个回答的相对质量，适合 prompt / model version 选择。"
+        },
+        {
+          "name": "Reference-Guided Scoring",
+          "description": "把标准答案、source document 或 RAG context 提供给 judge，用于 grounding 和 factuality 检查。"
+        },
+        {
+          "name": "Offline Evaluator",
+          "description": "开发期和上线前运行在 curated / golden dataset 上，用于版本比较和回归测试。"
+        },
+        {
+          "name": "Online Evaluator",
+          "description": "生产中评估 live interactions，用于持续监控 hallucination、bias、安全风险和满意度变化。"
+        },
+        {
+          "name": "Judge Bias",
+          "description": "LLM judge 的系统性偏差，例如偏好长回答、偏好第一个回答或偏好同源模型输出。"
+        }
+      ],
+      "quotes": [
+        {
+          "text": "LLM-as-a-judge",
+          "note": "文章讨论的核心技术：用 LLM 自动评估 AI 输出。"
+        },
+        {
+          "text": "Single output scoring",
+          "note": "评估单个回答，可带 reference，也可不带 reference。"
+        },
+        {
+          "text": "Pairwise comparison",
+          "note": "比较两个回答，适合 prompt/model 版本选择。"
+        },
+        {
+          "text": "Reference guided scoring",
+          "note": "给 judge 提供 gold answer 或 source context，用于 RAG grounding 等场景。"
+        },
+        {
+          "text": "Offline vs Online LLM Evaluators",
+          "note": "这篇文章比较清楚地区分了上线前评测和生产监控两种运行模式。"
+        }
+      ],
+      "my_note": "这篇的价值主要是补 LLM-as-a-Judge 的基础框架：三类 evaluator 和 offline/online evaluator 的区分。它不像 Arize 那篇那样深入 production calibration、trace context 和 judge drift，但作为入门条目有用。后续整理时可以把它放在 LLM-as-a-Judge 组的基础层：Humanloop 解释“有哪些 evaluator 类型、怎么跑评估”；Arize 解释“怎样把 evaluator 做到生产可靠”；OpenAI agent improvement loop 解释“这些 evaluator 如何进入 agent 改进闭环”。需要注意的是，这篇对具体 prompt/rubric 架构、human calibration 指标和 agent trajectory evaluation 讲得较浅，不能单独作为生产级 judge 设计依据。",
+      "analysis_note": {
+        "title": "详细笔记：Humanloop LLM-as-a-Judge Overview",
+        "source": "docs/blog_notes/humanloop-llm-as-a-judge-overview.md",
+        "url": "blog_notes/humanloop-llm-as-a-judge-overview.html"
+      },
+      "related_papers": [
+        "rewardbench-2024-arxiv"
+      ],
+      "status": "approved"
+    },
+    {
       "id": "lmsys-hard-prompts-category",
       "title": "Introducing Hard Prompts Category in Chatbot Arena",
       "url": "https://www.lmsys.org/blog/2024-05-17-category-hard/",
