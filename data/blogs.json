@@ -617,6 +617,102 @@
       "status": "approved"
     },
     {
+      "id": "microsoft-golden-dataset-rag-evaluation",
+      "title": "The path to a golden dataset, or how to evaluate your RAG?",
+      "url": "https://medium.com/data-science-at-microsoft/the-path-to-a-golden-dataset-or-how-to-evaluate-your-rag-045e23d1f13f",
+      "source": "Data Science + AI at Microsoft / promptflow-rag-project-template",
+      "published_at": "2024-05-21",
+      "added_at": "2026-05-31",
+      "tags": [
+        "Microsoft",
+        "Azure AI",
+        "RAG evaluation",
+        "golden dataset",
+        "silver dataset",
+        "benchmark construction",
+        "synthetic QA",
+        "chunks",
+        "groundedness",
+        "human review"
+      ],
+      "summary": "这篇 Microsoft Data Science + AI 技术文章讨论如何为企业 RAG 项目构建可信的 golden dataset。它的核心判断是：RAG 评估不能直接依赖通用 benchmark，因为企业 RAG 通常基于私有、领域化、结构复杂的数据；因此每个项目都需要自己的 `question / answer / source context` benchmark。文章提出两阶段流程：先从文档 chunks 和元数据中用 GPT 自动生成 `silver dataset`，再用 Azure AI Studio / RAGAS 类 AI-assisted metrics 评估 groundedness、relevance、coherence，并让领域专家重点审核低分或可疑样本，最终得到 `golden dataset`。公开 notebook 展示了一个基于 Microsoft financial transcripts 的实现：从预处理后的 `ChunksEmbedding.csv` 中按 ticker、year、quarter、page 等变量随机选 chunks，把两个 chunks 和元数据放入 prompt，让模型一次生成 10 组 QA，并要求答案必须来自给定文本，不存在则写 N/A。这里的 chunk 是 RAG 中由长文档切出的检索基本单位，会保留 page、line、ticker 等 source location；保留这些字段能帮助后续计算 top-N retrieval rate，并区分 RAG 失败来自检索没命中、上下文信息不足，还是 LLM 明明拿到信息却没答好。",
+      "key_points": [
+        "这篇是 Microsoft / Azure Data 团队的实践文章，不是论文；它有公开 notebook，但不是完整产品级框架。",
+        "RAG 评估前提是 custom benchmark，样本最好包含 question、answer 和 source reference/context。",
+        "Chunk 是把长文档切成的小片段，是 RAG 检索、引用和生成答案时使用的基本单位；每个 chunk 应保留 page、line、document id 等来源信息。",
+        "Silver dataset 是 AI 根据 selected chunks 自动生成的初始 QA 候选集，速度快但不能直接当作可靠 benchmark。",
+        "公开 notebook 读取 `ChunksEmbedding.csv`，字段包括 Id、Ticker、Year、Quarter、Chunk、PageNumber、LineNumber 和 Embedding。",
+        "QA 生成时会随机选择 ticker、year、quarter、page，再取两个 chunks 放入 prompt，以控制问题覆盖和来源范围。",
+        "Prompt 要求基于两个 chunks 生成 10 个 QA，答案必须能在文本中找到，不能自己编；如果答案不在文本中，写 N/A。",
+        "Notebook 后处理把模型输出的 Question / Answer 文本解析成 `chat_history`、`question`、`answer` 行，形成 CSV 评测集格式。",
+        "Golden dataset 是对 silver dataset 进一步检查、筛选、修正、补全、删除和确认后的高可信版本。",
+        "Golden 阶段使用 groundedness、relevance、coherence 等 AI-assisted metrics 先定位低质量样本，再由领域专家审核。",
+        "案例中 Microsoft earnings transcript 生成了 100 条 QA，专家审核后 66 条无条件通过、7 条有保留、27 条不达标。",
+        "专家指出的主要问题往往不是完全错误，而是答案不够完整，例如财务答案缺少 dollar amount、percent change、margin target 或 actual landing。"
+      ],
+      "standards": [
+        {
+          "name": "Chunking",
+          "description": "把长文档切成带 source location 的 chunks，作为生成 QA 和后续 RAG 检索诊断的基本单位。"
+        },
+        {
+          "name": "Silver Dataset",
+          "description": "从 selected chunks 自动生成 QA 候选集，强调速度和覆盖，但质量仍需验证。"
+        },
+        {
+          "name": "Prompt 约束",
+          "description": "给定两个 chunks 和 ticker/year/quarter 元数据，要求生成 10 个 QA，答案必须来自文本，不存在则写 N/A。"
+        },
+        {
+          "name": "Source Location",
+          "description": "保留 document/page/line 等来源信息，用于后续 top-N retrieval rate 和错误归因。"
+        },
+        {
+          "name": "Golden Dataset",
+          "description": "用 AI metrics 和专家审核对 silver 进一步筛选、修正和确认，得到可信 benchmark。"
+        },
+        {
+          "name": "质量指标",
+          "description": "重点检查 groundedness、relevance 和 coherence；这些指标先用于评估 benchmark QA 自身质量。"
+        }
+      ],
+      "quotes": [
+        {
+          "text": "silver dataset",
+          "note": "AI 自动生成的初始 QA 候选集。"
+        },
+        {
+          "text": "golden dataset",
+          "note": "经过指标检查和领域专家审核后的可信评测集。"
+        },
+        {
+          "text": "ChunksEmbedding.csv",
+          "note": "公开 notebook 使用的预处理 chunk 数据表。"
+        },
+        {
+          "text": "Groundedness",
+          "note": "检查 benchmark answer 是否被 source context 支持。"
+        },
+        {
+          "text": "top-N retrieval rate",
+          "note": "利用 source location 评估 retriever 是否找回标准证据片段。"
+        }
+      ],
+      "my_note": "这篇对我有价值的地方在于，它把 RAG benchmark 构造拆成了“先快速生成 silver，再系统清洗成 gold”的工程流程。尤其值得记住的是 chunk 和 source location 的作用：chunk 不是随便一段文本，而是 RAG 检索和引用的基本单位；source location 不只是引用来源，而是后续诊断 RAG 失败类型的关键字段。和 RAGAS 相比，Microsoft 这篇没有复杂 evolution 类型，但它更强调可控 sampling 和专家审核；和 Label Studio 相比，它没有完整 human-in-the-loop 平台闭环，但更清楚地说明了如何用 AI metrics 辅助筛掉低质量 QA。入库时应把它放在 synthetic RAG evaluation / golden dataset construction 这一组。",
+      "analysis_note": {
+        "title": "详细笔记：Microsoft Golden Dataset for RAG Evaluation",
+        "source": "docs/blog_notes/microsoft-golden-dataset-rag-evaluation.md",
+        "url": "blog_notes/microsoft-golden-dataset-rag-evaluation.html"
+      },
+      "related_papers": [
+        "ragas-automated-rag-evaluation-2024-eacl",
+        "ares-automated-rag-evaluation-2024-naacl",
+        "rgb-benchmarking-llms-rag-2024-aaai",
+        "ragtruth-hallucination-corpus-2024-acl"
+      ],
+      "status": "approved"
+    },
+    {
       "id": "lmsys-hard-prompts-category",
       "title": "Introducing Hard Prompts Category in Chatbot Arena",
       "url": "https://www.lmsys.org/blog/2024-05-17-category-hard/",
