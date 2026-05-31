@@ -10886,6 +10886,63 @@
           }
         ]
       }
+    },
+    {
+      "id": "progen-progressive-zero-shot-dataset-generation-2210-12329",
+      "title": "ProGen: Progressive Zero-shot Dataset Generation via In-context Feedback",
+      "paper_url": "https://aclanthology.org/2022.findings-emnlp.269/",
+      "pdf_url": "https://aclanthology.org/2022.findings-emnlp.269.pdf",
+      "authors": [
+        "Jiacheng Ye",
+        "Jiahui Gao",
+        "Jiangtao Feng",
+        "Zhiyong Wu",
+        "Tao Yu",
+        "Lingpeng Kong"
+      ],
+      "venue": "Findings of EMNLP",
+      "year": 2022,
+      "primary_area": "自然语言处理",
+      "category": "训练数据构造与合成",
+      "keywords": [
+        "ProGen",
+        "synthetic data generation",
+        "zero-shot learning",
+        "dataset generation",
+        "in-context learning",
+        "in-context feedback",
+        "influence function",
+        "self-training",
+        "text classification",
+        "data quality",
+        "data filtering",
+        "ZeroGen",
+        "GPT2-XL",
+        "DistilBERT"
+      ],
+      "labels": [
+        "ProGen",
+        "Synthetic Data",
+        "Zero-Shot Learning",
+        "Dataset Generation",
+        "In-Context Feedback",
+        "Data Quality",
+        "EMNLP"
+      ],
+      "code_url": "",
+      "note": "这篇值得记录的点是它很早就把 synthetic data generation 做成了一个反馈闭环，而不是一次性生成大量数据。它的 feedback 不是人工标注，而是 task-specific model 对前一轮合成数据的反馈：哪些样本更有影响、更能帮助模型训练，就把它们放回 prompt 作为 in-context examples，引导下一轮生成。今天看，ProGen 不是最直接可用的 QA 生成工具，因为原论文主要验证在文本分类任务上，生成器也是 GPT2-XL 时代的 PLM；但它提出的 generate -> evaluate/filter -> feedback -> regenerate 思路，和后来很多 synthetic QA、RAG benchmark generation、self-improving data generation 工作是一条线。对今天的启发是：数据生成的关键不只是“生成更多”，而是用反馈筛选和 steering 生成更有训练或评测价值的数据。",
+      "tldr": "ProGen 是一个 progressive zero-shot synthetic dataset generation 方法：先让 PLM 生成合成训练数据，再训练 task-specific model，用 influence function 选择对模型最有帮助的样本作为 in-context feedback，迭代引导下一轮生成，从而减少低信息量和重复数据。",
+      "abstract": "ProGen studies how to generate useful synthetic training data in a zero-shot setting. Instead of producing a large dataset from a fixed prompt in one pass, it progressively generates data, trains a task-specific model on the synthetic examples, estimates which examples are most helpful through influence-function-based feedback, and reuses selected examples as in-context demonstrations for the next generation round. Experiments on five text classification datasets show that this feedback-driven generation loop improves over previous zero-shot and few-shot baselines, and can achieve comparable or better performance with far less synthetic data than non-feedback generation methods.",
+      "summary_cn": {
+        "研究动机": "零样本场景下，可以让预训练语言模型先生成合成训练数据，再用这些数据训练任务模型。但一次性从固定 prompt 生成大量样本容易出现低信息量、重复、标签或分布不够有效的问题；数据量变大并不必然等于训练效果变好。作者希望让生成过程根据前一轮训练结果自动调整，使后续生成的数据更有训练价值。",
+        "解决问题": "论文解决的是 zero-shot dataset generation 的质量问题：在没有人工标注训练集的情况下，如何让 PLM 生成更有用、更少冗余的合成训练数据，并用这些数据训练下游文本分类模型。它不是 RAG QA 生成论文，也不是通用 benchmark 生成工具，而是较早的反馈驱动 synthetic training data 方法。",
+        "现象分析": "已有 ZeroGen 式方法通常是一次性 prompt 生成数据，再直接训练 classifier。问题在于生成模型并不知道哪些样本真正帮助下游模型学习决策边界，因此会产生大量对训练贡献有限的样本。ProGen 的观察是：训练出来的 task-specific model 可以反过来提供反馈，告诉生成流程哪些合成样本更有影响、更值得作为下一轮 prompt 示例。",
+        "主要方法": "ProGen 采用 progressive loop：先用 PLM 根据任务描述和少量 in-context examples 生成一批带标签样本；然后用这些样本训练 task-specific model；接着用 influence function 估计样本对模型训练和验证表现的影响，筛出高价值样本；最后把这些样本放回 prompt 作为 in-context feedback，指导下一轮数据生成。这个循环不断把“生成数据 -> 训练任务模型 -> 评估样本价值 -> 更新 prompt 示例”串起来。",
+        "数据集与实验": "论文在五个文本分类数据集上验证，包括 IMDb、SST-2、Rotten Tomatoes、Elec 和 Yelp。生成器使用 GPT2-XL，任务模型包括 DistilBERT 和 LSTM。结果显示 ProGen 相比此前 zero-shot 和 few-shot 方法更稳定有效，并且在一些设置下只需要 baseline 约 1% 的合成数据规模，就能达到相当或更好的性能。",
+        "主要贡献": "主要贡献是把 synthetic dataset generation 从一次性生成推进到反馈闭环：用 task-specific model 的训练反馈来选择 in-context examples，再 steering 下一轮生成。今天看，它的具体实验任务和模型已经偏早期，但思想仍然有参考价值，尤其适合和 RAGAS、YourBench、EnterpriseRAG-Bench、DataMorgana 等后来的 synthetic QA / benchmark generation 工作放在同一条脉络里理解：高质量合成数据需要生成、过滤、反馈和覆盖控制，而不是单纯扩大生成数量。"
+      },
+      "status": "approved",
+      "added_at": "2026-05-31"
     }
   ]
 }
