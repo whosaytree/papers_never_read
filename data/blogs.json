@@ -1020,6 +1020,116 @@
       "status": "approved"
     },
     {
+      "id": "galtea-llm-as-a-judge-complete-guide",
+      "title": "LLM as a Judge: The Complete Guide",
+      "url": "https://galtea.ai/blog/llm-as-a-judge-the-complete-guide",
+      "source": "Galtea Blog",
+      "published_at": "2026-05-07",
+      "added_at": "2026-05-31",
+      "tags": [
+        "Galtea",
+        "LLM-as-a-Judge",
+        "LLM evaluation",
+        "rubric design",
+        "judge calibration",
+        "gold set",
+        "claim-level evaluation",
+        "Cohen's Kappa",
+        "canary set",
+        "deployment gate"
+      ],
+      "summary": "这篇 Galtea 文章是 LLM-as-a-Judge 组里更偏工程方法论的一篇。它的核心观点是：LLM judge 的价值不在于“让模型给分”，而在于围绕明确 rubric、claim-level reasoning、labelled gold set、judge-human agreement metrics 和 production wiring 构建一个可校准、可监控、可用于部署门禁的评估系统。文章区分三种 scoring modes：pairwise comparison 适合 A/B 比较 prompt 或 model version，但不能给 absolute quality threshold；single-answer grading with rubric 是生产中更常用的模式，因为每个回答都沿同一标准打分，可以设置 canary set / deployment gate；reference-based grading 适合 translation、summarization、structured extraction 等 constrained outputs，但对开放式任务容易惩罚“正确但表达不同”的回答。它最重要的细节在 rubric 和 calibration：一个可用 judge prompt 应包含 domain-specific criterion definition、explicit reasoning structure、scoring rule 和 edge-case handling；例如 RAG faithfulness judge 应先枚举 response 中每个 factual claim，再逐条在 context 中找直接支持，任意 claim 无支持就判 unfaithful。校准方面，文章强调没有 labelled gold set 的 judge 不应作为 production signal；gold set 应由领域专家标注、来自真实评估分布、覆盖关键 failure classes，并先测 human inter-rater agreement。校准时不能只看 accuracy，还要看 precision、recall、F1、Pearson、Spearman 和 Cohen's Kappa，否则类别不平衡会掩盖 judge 对关键失败类的漏检。",
+      "key_points": [
+        "这篇比 Humanloop 更深入，适合作为 LLM-as-a-Judge 的核心方法论条目；Humanloop 偏基础分类，Galtea 偏 rubric 和校准。",
+        "LLM judge 的关键不只是选择 judge model，而是 prompt、rubric、gold set 和 judge-human agreement 是否可靠。",
+        "Pairwise comparison 适合开发期比较两个 prompt/model 输出，但不能说明胜者是否达到最低可用质量。",
+        "Single-answer grading with rubric 更适合生产评估，因为它能形成绝对阈值、canary set 和 deployment gate。",
+        "Reference-based grading 适合 constrained outputs，例如翻译、摘要、结构化抽取；开放式任务中可能误罚表达不同但正确的回答。",
+        "量表应选择最低够用精度：binary pass/fail、fail/partial/pass，再到 1-5 或 1-10；细粒度数字分数需要 gold set 证明 judge 真能稳定区分。",
+        "Galtea 反对 generic quality / helpfulness rubric，主张 claim-level 或 condition-level rubric。",
+        "一个可用 judge prompt 包含四部分：domain-specific criterion definition、explicit reasoning structure、scoring rule、edge-case handling。",
+        "RAG faithfulness 示例要求先列出回答中的 factual claims，再在 context 中找支持句；任意 factual claim 无直接支持就判 unfaithful。",
+        "Edge cases 要写进 rubric，例如 truncated context、empty retrievals、partial answers、refusals 和 missing evidence。",
+        "校准最低可行流程是：构建 labelled gold set、跑 baseline judge、计算多指标、找最差样本、改 prompt/rubric、重复到 alignment plateau。",
+        "Gold set 建议 30-200 个来自真实评估分布的样本；生产部署门禁更安全的做法是 200+ 或持续扩充。",
+        "Gold set 必须覆盖 failure classes；如果 100 个样本全是 faithful，不能证明 judge 能抓 unfaithfulness。",
+        "使用 gold set 前要先测 human inter-rater agreement；如果两个领域专家对超过 20% 样本分歧，说明 rubric 含糊，应先修 rubric。",
+        "校准不能只看 accuracy，还要看 precision、recall、F1、Pearson、Spearman 和 Cohen's Kappa；尤其要关注 per-class recall。",
+        "一个 judge 可能有 0.9 accuracy 但 Cohen's Kappa 只有 0.1，这通常说明它在类别不平衡数据上看似准确，实际接近猜测。",
+        "生产接入需要 batching、retry handling、malformed JSON 处理、rate limit / timeout 处理、structured logging、prompt versioning、canary regression detection 和 CI gate。",
+        "不该用 LLM judge 的场景包括：已有确定性 correctness check、没有 labelled gold set、missed failure 代价高于人工审核成本。",
+        "高风险场景里 judge 应作为 triage filter，而不是最终裁决。"
+      ],
+      "standards": [
+        {
+          "name": "Pairwise Comparison",
+          "description": "让 judge 比较两个回答哪个更好，适合 A/B 比较，但不能提供绝对质量门槛。"
+        },
+        {
+          "name": "Single-Answer Grading",
+          "description": "用明确 rubric 评估单个回答，适合生产评估、canary set 和 deployment gate。"
+        },
+        {
+          "name": "Reference-Based Grading",
+          "description": "给 judge 标准答案或 source context，适合 constrained outputs 和 RAG grounding。"
+        },
+        {
+          "name": "Rubric",
+          "description": "judge 必须执行的判定规则，包括标准定义、推理结构、打分规则和边界情况处理。"
+        },
+        {
+          "name": "Claim-Level Evaluation",
+          "description": "先拆 factual claims，再逐条验证 context support，比泛泛 helpfulness 打分更可操作。"
+        },
+        {
+          "name": "Gold Set",
+          "description": "由领域专家标注、来自真实分布、覆盖关键 failure classes 的 judge 校准集。"
+        },
+        {
+          "name": "Calibration Metrics",
+          "description": "除 accuracy 外，还要看 precision、recall、F1、Pearson、Spearman 和 Cohen's Kappa。"
+        },
+        {
+          "name": "Triage Filter",
+          "description": "高风险场景中 judge 用来筛出需要人工看的样本，而不是最终裁决。"
+        }
+      ],
+      "quotes": [
+        {
+          "text": "single-answer scoring with an explicit rubric",
+          "note": "Galtea 推荐的生产评估主模式。"
+        },
+        {
+          "text": "claim-level rubric",
+          "note": "文章用来对比泛泛 helpfulness 评分的核心 rubric 形态。"
+        },
+        {
+          "text": "labelled gold set",
+          "note": "judge 上线前必须对齐的人工标注集。"
+        },
+        {
+          "text": "Cohen's Kappa",
+          "note": "校正随机一致性后的 judge-human agreement 指标。"
+        },
+        {
+          "text": "The judge is a tool, not a verdict.",
+          "note": "文章最后对生产使用边界的概括。"
+        }
+      ],
+      "my_note": "这篇是 LLM-as-a-Judge 组里值得优先保留的核心方法论文章。Humanloop 解释基本类型，Arize 强调 production measurement infrastructure，Galtea 则把 rubric 和校准讲得最实：不要相信泛泛的 1-10 分，不要相信没在 labelled gold set 上测过的 judge。对我最有用的是两点：第一，rubric 要逼 judge 做 claim-level / condition-level 检查，先拆事实、条件或工具调用，再按明确规则判定；第二，校准必须看 per-class recall 和 Cohen's Kappa，不能被 aggregate accuracy 欺骗。后续如果我要设计 RAG 或 agent evaluator，这篇可以作为 rubric + calibration 的主参考。",
+      "analysis_note": {
+        "title": "详细笔记：Galtea LLM-as-a-Judge Complete Guide",
+        "source": "docs/blog_notes/galtea-llm-as-a-judge-complete-guide.md",
+        "url": "blog_notes/galtea-llm-as-a-judge-complete-guide.html"
+      },
+      "related_papers": [
+        "rewardbench-2024-arxiv",
+        "ragas-automated-rag-evaluation-2024-eacl",
+        "ares-automated-rag-evaluation-2024-naacl"
+      ],
+      "status": "approved"
+    },
+    {
       "id": "lmsys-hard-prompts-category",
       "title": "Introducing Hard Prompts Category in Chatbot Arena",
       "url": "https://www.lmsys.org/blog/2024-05-17-category-hard/",
