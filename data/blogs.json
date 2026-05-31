@@ -1244,6 +1244,122 @@
       "status": "approved"
     },
     {
+      "id": "deepeval-llm-as-a-judge-guide",
+      "title": "LLM-as-a-Judge Evaluation with DeepEval",
+      "url": "https://deepeval.com/guides/guides-llm-as-a-judge",
+      "source": "DeepEval Guide / Confident AI",
+      "published_at": "2026-05-31",
+      "added_at": "2026-05-31",
+      "tags": [
+        "DeepEval",
+        "LLM-as-a-Judge",
+        "GEval",
+        "DAGMetric",
+        "QAG",
+        "ArenaGEval",
+        "LLM evaluation",
+        "CI/CD evaluation",
+        "RAG evaluation",
+        "agent evaluation",
+        "pytest-style eval"
+      ],
+      "summary": "这篇 DeepEval guide 是一篇偏工具实现的 LLM-as-a-Judge 指南。它的核心观点是：LLM-as-a-Judge 不应被理解成“让 LLM 打分”这个单一动作，而应根据评估任务选择不同 judge technique。DeepEval 提供三类主要方式：`GEval` 适合快速定义 custom subjective metric，可以用 `criteria` 快速原型，也可以用 `evaluation_steps` 固化推理步骤；`DAGMetric` 适合有 hard gates、分支逻辑和多条件判定的任务，可以把宽泛 rubric 拆成可追踪的 decision tree；QAG-style built-in metrics 适合常见 RAG、agent、tool-use 和 answer relevancy 评估，框架会把大判断拆成更小的 closed-ended checks。除此之外，`ArenaGEval` 用于 pairwise comparison，适合比较两个 prompt 或 model version。文章还明确区分 reference-based 和 referenceless judge：是否 reference-based 不是由 metric 名称决定，而是由 test case 中是否使用 `expected_output`、`context`、`retrieval_context`、`expected_tools` 等字段决定。对生产监控来说，因为线上请求通常没有 labelled expected output，所以更常用 referenceless metrics。可靠性方面，文章建议用 explicit evaluation steps、`strict_mode`、DAG 分支、built-in metrics、human annotations、`verbose_mode` 和 `metric.reason` 来降低 judge 噪声。它的价值主要在于把前面几篇文章中的 rubric、judge、gold set、production monitoring 概念落到 DeepEval 的具体 API 和工程工作流里。",
+      "key_points": [
+        "这篇是 DeepEval 的工具指南，不是学术论文；它的价值在于把 LLM-as-a-Judge 落到具体 API 和工程 workflow。",
+        "DeepEval 把 LLM-as-a-Judge 分成 `GEval`、`DAGMetric`、QAG-style built-ins 三种主要技术。",
+        "`GEval` 适合 custom subjective criteria，例如 correctness、tone、coherence、helpfulness。",
+        "`GEval` 可以用 `criteria` 快速定义，也可以用 `evaluation_steps` 明确 judge 推理步骤。",
+        "重要指标进入 CI/CD 或生产监控时，应该从宽泛 `criteria` 迁移到更明确的 `evaluation_steps`。",
+        "`DAGMetric` 适合硬规则、分支判断和多条件评分。",
+        "DAG 可以先做结构性 gate，例如 JSON 是否有效、必要 section 是否存在，再做主观评分。",
+        "QAG-style built-ins 适合 DeepEval 已经覆盖的常见场景，例如 RAG faithfulness、answer relevancy、contextual relevancy、tool correctness。",
+        "`ArenaGEval` 用于 pairwise judge，适合 prompt/model 版本比较。",
+        "DeepEval 的基本评估对象是 `LLMTestCase`。",
+        "`LLMTestCase` 常见字段包括 `input`、`actual_output`、`expected_output`、`context`、`retrieval_context`、`expected_tools`。",
+        "judge 是否 reference-based 取决于它是否使用 reference-like 字段，而不是 metric 名称。",
+        "`expected_output` 用于 labelled answer / gold answer。",
+        "`retrieval_context` 用于 RAG grounding、faithfulness 和 contextual relevancy。",
+        "生产监控通常更依赖 referenceless metrics，因为线上请求通常没有 `expected_output`。",
+        "DeepEval 可以把 LLM judge 接入 CI/CD，用 `assert_test()` 像 pytest 一样阻断回归。",
+        "也可以用 tracing 在 retriever、generator、agent 或 tool-calling component 上做局部评估。",
+        "debug judge 时要检查：judge 是否看到了正确字段、是否意外变成 reference-based、criteria 是否太宽。",
+        "human annotations 仍然必要，用来检查 false positive / false negative。",
+        "高风险场景中 false positive 更危险，因为坏输出可能被 judge 放过。"
+      ],
+      "standards": [
+        {
+          "name": "GEval",
+          "description": "DeepEval 的 custom LLM judge，适合主观质量维度，可用 criteria 或 evaluation_steps 定义。"
+        },
+        {
+          "name": "DAGMetric",
+          "description": "把评估逻辑拆成 decision tree，适合 hard gate、分支判断和可追踪 scoring path。"
+        },
+        {
+          "name": "QAG-style Built-ins",
+          "description": "DeepEval 内置指标常用的方式，把大判断拆成封闭小问题再汇总分数。"
+        },
+        {
+          "name": "ArenaGEval",
+          "description": "Pairwise LLM judge，用于比较两个 prompt、model 或 app version 的相对质量。"
+        },
+        {
+          "name": "LLMTestCase",
+          "description": "DeepEval 的基础测试样本，包含 input、actual_output、expected_output、context、retrieval_context 等字段。"
+        },
+        {
+          "name": "Reference-Based Judge",
+          "description": "使用 expected_output、context、retrieval_context 或 expected_tools 等 reference-like 字段的 judge。"
+        },
+        {
+          "name": "Referenceless Judge",
+          "description": "只依赖 input、actual_output 等线上可得信息的 judge，常用于 production monitoring。"
+        },
+        {
+          "name": "assert_test",
+          "description": "把 DeepEval metric 接入 pytest-style CI/CD regression testing 的断言接口。"
+        },
+        {
+          "name": "Human Annotation Check",
+          "description": "用人工标注检查 true positive、true negative、false positive 和 false negative。"
+        }
+      ],
+      "quotes": [
+        {
+          "text": "GEval",
+          "note": "DeepEval 中定义 custom LLM judge 的主要 API。"
+        },
+        {
+          "text": "DAGMetric",
+          "note": "用于把 judge 拆成更确定、可追踪的分支逻辑。"
+        },
+        {
+          "text": "QAG-style metrics",
+          "note": "DeepEval 许多内置指标的底层思路：拆成 closed-ended checks。"
+        },
+        {
+          "text": "ArenaGEval",
+          "note": "用于 pairwise prompt/model comparison。"
+        },
+        {
+          "text": "strict_mode=True",
+          "note": "只允许完美输出通过时使用的更严格模式。"
+        }
+      ],
+      "my_note": "这篇适合作为 DeepEval 工程用法条目。它和 Galtea 的区别是：Galtea 讲 rubric 和 calibration 应该怎么设计，DeepEval 这篇讲在一个具体 eval framework 里怎么实现这些 judge。它和 Braintrust 的区别是：Braintrust 讲 production traces 如何经过 human review 变成 golden dataset，DeepEval 讲拿到 test cases 以后如何用 metrics、DAG、CI/CD 和 tracing 跑评估。对我最有用的是 `GEval -> evaluation_steps -> DAGMetric` 这条升级路径：先用自然语言 criteria 快速定义指标，指标重要后改成明确步骤，如果有硬条件再拆成 DAG。这个路径比直接写一个泛泛的 1-10 judge 更适合工程落地。",
+      "analysis_note": {
+        "title": "详细笔记：DeepEval LLM-as-a-Judge Guide",
+        "source": "docs/blog_notes/deepeval-llm-as-a-judge-guide.md",
+        "url": "blog_notes/deepeval-llm-as-a-judge-guide.html"
+      },
+      "related_papers": [
+        "rewardbench-2024-arxiv",
+        "ragas-automated-rag-evaluation-2024-eacl",
+        "ares-automated-rag-evaluation-2024-naacl"
+      ],
+      "status": "approved"
+    },
+    {
       "id": "lmsys-hard-prompts-category",
       "title": "Introducing Hard Prompts Category in Chatbot Arena",
       "url": "https://www.lmsys.org/blog/2024-05-17-category-hard/",
