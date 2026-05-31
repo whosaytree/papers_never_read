@@ -713,6 +713,108 @@
       "status": "approved"
     },
     {
+      "id": "openai-agent-improvement-loop",
+      "title": "Build an Agent Improvement Loop with Traces, Evals, and Codex",
+      "url": "https://developers.openai.com/cookbook/examples/agents_sdk/agent_improvement_loop",
+      "source": "OpenAI Cookbook",
+      "published_at": "2026-05-12",
+      "added_at": "2026-05-31",
+      "tags": [
+        "OpenAI",
+        "Agents SDK",
+        "agent evaluation",
+        "harness",
+        "traces",
+        "human feedback",
+        "Promptfoo",
+        "HALO",
+        "Codex",
+        "loop engineering"
+      ],
+      "summary": "这篇 OpenAI Cookbook 展示了一个 agent improvement loop：先用 Agents SDK 构建一个 financial analyst agent 并收集真实 traces，再把 human feedback 和 LLM feedback 转成 Promptfoo evals，用 eval gate 检查当前行为，最后把 traces、feedback、generated evals 和 gate results 交给 HALO 生成 ranked harness changes 与 `codex_handoff.md`，供 Codex 或开发者实现下一轮改动。需要注意的是，`harness` 不是这篇新提出的概念，也不是一个单独产品；它在这里指围绕 agent 的完整运行契约，包括 instructions、tools、routing、output requirements 和 validation checks。文章的价值不在于发明新评估指标，而在于把已有的 trace、feedback、eval、CI gate、coding agent 等环节组织成闭环：人的工作从直接手工修改 prompt 或局部流程，上移为构建可评估的 harness、审阅 agent 行为、提供高质量反馈，并在 eval refinement、PR approval、merge、deployment 等位置保留审核权。",
+      "key_points": [
+        "这篇是 OpenAI Cookbook notebook，不是论文；它给的是一个可运行的 agent 持续改进流水线模板。",
+        "`harness` 不是新概念，类似 test harness / eval harness；在这篇里指 agent 外围的完整契约。",
+        "harness 包括 system prompt、model settings、tools、routing/control flow、output requirements、validation checks 和 eval metadata。",
+        "文章的主要观点不是“改 prompt”，而是“根据真实行为诊断整个 harness 的薄弱点”。",
+        "示例 agent 是一个 Agents SDK-backed financial analyst，会读取虚构公司并购尽调材料并输出 summary、memo、risk register、citations、evidence table 等 artifacts。",
+        "trace 是闭环起点：先记录 agent 实际如何使用工具、生成输出和留下 artifacts，再基于真实行为做反馈。",
+        "human feedback 提供领域判断，例如哪些 claim 不能说、哪些指标必须用结构化财务数据、哪些答案缺少关键限定。",
+        "LLM feedback 用来补充模式观察，但可信度低于人工领域反馈。",
+        "feedback 会被自动转成 Promptfoo eval definitions，让一次性 review comment 变成可重复运行的 regression test。",
+        "Promptfoo gate 可以混合 deterministic assertions 和 LLM rubric judge，用来验证当前 agent 行为是否满足这些新 evals。",
+        "HALO 综合 current harness config、traces、human feedback、LLM insights、generated evals 和 eval-gate results，输出 ranked recommendations。",
+        "`codex_handoff.md` 是面向 Codex 或开发者的实现交接文件，包含优先级、证据、建议改动和验证方式。",
+        "人的核心工作变成两部分：先构建一个可观测、可验证、可迭代的 harness；再对 harness 行为提供反馈并审核自动生成的 eval、建议和代码改动。",
+        "自动化不是完全替代人，文章仍建议在 trace review、eval refinement、PR approval、merge 和 deployment 等环节保留 human gates。"
+      ],
+      "standards": [
+        {
+          "name": "Harness",
+          "description": "围绕 agent 的完整运行契约，不只是 prompt，还包括工具、路由、输出、验证和评估元数据。"
+        },
+        {
+          "name": "Trace",
+          "description": "agent 真实运行记录，是判断实际行为和发现 failure mode 的基础。"
+        },
+        {
+          "name": "Feedback",
+          "description": "人工反馈提供领域判断，LLM feedback 补充模式观察；二者共同为 eval 生成提供信号。"
+        },
+        {
+          "name": "Generated Eval",
+          "description": "把一次性的反馈转成 Promptfoo 可运行测试，包括 expected behavior、rubric、deterministic assertions 和 pass/fail examples。"
+        },
+        {
+          "name": "HALO",
+          "description": "基于 harness config、traces、feedback 和 eval results 诊断薄弱点，并排序下一轮 harness 改动。"
+        },
+        {
+          "name": "Codex Handoff",
+          "description": "把优化建议落成面向 Codex 或开发者的实施说明，便于修改 prompt、tools、validators、artifact schema 或 eval suite。"
+        },
+        {
+          "name": "Human Gates",
+          "description": "在反馈审阅、eval 修订、PR 审批、合并和部署等位置保留人工把关。"
+        }
+      ],
+      "quotes": [
+        {
+          "text": "harness",
+          "note": "这里不是新产品名，而是 agent 外围完整契约。"
+        },
+        {
+          "text": "agent harness",
+          "note": "文章用这个词指 prompt、tools、routing、output requirements 和 validation checks 的组合。"
+        },
+        {
+          "text": "Promptfoo evals",
+          "note": "把反馈固化成可重复运行的评估用例。"
+        },
+        {
+          "text": "codex_handoff.md",
+          "note": "HALO 输出给 Codex 或开发者的实施交接文件。"
+        },
+        {
+          "text": "loop engineering",
+          "note": "文章最后强调的耐久思想：把行为记录、反馈、测试和实现连接成闭环。"
+        }
+      ],
+      "my_note": "这篇不应该被理解为提出了全新的 harness 概念；如果熟悉 LLMOps、eval-driven development 和 CI regression，它的组件都很熟。真正值得记的是角色变化：人不再只是在 bad case 后手工改某个 prompt，而是先把 agent 做成可观测、可验证、可迭代的 harness，再对整个 harness 的行为提供领域反馈，并审核系统自动生成的 eval、诊断和 Codex handoff。它和前面 RAG synthetic evaluation 那组文章的区别是：那些文章主要解决“评测样本怎么生成”，这篇解决“真实 agent 行为如何被持续转成测试、诊断和下一轮工程改动”。",
+      "analysis_note": {
+        "title": "详细笔记：OpenAI Agent Improvement Loop",
+        "source": "docs/blog_notes/openai-agent-improvement-loop.md",
+        "url": "blog_notes/openai-agent-improvement-loop.html"
+      },
+      "related_papers": [
+        "agentbench-2308-03688",
+        "bfcl-2025-icml",
+        "react-2023-iclr",
+        "rag-gym-2502-13957"
+      ],
+      "status": "approved"
+    },
+    {
       "id": "lmsys-hard-prompts-category",
       "title": "Introducing Hard Prompts Category in Chatbot Arena",
       "url": "https://www.lmsys.org/blog/2024-05-17-category-hard/",
