@@ -1130,6 +1130,120 @@
       "status": "approved"
     },
     {
+      "id": "braintrust-human-review-golden-datasets",
+      "title": "How to improve your golden datasets with human review",
+      "url": "https://www.braintrust.dev/blog/human-review-golden-datasets",
+      "source": "Braintrust Blog",
+      "published_at": "2026-05-21",
+      "added_at": "2026-05-31",
+      "tags": [
+        "Braintrust",
+        "human review",
+        "golden dataset",
+        "production traces",
+        "expected value",
+        "LLM evaluation",
+        "scorer calibration",
+        "regression testing",
+        "SME review",
+        "eval lifecycle"
+      ],
+      "summary": "这篇 Braintrust 文章讲的是如何把 human review 接入 eval lifecycle，使 production traces 不只是 debug 记录，而是能持续转化成 golden dataset、regression suite 和 scorer calibration signal。它的核心闭环是：先从生产环境捕获真实 behavior，再用 Topics 之类的方法按 failure mode、intent、sentiment 对 traces 聚类；然后由 human reviewers 或 SME 对 bad / interesting traces 填写 `expected`、`is_correct`、`failure_type` 和 notes；经过审阅的 traces 被 promoted 到 golden dataset，后续用于 CI、实验对比、dashboard monitoring 和 deployment gate。文章最重要的概念是 `expected`：它代表人类专家认为模型应该输出的 clean target output，应该包含完整目标答案或具体返回值，并对齐格式、tone、schema、citation 和 safety behavior；supporting context、source material 和 rationale 不应混进 `expected`，而应放在 metadata 或 reference fields。文章还强调 human review rubric 应从短字段开始，包括 pass/fail、categorical labels、slider 和 freeform notes，并通过 triage queue、SME queue 和 calibration queue 维持审阅质量。随着 reviewed production failures 积累，这些样本会变成 regression test cases，客观问题用 heuristic scorers 检查，主观问题用 LLM-as-judge scorers，并持续跟踪 judge-human alignment。它最值得记住的实践警告是：不要把没有 `expected` 的 traces 当成 golden dataset；不要把背景材料塞进 expected；不要拖延 rubric、owner 和 review cadence 的设计。",
+      "key_points": [
+        "这篇不是讲 synthetic dataset generation，而是讲 production traces 如何经过 human review 变成 golden dataset。",
+        "它补足了 Galtea、Arize、Humanloop 等文章里“gold set 从哪里来、如何持续维护”的问题。",
+        "核心流程是 capture behavior -> label with expertise -> score in evals -> ship / fix / block。",
+        "Topics 用来先按 failure mode、intent、sentiment 等维度聚类 traces，让 reviewer 不用逐条盲看。",
+        "`expected` 是人类专家确认的目标输出，是 golden dataset 的核心字段。",
+        "`expected` 应保持干净；证据、上下文、rationale 放 metadata / reference fields。",
+        "单条 dataset row 最好只测一个清楚行为；复杂 trace 可以拆成多条 rows。",
+        "如果 reviewer 无法确定 expected，不应猜测，应找 SME 或重新缩小任务定义。",
+        "如果存在多个正确答案，应通过 rubric-based judge 或 scorer 编码可接受变体。",
+        "Human review rubric 应先短后长，避免字段过多导致吞吐下降和一致性下降。",
+        "常用 review fields 包括 pass/fail、categorical labels、slider、freeform notes。",
+        "Triage queue 负责快速判断 ignore / needs review / duplicate。",
+        "SME queue 负责填写 `expected`、`is_correct` 等 ground truth。",
+        "Calibration queue 让多个 reviewer 周期性评同一批样本，用来保持 rubric 一致性。",
+        "Reviewed traces 可以被 promoted 到 golden dataset，后续用于 CI、实验和 regression testing。",
+        "客观检查优先用 heuristic scorers，例如 exact match、regex、diff、schema validation。",
+        "主观语义维度可以用 LLM-as-judge scorer，但要跟 human labels 对齐。",
+        "Golden dataset 不是静态资产，应持续加入新 failure、清理重复和过时样本。",
+        "最大反模式是把 traces 放进 dataset 但不填 `expected`，这样不能成为可靠 regression test。"
+      ],
+      "standards": [
+        {
+          "name": "Production Trace",
+          "description": "线上真实交互、工具调用、检索结果和模型输出记录，是 human review 的原始材料。"
+        },
+        {
+          "name": "Topics",
+          "description": "对 traces 按 failure mode、intent、sentiment 等维度自动聚类和打标签，方便 reviewer 聚焦模式。"
+        },
+        {
+          "name": "Expected",
+          "description": "人类专家认为模型应该输出的干净目标答案或目标值，是 golden dataset 的核心 ground truth。"
+        },
+        {
+          "name": "Human Review Rubric",
+          "description": "结构化审阅字段，例如 is_correct、needs_fix、failure_type、groundedness 和 notes。"
+        },
+        {
+          "name": "Triage Queue",
+          "description": "快速筛出 ignore、needs review、duplicate，避免 SME 被低价值样本淹没。"
+        },
+        {
+          "name": "SME Queue",
+          "description": "由领域专家补充 expected、is_correct 和业务 ground truth 的审阅队列。"
+        },
+        {
+          "name": "Calibration Queue",
+          "description": "让多个 reviewer 周期性审同一批样本，用来检查 rubric 是否一致。"
+        },
+        {
+          "name": "Promote to Dataset",
+          "description": "把 reviewed traces 提升为 golden dataset 或 regression suite 中的长期测试样本。"
+        },
+        {
+          "name": "Scorer Alignment",
+          "description": "用人工审阅结果校准 heuristic scorers 或 LLM-as-judge scorers，持续跟踪 human alignment。"
+        }
+      ],
+      "quotes": [
+        {
+          "text": "expected",
+          "note": "文章最核心的字段：人类专家确认的目标输出。"
+        },
+        {
+          "text": "golden datasets",
+          "note": "human-reviewed traces 最终要进入的可复用评估集。"
+        },
+        {
+          "text": "Capture behavior",
+          "note": "闭环第一步：从真实生产交互捕获行为。"
+        },
+        {
+          "text": "Label with expertise",
+          "note": "闭环第二步：用领域知识补充 ground truth。"
+        },
+        {
+          "text": "Score in evals",
+          "note": "闭环第三步：把人工标注转化为自动 eval 信号。"
+        }
+      ],
+      "my_note": "这篇值得入库，因为它把 golden dataset 的运营机制讲清楚了。前面几篇更多是在讲 synthetic QA、rubric、LLM judge 校准，而 Braintrust 这篇强调真实 production traces 如何进入人工审阅队列，再被提升为长期回归测试样本。对我来说最有用的是 `expected` 的边界：它不是解释材料，不是证据包，也不是 reviewer 的理由，而是一个干净、可评分、可复用的目标输出。后续如果我要构建 RAG / agent eval，这篇可以作为“线上失败样本如何变成 eval dataset”的流程参考。",
+      "analysis_note": {
+        "title": "详细笔记：Braintrust Human Review Golden Datasets",
+        "source": "docs/blog_notes/braintrust-human-review-golden-datasets.md",
+        "url": "blog_notes/braintrust-human-review-golden-datasets.html"
+      },
+      "related_papers": [
+        "rewardbench-2024-arxiv",
+        "ragas-automated-rag-evaluation-2024-eacl",
+        "ares-automated-rag-evaluation-2024-naacl"
+      ],
+      "status": "approved"
+    },
+    {
       "id": "lmsys-hard-prompts-category",
       "title": "Introducing Hard Prompts Category in Chatbot Arena",
       "url": "https://www.lmsys.org/blog/2024-05-17-category-hard/",
