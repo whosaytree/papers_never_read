@@ -17,6 +17,7 @@ PROJECT_FILE = ROOT / "data" / "projects.json"
 ASSET_DIR = ROOT / "assets"
 OUTPUT_DIR = ROOT / "dist"
 OUTPUT_FILE = OUTPUT_DIR / "index.html"
+BLOG_KEY_POINTS_LIMIT = 5
 
 DIMENSIONS = [
     ("研究动机", "研究动机"),
@@ -1065,7 +1066,7 @@ def blog_card(post: dict, papers_by_id: dict[str, dict]) -> str:
     summary = escape(safe_text(post.get("summary"), "主要内容待补充"))
     my_note = escape(safe_text(post.get("my_note"), "暂无备注"))
     tags = post.get("tags", [])
-    key_points = post.get("key_points", [])
+    key_points = post.get("key_points", [])[:BLOG_KEY_POINTS_LIMIT]
     standards = post.get("standards", [])
     quotes = post.get("quotes", [])
     related_papers = post.get("related_papers", [])

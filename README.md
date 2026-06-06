@@ -118,7 +118,7 @@
 - `id`, `title`, `url`, `source`, `published_at`, `added_at`
 - `tags`
 - `summary`
-- `key_points`
+- `key_points`: 最多 5 条，每条只保留一个核心判断。
 - `standards`: 可选标准表，例如难度标准、评估标准、分级标准。
 - `quotes`: 关键语句，每项包含 `text` 和 `note`。
 - `my_note`
@@ -255,7 +255,7 @@ python3 scripts/finalize_paper_entry.py --paper-id "{paper_id}" --allow-missing-
 - 来源 / 发布时间
 - 标签
 - 主要内容
-- 关键要点
+- 关键要点：最多 5 条
 - 关键语句：原文短摘录和理解说明
 - 如适用，补充标准表
 - 我的备注
