@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="620" viewBox="0 0 1200 620">
+  <rect width="1200" height="620" fill="#fbfcfd"/>
+  <text x="70" y="78" font-family="Arial, sans-serif" font-size="34" font-weight="700" fill="#0d5b55">RAG evaluation dataset flow</text>
+  <text x="70" y="122" font-family="Arial, sans-serif" font-size="18" fill="#637282">SDG Hub turns source documents into grounded QA-context triplets for offline RAG testing.</text>
+  <g font-family="Arial, sans-serif" font-size="20" font-weight="700" fill="#1e2933">
+    <rect x="90" y="210" width="185" height="92" rx="12" fill="#eef3f8" stroke="#d7dee7"/><text x="130" y="264">Document</text>
+    <rect x="335" y="210" width="185" height="92" rx="12" fill="#eef3f8" stroke="#d7dee7"/><text x="378" y="264">Topic</text>
+    <rect x="580" y="210" width="185" height="92" rx="12" fill="#fff7dd" stroke="#d0a82f"/><text x="616" y="250">Question</text><text x="620" y="276">evolution</text>
+    <rect x="825" y="210" width="185" height="92" rx="12" fill="#fff7dd" stroke="#d0a82f"/><text x="858" y="250">Grounded</text><text x="872" y="276">answer</text>
+    <rect x="457" y="395" width="285" height="92" rx="12" fill="#d9f1ee" stroke="#0f766e"/><text x="493" y="450">ground_truth_context</text>
+  </g>
+  <g stroke="#0f766e" stroke-width="5" marker-end="url(#arrow)">
+    <path d="M280 256 H330"/>
+    <path d="M525 256 H575"/>
+    <path d="M770 256 H820"/>
+    <path d="M918 306 C910 360 780 425 748 440"/>
+  </g>
+  <text x="360" y="540" font-family="Arial, sans-serif" font-size="18" fill="#44515e">Output: question, response, and exact source context for retrieval and faithfulness checks.</text>
+  <defs><marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto"><path d="M0,0 L0,6 L9,3 z" fill="#0f766e"/></marker></defs>
+</svg>

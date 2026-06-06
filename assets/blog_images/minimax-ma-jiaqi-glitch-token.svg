@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="620" viewBox="0 0 1200 620">
+  <rect width="1200" height="620" fill="#fbfcfd"/>
+  <text x="70" y="78" font-family="Arial, sans-serif" font-size="34" font-weight="700" fill="#0d5b55">Sparse token forgetting after SFT</text>
+  <text x="70" y="122" font-family="Arial, sans-serif" font-size="18" fill="#637282">The model still understands the token, but the output head stops generating it reliably.</text>
+  <rect x="80" y="190" width="250" height="130" rx="14" fill="#eef3f8" stroke="#d7dee7"/>
+  <text x="124" y="240" font-family="Arial, sans-serif" font-size="24" font-weight="700" fill="#1e2933">Input embedding</text>
+  <text x="124" y="278" font-family="Arial, sans-serif" font-size="18" fill="#637282">semantic memory intact</text>
+  <path d="M340 255 H505" stroke="#0f766e" stroke-width="6" marker-end="url(#arrow)"/>
+  <rect x="520" y="190" width="250" height="130" rx="14" fill="#fff7dd" stroke="#d0a82f"/>
+  <text x="585" y="240" font-family="Arial, sans-serif" font-size="24" font-weight="700" fill="#6c5400">SFT data</text>
+  <text x="572" y="278" font-family="Arial, sans-serif" font-size="18" fill="#6c5400">rare token appears &lt; 5 times</text>
+  <path d="M780 255 H945" stroke="#0f766e" stroke-width="6" marker-end="url(#arrow)"/>
+  <rect x="960" y="190" width="180" height="130" rx="14" fill="#ffe6d8" stroke="#e7a17a"/>
+  <text x="998" y="240" font-family="Arial, sans-serif" font-size="24" font-weight="700" fill="#8a3b12">lm_head</text>
+  <text x="984" y="278" font-family="Arial, sans-serif" font-size="18" fill="#8a3b12">output vector drifts</text>
+  <rect x="210" y="405" width="780" height="96" rx="16" fill="#ffffff" stroke="#d7dee7"/>
+  <text x="252" y="445" font-family="Arial, sans-serif" font-size="22" font-weight="700" fill="#1e2933">Failure mode</text>
+  <text x="252" y="478" font-family="Arial, sans-serif" font-size="18" fill="#44515e">Prompt can point to the person, but decoding avoids the exact name token.</text>
+  <defs><marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto"><path d="M0,0 L0,6 L9,3 z" fill="#0f766e"/></marker></defs>
+</svg>

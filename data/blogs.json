@@ -44,7 +44,19 @@
       ],
       "my_note": "这篇对我有价值的地方在于，它把一个看似娱乐化的 bug 还原成后训练数据分布和输出头漂移问题。以后看 SFT/RL 后训练时，不能只看 benchmark 和高层能力，还要关注 token coverage、低频词输出概率、lm_head 邻域变化，以及工具调用/特殊标记是否污染普通语言 token 的输出空间。",
       "related_papers": [],
-      "status": "approved"
+      "status": "approved",
+      "key_figure": {
+        "type": "Blog image",
+        "name": "",
+        "page": null,
+        "path": "assets/blog_images/minimax-ma-jiaqi-glitch-token.svg",
+        "caption": "Sparse token forgetting after post-training",
+        "caption_cn": "",
+        "source": "manual-svg-summary",
+        "source_url": "https://www.zhihu.com/question/2017049686331127666",
+        "confidence": 0.65,
+        "needs_manual_review": true
+      }
     },
     {
       "id": "redhat-sdg-hub-rag-evaluation",
@@ -135,7 +147,19 @@
         "ragas-automated-rag-evaluation-2024-eacl",
         "ares-automated-rag-evaluation-2024-naacl"
       ],
-      "status": "approved"
+      "status": "approved",
+      "key_figure": {
+        "type": "Blog image",
+        "name": "",
+        "page": null,
+        "path": "assets/blog_images/redhat-sdg-hub-rag-evaluation.svg",
+        "caption": "RAG evaluation dataset generation pipeline supported by SDG Hub",
+        "caption_cn": "",
+        "source": "manual-svg-summary",
+        "source_url": "https://developers.redhat.com/articles/2026/02/23/synthetic-data-rag-evaluation-why-your-rag-system-needs-better-testing",
+        "confidence": 0.65,
+        "needs_manual_review": true
+      }
     },
     {
       "id": "databricks-synthetic-agent-evaluation",
@@ -232,7 +256,19 @@
         "ares-automated-rag-evaluation-2024-naacl",
         "rgb-benchmarking-llms-rag-2024-aaai"
       ],
-      "status": "approved"
+      "status": "approved",
+      "key_figure": {
+        "type": "Blog image",
+        "name": "",
+        "page": null,
+        "path": "assets/blog_images/databricks-synthetic-agent-evaluation.png",
+        "caption": "Streamline AI Agent Evaluation with New Synthetic Data Capabilities",
+        "caption_cn": "",
+        "source": "og:image",
+        "source_url": "https://www.databricks.com/sites/default/files/2025-01/streamline-ai-agent-evaluation-with-new-synthetic-data-capabilities.png",
+        "confidence": 0.98,
+        "needs_manual_review": true
+      }
     },
     {
       "id": "aws-bedrock-synthetic-rag-evaluation",
@@ -326,7 +362,19 @@
         "rgb-benchmarking-llms-rag-2024-aaai",
         "ragtruth-hallucination-corpus-2024-acl"
       ],
-      "status": "approved"
+      "status": "approved",
+      "key_figure": {
+        "type": "Blog image",
+        "name": "",
+        "page": null,
+        "path": "assets/blog_images/aws-bedrock-synthetic-rag-evaluation.png",
+        "caption": "Generate synthetic data for evaluating RAG systems using Amazon Bedrock | Amazon Web Services",
+        "caption_cn": "",
+        "source": "og:image",
+        "source_url": "https://d2908q01vomqb2.cloudfront.net/f1f836cb4ea6efb2a0b1b99f41ad8b103eff4b59/2024/09/23/Screenshot-2024-09-23-at-12.01.41 PM.png",
+        "confidence": 0.98,
+        "needs_manual_review": true
+      }
     },
     {
       "id": "llamaindex-qa-system-evaluation",
@@ -420,7 +468,19 @@
         "rgb-benchmarking-llms-rag-2024-aaai",
         "ragtruth-hallucination-corpus-2024-acl"
       ],
-      "status": "approved"
+      "status": "approved",
+      "key_figure": {
+        "type": "Blog image",
+        "name": "",
+        "page": null,
+        "path": "assets/blog_images/llamaindex-qa-system-evaluation.png",
+        "caption": "QA System Evaluation Guide With LlamaIndex | LlamaIndex",
+        "caption_cn": "",
+        "source": "og:image",
+        "source_url": "https://cdn.sanity.io/images/7m9jw85w/production/081ca11596de221af4a6b2c137018bc61f069251-2208x704.png",
+        "confidence": 0.98,
+        "needs_manual_review": true
+      }
     },
     {
       "id": "labelstudio-rag-system-production-data",
@@ -514,7 +574,19 @@
         "rgb-benchmarking-llms-rag-2024-aaai",
         "ragtruth-hallucination-corpus-2024-acl"
       ],
-      "status": "approved"
+      "status": "approved",
+      "key_figure": {
+        "type": "Blog image",
+        "name": "",
+        "page": null,
+        "path": "assets/blog_images/labelstudio-rag-system-production-data.jpg",
+        "caption": "Build a RAG QA System Using Real-World Production Data | Label Studio",
+        "caption_cn": "",
+        "source": "og:image",
+        "source_url": "https://cdn.sanity.io/images/k7elabj6/production/cd533d278a14581543550eee86284fb2652aad2e-1440x756.jpg",
+        "confidence": 0.9,
+        "needs_manual_review": true
+      }
     },
     {
       "id": "ragas-v0121-testset-generation",
@@ -614,7 +686,19 @@
         "rgb-benchmarking-llms-rag-2024-aaai",
         "ragtruth-hallucination-corpus-2024-acl"
       ],
-      "status": "approved"
+      "status": "approved",
+      "key_figure": {
+        "type": "Blog image",
+        "name": "",
+        "page": null,
+        "path": "assets/blog_images/ragas-v0121-testset-generation.webp",
+        "caption": "evol-generate",
+        "caption_cn": "",
+        "source": "img",
+        "source_url": "https://docs.ragas.io/en/v0.1.21/_static/imgs/eval-evolve.png",
+        "confidence": 0.61,
+        "needs_manual_review": true
+      }
     },
     {
       "id": "microsoft-golden-dataset-rag-evaluation",
@@ -710,7 +794,19 @@
         "rgb-benchmarking-llms-rag-2024-aaai",
         "ragtruth-hallucination-corpus-2024-acl"
       ],
-      "status": "approved"
+      "status": "approved",
+      "key_figure": {
+        "type": "Blog image",
+        "name": "",
+        "page": null,
+        "path": "assets/blog_images/microsoft-golden-dataset-rag-evaluation.svg",
+        "caption": "Silver-to-golden dataset workflow for RAG evaluation",
+        "caption_cn": "",
+        "source": "manual-svg-summary",
+        "source_url": "https://medium.com/data-science-at-microsoft/the-path-to-a-golden-dataset-or-how-to-evaluate-your-rag-045e23d1f13f",
+        "confidence": 0.65,
+        "needs_manual_review": true
+      }
     },
     {
       "id": "openai-agent-improvement-loop",
@@ -812,7 +908,19 @@
         "react-2023-iclr",
         "rag-gym-2502-13957"
       ],
-      "status": "approved"
+      "status": "approved",
+      "key_figure": {
+        "type": "Blog image",
+        "name": "",
+        "page": null,
+        "path": "assets/blog_images/openai-agent-improvement-loop.png",
+        "caption": "Build an Agent Improvement Loop with Traces, Evals, and Codex",
+        "caption_cn": "",
+        "source": "og:image",
+        "source_url": "https://developers.openai.com/open-graph.png",
+        "confidence": 0.98,
+        "needs_manual_review": true
+      }
     },
     {
       "id": "arize-production-llm-as-judge-evaluators",
@@ -915,7 +1023,19 @@
       "related_papers": [
         "rewardbench-2024-arxiv"
       ],
-      "status": "approved"
+      "status": "approved",
+      "key_figure": {
+        "type": "Blog image",
+        "name": "",
+        "page": null,
+        "path": "assets/blog_images/arize-production-llm-as-judge-evaluators.png",
+        "caption": "How to build LLM-as-a-Judge evaluators that hold up in production",
+        "caption_cn": "",
+        "source": "og:image",
+        "source_url": "https://arize.com/wp-content/uploads/2026/05/YT-template-Textimage-2-1.png",
+        "confidence": 0.9,
+        "needs_manual_review": true
+      }
     },
     {
       "id": "humanloop-llm-as-a-judge-overview",
@@ -1017,7 +1137,19 @@
       "related_papers": [
         "rewardbench-2024-arxiv"
       ],
-      "status": "approved"
+      "status": "approved",
+      "key_figure": {
+        "type": "Blog image",
+        "name": "",
+        "page": null,
+        "path": "assets/blog_images/humanloop-llm-as-a-judge-overview.png",
+        "caption": "LLM as a Judge",
+        "caption_cn": "",
+        "source": "og:image",
+        "source_url": "https://humanloop.com/blog/llm-as-a-judge/llm-as-a-judge.png",
+        "confidence": 0.9,
+        "needs_manual_review": true
+      }
     },
     {
       "id": "galtea-llm-as-a-judge-complete-guide",
@@ -1127,7 +1259,19 @@
         "ragas-automated-rag-evaluation-2024-eacl",
         "ares-automated-rag-evaluation-2024-naacl"
       ],
-      "status": "approved"
+      "status": "approved",
+      "key_figure": {
+        "type": "Blog image",
+        "name": "",
+        "page": null,
+        "path": "assets/blog_images/galtea-llm-as-a-judge-complete-guide.png",
+        "caption": "LLM as a Judge: The Complete Guide | Galtea Blog",
+        "caption_cn": "",
+        "source": "og:image",
+        "source_url": "https://cdn.prod.website-files.com/689b0815665fea4b2ce38b3d/69fd8dd4cfebf91f245c837d_llmjudge01_cover.png",
+        "confidence": 0.9,
+        "needs_manual_review": true
+      }
     },
     {
       "id": "braintrust-human-review-golden-datasets",
@@ -1241,7 +1385,19 @@
         "ragas-automated-rag-evaluation-2024-eacl",
         "ares-automated-rag-evaluation-2024-naacl"
       ],
-      "status": "approved"
+      "status": "approved",
+      "key_figure": {
+        "type": "Blog image",
+        "name": "",
+        "page": null,
+        "path": "assets/blog_images/braintrust-human-review-golden-datasets.png",
+        "caption": "How to improve your golden datasets with human review - Blog - Braintrust",
+        "caption_cn": "",
+        "source": "og:image",
+        "source_url": "https://www.braintrust.dev/og?title=How+to+improve+your+golden+datasets+with+human+review&description=Turn+production+traces+into+golden+datasets+by+adding+human+review+to+your+eval+workflow%2C+then+use+that+ground+truth+to+improve+scorers+over+time.&template=blog&v=3",
+        "confidence": 0.98,
+        "needs_manual_review": true
+      }
     },
     {
       "id": "deepeval-llm-as-a-judge-guide",
@@ -1357,7 +1513,19 @@
         "ragas-automated-rag-evaluation-2024-eacl",
         "ares-automated-rag-evaluation-2024-naacl"
       ],
-      "status": "approved"
+      "status": "approved",
+      "key_figure": {
+        "type": "Blog image",
+        "name": "",
+        "page": null,
+        "path": "assets/blog_images/deepeval-llm-as-a-judge-guide.png",
+        "caption": "DeepEval - The LLM Evaluation Framework",
+        "caption_cn": "",
+        "source": "og:image",
+        "source_url": "https://deepeval.com/img/social_card.png",
+        "confidence": 1.0,
+        "needs_manual_review": true
+      }
     },
     {
       "id": "lmsys-hard-prompts-category",
@@ -1433,7 +1601,19 @@
       ],
       "my_note": "这篇对我有用的地方在于，它清楚区分了 benchmark 的两个问题：先决定“用哪些题评价模型”，再决定“如何评价这些题上的回答质量”。Hard Prompts 主要解决前者，即从真实用户流量中切出一个更能暴露模型差异的困难题目范围；后者仍沿用 Arena 的人类偏好投票，而没有引入专家标注、标准答案、自动验证器或 LLM judge。因此它更像是 Chatbot Arena 的难题切片，而不是一个全新的可验证 benchmark。对我后续整理 evaluation / RLVR 数据时的启发是：难例筛选可以基于任务属性和真实用户分布，但如果任务需要严格正确性，仍要额外考虑答案评估机制是否足够可靠。",
       "related_papers": [],
-      "status": "approved"
+      "status": "approved",
+      "key_figure": {
+        "type": "Blog image",
+        "name": "",
+        "page": null,
+        "path": "assets/blog_images/lmsys-hard-prompts-category.png",
+        "caption": "来源页面代表图：Introducing Hard Prompts Category in Chatbot Arena - LMSYS Blog",
+        "caption_cn": "",
+        "source": "img",
+        "source_url": "https://www.lmsys.org/images/blog/category_hard/elo_comparison_1.png",
+        "confidence": 0.35,
+        "needs_manual_review": true
+      }
     },
     {
       "id": "lmsys-arena-hard-pipeline",
@@ -1520,7 +1700,19 @@
       ],
       "my_note": "这篇对我有价值的地方在于，它把“真实用户偏好”转化成了一个可复现的自动评测流程：Chatbot Arena 提供真实分布，prompt scoring 负责筛出有区分度的难题，LLM-as-a-Judge 降低评测成本，Bradley-Terry 和 bootstrap 提供排名与不确定性。它和 Hard Prompts、Style Control 可以合在一起看：Hard Prompts 讨论什么样的问题更难，Arena-Hard Pipeline 把难题筛选和自动评测工程化，Style Control 则进一步提醒偏好票里可能混入长度、Markdown 等风格因素。对后续研究 LLM evaluation / RLHF / RLVR 来说，这篇更适合作为 benchmark 构造方法论，而已有的 Arena-Hard-Auto 项目页则负责记录工具如何运行和复现实验。",
       "related_papers": [],
-      "status": "approved"
+      "status": "approved",
+      "key_figure": {
+        "type": "Blog image",
+        "name": "",
+        "page": null,
+        "path": "assets/blog_images/lmsys-arena-hard-pipeline.png",
+        "caption": "来源页面代表图：From Live Data to High-Quality Benchmarks: The Arena-Hard Pipeline - LMSYS Blog",
+        "caption_cn": "",
+        "source": "img",
+        "source_url": "https://www.lmsys.org/images/blog/arena_hard/arena-hard-vs-mt_bench.png",
+        "confidence": 0.35,
+        "needs_manual_review": true
+      }
     },
     {
       "id": "lmsys-arena-style-control",
@@ -1599,7 +1791,19 @@
       ],
       "my_note": "这篇对我有价值的地方在于，它提醒我 Arena leaderboard 不是纯正确性排行榜，而是人类对“内容 + 风格”的综合偏好排行榜。如果目标是理解真实用户喜欢什么，style 本身就是产品能力的一部分；但如果目标是比较模型的 substantive ability，例如事实性、推理、代码正确性和任务完成度，就需要知道有多少胜率来自长度和排版。它和 Hard Prompts blog 正好构成 evaluation 的两个维度：Hard Prompts 先决定题目范围，Style Control 再解释偏好票中的风格混杂。对后续看 LLM-as-judge、Arena-Hard、AlpacaEval LC 或偏好优化时，这篇可以作为 length bias / presentation bias 的背景材料。",
       "related_papers": [],
-      "status": "approved"
+      "status": "approved",
+      "key_figure": {
+        "type": "Blog image",
+        "name": "",
+        "page": null,
+        "path": "assets/blog_images/lmsys-arena-style-control.png",
+        "caption": "来源页面代表图：Does style matter? Disentangling style and substance in Chatbot Arena - LMSYS Blog",
+        "caption_cn": "",
+        "source": "img",
+        "source_url": "https://www.lmsys.org/images/blog/style_control/comparison_overall.png",
+        "confidence": 0.35,
+        "needs_manual_review": true
+      }
     },
     {
       "id": "lmsys-p2p-weight-transfer-rl",
@@ -1649,7 +1853,19 @@
       ],
       "my_note": "这篇对我有用的地方在于，它把 LLM RL 的效率瓶颈从“rollout 生成慢”进一步拆到了“policy 更新后如何快速把新权重同步给 rollout engine”。如果权重同步需要几十秒，那么再好的 RL 算法也会被系统关键路径拖慢。这个设计的核心不是更复杂的训练目标，而是把同步方式从 NCCL collective broadcast 改成 RDMA P2P shard transfer，并用 CPU replica 吸收模型并行、量化和 SGLang 权重格式的复杂性。它在 SGLang 里的地位应理解为大规模 RL 生态的重要版本亮点/高级能力，而不是普通 serving 核心模块；真正直接受益的是 miles 这类需要频繁 policy update + rollout 的训练系统。对后续看 agent/RL 系统很重要：训练吞吐不只取决于 GPU 算力，还取决于 rollout engine、weight update、network topology、parallelism mapping 和 stale policy 控制之间的整体配合。",
       "related_papers": [],
-      "status": "approved"
+      "status": "approved",
+      "key_figure": {
+        "type": "Blog image",
+        "name": "",
+        "page": null,
+        "path": "assets/blog_images/lmsys-p2p-weight-transfer-rl.png",
+        "caption": "来源页面代表图：Updating 1T parameters in seconds — P2P weight transfer in Large Scale Distributed RL - LMSYS Blog",
+        "caption_cn": "",
+        "source": "img",
+        "source_url": "https://www.lmsys.org/images/blog/p2p-update/blog-1.png",
+        "confidence": 0.35,
+        "needs_manual_review": true
+      }
     },
     {
       "id": "lmsys-deepseek-v4-day0",
@@ -1704,7 +1920,19 @@
         "deepseek-v3-2-2512-02556",
         "stabilizing-rl-with-llms-2512-01374"
       ],
-      "status": "approved"
+      "status": "approved",
+      "key_figure": {
+        "type": "Blog image",
+        "name": "",
+        "page": null,
+        "path": "assets/blog_images/lmsys-deepseek-v4-day0.png",
+        "caption": "DeepSeek-V4 decode throughput on Day-0 launch: SGLang vs other OSS engine",
+        "caption_cn": "",
+        "source": "img",
+        "source_url": "https://www.lmsys.org/images/blog/deepseek_v4/benchmark_vs_oss.png",
+        "confidence": 0.43,
+        "needs_manual_review": true
+      }
     },
     {
       "id": "lmsys-hisparse-hierarchical-memory",
@@ -1757,7 +1985,19 @@
       "related_papers": [
         "deepseek-v3-2-2512-02556"
       ],
-      "status": "approved"
+      "status": "approved",
+      "key_figure": {
+        "type": "Blog image",
+        "name": "",
+        "page": null,
+        "path": "assets/blog_images/lmsys-hisparse-hierarchical-memory.png",
+        "caption": "来源页面代表图：HiSparse: Turbocharging Sparse Attention with Hierarchical Memory - LMSYS Blog",
+        "caption_cn": "",
+        "source": "img",
+        "source_url": "https://www.lmsys.org/images/blog/hisparse/throughput_concurrency.png",
+        "confidence": 0.35,
+        "needs_manual_review": true
+      }
     },
     {
       "id": "lmsys-qwen3-mi300x-latency",
@@ -1810,7 +2050,19 @@
       ],
       "my_note": "这篇对我后续有价值的地方在于，它把“让一个大模型在某类硬件上跑得快”拆得很具体：量化格式、并行策略、attention KV layout、MoE kernel、operator fusion、图片解码、IPC 和 ViT 并行都会影响最终 TTFT/TPOT。它也提醒我，推理优化不是一个抽象的 SGLang 开关，而是模型结构、硬件特性、ROCm/AITER kernel、数据链路和业务负载共同决定的系统工程。和之前 DeepSeek-V4、HiSparse、GB300 long-context 这些材料放在一起看，可以形成一条更清晰的线索：模型发布后真正能服务线上用户，往往还需要大量硬件后端和 serving stack 适配。",
       "related_papers": [],
-      "status": "approved"
+      "status": "approved",
+      "key_figure": {
+        "type": "Blog image",
+        "name": "",
+        "page": null,
+        "path": "assets/blog_images/lmsys-qwen3-mi300x-latency.png",
+        "caption": "来源页面代表图：Unleashing Computational Power: Ultimate Latency Optimization of Qwen3 and Qwen3-VL on AMD MI300X Series - LMSYS Blog",
+        "caption_cn": "",
+        "source": "img",
+        "source_url": "https://www.lmsys.org/images/blog/qwen_amd_latency/qwen_optimization_flowchart.png",
+        "confidence": 0.43,
+        "needs_manual_review": true
+      }
     },
     {
       "id": "lmsys-int4-qat-rl-rollout",
@@ -1867,7 +2119,19 @@
       ],
       "my_note": "这篇对我有价值的地方在于，它把量化问题放回了 RL 系统闭环里：rollout engine 不是一个独立推理服务，而是 policy training 的一部分。如果 rollout 端因为 INT4 量化和训练端 BF16 行为不一致，RL 看到的 logprob、KL 和生成分布都会漂移，训练稳定性会受到影响。因此这里的 QAT 不是普通压缩技巧，而是为了让低比特 rollout 不破坏 RL 训练语义。和 P2P weight transfer、DeepSeek-V4 Day-0、Miles 这些材料连起来看，这篇补上的是 rollout engine 本身如何低成本运行：P2P 解决权重怎么同步，Miles/SGLang 解决大模型 RL 框架和推理后端怎么协同，INT4 QAT 则解决 rollout 推理怎样在显存/通信成本下降的同时保持 train-infer consistency。",
       "related_papers": [],
-      "status": "approved"
+      "status": "approved",
+      "key_figure": {
+        "type": "Blog image",
+        "name": "",
+        "page": null,
+        "path": "assets/blog_images/lmsys-int4-qat-rl-rollout.png",
+        "caption": "End-to-end QAT INT4 pipeline",
+        "caption_cn": "",
+        "source": "img",
+        "source_url": "https://raw.githubusercontent.com/zhaochenyang20/Awesome-ML-SYS-Tutorial/refs/heads/main/rlhf/slime/int4/figs/QAT-INT4-e2e.png",
+        "confidence": 0.43,
+        "needs_manual_review": true
+      }
     },
     {
       "id": "lmsys-minimax-m2-efficient-attention",
@@ -1941,7 +2205,19 @@
       "related_papers": [
         "deepseek-v3-2-2512-02556"
       ],
-      "status": "approved"
+      "status": "approved",
+      "key_figure": {
+        "type": "Blog image",
+        "name": "",
+        "page": null,
+        "path": "assets/blog_images/lmsys-minimax-m2-efficient-attention.svg",
+        "caption": "Efficient attention trade-offs in MiniMax M2",
+        "caption_cn": "",
+        "source": "manual-svg-summary",
+        "source_url": "https://www.lmsys.org/blog/2025-11-04-miminmax-m2/",
+        "confidence": 0.65,
+        "needs_manual_review": true
+      }
     },
     {
       "id": "lmsys-gpt-oss-dgx-spark-local",
@@ -1999,7 +2275,19 @@
       ],
       "my_note": "这篇本身更像部署教程，但经过补充定位后仍值得保留：它帮助我区分 GPT-OSS、ChatGPT 和 Codex。GPT-OSS 不是“开源 ChatGPT”或“开源 Codex”，而是 OpenAI 提供的开放权重模型；ChatGPT/Codex 则是围绕模型构建的完整产品和 agent 系统。对后续理解本地模型部署很有用的一点是：只拿到权重并不等于拿到产品能力，还需要 SGLang/vLLM 这类 serving backend、OpenAI-compatible API、UI、协议转换、工具调用、上下文管理和安全策略。它和 SGLang 项目条目可以连起来看：SGLang 把开放权重模型变成可调用的推理服务，而 Open WebUI/LMRouter/Claude Code 这类上层工具再把它变成聊天或 coding agent 工作流。",
       "related_papers": [],
-      "status": "approved"
+      "status": "approved",
+      "key_figure": {
+        "type": "Blog image",
+        "name": "",
+        "page": null,
+        "path": "assets/blog_images/lmsys-gpt-oss-dgx-spark-local.png",
+        "caption": "来源页面代表图：Optimizing GPT-OSS on NVIDIA DGX Spark: Getting the Most Out of Your Spark - LMSYS Blog",
+        "caption_cn": "",
+        "source": "img",
+        "source_url": "https://www.lmsys.org/images/blog/gpt_oss_on_nvidia_dgx_spark/demo_1.png",
+        "confidence": 0.35,
+        "needs_manual_review": true
+      }
     },
     {
       "id": "lmsys-pd-multiplexing-greencontext",
@@ -2075,7 +2363,19 @@
       ],
       "my_note": "这篇对我有价值的地方在于，它把 LLM serving 的核心调度矛盾讲得很清楚：prefill 想大块跑满 GPU，decode 想小步稳定输出；如果两者简单共用同一 GPU，就会在 TTFT、ITL 和 GPU utilization 之间相互牵制。PD-Multiplexing 的重要性在于给出第三条路：既不是把 prefill/decode 物理拆开的 PD-disaggregation，也不是只靠时间切片的 chunked prefill，而是在同一实例、同一 KV cache pool 中做 GPU 空间复用。和 HiSparse、P2P weight transfer、INT4 QAT、SGLang-Jax 连起来看，这篇补的是 serving scheduler 层：HiSparse 解决 KV memory hierarchy，P2P 解决 RL 权重同步，INT4 QAT 解决低成本 rollout 一致性，而 PD-Multiplexing 解决线上推理中 prefill/decode 资源如何在 SLO 下动态分配。",
       "related_papers": [],
-      "status": "approved"
+      "status": "approved",
+      "key_figure": {
+        "type": "Blog image",
+        "name": "",
+        "page": null,
+        "path": "assets/blog_images/lmsys-pd-multiplexing-greencontext.png",
+        "caption": "来源页面代表图：PD-Multiplexing: Unlocking High-Goodput LLM Serving with GreenContext - LMSYS Blog",
+        "caption_cn": "",
+        "source": "img",
+        "source_url": "https://www.lmsys.org/images/blog/pdmux/1-overview.png",
+        "confidence": 0.35,
+        "needs_manual_review": true
+      }
     },
     {
       "id": "lmsys-sglang-deterministic-inference",
@@ -2151,7 +2451,19 @@
       ],
       "my_note": "这篇对我有价值的地方在于，它把“可复现性”从一句设 seed 拆成了完整系统问题。对普通聊天产品来说，一点非确定性可能可以接受；但对 evaluation、debugging、RL training 和科学实验来说，batching 噪声会让结论变脏。尤其在 RL 里，rollout 是 policy 数据来源，如果同一 policy 因为 serving batch composition 不同而产生不同轨迹，on-policy 假设会被悄悄削弱。和 INT4 QAT、P2P weight transfer、PD-Multiplexing 连起来看，这篇补的是 rollout/inference 的数值一致性：INT4 QAT 解决低比特推理和训练分布一致，P2P 解决新 policy 权重如何同步到 rollout engine，PD-Multiplexing 解决 prefill/decode 资源调度，而 deterministic inference 解决同一输入和同一 seed 是否真的能得到同一条 rollout。",
       "related_papers": [],
-      "status": "approved"
+      "status": "approved",
+      "key_figure": {
+        "type": "Blog image",
+        "name": "",
+        "page": null,
+        "path": "assets/blog_images/lmsys-sglang-deterministic-inference.png",
+        "caption": "figure1",
+        "caption_cn": "",
+        "source": "img",
+        "source_url": "https://www.lmsys.org/images/blog/deterministic/deterministic_intro.png",
+        "confidence": 0.43,
+        "needs_manual_review": true
+      }
     },
     {
       "id": "lmsys-slime-sglang-native-rl",
@@ -2231,7 +2543,19 @@
       ],
       "my_note": "这篇对我有价值的地方在于，它把 slime 的地位讲清楚了：slime 不是 SGLang 的替代品，而是围绕 SGLang rollout backend 和 Megatron training backend 搭起来的 RL post-training 编排层。它和 verl 这类更通用的 RLHF/RLVR 框架相比，更强调 SGLang-native + Megatron-native，不试图把所有底层差异都抽象掉，而是通过参数透传和轻量训练 loop 保持对高性能库的直接控制。和前面几篇连起来看，slime 是总框架：P2P weight transfer 解决 trainer-to-rollout 权重同步，INT4 QAT 解决 rollout 低显存且 train-infer 一致，deterministic inference 解决 rollout 和 GRPO 训练可复现，PD-Multiplexing 解决 serving scheduler 的 SLO/goodput 问题；这些能力都可以成为 slime 这类大规模 RL pipeline 的组成部分。",
       "related_papers": [],
-      "status": "approved"
+      "status": "approved",
+      "key_figure": {
+        "type": "Blog image",
+        "name": "",
+        "page": null,
+        "path": "assets/blog_images/lmsys-slime-sglang-native-rl.png",
+        "caption": "slime architecture",
+        "caption_cn": "",
+        "source": "img",
+        "source_url": "https://www.lmsys.org/images/blog/slime/slime-arch.png",
+        "confidence": 0.43,
+        "needs_manual_review": true
+      }
     }
   ]
 }

@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="620" viewBox="0 0 1200 620">
+  <rect width="1200" height="620" fill="#fbfcfd"/>
+  <text x="70" y="78" font-family="Arial, sans-serif" font-size="34" font-weight="700" fill="#0d5b55">From silver data to a golden RAG dataset</text>
+  <text x="70" y="122" font-family="Arial, sans-serif" font-size="18" fill="#637282">Generate candidate QA pairs, evaluate them, then refine the benchmark with human review.</text>
+  <g font-family="Arial, sans-serif">
+    <rect x="95" y="220" width="205" height="110" rx="14" fill="#eef3f8" stroke="#d7dee7"/>
+    <text x="140" y="265" font-size="24" font-weight="700" fill="#1e2933">Source docs</text>
+    <text x="128" y="298" font-size="17" fill="#637282">chunks + citations</text>
+    <rect x="370" y="220" width="205" height="110" rx="14" fill="#fff7dd" stroke="#d0a82f"/>
+    <text x="415" y="265" font-size="24" font-weight="700" fill="#6c5400">Silver QA</text>
+    <text x="403" y="298" font-size="17" fill="#6c5400">AI-generated set</text>
+    <rect x="645" y="220" width="205" height="110" rx="14" fill="#eef3f8" stroke="#d7dee7"/>
+    <text x="684" y="265" font-size="24" font-weight="700" fill="#1e2933">AI checks</text>
+    <text x="675" y="298" font-size="17" fill="#637282">groundedness etc.</text>
+    <rect x="920" y="220" width="205" height="110" rx="14" fill="#d9f1ee" stroke="#0f766e"/>
+    <text x="947" y="265" font-size="24" font-weight="700" fill="#0d5b55">Golden set</text>
+    <text x="954" y="298" font-size="17" fill="#0d5b55">reviewed benchmark</text>
+  </g>
+  <g stroke="#0f766e" stroke-width="5" marker-end="url(#arrow)">
+    <path d="M305 275 H365"/>
+    <path d="M580 275 H640"/>
+    <path d="M855 275 H915"/>
+  </g>
+  <rect x="310" y="425" width="580" height="80" rx="14" fill="#ffffff" stroke="#d7dee7"/>
+  <text x="356" y="474" font-family="Arial, sans-serif" font-size="20" fill="#44515e">Review low-score samples and iterate until the dataset is trustworthy.</text>
+  <defs><marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto"><path d="M0,0 L0,6 L9,3 z" fill="#0f766e"/></marker></defs>
+</svg>

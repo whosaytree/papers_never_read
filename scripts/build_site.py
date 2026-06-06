@@ -653,11 +653,13 @@ function applyFilters() {
     const haystack = (card.dataset.search || '').toLowerCase();
     const hasRelated = card.dataset.hasRelated === 'true';
     const hasQuotes = card.dataset.hasQuotes === 'true';
+    const hasKeyFigure = card.dataset.hasKeyFigure === 'true';
     const matchesSearch = !q || haystack.includes(q);
     const matchesFilter =
       activeFilter === '__all__' ||
       (activeFilter === 'with-related' && hasRelated) ||
-      (activeFilter === 'with-quotes' && hasQuotes);
+      (activeFilter === 'with-quotes' && hasQuotes) ||
+      (activeFilter === 'with-key-figure' && hasKeyFigure);
     card.classList.toggle('hidden', !(matchesSearch && matchesFilter));
   });
   projectCards.forEach(card => {
@@ -922,6 +924,7 @@ def blog_search_blob(post: dict) -> str:
         " ".join(quote_parts),
         post.get("my_note", ""),
         (post.get("analysis_note") or {}).get("title", ""),
+        (post.get("key_figure") or {}).get("caption", ""),
         " ".join(post.get("related_papers", [])),
     ]
     return " ".join(part for part in parts if part)
@@ -964,8 +967,8 @@ def summary_html(summary: dict) -> str:
     return "".join(rows)
 
 
-def key_figure_html(paper: dict) -> str:
-    key_figure = paper.get("key_figure") or {}
+def key_figure_html(item: dict) -> str:
+    key_figure = item.get("key_figure") or {}
     path = safe_text(key_figure.get("path"), "")
     if not path:
         return ""
@@ -1066,6 +1069,7 @@ def blog_card(post: dict, papers_by_id: dict[str, dict]) -> str:
     standards = post.get("standards", [])
     quotes = post.get("quotes", [])
     related_papers = post.get("related_papers", [])
+    key_figure = post.get("key_figure") or {}
     analysis_note = post.get("analysis_note") or {}
     analysis_note_url = (analysis_note.get("url") or "").strip()
     analysis_note_title = safe_text(analysis_note.get("title"), "详细笔记")
@@ -1094,11 +1098,12 @@ def blog_card(post: dict, papers_by_id: dict[str, dict]) -> str:
         else "暂无详细笔记"
     )
     return f"""
-<article class="blog" data-search="{escape(blog_search_blob(post))}" data-has-related="{str(bool(related_papers)).lower()}" data-has-quotes="{str(bool(quotes)).lower()}">
+<article class="blog" data-search="{escape(blog_search_blob(post))}" data-has-related="{str(bool(related_papers)).lower()}" data-has-quotes="{str(bool(quotes)).lower()}" data-has-key-figure="{str(bool((key_figure.get('path') or '').strip())).lower()}">
   <div class="blog-title"><a href="{url}" target="_blank" rel="noreferrer">{title}</a></div>
   <div class="blog-meta">{source} · 发布：{published_at} · 入库：{added_at}</div>
   <div>{tag_html or '<span class="badge">未打标签</span>'}</div>
   <div class="blog-summary">{summary}</div>
+  {key_figure_html(post)}
   <div class="blog-block">
     <h4>关键要点</h4>
     <ul class="blog-points">{points_html or '<li>待补充</li>'}</ul>
@@ -1375,6 +1380,10 @@ def render_page(library: dict, blogs: dict, projects_data: dict) -> str:
     counter["blogs"] = len(posts)
     counter["blogs_with_related"] = sum(1 for item in posts if item.get("related_papers"))
     counter["blogs_with_quotes"] = sum(1 for item in posts if item.get("quotes"))
+    counter["blogs_with_key_figure"] = sum(
+        1 for item in posts
+        if ((item.get("key_figure") or {}).get("path") or "").strip()
+    )
     counter["projects"] = len(projects)
     counter["projects_with_links"] = sum(
         1 for item in projects
@@ -1425,6 +1434,7 @@ def render_page(library: dict, blogs: dict, projects_data: dict) -> str:
           <div class="stat-box"><b>{counter['blogs']}</b>技术分享</div>
           <div class="stat-box"><b>{counter['blogs_with_quotes']}</b>含关键语句</div>
           <div class="stat-box"><b>{counter['blogs_with_related']}</b>关联论文</div>
+          <div class="stat-box"><b>{counter['blogs_with_key_figure']}</b>含关键图</div>
           <div class="stat-box"><b>{len({tag for post in posts for tag in post.get('tags', [])})}</b>标签数</div>
         </div>
       </div>
@@ -1451,6 +1461,7 @@ def render_page(library: dict, blogs: dict, projects_data: dict) -> str:
           <button class="filter-chip active" data-view="blogs" data-filter="__all__">全部 {counter['blogs']} 篇</button>
           <button class="filter-chip" data-view="blogs" data-filter="with-quotes">含关键语句 {counter['blogs_with_quotes']} 篇</button>
           <button class="filter-chip" data-view="blogs" data-filter="with-related">关联论文 {counter['blogs_with_related']} 篇</button>
+          <button class="filter-chip" data-view="blogs" data-filter="with-key-figure">含关键图 {counter['blogs_with_key_figure']} 篇</button>
         </div>
         <div class="filter-row hidden" data-view="projects">
           <button class="filter-chip active" data-view="projects" data-filter="__all__">全部 {counter['projects']} 个</button>
