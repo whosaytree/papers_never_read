@@ -27,6 +27,14 @@ DIMENSIONS = [
     ("主要贡献", "主要贡献"),
 ]
 
+BLOG_SITE_LINKS = [
+    {
+        "name": "LMSYS Blog",
+        "url": "https://www.lmsys.org/blog/",
+        "note": "大模型系统、Chatbot Arena、SGLang 等方向的技术分享",
+    },
+]
+
 
 CSS = """
 :root{
@@ -379,6 +387,43 @@ h3.sub-title{
 .project-list{
   display:grid;
   gap:14px;
+}
+.blog-source-links{
+  background:var(--surface);
+  border:1px solid var(--line);
+  border-radius:8px;
+  margin-bottom:14px;
+  padding:16px 18px;
+  box-shadow:var(--shadow);
+}
+.blog-source-links h3{
+  font-size:15px;
+  color:var(--accent-deep);
+  margin-bottom:10px;
+}
+.blog-source-grid{
+  display:grid;
+  gap:8px;
+}
+.blog-source-item{
+  display:flex;
+  gap:10px;
+  align-items:flex-start;
+  justify-content:space-between;
+  padding:9px 10px;
+  border:1px solid var(--line);
+  border-radius:8px;
+  background:var(--surface-soft);
+}
+.blog-source-item a{
+  color:var(--accent-deep);
+  font-weight:750;
+  text-decoration:none;
+}
+.blog-source-item a:hover{text-decoration:underline}
+.blog-source-item span{
+  color:var(--muted);
+  font-size:12.5px;
 }
 .blog,
 .project{
@@ -1179,8 +1224,23 @@ def render_blog_section(posts: list[dict], papers: list[dict]) -> str:
         if (post.get("status") or "approved") == "approved"
     ]
     papers_by_id = {paper.get("id"): paper for paper in papers if paper.get("id")}
+    source_links_html = "".join(
+        (
+            f'<div class="blog-source-item"><a href="{escape(item["url"])}" '
+            f'target="_blank" rel="noreferrer">{escape(item["name"])}</a>'
+            f'<span>{escape(item["note"])}</span></div>'
+        )
+        for item in BLOG_SITE_LINKS
+    )
+    source_section = f"""
+<section class="blog-source-links">
+  <h3>常用 Blog 网址</h3>
+  <div class="blog-source-grid">{source_links_html}</div>
+</section>
+"""
     if not approved_posts:
-        return """
+        return f"""
+{source_section}
 <section>
   <div class="empty">
     技术分享库还没有正式内容。之后你发来网页链接时，我会先生成待审版本：主要内容、关键要点、关键语句、标签和关联论文建议；你确认后再入库发布。
@@ -1188,7 +1248,7 @@ def render_blog_section(posts: list[dict], papers: list[dict]) -> str:
 </section>
 """
     cards_html = "".join(blog_card(post, papers_by_id) for post in approved_posts)
-    return f'<section class="blog-list">{cards_html}</section>'
+    return f'{source_section}<section class="blog-list">{cards_html}</section>'
 
 
 def render_project_section(projects: list[dict], papers: list[dict], posts: list[dict]) -> str:
