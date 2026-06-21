@@ -156,6 +156,260 @@
       }
     },
     {
+      "id": "advantage-collapse-grpo-avspo-2605-21125",
+      "title": "Advantage Collapse in Group Relative Policy Optimization: Diagnosis and Mitigation",
+      "paper_url": "https://arxiv.org/abs/2605.21125",
+      "pdf_url": "https://arxiv.org/pdf/2605.21125",
+      "authors": [
+        "Xixiang He",
+        "Qiyao Sun",
+        "Ao Cheng",
+        "Xingming Li",
+        "Xuanyu Ji",
+        "Hailun Lu",
+        "Runke Huang",
+        "Qingyong Hu"
+      ],
+      "venue": "ICML",
+      "year": 2026,
+      "primary_area": "强化学习",
+      "category": "探索与奖励设计",
+      "keywords": [
+        "advantage collapse",
+        "Advantage Collapse Rate",
+        "ACR",
+        "GRPO",
+        "RLVR",
+        "verifiable rewards",
+        "training collapse proxy",
+        "early-warning diagnostic",
+        "group reward variance",
+        "AVSPO",
+        "Adaptive Virtual Sample Policy Optimization",
+        "virtual reward samples",
+        "training stability",
+        "math reasoning"
+      ],
+      "labels": [
+        "GRPO",
+        "RLVR",
+        "Advantage Collapse",
+        "ACR",
+        "Training Stability",
+        "Early Warning",
+        "AVSPO",
+        "ICML"
+      ],
+      "code_url": "https://github.com/QingyongHu/AVSPO",
+      "note": "这篇值得重点学习，不只是方法本身，而是论文结构非常适合作为类似工作的写法参考：先抓住 GRPO 中“组内奖励同质化导致 advantage 近零”的失败现象，再定义 Advantage Collapse Rate (ACR) 作为早期可观测 proxy，然后证明 ACR 与最终表现相关，最后给出低成本 mitigation AVSPO。对你正在做的类似工作来说，它的价值在于把“训练崩塌潜质”从模糊观察变成可监控指标，而不是等 final benchmark 掉分才回头解释。",
+      "tldr": "这篇提出 ACR（Advantage Collapse Rate）作为 GRPO/RLVR 训练崩塌潜质的早期指标：当同一 prompt group 的 reward 全对或全错时，组内 reward 方差接近零，advantage 和梯度信号消失。AVSPO 通过虚拟 reward samples 参与 advantage 统计，低成本恢复有效学习信号。",
+      "abstract": "This paper diagnoses advantage collapse in Group Relative Policy Optimization for reasoning with verifiable rewards. When all rollouts in a prompt group receive nearly identical rewards, group-normalized advantages vanish and the group contributes little useful gradient. The authors define Advantage Collapse Rate (ACR) as an early-warning diagnostic proxy for the fraction of collapsed groups, show its relationship to downstream training outcomes, and propose Adaptive Virtual Sample Policy Optimization (AVSPO), which injects virtual reward samples into advantage statistics without additional LLM rollouts or policy-gradient computation on virtual responses.",
+      "summary_cn": {
+        "研究动机": "GRPO/RLVR 的核心依赖同一 prompt 下多条 rollout 的相对奖励差异。如果一组样本全对或全错，平均 reward 可能看起来正常，但组内没有可比较的优劣，advantage normalization 后几乎不给梯度。作者希望把这种训练早期的失效信号显式量化，而不是等训练结束后才通过 benchmark 判断失败。",
+        "解决问题": "论文要解决两个问题：第一，如何诊断 GRPO 训练中 batch/group-level 的有效学习信号是否正在消失；第二，如何在不增加真实 rollout、不引入 critic、不需要 step-level 标注的情况下缓解 advantage collapse。",
+        "现象分析": "同样的 mean reward 可以对应完全不同的可学习性。例如一批 prompt 中，每组都是 6 对 2 错，GRPO 有相对优势信号；但如果 80% 的组全对、20% 的组全错，mean reward 也可能接近 0.8，却几乎没有组内方差信号。ACR 捕捉的就是后一种危险状态：不是模型已经输出混乱，而是训练信号结构已经坏掉，batch 里真正能提供相对比较的 prompt 比例下降。",
+        "主要方法": "作者提出 Advantage Collapse Rate (ACR)，统计训练 batch 中 reward variance 太低、无法形成有效 group-relative advantage 的 prompt group 比例。随后提出 AVSPO（Adaptive Virtual Sample Policy Optimization）：正常 GRPO 仍采样真实 responses 并计算真实 policy gradient；当检测到 group collapse 时，向 reward normalization / advantage statistics 注入 virtual reward samples。这些虚拟样本只改变 advantage 统计，不需要 LLM 生成，也不参与 log-prob 梯度更新。",
+        "数据集与实验": "论文主要在数学推理 RLVR 设置中验证，包括 Qwen2.5 0.5B 到 14B 等模型规模，训练集如 Level3-500，评估覆盖 MATH、GSM8K、Minerva、Olympiad、AMC、AIME、MMLU-Pro 等。论文报告 ACR 相比 GRPO 降低约 58-63%，准确率提升约 4-6 个百分点，额外开销小于 0.01%。项目页还强调早期 ACR 能解释相当一部分最终 MATH-500 performance variance。",
+        "主要贡献": "主要贡献是提出 ACR 这一 GRPO/RLVR 训练崩塌早期 proxy，把“学不动”的直觉落到 group reward variance 和 collapsed group ratio 上。AVSPO 是对应的低成本修复方法，但更值得学习的是整篇论文的组织方式：现象诊断 -> proxy 指标 -> 与最终性能相关性 -> 机制解释 -> mitigation。这种结构很适合写类似训练稳定性或训练崩塌诊断类工作。"
+      },
+      "status": "approved",
+      "added_at": "2026-06-02",
+      "key_figure": {
+        "type": "Figure",
+        "name": "ACR early-warning proxy",
+        "page": 1,
+        "path": "assets/paper_images/advantage-collapse-grpo-avspo-2605-21125-acr-proxy.png",
+        "caption": "ACR measures the fraction of prompt groups whose reward variance is too low to produce useful group-relative advantages. High ACR is an early-warning proxy that GRPO training has fewer effective learning groups even when mean reward looks acceptable.",
+        "caption_cn": "ACR 衡量 reward 方差过低、无法产生有效 group-relative advantage 的 prompt group 比例。即使 mean reward 看起来还可以，高 ACR 也说明 GRPO batch 中真正能学习的 group 正在减少，是训练崩塌潜质的早期预警指标。",
+        "bbox": {},
+        "caption_bbox": {},
+        "source": "manual-summary-from-arxiv-and-project-page",
+        "confidence": 0.9,
+        "needs_manual_review": false,
+        "contexts": [
+          {
+            "page": 1,
+            "text": "Advantage collapse occurs when grouped rollouts have near-identical rewards, causing group-normalized advantages to vanish."
+          },
+          {
+            "page": 1,
+            "text": "ACR tracks the fraction of collapsed groups and serves as an early diagnostic proxy for GRPO training effectiveness."
+          }
+        ]
+      }
+    },
+    {
+      "id": "espo-early-stopping-ppo-2605-29860",
+      "title": "ESPO: Early-Stopping Proximal Policy Optimization",
+      "paper_url": "https://arxiv.org/abs/2605.29860",
+      "pdf_url": "https://arxiv.org/pdf/2605.29860",
+      "authors": [
+        "Zihang Li",
+        "Rui Zhou",
+        "Yingcheng Shi",
+        "Wenhan Yu",
+        "Zhewen Tan",
+        "Zixiang Liu",
+        "Zeming Li",
+        "Binhua Li",
+        "Yongbin Li",
+        "Tong Yang",
+        "Jieping Ye"
+      ],
+      "venue": "arXiv",
+      "year": 2026,
+      "primary_area": "强化学习",
+      "category": "探索与奖励设计",
+      "keywords": [
+        "ESPO",
+        "Early-Stopping Proximal Policy Optimization",
+        "PPO",
+        "early stopping",
+        "rollout continuation problem",
+        "trajectory-level failure detection",
+        "surrogate regret",
+        "absorbing failure state",
+        "terminal failure reward",
+        "TD error",
+        "credit assignment",
+        "rollout efficiency",
+        "math reasoning",
+        "DeepSeek-R1-Distill-Qwen"
+      ],
+      "labels": [
+        "PPO",
+        "Early Stopping",
+        "Rollout Efficiency",
+        "Training Stability",
+        "TD Error",
+        "Reasoning RL",
+        "Trajectory Diagnostics"
+      ],
+      "code_url": "",
+      "note": "和 ACR/AVSPO 一起看很自然：ACR 是 group-level 训练信号塌缩 proxy，ESPO 是 trajectory-level 早期失败检测与截断机制。它不是 reward design，也不是 verifier 改进；核心是在 rollout 采样阶段用已有 logits 构造 surrogate regret，判断一条推理轨迹是否已经早期走坏，并提前停止，避免继续生成无正 reward 的错误后缀污染 advantage/TD 估计，同时节省 rollout token。",
+      "tldr": "ESPO 解决长链推理 RL 中的 rollout continuation problem：当模型早期已经走错时，普通 PPO 仍生成到最大长度，浪费 token 且污染 advantage。ESPO 用采样时已有 logits 构造 surrogate regret，在线检测失败轨迹并提前截断，把负 TD error 集中到失败点附近。",
+      "abstract": "ESPO proposes Early-Stopping Proximal Policy Optimization for LLM reasoning reinforcement learning. Standard PPO keeps generating a rollout even after an early reasoning mistake, wasting computation and injecting post-failure noise into advantage estimates. ESPO computes a surrogate regret at each generation step using logits already available during sampling, stops trajectories when the smoothed cumulative regret indicates likely failure, and treats truncated rollouts as absorbing failure states with terminal rewards. Experiments on mathematical reasoning show modest accuracy gains over PPO while saving more than 20% rollout tokens.",
+      "summary_cn": {
+        "研究动机": "长链推理 RL 中，模型一旦在早期推理步骤犯了关键错误，后续 token 往往很难再获得正 reward。但标准 PPO 仍会让轨迹继续生成到最大长度，这既浪费 rollout 计算，也把错误之后的大量低价值 token 混进 advantage 和 TD error 估计。",
+        "解决问题": "论文要解决的是 rollout continuation problem：如何在不引入额外 reward model、不做人类过程标注、不训练单独终止器的情况下，在线判断一条 trajectory 是否已经失败，并及时截断它。",
+        "现象分析": "普通 PPO 的反馈通常到序列末端才出现。若错误发生在早期，后面继续生成的 token 既消耗计算，又会让负反馈在一长串后失败 token 中扩散，导致 credit assignment 不够集中。ESPO 的直觉是：如果能够在失败发生附近截断轨迹，负 TD error 会更靠近真正的错误步骤，同时减少无效后缀带来的噪声。",
+        "主要方法": "ESPO 在每个生成步使用采样时已经计算出的 logits 构造 surrogate regret，衡量当前 sampled token 相对 policy 最偏好 token 的偏离程度。随后对 regret 做平滑累计，并与估计阈值比较；当累计 regret 显著超过阈值时，认为轨迹已经偏离有效推理路径并提前停止。被截断的轨迹被视为 absorbing failure state，在截断点给 terminal failure reward，后续不再生成，也不做额外 bootstrapping。",
+        "数据集与实验": "论文在 DeepSeek-R1-Distill-Qwen-7B 的数学推理 RL 上验证 ESPO。摘要报告 ESPO 在 AIME 2024 上达到 46.28%（PPO 为 45.25%），AMC 2023 上 85.83%（PPO 为 82.94%），MATH-500 上 87.42%（PPO 为 85.43%），同时累计节省超过 20% rollout tokens。",
+        "主要贡献": "主要贡献是提出一种 trajectory-level 的早期失败检测和截断机制，把训练稳定性问题从 batch/group-level 的 advantage collapse 扩展到单条 rollout 的后失败噪声控制。它适合作为 LLM reasoning RL 中 compute efficiency、credit assignment 和 rollout diagnostics 的参考；但它不解决 reward correctness 本身，也不等价于过程监督。"
+      },
+      "status": "approved",
+      "added_at": "2026-06-02",
+      "key_figure": {
+        "type": "Figure",
+        "name": "Trajectory early stopping for post-failure noise",
+        "page": 1,
+        "path": "assets/paper_images/espo-early-stopping-ppo-2605-29860-rollout.png",
+        "caption": "ESPO detects likely failure during rollout using surrogate regret from already-computed logits, stops the trajectory early, and treats the stop point as an absorbing failure state with terminal reward to reduce post-failure noise and rollout cost.",
+        "caption_cn": "ESPO 用采样时已有 logits 构造 surrogate regret，在线检测可能失败的 rollout，并把截断点作为 absorbing failure state 给 terminal reward，从而减少后失败 token 噪声和 rollout 成本。",
+        "bbox": {},
+        "caption_bbox": {},
+        "source": "manual-summary-from-arxiv-abstract",
+        "confidence": 0.9,
+        "needs_manual_review": false,
+        "contexts": [
+          {
+            "page": 1,
+            "text": "ESPO detects trajectory failure on-the-fly and terminates rollouts early using surrogate regret computed from logits already available during sampling."
+          },
+          {
+            "page": 1,
+            "text": "Truncated trajectories are treated as absorbing failure states with a terminal reward, concentrating negative TD errors near the detected failure step."
+          }
+        ]
+      }
+    },
+    {
+      "id": "soar-teaching-models-2601-18778",
+      "title": "Teaching Models to Teach Themselves: Reasoning at the Edge of Learnability",
+      "paper_url": "https://arxiv.org/abs/2601.18778",
+      "pdf_url": "https://arxiv.org/pdf/2601.18778",
+      "authors": [
+        "Shobhita Sundaram",
+        "John Quan",
+        "Ariel Kwiatkowski",
+        "Kartik Ahuja",
+        "Yann Ollivier",
+        "Julia Kempe"
+      ],
+      "venue": "ICML",
+      "year": 2026,
+      "primary_area": "强化学习",
+      "category": "自生成课程与反馈设计",
+      "keywords": [
+        "SOAR",
+        "Self-Optimization via Asymmetric RL",
+        "meta-RL",
+        "bilevel optimization",
+        "self-generated curriculum",
+        "stepping-stone curriculum",
+        "sparse reward",
+        "RLVR",
+        "RLOO",
+        "grounded reward",
+        "teacher-student",
+        "learnability frontier",
+        "reasoning plateau",
+        "synthetic question generation",
+        "promotion questions",
+        "MATH",
+        "HARP",
+        "OlympiadBench"
+      ],
+      "labels": [
+        "SOAR",
+        "Meta-RL",
+        "Self-Generated Curriculum",
+        "Grounded Reward",
+        "Sparse Reward",
+        "RLVR",
+        "Teacher-Student",
+        "Learnability Frontier",
+        "ICML Spotlight"
+      ],
+      "code_url": "",
+      "note": "这篇很值得重点读。它抓住了 reasoning RL 里的一个关键边界：当 hard problems 的初始成功率接近 0 时，普通 RLVR 没有正 reward，模型会卡在 sparse-reward plateau。SOAR 的想法不是继续硬训这些难题，也不是用内部 learnability proxy 让模型自嗨，而是让 teacher 模型生成中间题，student 短程训练后如果真的在真实 hard set 上进步，teacher 才得到 reward。对你现在关注的训练崩塌、RL 信号结构、自生成数据很相关：它把“模型自己生成什么数据才能让自己学会”变成了 grounded bilevel meta-RL 问题。",
+      "tldr": "SOAR 让同一个基座模型分成 teacher 和 student：teacher 生成 synthetic Q&A 作为 stepping-stone curriculum，student 用这些题短程 RL 训练；如果 student 在真实 fail@128 hard problems 上进步，这个进步就作为 teacher 的 grounded reward。它展示了模型即使解不出难题，也可能生成能让自己跨过 learnability frontier 的中间题。",
+      "abstract": "Teaching Models to Teach Themselves introduces SOAR, a grounded teacher-student meta-RL framework for escaping sparse-reward reasoning plateaus. A teacher copy of the base model generates synthetic question-answer pairs, a student copy trains briefly on them with RLVR, and the teacher is rewarded by the student's measured improvement on difficult real problems. Experiments on fail@128 subsets of math benchmarks show that grounded rewards can surface useful stepping-stone curricula, outperform intrinsic learnability rewards, preserve question diversity, and improve learning even when many generated answers are incorrect.",
+      "summary_cn": {
+        "研究动机": "RLVR 在数学和代码推理中很有效，但它依赖模型偶尔答对以产生正 reward。如果一批问题对当前模型太难，例如 128 次采样都答不对，直接在这些问题上做 RL 会缺少有效梯度，学习曲线很快 plateau。作者问的是：模型能否利用预训练中潜在的知识，自己生成一组中间题，让原本不可学习的 hard problems 变得可学习。",
+        "解决问题": "论文要解决 sparse, binary reward 下的自举学习问题：没有人工 curated intermediate data，没有自动验证 synthetic question 是否 well-posed 或 answer 是否正确，也不把 hard questions 直接展示给 teacher，仅通过 student 在真实 hard set 上的进步来训练 teacher 生成课程。",
+        "现象分析": "一个重要现象是 teaching ability 和 solving ability 可以解耦。模型可能解不出目标难题，但仍然能生成相关的简单链式法则题、代数题或结构相似的中间题，给 student 提供非零训练信号。另一个现象是 intrinsic learnability reward 容易高方差和 diversity collapse，而 grounded reward 更稳定。最反直觉的是，生成答案是否完全正确并不是最关键的，题目结构是否 well-posed、概念是否相关、分布是否多样，反而更决定能否推动学习。",
+        "主要方法": "SOAR 使用两个从同一 base model 初始化的副本：teacher 和 student。外层 teacher 用 RLOO 生成一批 synthetic question-answer pairs，并把它们分成 candidate datasets；内层 student 在每个 candidate dataset 上做短程 RLVR/RLOO 训练，然后在 sampled hard train questions 上评估。teacher 的 reward 是训练后 student 相对 baseline student 的真实性能提升，而不是题目难度、模型置信度或多数投票等 intrinsic proxy。为了积累进步，论文还设计 promotion mechanism：当 teacher reward 的移动平均超过阈值时，把当前表现最好的 trained student 提升为新的 baseline，并记录促成提升的 Promotion Questions。",
+        "数据集与实验": "实验使用 Llama-3.2-3B-Instruct，在 MATH、HARP、OlympiadBench 中筛出 fail@128 子集，即模型初始 128 次采样都失败的问题。SOAR 在 MATH 和 HARP 上训练，OlympiadBench 用作 OOD transfer。论文报告 Promotion Questions 在 MATH fail@128 上相对 Hard-Only 提升约 +9.3% pass@32，在 HARP 上提升约 +4.2%；Promoted Student 分别提升约 +8.5% 和 +3.6%。生成题还对 OlympiadBench 有一定迁移。多样性分析中，Intrinsic-T 的 Vendi Score 明显下降到约 10.82，而 Grounded-T 保持接近 base teacher 的多样性。人工/LLM 标注显示 Promotion Questions 只有约 33% 答案完全正确，但约 63% 题目 well-posed，仍然能提供有效学习信号。",
+        "主要贡献": "主要贡献是把自生成课程从“模型自己出题”推进到 grounded bilevel meta-RL：teacher 只有在 student 真实进步时才被奖励。它提供了一个很重要的训练边界视角：RL 不是只能在已有可解题上 sharpen，也可以通过生成 stepping stones 扩展 learnability frontier。对后续研究来说，这篇尤其适合和 advantage collapse、ESPO、Rubrics as Rewards 一起看，因为它们都在回答同一个底层问题：LLM 后训练中，什么样的反馈信号是真正可学习、稳定且不易塌缩的。"
+      },
+      "status": "approved",
+      "added_at": "2026-06-09",
+      "key_figure": {
+        "type": "Figure",
+        "name": "SOAR grounded teacher-student meta-RL loop",
+        "page": 1,
+        "path": "assets/paper_images/soar-teaching-models-2601-18778-meta-rl.png",
+        "caption": "SOAR trains a teacher copy to generate synthetic stepping-stone problems for a student copy. The teacher reward is grounded in the student's measured improvement on real fail@128 hard problems, turning self-generated curriculum learning into a bilevel meta-RL loop.",
+        "caption_cn": "SOAR 让 teacher 副本生成 synthetic stepping-stone problems 给 student 训练；teacher 的奖励来自 student 在真实 fail@128 hard problems 上的可测进步，从而把自生成课程学习变成 grounded bilevel meta-RL loop。",
+        "bbox": {},
+        "caption_bbox": {},
+        "source": "manual-summary-from-arxiv-and-author-blog",
+        "confidence": 0.9,
+        "needs_manual_review": false,
+        "contexts": [
+          {
+            "page": 1,
+            "text": "A teacher copy generates synthetic question-answer pairs for a student copy and is rewarded by the student's measured improvement on hard problems."
+          },
+          {
+            "page": 1,
+            "text": "SOAR grounds curriculum generation in real student progress rather than intrinsic proxy rewards, reducing instability and diversity collapse."
+          }
+        ]
+      }
+    },
+    {
       "id": "on-the-direction-of-rlvr-updates-2603-22117",
       "title": "On the Direction of RLVR Updates for LLM Reasoning: Identification and Exploitation",
       "paper_url": "https://arxiv.org/abs/2603.22117",
@@ -2713,6 +2967,90 @@
       }
     },
     {
+      "id": "lima-less-is-more-alignment-2305-11206",
+      "title": "LIMA: Less Is More for Alignment",
+      "paper_url": "https://arxiv.org/abs/2305.11206",
+      "pdf_url": "https://proceedings.neurips.cc/paper_files/paper/2023/file/ac662d74829e4407ce1d126477f4a03a-Paper-Conference.pdf",
+      "authors": [
+        "Chunting Zhou",
+        "Pengfei Liu",
+        "Puxin Xu",
+        "Srini Iyer",
+        "Jiao Sun",
+        "Yuning Mao",
+        "Xuezhe Ma",
+        "Avia Efrat",
+        "Ping Yu",
+        "Lili Yu",
+        "Susan Zhang",
+        "Gargi Ghosh",
+        "Mike Lewis",
+        "Luke Zettlemoyer",
+        "Omer Levy"
+      ],
+      "venue": "NeurIPS",
+      "year": 2023,
+      "primary_area": "对齐/安全/公平性/隐私",
+      "category": "指令微调与对齐",
+      "keywords": [
+        "LIMA",
+        "Less Is More for Alignment",
+        "superficial alignment hypothesis",
+        "supervised fine-tuning",
+        "SFT",
+        "instruction tuning",
+        "data quality",
+        "alignment data",
+        "LLaMA 65B",
+        "RLHF baseline"
+      ],
+      "labels": [
+        "Alignment",
+        "SFT",
+        "Instruction Tuning",
+        "Data Quality",
+        "Baseline",
+        "NeurIPS"
+      ],
+      "code_url": "https://github.com/GAIR-NLP/LIMA",
+      "note": "高质量小规模 SFT 的经典基线。LIMA 的直接方法就是 supervised fine-tuning：用 1,000 条精心筛选的 prompt-response 微调 LLaMA-65B，不用 RLHF、reward model 或 preference optimization。它强调预训练，不是说 SFT 没作用，而是说底层知识、推理和语言能力主要来自大规模预训练；SFT 主要把这些已有能力对齐到 assistant 风格、格式和交互行为。对后续 SFT cold-start、RLHF、agent RL 来说，它是一个重要提醒：不要把 instruction following 的提升全部归因给 RL，少量高质量 SFT 本身就可能很强。",
+      "tldr": "LIMA 用 1,000 条高质量样本对 LLaMA-65B 做普通 SFT，验证强 base model 的很多 instruction-following 表现可由少量高质量对齐数据激活；这里 SFT 改变的是交互风格和输出分布，底层能力主要来自预训练。",
+      "abstract": "LIMA studies the data efficiency of alignment. It fine-tunes a strong pretrained LLaMA-65B model on only 1,000 carefully curated prompt-response examples using standard supervised fine-tuning, without reinforcement learning or preference modeling. The paper proposes the superficial alignment hypothesis: most knowledge and capabilities come from pretraining, while alignment data primarily teaches the model which interaction style and response format to use.",
+      "summary_cn": {
+        "研究动机": "InstructGPT 等工作表明 RLHF 可以显著提升 instruction following，但这让人容易把对齐效果都归因于大规模人工反馈和 RL。LIMA 想检验一个更数据中心的问题：如果 base model 已经足够强，是否只需要极少量高质量 SFT 数据，就能让模型表现出很好的 assistant 行为。",
+        "解决问题": "论文要解决的是 alignment 数据规模和作用机制问题。它不是要替代 SFT，而是问：SFT 到底是在教新知识/新能力，还是主要在教模型如何把预训练中已有能力包装成用户期望的回答形式。",
+        "现象分析": "LIMA 的 Superficial Alignment Hypothesis 认为，大模型的大部分知识、语言能力和推理能力来自预训练；alignment/SFT 数据主要改变输出的表层分布，例如语气、格式、详细程度、礼貌性、结构化表达和对话风格。换句话说，LIMA 变好确实是 SFT 的直接结果，但 SFT 能用 1,000 条样本起效，是因为 LLaMA-65B 已经在预训练中学到了大量可被激活的能力。",
+        "主要方法": "作者使用 LLaMA-65B 作为 base model，构造 1,000 条高质量 prompt-response 数据，其中约 750 条来自 StackExchange、wikiHow、Reddit 等社区问答，约 250 条由标注者人工编写。训练时只使用标准 next-token supervised fine-tuning loss，没有 RLHF、reward model、preference data、DPO 或 rejection sampling。推理时也不做检索或 reward reranking。",
+        "数据集与实验": "LIMA 在开放式用户问题上与 GPT-4、Bard、DaVinci003、Alpaca、Vicuna、OpenAssistant 等系统做人类偏好比较。论文报告 LIMA 的回答在 43% case 中等同或优于 GPT-4，对 Bard 为 58%，对 DaVinci003 为 65%。这些数字不表示 LIMA 全面超过 GPT-4，而是说明高质量小规模 SFT 可以显著塑造强 base model 的 assistant 行为。",
+        "主要贡献": "主要贡献是用极简训练设置强调 instruction tuning 的数据质量和 base model 能力边界。它不是证明 RLHF 没用，也不是证明 alignment 完全表面化；更准确地说，它提供了一个强 SFT baseline，提醒后续 RLHF/RLVR/agent RL 研究必须区分预训练能力、SFT 行为塑形和在线/偏好反馈各自的贡献。"
+      },
+      "status": "approved",
+      "added_at": "2026-05-31",
+      "key_figure": {
+        "type": "Figure",
+        "name": "Pretraining capability vs SFT alignment behavior",
+        "page": 1,
+        "path": "assets/paper_images/lima-less-is-more-alignment-2305-11206-sft-pretraining.png",
+        "caption": "LIMA's effect comes from high-quality supervised fine-tuning, but its superficial alignment hypothesis attributes the underlying knowledge and capabilities to the pretrained base model, with SFT mainly shaping assistant-style behavior.",
+        "caption_cn": "LIMA 的直接效果来自高质量 SFT，但 superficial alignment hypothesis 认为底层知识和能力主要来自预训练，SFT 主要塑造 assistant 风格的输出行为。",
+        "bbox": {},
+        "caption_bbox": {},
+        "source": "manual-summary-from-paper-method-and-hypothesis",
+        "confidence": 0.9,
+        "needs_manual_review": false,
+        "contexts": [
+          {
+            "page": 1,
+            "text": "LIMA fine-tunes a pretrained LLaMA-65B model on 1,000 carefully curated prompt-response examples with standard supervised fine-tuning."
+          },
+          {
+            "page": 1,
+            "text": "The superficial alignment hypothesis states that alignment data mainly teaches interaction style while most knowledge and capabilities come from pretraining."
+          }
+        ]
+      }
+    },
+    {
       "id": "toolformer-2302-04761",
       "title": "Toolformer: Language Models Can Teach Themselves to Use Tools",
       "paper_url": "https://arxiv.org/abs/2302.04761",
@@ -2801,6 +3139,96 @@
           {
             "page": 2,
             "text": "Given an API call c with a cor- responding result r, we denote the linearized se- quences of the API call not including and including its result, respectively, as: e(c) = <API>ac(ic) </API> e(c,r ) = <API>ac(ic)→r </API> where “ <API>”, “ </API>” and “→” are special tokens.1 Some examples of linearized API calls inserted into text sequences are shown in Figure 1. Given a dataset C = {x1,..., x|C|} of plain texts, we first co"
+          }
+        ]
+      }
+    },
+    {
+      "id": "toollm-toolbench-2307-16789",
+      "title": "ToolLLM: Facilitating Large Language Models to Master 16000+ Real-world APIs",
+      "paper_url": "https://arxiv.org/abs/2307.16789",
+      "pdf_url": "https://arxiv.org/pdf/2307.16789",
+      "authors": [
+        "Yujia Qin",
+        "Shihao Liang",
+        "Yining Ye",
+        "Kunlun Zhu",
+        "Lan Yan",
+        "Yaxi Lu",
+        "Yankai Lin",
+        "Xin Cong",
+        "Xiangru Tang",
+        "Bill Qian",
+        "Sihan Zhao",
+        "Lauren Hong",
+        "Runchu Tian",
+        "Ruobing Xie",
+        "Jie Zhou",
+        "Mark Gerstein",
+        "Dahai Li",
+        "Zhiyuan Liu",
+        "Maosong Sun"
+      ],
+      "venue": "ICLR",
+      "year": 2024,
+      "primary_area": "基础/前沿模型 (含LLM)",
+      "category": "Agent 与工具使用",
+      "keywords": [
+        "ToolLLM",
+        "ToolBench",
+        "ToolLLaMA",
+        "tool use",
+        "real-world APIs",
+        "RapidAPI",
+        "API retriever",
+        "ToolEval",
+        "solution path annotation",
+        "DFSDT",
+        "instruction tuning",
+        "SFT"
+      ],
+      "labels": [
+        "Tool Use",
+        "ToolBench",
+        "Baseline",
+        "API Calling",
+        "Instruction Tuning",
+        "ICLR"
+      ],
+      "code_url": "https://github.com/OpenBMB/ToolBench",
+      "note": "基线型工具调用老文章。它的重要性不在于提出 RL 算法，而在于把真实 API 工具调用做成大规模数据、训练和评测闭环：ToolBench 数据集、ToolLLaMA 模型、API retriever 和 ToolEval 评测。后续 ToolOmni、StableToolBench、tool-use RL、开放世界 API 检索等工作基本都需要把它当作背景或 baseline。局限也很清楚：训练主要是 SFT，solution path 和评测高度依赖 ChatGPT，真实 API 会变化，导致复现和稳定评测有压力。",
+      "tldr": "ToolLLM/ToolBench 是真实 API 工具调用方向的基线工作：从 RapidAPI 收集 16,464 个 RESTful APIs，用 ChatGPT 生成指令和 API 调用链，训练 ToolLLaMA 与 API retriever，并用 ToolEval 自动评估工具调用轨迹。",
+      "abstract": "ToolLLM introduces a general framework for improving open-source LLM tool-use capability through data construction, model training, and evaluation. Its ToolBench dataset collects 16,464 real-world RESTful APIs from RapidAPI, generates single-tool and multi-tool instructions with ChatGPT, and annotates solution paths as chains of API calls. The paper trains ToolLLaMA with ToolBench, equips it with a neural API retriever, and evaluates tool-use trajectories with ToolEval.",
+      "summary_cn": {
+        "研究动机": "2023 年前后的开源 LLM 已经具备一定指令跟随能力，但工具使用能力明显落后于 ChatGPT/GPT-4 这类闭源模型。已有 instruction tuning 数据大多聚焦普通语言任务，缺少真实 API 场景下的工具选择、参数构造、多步调用和结果整合监督。",
+        "解决问题": "论文要解决的是如何系统性地训练和评估开源 LLM 的真实 API 使用能力：工具库很大，API 文档复杂，用户任务可能需要多个工具组合，模型既要找到相关 API，又要规划调用链并根据返回结果生成最终答案。",
+        "现象分析": "ToolLLM 的关键位置是把 tool use 从小规模 demo 推到真实 API 生态。相比 Toolformer 的离线单次工具 span，ToolBench 更强调真实 RESTful API、multi-tool instruction、solution path 和端到端执行评测。但它仍是 SFT/数据驱动范式，不是在线 RL；工具调用质量依赖 ChatGPT 标注的轨迹和自动 judge。",
+        "主要方法": "作者先从 RapidAPI Hub 收集 16,464 个真实 RESTful APIs，覆盖 49 个类别；然后提示 ChatGPT 生成涉及这些 API 的单工具和多工具用户指令；再用 ChatGPT 搜索有效 solution path，也就是 API 调用链。训练侧用 ToolBench 微调 LLaMA 得到 ToolLLaMA，并加入 neural API retriever 从大工具池中召回相关 API。推理侧还提出 DFSDT 等决策树式搜索策略，帮助模型在多步工具调用中探索和回溯。",
+        "数据集与实验": "ToolBench 最终包含约 126K 条 instruction-solution path 数据。评测方面，论文提出 ToolEval，用 ChatGPT 判断工具调用轨迹是否完成任务，并用 pass rate 和 win rate 衡量性能；同时报告 ToolEval 与人工评估有较高一致性。实验显示 ToolLLaMA 在复杂指令和未见 API 上明显优于普通开源模型，并在部分设置下接近 ChatGPT。",
+        "主要贡献": "主要贡献是提供了一个后来被广泛引用的工具调用基线：大规模真实 API 数据集 ToolBench、基于该数据训练的 ToolLLaMA、面向 16K+ API 的 retriever，以及自动评测器 ToolEval。对工具调用 RL 研究来说，它提供了任务、工具库和评测参照；但要研究奖励、在线探索和 credit assignment，还需要后续 RL 或 agentic learning 工作补足。"
+      },
+      "status": "approved",
+      "added_at": "2026-05-31",
+      "key_figure": {
+        "type": "Figure",
+        "name": "ToolBench baseline pipeline",
+        "page": 1,
+        "path": "assets/paper_images/toollm-toolbench-2307-16789-pipeline.png",
+        "caption": "ToolLLM builds ToolBench from real-world RapidAPI tools, generates instructions and solution paths with ChatGPT, trains ToolLLaMA with an API retriever, and evaluates tool-use trajectories with ToolEval.",
+        "caption_cn": "ToolLLM 从 RapidAPI 真实工具构建 ToolBench，用 ChatGPT 生成指令和调用链，训练带 API retriever 的 ToolLLaMA，并用 ToolEval 评估工具调用轨迹。",
+        "bbox": {},
+        "caption_bbox": {},
+        "source": "manual-summary-from-paper-method",
+        "confidence": 0.9,
+        "needs_manual_review": false,
+        "contexts": [
+          {
+            "page": 1,
+            "text": "ToolLLM includes data construction, model training, and automatic evaluation for real-world API tool use."
+          },
+          {
+            "page": 1,
+            "text": "ToolBench collects 16,464 RESTful APIs across 49 categories and builds instruction-solution path examples."
           }
         ]
       }
@@ -6543,6 +6971,158 @@
       }
     },
     {
+      "id": "reflexion-verbal-rl-2303-11366",
+      "title": "Reflexion: Language Agents with Verbal Reinforcement Learning",
+      "paper_url": "https://papers.nips.cc/paper_files/paper/2023/hash/1b44b878bb782e6954cd888628510e90-Abstract-Conference.html",
+      "pdf_url": "https://arxiv.org/pdf/2303.11366",
+      "authors": [
+        "Noah Shinn",
+        "Federico Cassano",
+        "Ashwin Gopinath",
+        "Karthik Narasimhan",
+        "Shunyu Yao"
+      ],
+      "venue": "NeurIPS",
+      "year": 2023,
+      "primary_area": "基础/前沿模型 (含LLM)",
+      "category": "Agent 与工具使用",
+      "keywords": [
+        "Reflexion",
+        "language agents",
+        "verbal reinforcement learning",
+        "self-reflection",
+        "episodic memory",
+        "trial-and-error",
+        "ReAct",
+        "ALFWorld",
+        "HotPotQA",
+        "HumanEval",
+        "non-parametric learning"
+      ],
+      "labels": [
+        "Agent",
+        "Reflection",
+        "Memory",
+        "Baseline",
+        "Non-parametric Learning",
+        "NeurIPS"
+      ],
+      "code_url": "https://github.com/noahshinn024/reflexion",
+      "note": "Agent 自我反思/记忆机制的基线型老文章。Reflexion 的“verbal reinforcement learning”不是传统 RL，也不更新模型参数；它把环境反馈转成自然语言 reflection，存入 episodic memory，并在下一次 trial 中作为上下文使用。对工具调用 RL / agent RL 来说，它是重要的非参数更新对照组：如果只靠 verbal feedback + memory 就能提升表现，那么后续 RL 方法需要说明额外的 policy update 到底带来了什么。",
+      "tldr": "Reflexion 在 ReAct 式 agent 外面加一层跨 trial 自我反思：任务尝试后根据环境反馈写出自然语言 reflection，存入 episodic memory，并在下一轮尝试中作为上下文使用，从而实现不更新参数的试错改进。",
+      "abstract": "Reflexion proposes a framework for reinforcing language agents through linguistic feedback rather than weight updates. After each trial, the agent reflects on task feedback signals, stores the resulting text in an episodic memory buffer, and uses this memory to improve future decisions. The framework is evaluated on sequential decision-making, coding, and language reasoning tasks, and serves as a strong non-parametric baseline for trial-and-error language agents.",
+      "summary_cn": {
+        "研究动机": "LLM agent 已经可以通过 ReAct 等方式和外部环境交互，但从试错中快速学习仍然困难。传统强化学习通常需要大量采样和昂贵的参数更新，而很多 agent 场景中反馈本身可以被语言化总结，作为下一次尝试的经验。",
+        "解决问题": "论文要解决的是如何让语言 agent 在不微调、不做 policy gradient 的情况下利用 trial-and-error feedback。关键问题不是如何计算梯度，而是如何把失败原因、成功经验和下一步策略用自然语言保存下来，并让模型在后续尝试中真正利用这些记忆。",
+        "现象分析": "Reflexion 的位置是在 ReAct 轨迹之上增加跨 episode 的学习层。ReAct 解决单次任务内 thought-action-observation 的交替，Reflexion 解决多次尝试之间如何累积经验。它的提升来自上下文记忆和反思提示，而不是模型参数变化；因此它容易部署，但受上下文长度、reflection 质量和反馈可靠性限制。",
+        "主要方法": "每次 trial 中，agent 执行任务并获得环境反馈，可以是标量成功/失败、错误信息或自由文本反馈。随后一个 reflection 模块把反馈和轨迹总结成自然语言反思，写入 episodic memory buffer。下一次 trial 时，agent 在 prompt 中读取这些 reflections，再生成新的 reasoning 和 actions。这个循环构成 verbal reinforcement learning。",
+        "数据集与实验": "论文在 sequential decision-making、coding 和 language reasoning 任务上评估，包括 ALFWorld、HotPotQA 和 HumanEval 等。NeurIPS 摘要报告 Reflexion 在 HumanEval 上达到 91% pass@1，并显著优于无反思的 baseline agent；论文还比较不同反馈信号、反馈接入方式和 agent 类型的影响。",
+        "主要贡献": "主要贡献是提出一种非参数的 agent trial-and-error 学习范式：用语言反思作为可读、可编辑、可迁移的经验记忆。对后续 agent RL 研究来说，它是必须区分的 baseline：它证明一部分“学习”可以通过上下文记忆实现，而不一定来自 RL 参数更新。"
+      },
+      "status": "approved",
+      "added_at": "2026-05-31",
+      "key_figure": {
+        "type": "Figure",
+        "name": "Verbal reinforcement learning loop",
+        "page": 1,
+        "path": "assets/paper_images/reflexion-verbal-rl-2303-11366-loop.png",
+        "caption": "Reflexion reinforces a language agent without weight updates: after each trial, task feedback is converted into a verbal reflection, stored in episodic memory, and provided as context for the next trial.",
+        "caption_cn": "Reflexion 不通过参数更新强化 agent：每次尝试后，任务反馈被转成自然语言反思，存入 episodic memory，并作为下一轮尝试的上下文。",
+        "bbox": {},
+        "caption_bbox": {},
+        "source": "manual-summary-from-paper-method",
+        "confidence": 0.9,
+        "needs_manual_review": false,
+        "contexts": [
+          {
+            "page": 1,
+            "text": "Reflexion reinforces language agents not by updating weights, but through linguistic feedback stored in an episodic memory buffer."
+          },
+          {
+            "page": 1,
+            "text": "Agents verbally reflect on task feedback signals and use reflective text to improve subsequent trials."
+          }
+        ]
+      }
+    },
+    {
+      "id": "tau-bench-2406-12045",
+      "title": "τ-bench: A Benchmark for Tool-Agent-User Interaction in Real-World Domains",
+      "paper_url": "https://arxiv.org/abs/2406.12045",
+      "pdf_url": "https://arxiv.org/pdf/2406.12045",
+      "authors": [
+        "Shunyu Yao",
+        "Noah Shinn",
+        "Pedram Razavi",
+        "Karthik Narasimhan"
+      ],
+      "venue": "ICLR",
+      "year": 2025,
+      "primary_area": "基础/前沿模型 (含LLM)",
+      "category": "Agent 与工具使用",
+      "keywords": [
+        "τ-bench",
+        "tau-bench",
+        "Tool-Agent-User Interaction Benchmark",
+        "tool-use agents",
+        "user simulation",
+        "domain policy",
+        "database state evaluation",
+        "pass^k",
+        "customer service agents",
+        "retail",
+        "airline",
+        "function calling",
+        "agent reliability"
+      ],
+      "labels": [
+        "Agent Benchmark",
+        "Tool Use",
+        "User Simulation",
+        "Policy Following",
+        "Reliability",
+        "ICLR"
+      ],
+      "code_url": "https://github.com/sierra-research/tau-bench",
+      "note": "面向真实客服式 tool-agent-user 交互的基线 benchmark。它的重要性在于把工具调用、用户多轮交互和 domain policy following 放进同一个可自动评估环境，而不是只测单步 function calling。评估核心是程序化的 r = r_action × r_output：最终数据库状态必须等于由隐藏标注 write actions 产生的目标状态，同时 agent 给用户的回复要包含必要信息。需要注意，原始 tau-bench 仓库后来提示 airline/retail 任务存在过期或错误，建议新实验使用 τ²/τ³-bench 修正版；但原论文作为 agent reliability benchmark 的起点仍然很重要。",
+      "tldr": "τ-bench 评估客服式 language agent 是否能在多轮用户对话中调用领域 API、遵守业务 policy，并把数据库改到唯一正确的目标状态；它提出 pass^k 衡量同一任务多次运行都成功的可靠性，而不是只看偶然成功。",
+      "abstract": "τ-bench is a benchmark for evaluating language agents in dynamic tool-agent-user interactions. In each domain, an agent converses with a language-model-simulated user, calls domain-specific API tools, and follows policy guidelines. Evaluation is rule-based: after the episode ends, the final database state is compared against the unique goal state implied by hidden ground-truth write actions, and required information in the agent's user-facing responses is checked. The benchmark introduces pass^k to measure reliability across repeated trials.",
+      "summary_cn": {
+        "研究动机": "真实企业客服 agent 不是只接收一个完整指令再调用一次函数。它需要和用户多轮对话收集缺失信息，调用内部 API 修改订单或预订状态，同时遵守复杂业务 policy。已有 tool-use benchmark 多数只测单步 function calling 或最终答案，不能反映这种 tool-agent-user 三方交互场景。",
+        "解决问题": "论文要解决的是如何客观评估 language agent 在真实业务风格环境中的可靠性：agent 是否能理解用户意图、追问必要信息、调用正确 API、避免违反政策，并在多轮对话随机变化下稳定得到同一个正确业务结果。",
+        "现象分析": "τ-bench 把每个任务建模为部分可观测交互过程。数据库状态对 agent 和用户都是隐藏的，agent 只能通过 API read/write 间接访问；用户由 LLM 模拟，只能看到和 agent 的对话，看不到 agent 与工具的交互；domain policy 描述哪些操作允许、哪些信息必须确认。这样比静态 QA 或单步工具调用更接近真实客服 agent。",
+        "主要方法": "每个 task instance 包含两部分隐藏标注：给 user simulator 的 instruction，以及 ground-truth database write actions，必要时还包括 ground-truth outputs。agent 看不到这些标注，只看到 policy、tools 和用户消息。episode 结束时，系统从初始数据库出发，检查 agent 的实际 write API 调用产生的最终数据库是否等于标注 write actions 应产生的唯一目标数据库状态；read API 调用和具体对话路径可以不同。",
+        "评估细节": "reward 定义为 r = r_action × r_output，取值为 0 或 1。r_action 检查 final database 是否与 unique ground truth outcome database 完全一致；r_output 检查 agent 面向用户的回复是否包含任务要求输出的必要信息。例如 retail 任务中，标注可能要求唯一写操作为 return_delivered_order_items(order_id, item_ids, payment_method_id)，同时要求回复包含两个金额字符串。只有数据库写入结果正确且必要金额被告知用户，episode 才算成功。论文也指出 r=1 只是必要不充分条件：如果 agent 未经用户确认就执行退货，可能违反 policy，但规则化 reward 仍可能给 1。",
+        "数据集与实验": "τ-bench 包含 retail 和 airline 两个领域。论文报告 retail 有 500 users、50 products、1,000 orders、7 个 write APIs、8 个 non-write APIs、115 个任务；airline 有 500 users、300 flights、2,000 reservations、6 个 write APIs、7 个 non-write APIs、50 个任务。实验显示 GPT-4o 等强 function-calling agent 仍远未稳定解决任务，且 pass^k 随 k 增大快速下降。",
+        "主要贡献": "主要贡献是把 agent 评测从“能否生成正确函数调用”推进到“能否在多轮用户交互中可靠完成业务状态变更”。pass^k 也很关键：它衡量同一任务独立运行 k 次是否全部成功，更贴近真实部署中的 consistency/reliability，而不是 pass@k 那种多次尝试至少一次成功。对 tool-use RL 来说，τ-bench 提供了可验证的多轮工具环境和可靠性目标。"
+      },
+      "status": "approved",
+      "added_at": "2026-05-31",
+      "key_figure": {
+        "type": "Figure",
+        "name": "Database-state evaluation loop",
+        "page": 4,
+        "path": "assets/paper_images/tau-bench-2406-12045-evaluation-loop.png",
+        "caption": "τ-bench evaluates tool-agent-user episodes by replaying the agent's database write effects and comparing the final database state with the unique goal state implied by hidden ground-truth write actions, while also checking required user-facing outputs.",
+        "caption_cn": "τ-bench 通过比较 episode 结束后的数据库状态和隐藏标注 write actions 对应的唯一目标状态来评估 agent，同时检查面向用户的回复是否包含必要信息。",
+        "bbox": {},
+        "caption_bbox": {},
+        "source": "manual-summary-from-paper-section-3",
+        "confidence": 0.9,
+        "needs_manual_review": false,
+        "contexts": [
+          {
+            "page": 4,
+            "text": "The reward is r_action times r_output: the final database must match the unique ground-truth outcome database, and user-facing responses must contain necessary information."
+          },
+          {
+            "page": 4,
+            "text": "Task instances include a hidden user instruction and annotations of ground-truth database write actions, with optional ground-truth outputs for user questions."
+          }
+        ]
+      }
+    },
+    {
       "id": "webagent-r1-2025-emnlp",
       "title": "WebAgent-R1: Training Web Agents via End-to-End Multi-Turn Reinforcement Learning",
       "paper_url": "https://aclanthology.org/2025.emnlp-main.401/",
@@ -7589,7 +8169,7 @@
         "Tool Use",
         "Function Calling"
       ],
-      "code_url": "",
+      "code_url": "https://github.com/ShishirPatil/gorilla/tree/main/berkeley-function-call-leaderboard",
       "note": "function calling / tool-use evaluation 的代表 benchmark。它不是训练方法，但能说明工具调用能力已经形成标准评测维度：串行/并行调用、AST-based validity、abstention 和 stateful multi-step agentic setting。适合作为 Tool-N1、ResT、DeepAgent 等工作的评测背景。",
       "tldr": "BFCL 用真实函数调用场景评估 LLM 工具调用能力，覆盖串行/并行调用、多语言函数、AST-based correctness、abstention 和 stateful 多步 agent 设定。",
       "abstract": "The Berkeley Function Calling Leaderboard evaluates large language models on function-calling and tool-use capabilities. It tests whether models can map user requests into valid external function calls, including serial and parallel calls, multilingual function signatures, abstention, and more stateful multi-step agentic settings. Evaluation relies on structured function-call validity, including AST-based checks. The paper is relevant as an evaluation-side background for tool-use RL: training methods still need stable policy learning, but benchmarks such as BFCL define what correct tool invocation means.",
@@ -7626,6 +8206,86 @@
         "confidence": 0.95,
         "needs_manual_review": false,
         "contexts": []
+      }
+    },
+    {
+      "id": "toolload-bench-cognitive-load-2601-20412",
+      "title": "Beyond Accuracy: A Cognitive Load Framework for Mapping the Capability Boundaries of Tool-use Agents",
+      "paper_url": "https://arxiv.org/abs/2601.20412",
+      "pdf_url": "https://ojs.aaai.org/index.php/AAAI/article/download/40650/44611",
+      "authors": [
+        "Qihao Wang",
+        "Yue Hu",
+        "Mingzhe Lu",
+        "Jiayue Wu",
+        "Yanbing Liu",
+        "Yuanmin Tang"
+      ],
+      "venue": "AAAI",
+      "year": 2026,
+      "primary_area": "数据集与基准",
+      "category": "Agent / 工具使用评测",
+      "keywords": [
+        "ToolLoad-Bench",
+        "tool-use agents",
+        "cognitive load",
+        "capability boundary",
+        "performance cliff",
+        "Tool Interaction Graph",
+        "TIG",
+        "intrinsic load",
+        "extraneous load",
+        "agent evaluation",
+        "function calling",
+        "tool complexity",
+        "ambiguity",
+        "diagnostic benchmark"
+      ],
+      "labels": [
+        "Tool-use Agent",
+        "Benchmark",
+        "Cognitive Load",
+        "Capability Boundary",
+        "Tool Interaction Graph",
+        "Diagnostic Evaluation",
+        "AAAI"
+      ],
+      "code_url": "",
+      "note": "这篇是 tool-use agent 评测里很有价值的诊断型框架。它不是又做一个总准确率榜单，而是把任务难度拆成 Intrinsic Load（工具链本身结构复杂度）和 Extraneous Load（用户表达、噪声、歧义带来的额外负担），从而画出模型在复杂度维度上的 capability boundary。和 BFCL 相比，BFCL 更关注函数调用是否正确；ToolLoad-Bench 更关注模型到底在哪类认知负载下开始出现 performance cliff。对 agent/RL 工作很有用，因为它能提示训练数据、reward 或 curriculum 应该覆盖哪些复杂度区域。",
+      "tldr": "ToolLoad-Bench 用认知负载框架评估工具调用 agent：Intrinsic Load 衡量工具交互图本身有多复杂，Extraneous Load 衡量用户表达和干扰信息带来的额外难度。它的价值不是单一 accuracy，而是映射模型随任务复杂度上升出现 performance cliff 的能力边界。",
+      "abstract": "Beyond Accuracy proposes a cognitive load framework for diagnostic evaluation of tool-use agents. The paper decomposes task difficulty into intrinsic load, derived from the structural complexity of the tool interaction graph, and extraneous load, introduced by ambiguity, noise, or presentation complexity in the user request. ToolLoad-Bench parametrically controls these load factors to reveal capability boundaries and performance cliffs that aggregate accuracy scores can hide.",
+      "summary_cn": {
+        "研究动机": "现有 tool-use benchmark 往往给出一个总体 accuracy，但总分无法解释模型为什么失败，也无法定位模型能力边界。一个模型可能在简单函数调用上很强，却在工具依赖变深、参数传递变复杂、用户 query 更含糊时突然崩掉。作者希望从认知负载角度把任务复杂度拆开，做更可解释的 agent evaluation。",
+        "解决问题": "论文要解决的是 beyond accuracy 的工具调用评测：不仅问模型是否答对，还要问它在什么复杂度结构下开始失败。这个问题对模型选择、benchmark 设计、训练 curriculum 和工具调用 RL 都有价值，因为不同模型的 failure mode 可能来自工具链结构复杂，也可能来自输入表达噪声。",
+        "现象分析": "作者把工具调用任务难度分成两类。Intrinsic Load 来自任务本身的工具交互结构，例如需要多少工具、工具之间是否存在依赖、调用链深度、参数是否要跨工具传递；Extraneous Load 来自任务呈现方式，例如用户请求是否模糊、是否有干扰信息、是否需要从冗余描述中抽取目标。两类 load 增加时，模型 accuracy 不是平滑下降，而可能出现明显 performance cliff。",
+        "主要方法": "论文提出 Tool Interaction Graph (TIG) 表示工具调用任务中的工具节点、依赖关系和信息流，并基于 TIG 定义 Intrinsic Load。同时，通过控制用户 query 的歧义、噪声和表述复杂度构造 Extraneous Load。ToolLoad-Bench 不是随机收集题，而是参数化调节这两类 load，从而系统扫描模型在不同认知负载下的能力边界。",
+        "数据集与实验": "ToolLoad-Bench 评估多种通用模型和工具调用专用模型。AAAI 论文报告，专门 fine-tuned 的 tool-use 模型 xLAM2-32B 在总体准确率上最高，约 78.8%；GPT-4o 约 68%，Claude 3.7 Sonnet 约 64.8%，Gemini 2.5 Pro 约 60%。更重要的是，论文展示不同模型在 Intrinsic Load 和 Extraneous Load 增加时有不同的性能崖点。",
+        "主要贡献": "主要贡献是把工具调用评测从“总准确率排名”推进到“能力边界映射”。它提供了一个可解释框架：用 TIG 和 cognitive load 解释 agent 为什么失败、在哪里失败、对哪类复杂度敏感。对后续 agent RL 来说，它也提示 reward 和训练数据不应只覆盖成功率高的简单任务，而应系统覆盖工具链依赖、参数传递和输入歧义带来的认知负载。"
+      },
+      "status": "approved",
+      "added_at": "2026-06-09",
+      "key_figure": {
+        "type": "Figure",
+        "name": "Cognitive load capability boundary",
+        "page": 1,
+        "path": "assets/paper_images/toolload-bench-cognitive-load-2601-20412-boundary.png",
+        "caption": "ToolLoad-Bench decomposes tool-use task difficulty into intrinsic load from the tool interaction graph and extraneous load from ambiguous or noisy task presentation, then maps model capability boundaries and performance cliffs across those load axes.",
+        "caption_cn": "ToolLoad-Bench 将工具调用任务难度拆成工具交互图带来的 intrinsic load 和用户表达/噪声带来的 extraneous load，并沿这两个负载轴映射模型能力边界和 performance cliff。",
+        "bbox": {},
+        "caption_bbox": {},
+        "source": "manual-summary-from-arxiv-and-aaai-paper",
+        "confidence": 0.9,
+        "needs_manual_review": false,
+        "contexts": [
+          {
+            "page": 1,
+            "text": "The framework decomposes tool-use task difficulty into intrinsic load from tool interaction structure and extraneous load from task presentation."
+          },
+          {
+            "page": 1,
+            "text": "ToolLoad-Bench is designed to map capability boundaries and performance cliffs beyond aggregate accuracy."
+          }
+        ]
       }
     },
     {
@@ -8041,6 +8701,164 @@
           {
             "page": 43,
             "text": "Figure 17: Example 1 from the AlpacaEval Length subset, which was rejected due to hallucinations. 43"
+          }
+        ]
+      }
+    },
+    {
+      "id": "rewardbench-2-2506-01937",
+      "title": "RewardBench 2: Advancing Reward Model Evaluation",
+      "paper_url": "https://arxiv.org/abs/2506.01937",
+      "pdf_url": "https://arxiv.org/pdf/2506.01937",
+      "authors": [
+        "Saumya Malik",
+        "Valentina Pyatkin",
+        "Sander Land",
+        "Jacob Morrison",
+        "Noah A. Smith",
+        "Hannaneh Hajishirzi",
+        "Nathan Lambert"
+      ],
+      "venue": "arXiv",
+      "year": 2025,
+      "primary_area": "强化学习",
+      "category": "基于偏好/反馈的 RL",
+      "keywords": [
+        "RewardBench 2",
+        "reward models",
+        "RLHF",
+        "preference evaluation",
+        "best-of-4",
+        "inference-time scaling",
+        "Best-of-N",
+        "PPO",
+        "human prompts",
+        "reward model leaderboard"
+      ],
+      "labels": [
+        "Benchmark",
+        "Reward Model",
+        "RLHF",
+        "Preference Evaluation",
+        "Best-of-4"
+      ],
+      "code_url": "https://huggingface.co/datasets/allenai/reward-bench-2",
+      "note": "RewardBench 2 是 RewardBench 的更难升级版。它把评测从 pairwise chosen-vs-rejected 扩展为 best-of-4：每个 prompt 有 1 个正确/优选回答和 3 个错误/较差回答，要求 reward model 把正确回答排到第一。对工具调用 RL 来说，这篇很有价值，因为它把 reward model evaluation 推向更接近实际用法的场景：RM 不只是二选一判断器，而是用于 Best-of-N、inference-time scaling 和 PPO/RLHF 中的排序/筛选信号。",
+      "tldr": "RewardBench 2 用更难的 best-of-4 设置评估 reward model：给同一 prompt 的 4 个候选回答打分，只有把正确/优选回答排第一才算对，从而更贴近 Best-of-N、推理时扩展和 PPO/RLHF 中 reward model 的真实使用方式。",
+      "abstract": "RewardBench 2 advances reward model evaluation beyond pairwise comparisons. It constructs a harder benchmark where each prompt is paired with four candidate responses, one chosen or correct and three rejected or incorrect, and evaluates whether the reward model ranks the chosen response highest. The benchmark adds new human prompts, organizes examples into multiple subsets, and studies how reward model benchmark performance correlates with downstream usage such as Best-of-N inference-time scaling and PPO/RLHF optimization.",
+      "summary_cn": {
+        "研究动机": "原版 RewardBench 主要考察 reward model 能否在 chosen/rejected pair 中选出更好的回答，但真实系统里 RM 常被用来从多个候选中排序、筛选或指导优化。例如 Best-of-N 会生成多个回答再按 reward 选最好，PPO/RLHF 也依赖 reward signal 的相对排序质量。因此 pairwise 准确率可能高估 RM 在真实后训练和推理时扩展中的可用性。",
+        "解决问题": "论文要解决的是 reward model evaluation 难度和真实使用场景不匹配的问题。一个 RM 能在二选一里胜出，不代表它能在多个相似但有缺陷的候选中稳定把最佳回答排第一；而后者更接近实际部署。",
+        "现象分析": "RewardBench 2 的 best-of-4 设置把随机基线从二选一的 50% 降到 25%，也会暴露原版 benchmark 不容易区分的模型差异。论文报告新基准上的平均分明显低于 RewardBench v1，说明很多 RM 在 pairwise setting 下看起来强，但面对更多干扰回答时排序能力不足。",
+        "主要方法": "作者构造每条样本包含 prompt、1 个 chosen/correct response 和 3 个 rejected/incorrect responses 的 best-of-4 评测格式。评测时 reward model 分别给 4 个 response 打分，只有 chosen response 得分最高才算正确。这比普通 pairwise chosen-vs-rejected 更接近 RM 在 Best-of-N sampling 和候选重排序中的使用方式。",
+        "数据集与实验": "RewardBench 2 增加大量新的人类 prompt，并组织成 6 个子集，总测试规模约 1.87K 条。实验比较多类 reward models，并进一步考察 benchmark 分数与下游 Best-of-N/inference-time scaling、PPO/RLHF 优化效果之间的相关性。",
+        "主要贡献": "主要贡献是把 reward model benchmark 从 pairwise discrimination 推进到 multi-candidate ranking，并用下游相关性验证这种评测更贴近 RM 的真实用途。它适合作为研究 reward signal 可靠性的核心参考，也提示工具/检索 RL 的奖励模型评估不能只停留在二元偏好判断。"
+      },
+      "status": "approved",
+      "added_at": "2026-05-31",
+      "key_figure": {
+        "type": "Figure",
+        "name": "Best-of-4 reward model evaluation",
+        "page": 1,
+        "path": "assets/paper_images/rewardbench-2-2506-01937-best-of-4.png",
+        "caption": "RewardBench 2 evaluates reward models in a best-of-4 setting: a prompt is paired with one chosen or correct response and three rejected or incorrect responses, and the reward model succeeds only if it ranks the chosen response first.",
+        "caption_cn": "RewardBench 2 使用 best-of-4 设置评估 reward model：同一个 prompt 配 1 个正确/优选回答和 3 个错误/较差回答，只有 reward model 把正确回答排第一才算成功。",
+        "bbox": {},
+        "caption_bbox": {},
+        "source": "manual-summary-from-paper-method-and-dataset-card",
+        "confidence": 0.9,
+        "needs_manual_review": false,
+        "contexts": [
+          {
+            "page": 1,
+            "text": "RewardBench 2 moves beyond pairwise reward model evaluation by asking models to identify the best response among four candidates for the same prompt."
+          },
+          {
+            "page": 1,
+            "text": "The benchmark is intended to better match downstream uses of reward models such as Best-of-N ranking, inference-time scaling, and RLHF optimization."
+          }
+        ]
+      }
+    },
+    {
+      "id": "rubrics-as-rewards-2507-17746",
+      "title": "Rubrics as Rewards: Reinforcement Learning Beyond Verifiable Domains",
+      "paper_url": "https://arxiv.org/abs/2507.17746",
+      "pdf_url": "https://arxiv.org/pdf/2507.17746",
+      "authors": [
+        "Anisha Gunjal",
+        "Anthony Wang",
+        "Elaine Lau",
+        "Vaskar Nath",
+        "Yunzhong He",
+        "Bing Liu",
+        "Sean M. Hendryx"
+      ],
+      "venue": "ICLR",
+      "year": 2026,
+      "primary_area": "强化学习",
+      "category": "基于偏好/反馈的 RL",
+      "keywords": [
+        "Rubrics as Rewards",
+        "rubrics",
+        "rubric reward",
+        "rubric-guided reward",
+        "GRPO",
+        "RL beyond verifiable domains",
+        "RLVR",
+        "LLM-as-a-judge",
+        "reward design",
+        "HealthBench",
+        "GPQA-Diamond",
+        "RaR-Explicit",
+        "RaR-Implicit",
+        "medical QA"
+      ],
+      "labels": [
+        "rubrics",
+        "Rubric Reward",
+        "Reward Design",
+        "GRPO",
+        "RLVR",
+        "LLM-as-a-Judge",
+        "HealthBench",
+        "ICLR"
+      ],
+      "code_url": "",
+      "note": "这篇把 rubrics 从评估 prompt 推进到 RL reward，是 RLVR 走向非可验证开放任务的重要一步。Rubric 可以理解为老师判卷子的评分细则：不是让 judge 凭感觉给 1-10 分，而是把好答案拆成一组可检查的标准，再把逐项判断聚合成 reward。它和 Prometheus 的区别是：Prometheus 训练/使用 rubric-conditioned evaluator，RaR 则直接把 rubric evaluation 接到 GRPO 里做 on-policy reward。风险也很明确：rubric 质量、reference answer 偏差和 judge bias 会直接变成 reward bias，仍需要防 reward hacking。",
+      "tldr": "RaR 将 prompt-specific rubrics 作为开放任务的结构化 reward：先为每个 prompt 生成 7-20 条带权重的评分标准，再让 LLM judge 按 rubrics 检查 response，并把结果聚合成 GRPO reward，从而把 RL 扩展到医疗、科学解释等非 exact-match/单元测试可验证领域。",
+      "abstract": "Rubrics as Rewards studies reinforcement learning for domains where correctness is hard to verify with exact match or unit tests. The method generates prompt-specific rubrics, uses an LLM judge to evaluate responses against those criteria, aggregates rubric judgments into scalar rewards, and optimizes the policy with GRPO. Experiments on medical and scientific reasoning tasks show that rubric-guided rewards can outperform direct Likert-style judge rewards, especially in domains where fine-grained safety, reasoning, and factual criteria matter.",
+      "summary_cn": {
+        "研究动机": "RLVR 在数学和代码上有效，是因为答案、单元测试或 verifier 可以给出清晰 reward。但医疗建议、科学解释、开放式推理这类任务没有唯一标准答案，直接让 LLM judge 给一个整体 Likert 分又太粗，容易被回答长度、语气和表面格式影响。",
+        "解决问题": "论文要解决的是非可验证领域的 reward design：如何把开放式任务里“好答案”的细粒度要求转成可用于 RL 的稳定奖励信号。核心不是发明 rubric 概念，而是把 prompt-specific rubrics 变成 on-policy RL 的 reward source。",
+        "现象分析": "整体打分把多个维度压成一个模糊数字，judge 很容易忽略安全红线、关键事实或特定错误。Rubrics 则像老师判卷子的评分标准，把评价拆成 Essential、Important、Optional、Pitfall 等项目，让 judge 逐项检查 response 是否满足。这样 reward 更具体，也更能避免模型靠冗长、礼貌或格式感骗过 judge。",
+        "主要方法": "RaR 先为每个 prompt 生成一组 rubric items，通常约 7-20 条，并用 reference answer 作为 expert guidance proxy。每条 rubric 是自包含评价标准，并带有类别或权重，例如 Essential、Important、Optional、Pitfall。随后 LLM judge 根据这些 rubrics 评估 policy response，聚合成 scalar reward，并用 GRPO 做 on-policy 更新。论文比较 RaR-Explicit 和 RaR-Implicit：前者逐条判断后显式加权，后者把所有 rubrics 和权重交给 judge 综合给分。一个直观 case 是医疗胸痛问答：用户问胸口痛、出汗、恶心是否可能只是胃酸反流并能否在家观察。rubric 会要求必须指出心梗等急症风险、必须建议立即就医或拨打急救电话、可以提胃酸反流但不能误导为最可能结论、必须避免“先吃药观察几小时”，并把“可能只是胃酸反流，先休息观察”作为 Pitfall 严重扣分。",
+        "案例": "医疗问答中，用户问“胸口痛、出汗、恶心，是不是胃酸反流？能不能先在家观察？”普通 Likert reward 可能只让 judge 打 1-10 分，长而温和的回答可能虚高。Rubric reward 会拆成评分细则：Essential 必须指出胸痛伴出汗/恶心可能是心梗等急症信号；Essential 必须建议立即就医或拨打急救电话；Important 可以提到胃酸反流也可能胸痛，但不能把它当作最可能结论；Important 应避免建议先吃药观察；Optional 可提醒不要自行开车；Pitfall 如果回答“可能只是胃酸反流，先休息观察”则严重扣分。这样 Response A 若建议在家观察会踩 pitfall 得低 reward；Response B 若建议急诊并说明先排除危险情况，则得高 reward。",
+        "数据集与实验": "论文主要在 Medicine 和 Science 两类任务上实验，包括 HealthBench-1k 和 GPQA-Diamond。训练使用 Qwen2.5-7B 作为 policy，GRPO 作为 RL 算法，judge 主要使用 gpt-4o-mini。结果显示最佳 RaR 变体相比直接 Likert reward 在 HealthBench 上有显著相对提升，在 GPQA-Diamond 上也有提升；论文还观察到 rubric-guided evaluation 对较小 judge 更有帮助，能降低 judge scale 带来的方差。",
+        "主要贡献": "主要贡献是把 rubrics 从“评估说明书”变成“奖励函数构件”，为非 exact-match、非单元测试的开放领域 RL 提供了一条可操作路径。它适合作为 Prometheus、LLM-as-a-judge、RewardBench 之后的 reward design 文献，也提示后续 agent/RAG/医疗安全 RL 可以用 rubrics 表达过程要求、安全红线和常见错误。"
+      },
+      "status": "approved",
+      "added_at": "2026-06-02",
+      "key_figure": {
+        "type": "Figure",
+        "name": "Rubric reward medical case",
+        "page": 1,
+        "path": "assets/paper_images/rubrics-as-rewards-2507-17746-medical-case.png",
+        "caption": "Rubrics as Rewards replaces a single Likert score with prompt-specific scoring criteria: a judge checks essential, important, optional, and pitfall items, then aggregates those rubric judgments into a scalar reward for GRPO.",
+        "caption_cn": "Rubrics as Rewards 用 prompt-specific 评分细则替代单一 Likert 分：judge 逐项检查 essential、important、optional 和 pitfall 标准，再把这些 rubric 判断聚合成 GRPO 的标量 reward。",
+        "bbox": {},
+        "caption_bbox": {},
+        "source": "manual-summary-from-paper-method-and-medical-case",
+        "confidence": 0.9,
+        "needs_manual_review": false,
+        "contexts": [
+          {
+            "page": 1,
+            "text": "RaR generates prompt-specific rubrics and uses LLM judges to transform rubric-guided evaluations into rewards for GRPO."
+          },
+          {
+            "page": 1,
+            "text": "Rubric criteria can include essential requirements, important considerations, optional improvements, and pitfalls to penalize."
           }
         ]
       }
@@ -10888,6 +11706,1380 @@
       }
     },
     {
+      "id": "synthetic-multimodal-question-generation-2407-02233",
+      "title": "Synthetic Multimodal Question Generation",
+      "paper_url": "https://aclanthology.org/2024.findings-emnlp.759/",
+      "pdf_url": "https://aclanthology.org/2024.findings-emnlp.759.pdf",
+      "authors": [
+        "Ian Wu",
+        "Sravan Jayanthi",
+        "Vijay Viswanathan",
+        "Simon Rosenberg",
+        "Sina Khoshfetrat Pakazad",
+        "Tongshuang Wu",
+        "Graham Neubig"
+      ],
+      "venue": "Findings of EMNLP",
+      "year": 2024,
+      "primary_area": "数据集与基准",
+      "category": "其他",
+      "keywords": [
+        "synthetic multimodal question generation",
+        "multimodal RAG",
+        "MMRAG evaluation",
+        "question generation",
+        "synthetic QA data",
+        "retriever",
+        "LLM",
+        "LMM",
+        "Wikipedia QA",
+        "MMQA",
+        "question style control",
+        "modality control"
+      ],
+      "labels": [
+        "Multimodal QA",
+        "MMRAG",
+        "Synthetic Data",
+        "Question Generation",
+        "Evaluation Benchmark",
+        "EMNLP"
+      ],
+      "code_url": "",
+      "note": "这篇很适合作为合成 QA 数据用于 RAG/MMRAG 评测的现代代表文献。它和早期 Question Generation 论文形成时间线：从文本 QG、QG-for-QA，推进到 LLM/LMM 驱动的多模态、可控、评测导向数据生成。需要注意的是，论文主要验证的是“用于评测”的可靠性，作者也明确说还不能声称 SMMQG 数据适合训练。",
+      "tldr": "SMMQG 用 retriever + LLM + LMM 从多模态文档中自动生成符合指定问题风格和模态要求的问答对，用于构建可控的 MMRAG 评测集，并证明其质量接近众包 MMQA。",
+      "abstract": "Synthetic Multimodal Question Generation proposes SMMQG, a framework for generating question-answer pairs directly from multimodal documents for multimodal retrieval-augmented generation evaluation. The method combines a retriever, an LLM, and an LMM to select grounded sources and produce questions that satisfy user-specified question styles and modality requirements. The authors use SMMQG to build a 1024-question Wikipedia MMRAG dataset, evaluate retrievers and QA models across style and modality slices, and validate the generated data through human evaluation and concurrence with MMQA-based model rankings.",
+      "summary_cn": {
+        "研究动机": "多模态 RAG 需要针对文本、表格、图片等混合来源做问答评测，但现有 benchmark 通常是固定数据集，难以按目标应用定制问题风格和输入模态。作者希望解决 MMRAG 评测数据稀缺且不可控的问题。",
+        "解决问题": "论文要解决的是如何从未配对的多模态文档源中，自动生成高质量、可回答、来源可追溯，并且满足指定 question style 和 modality requirements 的问答样本。",
+        "现象分析": "作者指出，MMRAG 模型表现会强烈依赖问题类型和来源模态。比如同一个模型可能擅长 extractive QA，但在 numerical、compare-contrast 或 multi-hop 上明显变弱；检索器也可能在纯图像检索和跨模态检索上表现截然不同。固定 benchmark 很难揭示这些切片差异。",
+        "主要方法": "SMMQG 分五步：采样 seed source，抽取实体，用实体检索相关候选来源，让 LLM/LMM 从候选中选择问题来源并生成问题和答案，最后验证问题风格、模态匹配、答案正确性和每个来源是否必要。对 multi-hop 问题，作者还设计了先生成两个中间问题、再组合成最终问题的流程。",
+        "数据集与实验": "作者基于 Wikipedia 文档源生成 1024 个 QA 样本，覆盖 information extraction、compare contrast、numerical、compound、multi-hop 五类问题，以及文本、表格、图片及其两两组合。实验评测 BM25、E5、OpenCLIP 等检索器，以及 Vicuna/LLaVA、Qwen/Qwen-VL、Gemini、Claude 3、GPT-4-Turbo 等 QA 模型。人工评估显示 SMMQG 在 fluency、source relevance、answerability、answer correctness 等指标上与 MMQA 相当或更好；与 MMQA 的模型排序 concurrence 在 retrieval 和 QA 上分别达到 0.87 和 0.86。",
+        "主要贡献": "这篇的贡献不是单纯提出一个新 benchmark，而是提出一种可控生成 MMRAG 评测数据的方法。它把 question generation、retrieval、multimodal grounding 和 verification 串成一个可复用框架，使研究者能按问题风格和模态组合定制评测集，并用这些切片发现模型短板。"
+      },
+      "status": "approved",
+      "added_at": "2026-05-31"
+    },
+    {
+      "id": "datamorgana-rag-benchmark-generation-2025-acl-industry",
+      "title": "Generating Q&A Benchmarks for RAG Evaluation in Enterprise Settings",
+      "paper_url": "https://aclanthology.org/2025.acl-industry.33/",
+      "pdf_url": "https://aclanthology.org/2025.acl-industry.33.pdf",
+      "authors": [
+        "Simone Filice",
+        "Guy Horowitz",
+        "David Carmel",
+        "Zohar Karnin",
+        "Liane Lewin-Eytan",
+        "Yoelle Maarek"
+      ],
+      "venue": "ACL Industry Track",
+      "year": 2025,
+      "primary_area": "数据集与基准",
+      "category": "其他",
+      "keywords": [
+        "DataMorgana",
+        "RAG evaluation",
+        "retrieval augmented generation",
+        "enterprise RAG",
+        "synthetic Q&A benchmark",
+        "question generation",
+        "question categorization",
+        "question diversity",
+        "traffic simulation",
+        "LLM-as-a-judge",
+        "Claude 3.5 Sonnet",
+        "LiveRAG Challenge"
+      ],
+      "labels": [
+        "RAG",
+        "Synthetic Data",
+        "Question Generation",
+        "Enterprise RAG",
+        "Benchmark Generation",
+        "DataMorgana",
+        "ACL Industry"
+      ],
+      "code_url": "",
+      "note": "这篇和 SMMQG 很适合放在一起：SMMQG 关注多模态 RAG benchmark 的问题/模态可控生成，DataMorgana 关注企业 RAG 的用户流量与问题类型可控生成。它也和 EnterpriseRAG-Bench 项目相邻：EnterpriseRAG-Bench 更像固定企业场景 benchmark + harness，DataMorgana 更像可配置生成工具。核心限制是论文主要评估 question quality/diversity，明确把 generated answers 的系统性分析留给未来工作。",
+      "tldr": "DataMorgana 用“问题类别/用户类别 + 概率分布”的轻量配置方式，为企业 RAG 场景生成更贴近预期流量的合成 Q&A benchmark；每条样本采样一篇文档和一组类别约束，再由 LLM 一次性输出 question-answer JSON。",
+      "abstract": "DataMorgana is a tool for generating synthetic Q&A benchmarks tailored to retrieval-augmented generation applications in enterprise settings. It lets users specify question types, user characteristics, and their associated distributions through lightweight question categorizations, then uses an LLM to generate question-answer pairs from sampled corpus documents. Experiments on Wikipedia, CORD-19, and two private governmental RAG datasets show that DataMorgana improves lexical, syntactic, and semantic diversity over several generation baselines while maintaining high question quality.",
+      "summary_cn": {
+        "研究动机": "企业 RAG 上线前需要贴近目标业务和用户需求的评测集，但真实 query log 常常没有、不可公开，或受隐私限制。直接让 LLM 从随机文档生成问题，容易得到质量尚可但类型单一、用户意图不真实、覆盖不足的 benchmark。",
+        "解决问题": "论文要解决的是企业 RAG 评测 benchmark 的可控生成问题：怎样让领域专家用低门槛方式指定“用户会问什么类型的问题、不同类型占比多少”，并据此生成多样化 Q&A 数据。目标不是训练一个新生成模型，而是给 RAG 应用构建更符合预期流量的合成测试集。",
+        "现象分析": "作者认为，RAG benchmark 不只要单个问题 fluency、clarity 和 answerability 好，更要覆盖真实流量中的多种问题形态。很多现有方法要么完全交给 LLM 自由生成，要么只提供固定 taxonomy，导致生成问题在语义、句法或用户画像上不够丰富。Vanilla 生成尤其容易产生偏长、细节过多、形式相似的问题。",
+        "主要方法": "DataMorgana 分两阶段。配置阶段，用户定义若干 mutually exclusive 的 question categorizations，例如 factuality、premise、phrasing、linguistic variation、user expertise，并给每个 category 配概率。生成阶段，每次先从语料采样一篇文档，再从每个 categorization 中按概率采样一个 category，最后把文档、用户特征、问题特征和答案要求写进 prompt，让 LLM 一次性返回 {\"question\": ..., \"answer\": ...}。Prompt 要求问题自包含、不能引用“文档本身”、只能由文档回答；答案要贴近文档措辞，只包含文档直接出现或可直接推出的 claims。论文刻意避免构建 KG、重型文档分析、多轮 question evolution 或复杂 post-processing。",
+        "数据集与实验": "实验使用 Wikipedia、CORD-19，以及两个 AI71 提供的政府 RAG 私有数据集 GovExternal 和 GovInternal。基线包括 Vanilla、Know Your RAG 和 DeepEval，统一使用 Claude 3.5 Sonnet v2。质量评估看 fluency、clarity、conciseness、relevance、consistency、answerability；多样性评估看 N-Gram Diversity、Self-Repetition、word compression ratio、PoS compression ratio、embedding homogenization score。结果显示 DataMorgana 在保持接近满分的问题质量下，在句法和语义多样性上整体优于基线，在词汇多样性上优于 Know Your RAG，接近 DeepEval。",
+        "主要贡献": "贡献在于把 enterprise RAG benchmark generation 从“随机文档 + 通用问题生成”推进到“可由领域专家控制的流量模拟”。它的核心不是更复杂的生成器，而是一个可组合、可调分布的 question categorization 配置机制，用低成本换取更高覆盖度和更贴近真实业务流量的问题集。DataMorgana 也已在 AI71 和 SIGIR 2025 LiveRAG Challenge 中部署使用。"
+      },
+      "status": "approved",
+      "added_at": "2026-05-31",
+      "key_figure": {
+        "type": "Figure",
+        "name": "QA generation workflow",
+        "page": 11,
+        "path": "assets/paper_images/datamorgana-rag-benchmark-generation-2025-acl-industry-qa-workflow.png",
+        "caption": "DataMorgana generates each Q&A pair by sampling a document, sampling one category from each configured question categorization, and prompting an LLM to return a self-contained question-answer JSON grounded in the sampled document.",
+        "caption_cn": "DataMorgana 每生成一条 Q&A，先采样一篇文档，再从每个问题分类配置中采样一个类别，并用这些约束提示 LLM 返回由该文档支撑的自包含 question-answer JSON。",
+        "bbox": {},
+        "caption_bbox": {},
+        "source": "manual-summary-from-paper-section-3-and-appendix-figure-4",
+        "confidence": 0.9,
+        "needs_manual_review": false,
+        "contexts": [
+          {
+            "page": 3,
+            "text": "The benchmark is built incrementally one Q&A pair at a time by sampling a document, sampling one category from each categorization according to the configured distribution, and asking the LLM to generate a question based on the sampled document and categories."
+          },
+          {
+            "page": 11,
+            "text": "The QA generation prompt asks for JSON with question and answer, requires the question to be self-contained and answerable solely from the document, and requires the answer to contain only document-supported claims."
+          }
+        ]
+      }
+    },
+    {
+      "id": "diverse-private-synthetic-rag-evaluation-2508-18929",
+      "title": "Diverse and Private Synthetic Datasets Generation for RAG Evaluation: A Multi-agent Framework",
+      "paper_url": "https://arxiv.org/abs/2508.18929",
+      "pdf_url": "https://arxiv.org/pdf/2508.18929",
+      "authors": [
+        "Ilias Driouich",
+        "Hongliu Cao",
+        "Eoin Thomas"
+      ],
+      "venue": "ECAI TRUST AI Workshop",
+      "year": 2025,
+      "primary_area": "数据集与基准",
+      "category": "其他",
+      "keywords": [
+        "RAG evaluation",
+        "synthetic QA generation",
+        "privacy-preserving evaluation",
+        "semantic diversity",
+        "multi-agent framework",
+        "PII masking",
+        "PHI masking",
+        "PWI masking",
+        "k-means clustering",
+        "EU AI Act",
+        "AI4Privacy",
+        "LangGraph"
+      ],
+      "labels": [
+        "RAG",
+        "Evaluation",
+        "Synthetic Data",
+        "Privacy",
+        "Multi-Agent",
+        "PII Masking",
+        "LangGraph",
+        "ECAI"
+      ],
+      "code_url": "",
+      "note": "这篇的核心价值在“评估数据工程”，不是模型或指标本身。比较实用的启发是：做企业 RAG benchmark 时，不应该只从文档随机抽 chunks 生成 QA，而要先保证主题覆盖，再做隐私消毒，最后再生成 QA。缺点是实验仍偏 pipeline proof-of-concept：没有强力证明生成的 QA 对最终 RAG 排序/诊断能力更好，也缺少对 privacy attack resilience 的系统评估，作者自己也把这一点列为未来工作。",
+      "tldr": "这篇论文提出一个用于 RAG 评估集生成的多智能体框架：先用聚类挑选语义多样的文档片段，再用隐私智能体识别并伪匿名化 PII/PHI/PWI，最后生成可作为 RAG ground truth 的合成 QA 对，目标是在评估数据层面同时提高覆盖度和隐私合规性。",
+      "abstract": "Retrieval-augmented generation (RAG) systems improve large language model outputs by incorporating external knowledge, enabling more informed and context-aware responses. However, the effectiveness and trustworthiness of these systems critically depends on how they are evaluated, particularly on whether the evaluation process captures real-world constraints like protecting sensitive information. While current evaluation efforts for RAG systems have primarily focused on the development of performance metrics, far less attention has been given to the design and quality of the underlying evaluation datasets, despite their pivotal role in enabling meaningful, reliable assessments. In this work, we introduce a novel multi-agent framework for generating synthetic QA datasets for RAG evaluation that prioritize semantic diversity and privacy preservation. Our approach involves: (1) a Diversity agent leveraging clustering techniques to maximize topical coverage and semantic variability, (2) a Privacy Agent that detects and mask sensitive information across multiple domains and (3) a QA curation agent that synthesizes private and diverse QA pairs suitable as ground truth for RAG evaluation. Extensive experiments demonstrate that our evaluation sets outperform baseline methods in diversity and achieve robust privacy masking on domain-specific datasets. This work offers a practical and ethically aligned pathway toward safer, more comprehensive RAG system evaluation, laying the foundation for future enhancements aligned with evolving AI regulations and compliance standards.",
+      "summary_cn": {
+        "研究动机": "RAG 评估研究通常更关注指标，比如 faithfulness、answer correctness、LLM-as-a-judge，而对“评估集本身是否足够多样、是否泄露敏感信息”关注不足。企业、医疗、金融等真实 RAG 场景经常依赖私有语料，直接用真实文档生成评测题可能带来隐私泄露风险。",
+        "解决问题": "论文要解决的是如何为 RAG 系统生成既有语义覆盖度、又经过隐私保护的合成 QA evaluation dataset。换言之，它不是提出新的 RAG 评分指标，而是改进 RAG 评估数据的构造流程。",
+        "现象分析": "直接 prompt LLM 从文档生成 QA 容易产生主题重复、覆盖不均、问题结构单一的问题；而直接用真实文档做评估又可能暴露姓名、联系方式、医疗诊断、薪资、公司等敏感实体。作者认为 RAG evaluation dataset 应该同时满足 diversity、privacy、utility 三个约束。",
+        "主要方法": "框架包含三个 agent。Diversity Agent 先将输入文档切成 256-token chunks，用 text-embedding-3-small 生成 1536 维 embedding，再用 k-means 聚类，并按簇选择代表样本以扩大主题覆盖。Privacy Agent 对代表样本检测 PII，并用上下文感知方式伪匿名化，同时产出隐私报告。QA Curation Agent 再基于隐私处理后的文本生成 QA pairs，并记录生成成功率、失败情况和数据集特征。整体用 LangGraph 编排，Diversity 和 QA agent 用 GPT-4o，Privacy agent 用 GPT-4.1，温度设为 0。",
+        "数据集与实验": "多样性实验使用 EU AI Act 官方文本作为输入，对比 RagasGen 和 Direct Prompting。评估包括 GPT-4.1 LLM-as-a-judge 的 1-10 分多样性评分，以及 CosineSimilarity-to-Diversity。100 个 QA 样本时，作者方法的多样性评分为 9.0，高于 RagasGen 的 8.1 和 Direct Prompting 的 7.6；CosineSim-to-Diversity 为 -0.15，也优于两个 baseline 的 -0.33。隐私实验使用 AI4Privacy 的 PII-Masking-200K、PWI-Masking-200K、PHI-Masking-200K，并把样本拼成长段文本模拟真实输入。Privacy Agent 在多数实体类型上达到约 0.75-0.90 的准确率，例如 PWI 的 JOBTYPE 0.94、PHI 的 DISABILITYSTATUS 0.91、PII 的 LASTNAME 0.91。",
+        "主要贡献": "论文贡献是把 RAG 评估数据生成拆成“多样性选择 -> 隐私处理 -> QA 生成”的模块化 pipeline，并用实验证明它比直接提示和 RagasGen 更能产生多样问题，同时能对多类敏感实体做较稳健的 masking。它适合补在 RAG evaluation 这组文献里，和 RAGAs/ARES/RGB/RAGTruth/RAGChecker 形成互补：这些论文多在评估指标或诊断维度上发力，而这篇强调 evaluation dataset 的生成质量和隐私合规。"
+      },
+      "status": "approved",
+      "added_at": "2026-05-31",
+      "key_figure": {
+        "type": "Figure",
+        "name": "1",
+        "page": 6,
+        "path": "assets/paper_images/diverse-private-synthetic-rag-evaluation-2508-18929-figure-1.png",
+        "caption": "Figure 1: Privacy agent accuracy per entity type across the PHI, PWI, and PII datasets.",
+        "caption_cn": "图 1：Privacy Agent 在 PHI、PWI 和 PII 三类隐私数据集上按实体标签划分的识别/伪匿名化准确率热力图。",
+        "bbox": {
+          "x1": 114.96,
+          "x2": 477.12,
+          "y1": 87.84,
+          "y2": 270.96
+        },
+        "caption_bbox": {
+          "x1": 72.0,
+          "x2": 430.0130920410156,
+          "y1": 282.8071594238281,
+          "y2": 289.2330322265625
+        },
+        "source": "pdffigures2-local-jar",
+        "confidence": 0.95,
+        "needs_manual_review": false,
+        "contexts": [
+          {
+            "page": 6,
+            "text": "Experimental results In Figure 1 we present label-wise accuracy across the PHI, PWI, and PII datasets The privacy agent shows strong overall performance, with most labels achieving accuracies between 0.75 and 0.90. On the PHI dataset, the highest scores are observed for DISABILITYSTATUS (0.91), HOSPITALNAME (0.90), and MENTALHEALTHINFO (0.90), indicating robust handling of sensitive medical information. On the PWI dataset, the model performs best o"
+          },
+          {
+            "page": 7,
+            "text": "Figure 1: Privacy agent accuracy per entity type across the PHI, PWI, and PII datasets. 5. Conc"
+          }
+        ]
+      }
+    },
+    {
+      "id": "selfcheckgpt-2303-08896",
+      "title": "SelfCheckGPT: Zero-Resource Black-Box Hallucination Detection for Generative Large Language Models",
+      "paper_url": "https://aclanthology.org/2023.emnlp-main.557/",
+      "pdf_url": "https://aclanthology.org/2023.emnlp-main.557.pdf",
+      "authors": [
+        "Potsawee Manakul",
+        "Adian Liusie",
+        "Mark Gales"
+      ],
+      "venue": "EMNLP",
+      "year": 2023,
+      "primary_area": "对齐/安全/公平性/隐私",
+      "category": "红队与评估",
+      "keywords": [
+        "SelfCheckGPT",
+        "zero-resource hallucination detection",
+        "black-box LLM",
+        "sampling consistency",
+        "self-consistency",
+        "hallucination detection",
+        "factuality assessment",
+        "WikiBio",
+        "sentence-level factuality",
+        "passage factuality",
+        "NLI",
+        "BERTScore",
+        "MQAG"
+      ],
+      "labels": [
+        "Hallucination Detection",
+        "Factuality",
+        "Black-box LLM",
+        "Self-consistency",
+        "Evaluation",
+        "EMNLP"
+      ],
+      "code_url": "https://github.com/potsawee/selfcheckgpt",
+      "note": "这个想法值得继续研究：它本质上是在用同一 prompt 下的多次随机采样，间接探测黑盒模型输出分布里的不确定性和事实稳定性。直觉上，如果模型对某个事实的条件分布很集中，多次采样会一致；如果事实是幻觉或模型知识不稳定，采样会发散或互相矛盾。这个角度可能和概率分布、entropy、epistemic uncertainty、mode collapse / mode spread 都有关系。RAG 场景中它适合作为补充信号，但不能替代基于外部证据的 grounding / faithfulness 检查，因为它检测的是模型自身采样是否一致，不是事实是否真实。",
+      "tldr": "SelfCheckGPT 是一个无需外部知识库、无需模型 logprob 的黑盒幻觉检测方法：对同一个 prompt 多次采样回答，如果原回答中的事实是模型稳定知道的，其他采样通常会一致；如果是幻觉，其他采样更容易分歧或矛盾。",
+      "abstract": "SelfCheckGPT proposes a sampling-based hallucination detection method for black-box generative LLMs. Instead of relying on external databases or token-level output probabilities, it generates multiple stochastic responses for the same prompt and measures whether sentences in the main response are consistent with the sampled responses. The paper evaluates this idea on GPT-3 generated WikiBio passages with manual factuality annotations, showing that SelfCheckGPT can detect factual and non-factual sentences and rank passages by factuality, with strong sentence-level AUC-PR and passage-level correlation compared with several baselines.",
+      "summary_cn": {
+        "研究动机": "LLM 可以生成非常流畅的文本，但经常夹带事实错误。已有事实检查方法通常依赖外部数据库、检索系统，或依赖 token-level probability / logprob；这些对 ChatGPT 这类黑盒 API 往往不可用。作者希望找到一种只需要多次调用模型、无需额外资源的幻觉检测方法。",
+        "解决问题": "论文要解决的是 zero-resource black-box hallucination detection：只允许调用生成模型采样，不访问模型内部概率，也不接入外部知识库，如何判断生成文本中的句子是否可能不真实。它同时关注 sentence-level factuality detection 和 passage-level factuality ranking。",
+        "现象分析": "核心观察是自一致性。若模型对某个实体或事件有稳定知识，多次采样的回答会在关键事实上相互支持；若某句话是编造出来的，其他采样往往会给出不同生日、职业、机构、事件细节，甚至直接矛盾。因此，采样间的一致性可以被看作黑盒条件输出分布稳定性的外部观测。",
+        "主要方法": "SelfCheckGPT 先让同一个 LLM 对同一 prompt 生成主回答和若干 sampled passages。然后把主回答切成句子，对每个句子与 sampled passages 做一致性比较，得到 sentence-level hallucination score。论文和代码实现了多种比较方式：BERTScore、MQAG / Question Answering、n-gram、NLI，以及 LLM prompting。其中 NLI 版本用 contradiction probability 作为非事实分数，GitHub README 也把 NLI 标为推荐用法。",
+        "数据集与实验": "作者用 GPT-3 针对 WikiBio 中的人物生成 passages，并人工标注生成句子的 factuality。实验评估 sentence-level non-factual detection 和 passage-level factuality ranking。ACL 摘要说明，SelfCheckGPT 在 sentence hallucination detection 上的 AUC-PR 明显高于若干 baseline，并在 passage-level factuality assessment 上取得更高相关性。官方代码提供 selfcheckgpt 包，包含 BERTScore、MQAG、n-gram 和 NLI 等实现。",
+        "主要贡献": "这篇的贡献是把“自采样一致性”明确做成黑盒幻觉检测框架。它非常适合没有检索证据、没有 logprob、只有 API 调用权限的场景，也为后续很多 self-consistency / sampling-based factuality 检测方法提供了基础范式。它也提示了一个更深的问题：事实可靠性可能可以通过输出分布的局部稳定性来近似观测。"
+      },
+      "status": "approved",
+      "added_at": "2026-05-31",
+      "key_figure": {
+        "type": "Figure",
+        "name": "Self-consistency workflow",
+        "page": 1,
+        "path": "assets/paper_images/selfcheckgpt-2303-08896-self-consistency.png",
+        "caption": "SelfCheckGPT estimates hallucination by comparing each sentence in a main response with multiple stochastic sampled responses from the same black-box LLM; stable facts tend to be consistent, while hallucinated facts tend to diverge or contradict.",
+        "caption_cn": "SelfCheckGPT 通过把主回答中的每个句子与同一黑盒 LLM 的多次随机采样回答比较来估计幻觉：稳定事实通常跨采样一致，而幻觉事实更容易发散或矛盾。",
+        "bbox": {},
+        "caption_bbox": {},
+        "source": "manual-summary-from-paper-figure-1-and-method",
+        "confidence": 0.9,
+        "needs_manual_review": false,
+        "contexts": [
+          {
+            "page": 1,
+            "text": "SelfCheckGPT leverages the idea that if an LLM has knowledge of a concept, sampled responses are likely to be similar and contain consistent facts, while hallucinated facts are likely to diverge and contradict one another."
+          },
+          {
+            "page": 3,
+            "text": "The method compares sentences from the generated passage against stochastically sampled passages using variants such as BERTScore, question answering, n-gram, NLI, and LLM prompting."
+          }
+        ]
+      }
+    },
+    {
+      "id": "factscore-2305-14251",
+      "title": "FActScore: Fine-grained Atomic Evaluation of Factual Precision in Long Form Text Generation",
+      "paper_url": "https://aclanthology.org/2023.emnlp-main.741/",
+      "pdf_url": "https://aclanthology.org/2023.emnlp-main.741.pdf",
+      "authors": [
+        "Sewon Min",
+        "Kalpesh Krishna",
+        "Xinxi Lyu",
+        "Mike Lewis",
+        "Wen-tau Yih",
+        "Pang Wei Koh",
+        "Mohit Iyyer",
+        "Luke Zettlemoyer",
+        "Hannaneh Hajishirzi"
+      ],
+      "venue": "EMNLP",
+      "year": 2023,
+      "primary_area": "应用：CV/音频/语言等",
+      "category": "自然语言处理",
+      "keywords": [
+        "FActScore",
+        "factual precision",
+        "atomic facts",
+        "long-form text generation",
+        "hallucination evaluation",
+        "factuality evaluation",
+        "biography generation",
+        "Wikipedia grounding",
+        "retrieval-based evaluation",
+        "atomic fact validation",
+        "ChatGPT",
+        "PerplexityAI"
+      ],
+      "labels": [
+        "Factuality",
+        "Long-form Generation",
+        "Hallucination Evaluation",
+        "Atomic Facts",
+        "Evaluation Metric",
+        "EMNLP"
+      ],
+      "code_url": "https://github.com/shmsw25/factscore",
+      "note": "FActScore 已在 projects.json 里作为工具记录过；作为论文条目，重点是 atomic fact evaluation 这个方法贡献。它避免了把一整段长回答粗暴判成对/错，而是允许一段话里有的事实正确、有的事实错误。需要注意的是，它衡量 factual precision，不衡量 factual recall；模型少说但都说对，也可能得高分。因此使用时最好同时看 respond ratio、num facts per response 或覆盖度指标。",
+      "tldr": "FActScore 把长文本生成拆成一组 atomic facts，再逐个检查这些事实是否被可靠知识源支持，最后用 supported atomic facts 占比衡量 factual precision；它解决的是长文本里“有的事实对、有的事实错”时，不能只用整段二分类评价的问题。",
+      "abstract": "FActScore proposes a fine-grained factuality evaluation protocol for long-form text generation. It decomposes generated text into atomic facts, verifies each atomic fact against a reliable knowledge source, and reports factual precision as the fraction of supported atomic facts. The paper studies biography generation from several language models, shows that fluent long-form generations still contain many factual errors, and develops an automatic estimator that approximates human FActScore at much lower cost.",
+      "summary_cn": {
+        "研究动机": "长文本生成的事实性评估很难，因为一段回答通常混合了正确事实和错误事实。传统整段正确/错误标签太粗，人工逐条核查又昂贵，无法支撑大规模模型比较。作者希望把事实性评估拆到更细的可验证事实单位。",
+        "解决问题": "论文提出 FActScore，用来评估 long-form generation 的 factual precision。它关注的是模型说出来的事实里有多少被可靠知识源支持，而不是模型是否覆盖了所有应说事实。因此它更像事实精度指标，而不是完整性或召回指标。",
+        "现象分析": "作者指出，长文本事实错误往往不是整段全错，而是局部事实出错。比如人物传记里，职业、出生日期、获奖、机构、亲属关系可能部分正确、部分幻觉。把一整段判为对/错会丢掉大量细粒度信息，也无法定位具体哪些事实需要修正。",
+        "主要方法": "FActScore 先把生成文本分解成 atomic facts，每个 atomic fact 只表达一个可验证事实；然后基于可靠知识源检索证据，并判断该 atomic fact 是否被支持。最终分数是 supported atomic facts / total atomic facts。论文还提出自动估计器：用 retrieval + 强 LM 验证 atomic facts，将人工评估成本降下来。工具实现默认面向 Wikipedia 知识源，也支持自定义知识源。",
+        "数据集与实验": "论文对 InstructGPT、ChatGPT、PerplexityAI 等模型生成的人物传记做人工 FActScore 评估，并报告 ChatGPT 的 factual precision 只有 58%，说明流畅长文本仍包含大量事实错误。随后用自动评估器评估 13 个近期 LM 的 6,500 个生成结果；若人工评估，成本约 26K 美元。自动估计器相对人工 FActScore 的误差低于 2%。",
+        "主要贡献": "贡献是把 factuality evaluation 明确推到 atomic fact 粒度，并把 long-form generation 的事实性定义为 factual precision。它为后续 claim-level / atomic-fact-level 评估方法提供了基础范式，也和 RAGChecker、RAGTruth、SelfCheckGPT 形成互补：FActScore 看最终文本事实精度，RAGChecker 更关注 RAG 检索/生成归因，SelfCheckGPT 关注黑盒自一致性。"
+      },
+      "status": "approved",
+      "added_at": "2026-05-31",
+      "key_figure": {
+        "type": "Figure",
+        "name": "Atomic fact workflow",
+        "page": 1,
+        "path": "assets/paper_images/factscore-2305-14251-atomic-facts.png",
+        "caption": "FActScore decomposes long-form generation into atomic facts, checks whether each atomic fact is supported by a reliable knowledge source, and reports factual precision as the fraction of supported atomic facts.",
+        "caption_cn": "FActScore 将长文本生成拆成 atomic facts，逐个检查每个事实是否被可靠知识源支持，并用受支持事实占全部 atomic facts 的比例衡量 factual precision。",
+        "bbox": {},
+        "caption_bbox": {},
+        "source": "manual-summary-from-paper-method",
+        "confidence": 0.9,
+        "needs_manual_review": false,
+        "contexts": [
+          {
+            "page": 1,
+            "text": "FActScore breaks a generation into atomic facts and computes the percentage of atomic facts supported by a reliable knowledge source."
+          },
+          {
+            "page": 2,
+            "text": "The metric focuses on factual precision for long-form generation and evaluates whether each atomic fact is supported, rather than assigning one coarse factuality label to an entire passage."
+          }
+        ]
+      }
+    },
+    {
+      "id": "answer-equivalence-bem-2202-07654",
+      "title": "Tomayto, Tomahto. Beyond Token-level Answer Equivalence for Question Answering Evaluation",
+      "paper_url": "https://arxiv.org/abs/2202.07654",
+      "pdf_url": "https://aclanthology.org/2022.emnlp-main.20.pdf",
+      "authors": [
+        "Jannis Bulian",
+        "Christian Buck",
+        "Wojciech Gajewski",
+        "Benjamin Börschinger",
+        "Tal Schuster"
+      ],
+      "venue": "EMNLP",
+      "year": 2022,
+      "primary_area": "应用：CV/音频/语言等",
+      "category": "自然语言处理",
+      "keywords": [
+        "answer equivalence",
+        "BEM",
+        "BERT Matching",
+        "question answering evaluation",
+        "token F1",
+        "exact match",
+        "semantic equivalence",
+        "asymmetric equivalence",
+        "SQuAD",
+        "human judgments",
+        "minimal accurate prediction sets"
+      ],
+      "labels": [
+        "Question Answering",
+        "Evaluation Metric",
+        "Answer Equivalence",
+        "BERT Matching",
+        "SQuAD",
+        "EMNLP"
+      ],
+      "code_url": "https://github.com/google-research-datasets/answer-equivalence-dataset",
+      "note": "这篇和 FActScore、RAGChecker、DataMorgana 有间接关系：它不是 RAG 论文，但它处理的是“答案是否等价/可接受”的底层评估问题。对于 RAG 评测，尤其是自动生成 benchmark 后比较模型答案和 gold answer 时，单纯 exact match / token F1 明显不够。BEM 这类 answer equivalence metric 可以作为短答案 answer correctness 的组件，但它主要面向短答案 QA；长答案、开放式答案或带解释的 RAG 输出仍需要 claim-level 或 LLM judge。",
+      "tldr": "这篇指出 QA 评估里常用的 EM / token F1 会低估模型，因为很多正确答案和参考答案词面不同但语义等价，甚至比参考答案更完整；作者定义非对称 Answer Equivalence，并训练 BERT Matching 模型 BEM 来替代 token-level F1 判断答案等价性。",
+      "abstract": "Question answering systems are typically evaluated against finite sets of manually annotated answers using exact match or token-level F1. This paper analyzes the shortcomings of token-level answer equivalence, defines an asymmetric Answer Equivalence task that accepts answers equivalent to or improving over the reference, releases over 23K human judgments on SQuAD model predictions, and trains a BERT Matching model (BEM) that better approximates human answer-equivalence judgments than token-overlap metrics.",
+      "summary_cn": {
+        "研究动机": "抽取式/短答案 QA 通常用 Exact Match 和 token-level F1 评估，但答案正确性并不等于 token 重叠。有限参考答案集覆盖不全，会把很多语义正确、表达不同、或更具体的候选答案错判为错误。因此需要比字符串匹配更接近人类判断的答案等价性指标。",
+        "解决问题": "论文要解决的是 QA evaluation 中的 answer equivalence 判断：给定问题、上下文、参考答案和候选答案，如何判断候选答案是否等价于参考答案，或是否比参考答案更好，而不是只看字符串或 token overlap。",
+        "现象分析": "作者系统分析了 token F1 的几个问题：它给人一种“分数渐进代表语义渐进”的错觉；它忽略问题本身，例如同样的两个 span 在不同问题下可能等价性不同；它也不能处理非对称情况，例如候选答案比参考答案更具体时，应当接受，但反过来未必成立。",
+        "主要方法": "作者定义 Answer Equivalence（AE）为一个非对称判断任务：candidate answer 如果与 reference answer 等价，或比 reference 更完整/更准确，就应被接受。然后基于 SQuAD 构造 AE 数据集，对来自 ALBERT、BiDAF、XLNet、LUKE 等模型的候选答案做人类标注。最后训练 BERT Matching（BEM）模型，用 question、reference answer、candidate answer，必要时加 context，预测 AE 标签。",
+        "数据集与实验": "公开数据包含 17,655 个 AE examples 和 23,260 个 ratings；其中 train 有 9,090 条，dev 2,734 条，test 5,831 条。按系统来源看，BiDAF、XLNet、LUKE dev predictions 共 8,565 个 AE examples / 14,170 个 ratings。实验显示 BEM 在 AE 判断上显著优于 EM、F1、BERTScore、BLEURT、LERC 等指标，并能更真实地反映 QA 系统性能。论文还展示了在 minimal accurate prediction sets 中，AE/BEM 可把所需答案数量减少最多 2.6 倍。",
+        "主要贡献": "贡献是把 QA 里的答案等价性从 token-level metric 推进到语义判断任务，并明确提出非对称 answer equivalence。它不仅给出数据集和 BEM 模型，也指出 QA evaluation 必须依赖 question/context，而不是只比较两个答案字符串。这个思想可以作为 RAG 短答案评估中的 answer correctness 基础组件。"
+      },
+      "status": "approved",
+      "added_at": "2026-05-31",
+      "key_figure": {
+        "type": "Figure",
+        "name": "BEM workflow",
+        "page": 1,
+        "path": "assets/paper_images/answer-equivalence-bem-2202-07654-workflow.png",
+        "caption": "BEM approximates human answer-equivalence judgments by taking the question, reference answer, candidate answer, and optionally context, then predicting whether the candidate is equivalent to or improves over the reference.",
+        "caption_cn": "BEM 使用问题、参考答案、候选答案以及可选上下文来近似人类 answer-equivalence 判断，预测候选答案是否与参考答案等价，或是否比参考答案更完整。",
+        "bbox": {},
+        "caption_bbox": {},
+        "source": "manual-summary-from-paper-method",
+        "confidence": 0.9,
+        "needs_manual_review": false,
+        "contexts": [
+          {
+            "page": 1,
+            "text": "The paper defines the asymmetric notion of answer equivalence, accepting answers that are equivalent to or improve over the reference."
+          },
+          {
+            "page": 1,
+            "text": "The authors learn a BERT Matching measure, BEM, to approximate human answer-equivalence judgments and better reflect QA system performance than token-level F1."
+          }
+        ]
+      }
+    },
+    {
+      "id": "judging-llm-as-a-judge-2306-05685",
+      "title": "Judging LLM-as-a-Judge with MT-Bench and Chatbot Arena",
+      "paper_url": "https://arxiv.org/abs/2306.05685",
+      "pdf_url": "https://arxiv.org/pdf/2306.05685",
+      "authors": [
+        "Lianmin Zheng",
+        "Wei-Lin Chiang",
+        "Ying Sheng",
+        "Siyuan Zhuang",
+        "Zhanghao Wu",
+        "Yonghao Zhuang",
+        "Zi Lin",
+        "Zhuohan Li",
+        "Dacheng Li",
+        "Eric P. Xing",
+        "Hao Zhang",
+        "Joseph E. Gonzalez",
+        "Ion Stoica"
+      ],
+      "venue": "NeurIPS Datasets and Benchmarks",
+      "year": 2023,
+      "primary_area": "数据集与基准",
+      "category": "其他",
+      "keywords": [
+        "LLM evaluation",
+        "chatbot evaluation",
+        "LLM-as-a-judge",
+        "MT-Bench",
+        "Chatbot Arena",
+        "human preference",
+        "pairwise comparison",
+        "position bias",
+        "verbosity bias",
+        "self-enhancement bias",
+        "Elo rating",
+        "Vicuna",
+        "FastChat"
+      ],
+      "labels": [
+        "LLM-as-a-Judge",
+        "MT-Bench",
+        "Chatbot Arena",
+        "Evaluation",
+        "Human Preference",
+        "Benchmark",
+        "GPT-4 Judge",
+        "NeurIPS"
+      ],
+      "code_url": "https://github.com/lm-sys/FastChat/tree/main/fastchat/llm_judge",
+      "note": "这是 LLM 评估方向的基础论文，适合放在 RAGAs/ARES 之前作为“LLM judge 为什么可用、哪里不可靠”的源头文献。它的关键价值不是 MT-Bench 题量大，而是把自动 judge、人类偏好、偏差分析和开放式聊天评测放进同一个实验框架。缺点也很明确：GPT-4 judge 的可靠性依赖被评任务类型，开放式偏好不能等同于事实正确性，且 MT-Bench 后来逐渐被模型训练和调参污染。",
+      "tldr": "这篇论文系统验证了用强 LLM 充当 judge 来评估聊天模型的可行性，提出 MT-Bench 和 Chatbot Arena，显示 GPT-4 judge 与人类偏好的一致性可达到 80% 以上，同时指出位置偏差、冗长偏差、自我增强偏差和推理能力不足等风险。",
+      "abstract": "This paper studies whether strong large language models can act as judges for evaluating open-ended chat assistants. It introduces MT-Bench, a multi-turn question set, and Chatbot Arena, a crowdsourced pairwise comparison platform, then compares LLM judge decisions with controlled expert votes and broader human preferences. The study finds that GPT-4 judge can reach human-level agreement on many preference comparisons, while also documenting important failure modes such as position bias, verbosity bias, self-enhancement bias, and limited reasoning ability.",
+      "summary_cn": {
+        "研究动机": "传统 NLP benchmark 多评估知识、推理或固定答案任务，很难反映开放式聊天助手是否真正符合人类偏好。人工评测质量高但成本大、扩展慢，因此需要一种可扩展、可解释、接近人类偏好的评估方式。",
+        "解决问题": "论文要解决的是 LLM-based chat assistant 的开放式评估问题：能否用强模型如 GPT-4 作为自动 judge，稳定地比较不同助手回答，并用它近似昂贵的人类偏好标注。",
+        "现象分析": "作者指出 LLM judge 并不是无偏裁判。它可能偏向某个展示位置，偏爱更长答案，对自己生成的答案有自我增强偏差，也会在数学、推理等高难任务上判断失误。因此 LLM-as-a-judge 需要配合位置交换、多轮评分、成对比较和偏差分析使用。",
+        "主要方法": "论文提出两套评估资源。MT-Bench 是包含 80 个多轮开放问题的测试集，覆盖写作、角色扮演、推理、数学、代码、知识、STEM、人文社科等类别，用 GPT-4 judge 给模型回答打分。Chatbot Arena 则是众包匿名对战平台，让用户在两个模型回答之间投票，并用 Elo 方式汇总模型偏好排名。",
+        "数据集与实验": "论文公开 80 个 MT-Bench 问题、约 3K expert votes，以及约 30K 条带人类偏好的 Chatbot Arena conversations。实验比较 GPT-4 judge、Claude、GPT-3.5 等 judge 与人类偏好的相关性，结果显示 GPT-4 judge 在受控和众包偏好上都能达到与人类间一致性相近的水平，超过 80% agreement。论文还用多个 LLaMA/Vicuna 变体说明 MT-Bench 与传统 benchmark 互补。",
+        "主要贡献": "这篇论文基本奠定了现代 LLM-as-a-judge 评估范式：用强模型作为可扩展评审器，用 MT-Bench 做多轮自动评测，用 Chatbot Arena 收集真实人类偏好。它同时强调 judge bias 不能忽略，因此后续 RAGAs、ARES、RewardBench、Arena-Hard、各种 judge bias 论文都可以视为对这条路线的扩展或修正。"
+      },
+      "status": "approved",
+      "added_at": "2026-05-31",
+      "key_figure": {
+        "type": "Figure",
+        "name": "6",
+        "page": 13,
+        "path": "assets/paper_images/judging-llm-as-a-judge-2306-05685-figure-6.png",
+        "caption": "Figure 6: The default prompt for single answer grading.",
+        "caption_cn": "图 6：单答案评分的默认提示模板，要求 LLM judge 从有用性、相关性、准确性、深度、创造性和细节程度等维度评价回答，并输出 1 到 10 分。",
+        "bbox": {
+          "x1": 108.0,
+          "x2": 504.0,
+          "y1": 379.91999999999996,
+          "y2": 521.04
+        },
+        "caption_bbox": {
+          "x1": 194.65899658203125,
+          "x2": 417.3429260253906,
+          "y1": 530.2085571289062,
+          "y2": 536.2109985351562
+        },
+        "source": "pdffigures2-local-jar",
+        "confidence": 0.95,
+        "needs_manual_review": false,
+        "contexts": [
+          {
+            "page": 4,
+            "text": "The prompt used for this scenario is in Figure 6 (Appendix). • Reference-guided grading. In certain cases, it may be beneficial to provide a reference solution if applicable. An example prompt we use for grading math problems is in Figure 8 (Appendix). These methods have different pros and cons. For example, the pairwise comparison may lack scalability when the number of players increases, given that the number of possible pairs grows"
+          },
+          {
+            "page": 9,
+            "text": "We ask GPT-4 to give a score for each turn on a scale of 10 by using our prompt templates (Figure 6, Figure 10) and report an average score of 160 = 80 × 2 turns. Table 8 shows the results. We find that fine-tuning on high-quality dialog datasets (i.e., ShareGPT) can consistently improve the model performance on MMLU and the improvement scales with fine-tuning data size. On the other hand, a small high-quality conversation dataset can quickly teach the model a style preferred by GPT-4"
+          },
+          {
+            "page": 14,
+            "text": "After providing yourexplanation, please rate the response on a scale of 1 to 10 by strictly following this format: \"[[rating]]\", for example: \"Rating: [[5]]\".[Question]{question}[The Start of Assistant’s Answer]{answer}[The End of Assistant’s Answer] Figure 6: The default prompt for single answer grading. 3https://github.com/lm-sys/FastChat/tree/main/fastchat/llm_judge 14"
+          }
+        ]
+      }
+    },
+    {
+      "id": "prometheus-evaluator-lm-2310-08491",
+      "title": "Prometheus: Inducing Fine-Grained Evaluation Capability in Language Models",
+      "paper_url": "https://arxiv.org/abs/2310.08491",
+      "pdf_url": "https://arxiv.org/pdf/2310.08491",
+      "authors": [
+        "Seungone Kim",
+        "Jamin Shin",
+        "Yejin Cho",
+        "Joel Jang",
+        "Shayne Longpre",
+        "Hwaran Lee",
+        "Sangdoo Yun",
+        "Seongjin Shin",
+        "Sungdong Kim",
+        "James Thorne",
+        "Minjoon Seo"
+      ],
+      "venue": "ICLR",
+      "year": 2024,
+      "primary_area": "对齐/安全/公平性/隐私",
+      "category": "红队与评估",
+      "keywords": [
+        "Prometheus",
+        "LLM-as-a-judge",
+        "evaluator LM",
+        "fine-grained evaluation",
+        "rubric-conditioned evaluation",
+        "customized score rubric",
+        "reference answer",
+        "language feedback",
+        "Feedback Collection",
+        "GPT-4 evaluator",
+        "human correlation",
+        "MT Bench",
+        "Vicuna Bench",
+        "Flask Eval",
+        "reward model"
+      ],
+      "labels": [
+        "LLM-as-a-Judge",
+        "Evaluator LM",
+        "Fine-Grained Evaluation",
+        "Rubric Evaluation",
+        "Feedback Generation",
+        "Open-source Evaluator",
+        "ICLR"
+      ],
+      "code_url": "https://github.com/prometheus-eval/prometheus",
+      "note": "这篇的重点不是发明 rubrics。Rubric 本来就是教育评估、人类标注和 LLM-as-a-judge prompt 中常见的评价形式。Prometheus 的贡献是把 rubric 作为 evaluator LM 的显式输入，并把“按自定义 rubric 评价回答”规模化成 Feedback Collection 训练数据，从而训练出一个开源、可复现、能按 rubric 打分和写反馈的 evaluator LM。对 RAG evaluation 来说，它更像可插拔 judge backbone：生成评测集后，可以用 rubric + reference answer 让 Prometheus 做自动判分。但 judge 偏差、rubric 质量和 reference answer 质量仍然会限制结果。",
+      "tldr": "Prometheus 不是提出 rubric 的论文，而是把 rubric-conditioned evaluation 规模化成训练数据：用 instruction、response、reference answer 和 score rubric 作为输入，训练开源 evaluator LM 输出细粒度 feedback 和 1-5 分数，在自定义评价标准下接近 GPT-4。",
+      "abstract": "Prometheus is an open-source evaluator language model trained to evaluate long-form responses under user-provided score rubrics and reference materials. The paper constructs Feedback Collection, containing 1K fine-grained score rubrics, 20K instructions, 100K responses, and GPT-4-generated language feedback and scores. A 13B evaluator LM trained on this data can produce rubric-specific feedback and 1-5 scores, achieving human correlation comparable to GPT-4 and substantially outperforming ChatGPT under customized evaluation criteria.",
+      "summary_cn": {
+        "研究动机": "GPT-4 已经成为长文本回答评估的事实标准，但闭源、版本不可控、成本高、复现实验困难。对于大规模评测或自定义标准，例如 child-readability、conciseness、formality，用 GPT-4 做 evaluator 不够稳定也不够便宜。作者希望训练一个开源 evaluator LM，降低对闭源 judge 的依赖。",
+        "解决问题": "论文要解决的是如何训练一个开源模型，使它能在用户给定 score rubric 和 reference answer 的条件下，对任意长文本回答做细粒度评分和自然语言反馈。这里 rubric 不是本文发明的概念，而是被显式作为模型输入和训练条件，用来控制 evaluator 关注的具体评价维度。",
+        "现象分析": "作者认为 evaluator LM 的关键不是只看 response，而是要给它足够的 reference materials：instruction、response、reference answer、score rubric。没有 rubric 时，模型容易给泛泛判断；有 rubric 后，评估才能贴合用户真正关心的标准。没有 reference answer 时，模型也更难判断回答是否达到高分标准。",
+        "主要方法": "作者构造 Feedback Collection，包含约 1K fine-grained score rubrics、20K instructions、100K responses，以及 GPT-4 生成的 language feedback 和 1-5 score。每条训练样本把 instruction、response、reference answer、score rubric 拼成输入，输出为 rubric-specific feedback 加 [RESULT] 分数。然后用这个数据微调 Llama-2-chat 13B，得到 Prometheus。推理时，用户可以替换自己的 rubric 和 reference answer，让模型按该标准评分。",
+        "数据集与实验": "ICLR 摘要报告，Prometheus 在 45 个 customized score rubrics 上与人工评价 Pearson correlation 达到 0.897，接近 GPT-4-0613 的 0.882，明显高于 ChatGPT 的 0.392。它在 MT Bench、Vicuna Bench、Feedback Bench、Flask Eval 等多个 benchmark 上与 GPT-4 评价相关性也较强。在反馈质量人评中，Prometheus 相比 GPT-4 的 win rate 为 58.62%，相比 ChatGPT 为 79.57%。此外，它在 HHH Alignment 和 MT Bench Human Judgment 等偏好 benchmark 上也优于一些开源 reward models。",
+        "主要贡献": "贡献是把 LLM-as-a-judge 从闭源 GPT-4 API 推向可复现、可控、可部署的开源 evaluator LM，并证明“score rubric + reference answer + natural language feedback”可以诱导细粒度评估能力。它不是 rubric 概念的源头，而是把 rubric-following evaluation 做成模型训练任务和开源 judge 能力。"
+      },
+      "status": "approved",
+      "added_at": "2026-05-31",
+      "key_figure": {
+        "type": "Figure",
+        "name": "Rubric-conditioned evaluator workflow",
+        "page": 1,
+        "path": "assets/paper_images/prometheus-evaluator-lm-2310-08491-rubric-workflow.png",
+        "caption": "Prometheus takes an instruction, response, reference answer, and user-provided score rubric, then generates rubric-specific feedback and a 1-5 score as an open-source evaluator LM.",
+        "caption_cn": "Prometheus 将 instruction、待评估 response、reference answer 和用户提供的 score rubric 作为输入，输出针对该 rubric 的自然语言反馈和 1-5 分数，是一个开源 evaluator LM。",
+        "bbox": {},
+        "caption_bbox": {},
+        "source": "manual-summary-from-paper-method-and-github-input-format",
+        "confidence": 0.9,
+        "needs_manual_review": false,
+        "contexts": [
+          {
+            "page": 1,
+            "text": "Prometheus is trained to assess long-form text based on customized score rubrics provided by the user, with appropriate reference materials such as reference answers and score rubrics."
+          },
+          {
+            "page": 1,
+            "text": "Feedback Collection consists of 1K fine-grained score rubrics, 20K instructions, and 100K responses and language feedback generated by GPT-4."
+          }
+        ]
+      }
+    },
+    {
+      "id": "mrkl-systems-2205-00445",
+      "title": "MRKL Systems: A Modular, Neuro-Symbolic Architecture That Combines Large Language Models, External Knowledge Sources and Discrete Reasoning",
+      "paper_url": "https://arxiv.org/abs/2205.00445",
+      "pdf_url": "https://arxiv.org/pdf/2205.00445",
+      "authors": [
+        "Ehud Karpas",
+        "Omri Abend",
+        "Yonatan Belinkov",
+        "Barak Lenz",
+        "Opher Lieber",
+        "Nir Ratner",
+        "Yoav Shoham",
+        "Hofit Bata",
+        "Yoav Levine",
+        "Kevin Leyton-Brown",
+        "Dor Muhlgay",
+        "Noam Rozen",
+        "Erez Schwartz",
+        "Gal Shachaf",
+        "Shai Shalev-Shwartz",
+        "Amnon Shashua",
+        "Moshe Tenenholtz"
+      ],
+      "venue": "arXiv",
+      "year": 2022,
+      "primary_area": "基础/前沿模型 (含LLM)",
+      "category": "Agent 与工具使用",
+      "keywords": [
+        "MRKL systems",
+        "modular reasoning",
+        "knowledge and language",
+        "neuro-symbolic architecture",
+        "large language models",
+        "external knowledge sources",
+        "discrete reasoning",
+        "router",
+        "expert modules",
+        "tool use",
+        "API calls",
+        "calculator",
+        "database access",
+        "Jurassic-X"
+      ],
+      "labels": [
+        "MRKL",
+        "Neuro-Symbolic",
+        "Tool Use",
+        "Agent Architecture",
+        "Router",
+        "External Knowledge",
+        "Discrete Reasoning",
+        "Jurassic-X",
+        "AI21 Labs"
+      ],
+      "code_url": "",
+      "note": "这篇是工具调用和 agent 架构的早期基础论文，价值在概念框架而不是实验分数。它把 LLM 的缺陷拆成系统边界问题：哪些交给语言模型，哪些交给外部工具，如何路由和抽参。今天看起来像 function calling / tool router / RAG + tools 的前身。局限是实现细节和评测不充分，Jurassic-X 也不是完整开源系统；但作为“为什么需要模块化 LLM 系统”的源头文献很值得入库。",
+      "tldr": "MRKL 提出一种“LLM + 路由器 + 专家模块”的神经符号系统架构，让大语言模型负责语言理解和生成，同时把计算、检索、数据库/API 调用、动态知识和专有知识交给外部模块处理，是后续 tool use、agent router、function calling、RAG+tools 架构的重要早期系统化表述。",
+      "abstract": "Huge language models have become a gateway to natural-language-based knowledge tasks, but they remain inherently limited in their access to current and proprietary information and in their ability to perform certain forms of discrete reasoning. This paper proposes a systems approach called Modular Reasoning, Knowledge and Language (MRKL), a neuro-symbolic architecture that combines one or more language models with external knowledge sources, APIs, databases, calculators, and other reasoning modules through a router. It also discusses technical challenges and describes Jurassic-X, AI21 Labs' implementation of an MRKL system.",
+      "summary_cn": {
+        "研究动机": "大语言模型已经成为自然语言知识任务的通用入口，但它们有明显结构性限制：无法访问实时信息和私有数据库，不擅长精确计算与离散推理，模型微调和多任务训练也会带来模型爆炸、灾难性遗忘和部署成本问题。作者希望用系统架构而不是单纯模型扩容来解决这些短板。",
+        "解决问题": "论文要解决的是如何把 LLM 的语言能力与外部知识源、API、数据库、计算器和其他符号推理模块组合起来，使系统既保留通用语言接口，又能获得可更新、可解释、可扩展的专业能力。",
+        "现象分析": "作者指出，很多 LLM 错误不是语言建模能力不足，而是任务本身需要动态知识、专有知识或精确符号操作。例如汇率、日期、股票价格、公司内部数据、四位数算术等，都不应该期待静态预训练模型独立完成。把这些能力硬塞进一个巨大模型，既不可靠，也不易维护。",
+        "主要方法": "MRKL 系统由一组可扩展的专家模块和一个 router 组成。专家模块可以是神经模块，例如通用 LLM 或小型专用 LM；也可以是符号模块，例如计算器、货币转换器、搜索/API、数据库查询器。router 接收自然语言输入，判断应交给哪个专家，必要时还要从自然语言中抽取结构化参数传给符号模块。若没有合适专家，则回退到通用 LLM。",
+        "数据集与实验": "论文不是标准 benchmark 论文，而是架构论文，重点展示 AI21 Labs 的 Jurassic-X 作为 MRKL 实现，并用算术任务说明“跨越神经-符号鸿沟”的难点。作者强调 LLM 不负责最终计算，而负责从自然语言问题中抽取运算类型和参数，再由符号计算器执行，这样可避免模型在精确计算上胡猜。",
+        "主要贡献": "主要贡献是提出 MRKL 这一模块化神经符号范式，把 LLM 从“单体全能模型”重新定位为系统中的语言接口和路由/参数抽取组件。它提前概括了后来 agent/tool use/function calling 系统的核心结构：自然语言输入、路由、工具选择、参数抽取、外部模块执行、结果整合。它也明确提出了安全回退、鲁棒扩展、可解释性、动态知识、私有知识和组合性这几个系统收益。"
+      },
+      "status": "approved",
+      "added_at": "2026-05-31",
+      "key_figure": {
+        "type": "Table",
+        "name": "1",
+        "page": 8,
+        "path": "assets/paper_images/mrkl-systems-2205-00445-table-1.png",
+        "caption": "Table 1: Robustness to the number of digits in the operands. Accuracy vs. the number of digits in the test data for a model that was trained only on 1-digit operands (5 + 3, etc.). Results for GPT-3 were taken from [2].",
+        "caption_cn": "表 1：操作数位数增加时的算术鲁棒性对比。专用符号计算模块在加法和乘法上几乎保持满分，而 GPT-3 在多位数运算上快速退化，说明精确计算更适合交给外部推理模块。",
+        "bbox": {
+          "x1": 108.96,
+          "x2": 503.03999999999996,
+          "y1": 336.0,
+          "y2": 397.2
+        },
+        "caption_bbox": {
+          "x1": 108.0,
+          "x2": 504.00018310546875,
+          "y1": 408.724365234375,
+          "y2": 442.7060241699219
+        },
+        "source": "pdffigures2-local-jar",
+        "confidence": 0.399,
+        "needs_manual_review": true,
+        "contexts": [
+          {
+            "page": 9,
+            "text": "Table 1 presents our results, sliced by the number of digits, and compared to the results by GPT-3’s approach [2] (as representative of all language models that don’t have access to external calculator), reported on addition. We note that we trained on single-digit operations for all settings while GPT-3 was conditioned on examples with the same number of digits when answering a certain problem. Our results show that despit"
+          },
+          {
+            "page": 9,
+            "text": "digits 1 2 3 4 5 6 7 8 9 Addition 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 Multiplication 1.0 1.0 1.0 1.0 1.0 0.98 1.0 1.0 1.0 GPT-3 N/A 1.0 0.804 0.255 0.093 N/A N/A N/A N/A Table 1: Robustness to the number of digits in the operands. Accuracy vs. the number of digits in the test data for a model that was trained only on1-digit operands (5 + 3, etc.). Results for GPT-3 were taken from [2]. Experiment 2: Generalization from digits to numbers as words and vice versa. In this set o"
+          }
+        ]
+      }
+    },
+    {
+      "id": "gorilla-massive-apis-2305-15334",
+      "title": "Gorilla: Large Language Model Connected with Massive APIs",
+      "paper_url": "https://arxiv.org/abs/2305.15334",
+      "pdf_url": "https://arxiv.org/pdf/2305.15334",
+      "authors": [
+        "Shishir G. Patil",
+        "Tianjun Zhang",
+        "Xin Wang",
+        "Joseph E. Gonzalez"
+      ],
+      "venue": "NeurIPS",
+      "year": 2024,
+      "primary_area": "基础/前沿模型 (含LLM)",
+      "category": "Agent 与工具使用",
+      "keywords": [
+        "Gorilla",
+        "API calling",
+        "function calling",
+        "tool use",
+        "large language models",
+        "APIBench",
+        "retriever-aware training",
+        "API documentation",
+        "API hallucination",
+        "AST-based evaluation",
+        "HuggingFace APIs",
+        "TorchHub",
+        "TensorHub",
+        "LLaMA"
+      ],
+      "labels": [
+        "Gorilla",
+        "Tool Use",
+        "API Calling",
+        "Function Calling",
+        "APIBench",
+        "Retriever-Aware",
+        "LLaMA",
+        "AST Evaluation",
+        "Berkeley"
+      ],
+      "code_url": "https://github.com/ShishirPatil/gorilla",
+      "note": "这篇适合接在 MRKL 后面：MRKL 提出“LLM + router + experts”的系统思想，Gorilla 则把 API 调用能力具体做成数据集、微调模型和评估协议。放到现在看，Gorilla 模型本身已经不是最新最强方案，闭源模型原生 function calling、JSON/tool schema following 和后续 BFCL/ToolBench/xLAM 等评测与模型都更完整；但它在发展脉络上很关键，因为 APIBench、retriever-aware API calling 和 AST-based evaluation 都是后续大规模工具调用评测与训练的前身。局限是 API 主要集中在 HuggingFace/TorchHub/TensorHub 这类 ML 开发工具，真实业务 API 的多轮状态、权限、安全、副作用和错误恢复覆盖不足。",
+      "tldr": "Gorilla 针对 LLM 工具调用中的 API 选择、参数生成和文档变化问题，提出基于 LLaMA 微调 + API 文档检索的 API calling 模型，并构建 APIBench，证明检索增强训练能显著降低 API hallucination，使模型更可靠地调用大规模动态 API。",
+      "abstract": "Gorilla studies how to connect large language models with massive and evolving APIs. The paper fine-tunes LLaMA-based models on API instruction data, introduces APIBench covering HuggingFace, TorchHub, and TensorHub APIs, and uses retrieval over API documentation to ground API-call generation at inference time. By comparing against strong LLM baselines, the authors show that retriever-aware API calling can reduce hallucinated API calls and improve the structural correctness of generated calls, especially when API documentation changes after training.",
+      "summary_cn": {
+        "研究动机": "LLM 虽然在推理和代码生成上进步很快，但真正接入外部工具/API 时仍不可靠。主要问题是模型容易选错 API、生成错误参数、调用不存在或过期的接口，并且 API 文档经常更新，静态模型很难跟上变化。作者希望让 LLM 能在大规模 API 空间中准确选择和调用工具。",
+        "解决问题": "论文解决的是大规模 API 调用生成问题：给定自然语言用户需求和 API 文档，模型需要生成语义正确、语法正确、参数正确的 API call，并能在 API 文档版本变化时通过检索保持适应性。",
+        "现象分析": "直接 prompt GPT-4 或其他 LLM 调 API 时，常见失败包括 hallucinated API、错误库/模型名、参数缺失、参数类型错误、调用格式不合法。作者认为工具调用不是普通代码生成：它要求模型精确对齐外部 API 文档，并且要能处理大量相似、不断变化的函数接口。",
+        "主要方法": "Gorilla 以 LLaMA 为基础模型，使用 API 指令数据进行微调。系统包含 retriever-aware 训练流程：给模型提供相关 API 文档，让模型学习在文档条件下生成 API call。推理时，用户 query 先通过检索器找到相关 API 文档，再把文档和 query 一起输入 Gorilla 生成调用。评估上，作者使用 AST-based matching 判断调用是否功能正确，而不只看字符串匹配。",
+        "数据集与实验": "作者构建 APIBench，覆盖 HuggingFace、TorchHub 和 TensorHub API，包含大量自然语言指令、API 文档和目标调用。实验比较 Gorilla、GPT-4、Claude 等模型在 API 调用准确率、文档检索适应性和 hallucination 上的表现。结果显示 Gorilla 在多个设置下优于 GPT-4，尤其在结合文档 retriever 后，能适应测试时 API 文档变化，并显著减少 hallucinated calls。",
+        "主要贡献": "主要贡献是把 LLM tool use 从少量手写工具调用推进到大规模 API 空间，并提出 APIBench、retriever-aware API calling training 和 AST-based API call evaluation。它是 MRKL、Toolformer 之后，ToolLLM、BFCL、OpenFunctions 等工作之前的重要中间节点：从“模型会不会调用工具”推进到“模型能否面对海量真实 API 文档生成正确调用”。放到今天看，它的历史价值大于直接工程价值。"
+      },
+      "status": "approved",
+      "added_at": "2026-05-31",
+      "key_figure": {
+        "type": "Figure",
+        "name": "8",
+        "page": 14,
+        "path": "assets/paper_images/gorilla-massive-apis-2305-15334-figure-8.png",
+        "caption": "Figure 8: Example of the Dataset: Two examples of the dataset, the above one is zero-shot (without information retrievers) and the bottom one is with information retriever.",
+        "caption_cn": "图 8：APIBench 数据样例。上方是不使用信息检索器的零样本 API 调用生成格式；下方是在检索到参考 API 文档后生成结构化 API 调用、提供者、解释和代码。",
+        "bbox": {
+          "x1": 108.0,
+          "x2": 505.2,
+          "y1": 139.92,
+          "y2": 619.1999999999999
+        },
+        "caption_bbox": {
+          "x1": 108.0,
+          "x2": 504.0035095214844,
+          "y1": 632.360595703125,
+          "y2": 649.27197265625
+        },
+        "source": "pdffigures2-local-jar",
+        "confidence": 0.95,
+        "needs_manual_review": true,
+        "contexts": [
+          {
+            "page": 13,
+            "text": "To exemplify the structure and nature of our dataset, we invite you to refer to the domain names represented in Figure 8. API Call Task In this task, we test the model’s capability to generate a single line of code, either in a zero-shot fashion or by leveraging an API reference. Primarily designed for evaluation purposes, this task effectively gauges the model’s proficiency in identifying and utilizing the appropriate API c"
+          },
+          {
+            "page": 15,
+            "text": "in an image of the scene, <code>: import torch; model = torch.hub.load(’datvuthanh/hybridnets’, ’hybridnets’, pre- trained=True) Figure 8: Example of the Dataset: Two examples of the dataset, the above one is zero-shot (without information retrievers) and the bottom one is with information retriever. 15"
+          }
+        ]
+      }
+    },
+    {
+      "id": "self-refine-2303-17651",
+      "title": "Self-Refine: Iterative Refinement with Self-Feedback",
+      "paper_url": "https://arxiv.org/abs/2303.17651",
+      "pdf_url": "https://arxiv.org/pdf/2303.17651",
+      "authors": [
+        "Aman Madaan",
+        "Niket Tandon",
+        "Prakhar Gupta",
+        "Skyler Hallinan",
+        "Luyu Gao",
+        "Sarah Wiegreffe",
+        "Uri Alon",
+        "Nouha Dziri",
+        "Shrimai Prabhumoye",
+        "Yiming Yang",
+        "Shashank Gupta",
+        "Bodhisattwa Prasad Majumder",
+        "Katherine Hermann",
+        "Sean Welleck",
+        "Amir Yazdanbakhsh",
+        "Peter Clark"
+      ],
+      "venue": "NeurIPS",
+      "year": 2023,
+      "primary_area": "基础/前沿模型 (含LLM)",
+      "category": "推理与思维链",
+      "keywords": [
+        "Self-Refine",
+        "iterative refinement",
+        "self-feedback",
+        "self-correction",
+        "test-time refinement",
+        "LLM prompting",
+        "feedback generation",
+        "refiner",
+        "generator",
+        "critic",
+        "ChatGPT",
+        "GPT-4",
+        "code optimization",
+        "mathematical reasoning",
+        "dialogue generation"
+      ],
+      "labels": [
+        "Self-Refine",
+        "Self-Feedback",
+        "Self-Correction",
+        "Iterative Refinement",
+        "Test-Time Scaling",
+        "Prompting",
+        "Critic-Refiner",
+        "NeurIPS"
+      ],
+      "code_url": "https://github.com/madaan/self-refine",
+      "note": "这篇是 self-correction / critic-refiner 路线的基础论文。今天看，它的最强点是简单、通用、无需训练；局限也很清楚：如果模型没有足够能力发现错误，self-feedback 就会变成空泛建议或确认偏误。和 SCoRe 对照很有价值：Self-Refine 是纯测试时 prompting，SCoRe 则指出要把 self-correction 作为模型行为用 online RL 训练，否则容易受分布错配和行为坍缩影响。对 agent/RAG/tool-use 来说，Self-Refine 可作为“没有外部工具反馈时的内省式 refinement”基线，但可靠系统通常还需要检索、执行结果、verifier 或人类反馈。",
+      "tldr": "Self-Refine 提出一种无需训练、无需人工反馈、无需 RL 的测试时迭代改进框架：同一个 LLM 先生成初稿，再对自己的输出给反馈，最后基于反馈改写，如此循环多轮，在多种生成、推理和代码任务上比一次性生成平均提升约 20 个百分点。",
+      "abstract": "Self-Refine improves initial outputs from large language models through iterative feedback and refinement. A single LLM first generates an initial output, then provides feedback on that output, and finally refines the output using the feedback; this loop can be repeated at test time. The approach requires no supervised training data, no additional training, and no reinforcement learning. Across seven diverse tasks, including dialog response generation, code optimization, constrained generation, and mathematical reasoning, outputs produced with Self-Refine are preferred by humans and automatic metrics over one-step generation.",
+      "summary_cn": {
+        "研究动机": "人类写作和解题往往不是一次完成，而是先生成草稿，再批判、修改和迭代。LLM 的一次性输出也常有遗漏、格式问题、事实错误、代码低效或推理不完整。已有改进方法通常依赖监督数据、人工反馈、外部 reward model 或额外训练，成本较高。作者希望用纯 prompting 的方式，让同一个强 LLM 在测试时自我反馈和自我修正。",
+        "解决问题": "论文解决的是 test-time self-improvement：在不更新模型参数、不引入额外训练数据和外部监督的前提下，如何让模型利用自身反馈迭代提升输出质量。它关注的是开放式生成、代码优化、数学推理、对话等任务上的输出改进，而不是训练一个长期更强的模型。",
+        "现象分析": "作者认为 LLM 初稿经常不是全局最优，但模型本身可能具备识别缺陷和提出改进建议的能力。关键是把“生成答案”和“评价答案”分离成不同 prompt，并把反馈显式传回下一轮 refinement。这样模型不用凭空重答，而是围绕具体缺陷做局部改进。",
+        "主要方法": "Self-Refine 包含三个阶段：GENERATOR 根据输入生成初始输出；FEEDBACK 模块读取输入和当前输出，给出自然语言反馈，指出哪里需要改；REFINER 根据输入、当前输出和反馈生成改进版本。这个循环可运行多轮，直到达到停止条件，例如最大轮数、反馈表示已满意、或任务指标不再提升。三个模块可以由同一个 LLM 通过不同 prompt 扮演。",
+        "数据集与实验": "论文在 7 类任务上评估，包括 dialogue response generation、code readability improvement、code optimization、mathematical reasoning、sentiment reversal、acronym generation、constrained generation 等，使用 GPT-3.5、ChatGPT、GPT-4 等模型。结果显示 Self-Refine 在所有任务上相对一次性生成都有提升，平均绝对性能提升约 20%。人工偏好和自动指标都更倾向 Self-Refine 输出。",
+        "主要贡献": "贡献是把“自我反馈 -> 自我修正”做成一个通用、无需训练的测试时框架，并证明强 LLM 即使不更新参数，也能通过多轮自然语言反馈改善自身输出。它是 Reflexion、SCoRe、self-correction、critic-refiner、test-time scaling 等后续工作的基础背景之一。但它也暴露出一个核心问题：自我反馈质量受模型自身能力限制，模型看不出的错误通常也难以修正；在事实性、复杂推理和弱模型上，单纯 self-feedback 可能不稳定。"
+      },
+      "status": "approved",
+      "added_at": "2026-05-31",
+      "key_figure": {
+        "type": "Figure",
+        "name": "15",
+        "page": 37,
+        "path": "assets/paper_images/self-refine-2303-17651-figure-15.png",
+        "caption": "Figure 15: A comparison of SELF-REFINE and direct generation with GPT-3.5 on CommonGenHard.",
+        "caption_cn": "图 15：GPT-3.5 在 CommonGenHard 上直接生成与 Self-Refine 的对比。Self-Refine 在概念覆盖、常识性和总体偏好上均明显优于一次性生成。",
+        "bbox": {
+          "x1": 195.6,
+          "x2": 420.24,
+          "y1": 73.92,
+          "y2": 290.64
+        },
+        "caption_bbox": {
+          "x1": 108.0,
+          "x2": 505.6489562988281,
+          "y1": 303.87353515625,
+          "y2": 320.7850036621094
+        },
+        "source": "pdffigures2-local-jar",
+        "confidence": 0.95,
+        "needs_manual_review": true,
+        "contexts": [
+          {
+            "page": 37,
+            "text": "Through iterative creation and self-reflection, the SELF -REFINE framework empowers language models to progressively enhance the quality of their output, closely mimicking the human creative process and demonstrating its ability to improve generated text on complex and demanding natural language generation tasks like CommonGen-Hard (Figure 15). S Prompts We include all the prompts used in the experiments in Figures 16-35: • Ac"
+          },
+          {
+            "page": 38,
+            "text": "Concept Commonsense Overall 0 10 20 30 40 50 3 5 0 35 10 32 Winning Ratio Direct SELF -R EFINE Figure 15: A comparison of SELF -REFINE and direct generation with GPT-3.5 on CommonGen- Hard."
+          }
+        ]
+      }
+    },
+    {
+      "id": "swe-bench-2310-06770",
+      "title": "SWE-bench: Can Language Models Resolve Real-World GitHub Issues?",
+      "paper_url": "https://arxiv.org/abs/2310.06770",
+      "pdf_url": "https://arxiv.org/pdf/2310.06770",
+      "authors": [
+        "Carlos E. Jimenez",
+        "John Yang",
+        "Alexander Wettig",
+        "Shunyu Yao",
+        "Kexin Pei",
+        "Ofir Press",
+        "Karthik R. Narasimhan"
+      ],
+      "venue": "ICLR Oral",
+      "year": 2024,
+      "primary_area": "数据集与基准",
+      "category": "代码与领域基准",
+      "keywords": [
+        "SWE-bench",
+        "real-world GitHub issues",
+        "software engineering benchmark",
+        "program repair",
+        "patch generation",
+        "codebase editing",
+        "issue resolution",
+        "pull request",
+        "unit tests",
+        "BM25 retrieval",
+        "SWE-Llama",
+        "coding agents",
+        "repository-level code generation",
+        "SWE-bench Verified",
+        "SWE-bench Pro"
+      ],
+      "labels": [
+        "SWE-bench",
+        "Software Engineering",
+        "Code Generation",
+        "GitHub Issues",
+        "Program Repair",
+        "Coding Agent",
+        "Benchmark",
+        "ICLR"
+      ],
+      "code_url": "https://github.com/SWE-bench/SWE-bench",
+      "note": "这篇是代码 agent 方向的分水岭。它的价值不是某个模型分数，而是重新定义了“会写代码”的评测标准：必须在真实仓库中定位、修改、测试并产出可应用 patch。SWE-bench / SWE-bench Verified 后来成为 GPT、Gemini、Claude 等前沿模型发布时常见的 coding-agent 指标之一，用于衡量模型在真实软件工程任务上的自主修复能力。今天看，原始 SWE-bench 和 Verified 都要放在演进脉络里理解：Verified 修正了原始基准中不明确 issue 和过窄测试的问题，但到 2026 年前后也开始出现污染、饱和和区分度下降，OpenAI 等已建议更前沿的模型同时看 SWE-bench Pro、Terminal-Bench、Aider Polyglot 等新基准。因此它现在既是历史核心基准，也是后续 coding-agent benchmark 的起点。",
+      "tldr": "SWE-bench 把代码模型评估从短小算法题推进到真实软件工程任务：给定 GitHub issue 和对应仓库快照，模型必须生成补丁并通过真实测试。原始基准包含 12 个 Python 仓库的 2,294 个真实 issue/PR 实例，暴露出代码库理解、定位、编辑和测试闭环能力的巨大差距。",
+      "abstract": "SWE-bench is an evaluation framework for testing whether language models can resolve real-world software issues. Each task is created from a GitHub issue and its corresponding pull request in a real Python repository. Given the issue text and repository snapshot, a model must generate a patch that resolves the issue. The generated patch is applied to the repository and evaluated by running issue-specific FAIL_TO_PASS tests and regression PASS_TO_PASS tests. The benchmark contains 2,294 tasks from 12 popular Python repositories and shows that even strong models initially solve only a small fraction of real-world software engineering tasks.",
+      "summary_cn": {
+        "研究动机": "HumanEval、MBPP 等代码 benchmark 多是自包含短函数，无法代表真实软件工程。真实 GitHub issue 往往需要理解大型代码库、定位相关文件、跨文件修改、保持兼容性，并通过已有测试和新测试。作者希望构建一个更接近真实开发工作的评测，让模型不仅会写代码片段，还能修真实项目里的 bug 或功能问题。",
+        "解决问题": "论文解决的是 real-world issue resolution evaluation：给模型一个代码库和 issue 描述，要求它生成 patch 来解决问题。评估不是人工打分，而是把 patch 应用到仓库里运行测试，看是否让与该 issue 相关的测试通过且不破坏原有行为。",
+        "现象分析": "作者指出，真实软件工程任务的难点不只是生成代码，而是完整闭环：理解自然语言 issue、从大量文件中找到相关上下文、推断应修改的位置和接口、生成最小正确补丁、避免破坏其他测试。单纯扩大模型上下文或喂更多文件并不能自动解决，因为检索、定位和补丁生成都会出错。",
+        "主要方法": "SWE-bench 从真实 GitHub 仓库中收集 issue 和解决它们的 merged pull requests。每个实例包含仓库快照、issue 描述、参考 PR patch，以及用于验证的测试。构建流程会把 PR 修改前的仓库作为起点，将模型生成的 patch 应用到该状态，再运行测试判断是否解决问题。作者还提供 BM25/Oracle 文件检索设定，以及基于编辑 diff 的 patch 生成评估流程。",
+        "数据集与实验": "原始 SWE-bench 包含 2,294 个软件工程任务，来自 12 个流行 Python 仓库。论文评估 Claude 2、GPT-4、ChatGPT、SWE-Llama 等模型，并比较不同上下文检索策略。结果显示，即使使用强闭源模型和较理想的上下文设置，解决率仍然很低：早期 Claude 2 约 1.96%，GPT-4 也只有个位数水平。这说明当时模型离真实 GitHub issue 自动修复还有明显距离。",
+        "主要贡献": "主要贡献是提出第一个被广泛采用的真实 GitHub issue 修复基准，把代码模型评测从“写一个函数”提升到“读代码库、改 patch、跑测试”的软件工程任务。它也催生了 SWE-bench Lite、SWE-bench Verified、SWE-bench Pro、SWE-agent、OpenHands、Devin 类 agent 系统和大量软件工程 agent 评测。今天看，SWE-bench 已经成为现代 coding agent benchmark 的核心起点，但更前沿的模型评估需要结合 Verified/Pro/Terminal-Bench/Aider Polyglot 等后续版本。"
+      },
+      "status": "approved",
+      "added_at": "2026-05-31",
+      "key_figure": {
+        "type": "Figure",
+        "name": "8",
+        "page": 19,
+        "path": "assets/paper_images/swe-bench-2310-06770-figure-8.png",
+        "caption": "Figure 8: Visualization of the evaluation pipeline at an individual task instance level. During evaluation, the Patch is model generated. A prediction .patch must be applied successfully and produce the same results as the corresponding task instance’s D for task completion.",
+        "caption_cn": "图 8：单个 SWE-bench 任务实例的评估流程。模型根据代码库、问题描述和测试生成补丁，评测 harness 将补丁应用到仓库、运行测试脚本并记录结果；只有补丁成功应用且测试结果满足该任务要求时才算解决。",
+        "bbox": {
+          "x1": 108.0,
+          "x2": 505.2,
+          "y1": 493.91999999999996,
+          "y2": 628.0799999999999
+        },
+        "caption_bbox": {
+          "x1": 108.0,
+          "x2": 504.0032958984375,
+          "y1": 639.5675659179688,
+          "y2": 667.488037109375
+        },
+        "source": "pdffigures2-local-jar",
+        "confidence": 0.95,
+        "needs_manual_review": false,
+        "contexts": [
+          {
+            "page": 20,
+            "text": "Pr oblem P Title: v s tack'ing s tructur ed arra y tables f ails with cas ting err or R esults table/t es ts/t es t_ops.p y t es t_ j oin_s truct_col t es t_v s tack_s truct_col t es t_ds tack_s truct_col Figure 8: Visualization of the evaluation pipeline at an individual task instance level. During evalua- tion, the Patch is model generated. A prediction .patch must be applied successfully and produce the same results as the corresponding task instance’sD for task completion. We provide a visualizatio"
+          },
+          {
+            "page": 20,
+            "text": "We provide a visualization of the evaluation procedure in Figure 8. The evaluation procedure scores the model’s ˆδ .patch generation with respect to the behavior of the solution δ. At a finer-grained level, the evaluation procedure can be broken down into four separate steps, highlighted by the numbered steps in Figure 8. First, the codebase and problem statement are visible and given to the 20"
+          },
+          {
+            "page": 20,
+            "text": "At a finer-grained level, the evaluation procedure can be broken down into four separate steps, highlighted by the numbered steps in Figure 8. First, the codebase and problem statement are visible and given to the 20"
+          }
+        ]
+      }
+    },
+    {
+      "id": "supergen-training-data-language-models-2202-04538",
+      "title": "Generating Training Data with Language Models: Towards Zero-Shot Language Understanding",
+      "paper_url": "https://arxiv.org/abs/2202.04538",
+      "pdf_url": "https://arxiv.org/pdf/2202.04538",
+      "authors": [
+        "Yu Meng",
+        "Jiaxin Huang",
+        "Yu Zhang",
+        "Jiawei Han"
+      ],
+      "venue": "NeurIPS",
+      "year": 2022,
+      "primary_area": "自然语言处理",
+      "category": "训练数据构造与合成",
+      "keywords": [
+        "SuperGen",
+        "synthetic training data",
+        "zero-shot learning",
+        "zero-shot language understanding",
+        "data generation",
+        "label-descriptive prompts",
+        "class-conditioned generation",
+        "pseudo-labeled data",
+        "prompt-based fine-tuning",
+        "GLUE",
+        "label smoothing",
+        "temporal ensembling",
+        "data-free training",
+        "language model as data generator"
+      ],
+      "labels": [
+        "SuperGen",
+        "Synthetic Data",
+        "Zero-Shot Learning",
+        "Data Generation",
+        "Prompting",
+        "NLU",
+        "GLUE",
+        "NeurIPS"
+      ],
+      "code_url": "https://github.com/yumeng5/SuperGen",
+      "note": "这篇不是 Ye et al. 的 ZeroGen，而是 Meng et al. 的 SuperGen。它的核心价值在于很早证明了语言模型可以充当“数据工厂”：不是让 GPT 直接零样本答题，而是让生成式 LM 按标签合成训练样本，再用这些伪标注数据训练判别式 NLU 模型。这样就把 zero-shot 问题转成 synthetic supervised learning 问题。今天看，它不是通用 instruction synthesis，也不是 RAG evaluation 数据生成，但和后来的 Self-Instruct、Alpaca、LLM-as-data-generator、zero-label learning、RAG synthetic query / QA generation 都在同一条思想线上。局限也很明显：任务集中在 GLUE 分类，依赖手工 label prompt 和生成概率筛选，目标是训练小模型而不是直接提升大模型本身。",
+      "tldr": "SuperGen 用生成式语言模型按类别生成带标签训练样本，再用这些合成数据微调 BERT/COCO-LM 等判别式模型，从而在没有人工标注训练集的情况下完成 GLUE 分类任务。它把 zero-shot NLU 从直接 prompt 推理转成了“先合成数据、再监督训练”的路线。",
+      "abstract": "SuperGen studies fully zero-shot learning for natural language understanding by combining generative and discriminative pretrained language models. A unidirectional language model generates class-conditioned texts from label-descriptive prompts, and the generated examples are used as training data for fine-tuning a bidirectional language model. The method selects higher-quality generated data according to generation probability and applies label smoothing and temporal ensembling during fine-tuning to improve stability and generalization. Experiments on seven GLUE classification tasks show that this synthetic-data route substantially outperforms zero-shot prompting baselines and can be competitive with few-shot methods using 32 labeled examples per class.",
+      "summary_cn": {
+        "研究动机": "当时 GPT 类单向 PLM 擅长生成文本，BERT 类双向 PLM 擅长 NLU 判别任务，但真正无标注的 zero-shot NLU 效果仍不稳定。直接让生成模型看 prompt 回答分类题，往往受 prompt、label word 和模型校准影响。作者希望换一种思路：既然生成模型会写文本，就让它先为每个标签造训练样本，再训练一个更适合分类的判别式模型。",
+        "解决问题": "论文解决的是没有任何任务特定人工标注数据时，如何训练一个能做文本分类/NLU 的模型。关键不是提升大模型的直接推理能力，而是把 zero-shot 学习改造成一个合成数据监督学习问题：用语言模型自动生成带标签训练集，再对下游分类器做 fine-tuning。",
+        "现象分析": "作者利用了生成式 PLM 和判别式 PLM 的能力不对称：生成式模型更适合根据标签描述生成自然语言样本，判别式模型更适合在给定训练集后学习分类边界。由于生成样本会有噪声，论文进一步用生成概率筛选较可信样本，并在训练阶段用正则化减轻伪标签噪声带来的过拟合。",
+        "主要方法": "SuperGen 先为每个类别设计 label-descriptive prompt，例如给定 positive/negative、entailment/contradiction 等标签描述，让单向语言模型生成对应类别的文本或文本对。生成阶段会为每个标签产生多于最终需要数量的候选样本；筛选阶段根据生成概率选择质量更高的样本组成合成训练集；训练阶段用这些伪标注样本微调 BERT/COCO-LM 等双向 PLM，并加入 label smoothing 和 temporal ensembling 来提升稳定性。",
+        "数据集与实验": "论文在 GLUE 的 7 个分类任务上实验，包括 MNLI、QQP、QNLI、SST-2、CoLA、RTE、MRPC 等。SuperGen 不使用原始训练集，只使用生成模型合成的训练数据，并在原始 dev/test 设置上评估。结果显示它显著超过直接 zero-shot prompting，在若干任务上接近甚至超过每类 32 个标注样本的 few-shot LM-BFF 设置。",
+        "主要贡献": "主要贡献是把语言模型从“零样本任务求解器”转成“零标注数据生成器”，提出了一条早期 synthetic training data 路线。它说明 LLM 可以先生产监督信号，再让更小或更合适的模型学习任务。今天看，这篇是 LLM 合成训练数据、zero-label learning 和后续 instruction/data synthesis 工作的重要早期背景，但它的适用范围仍主要是标签清晰的分类任务。"
+      },
+      "status": "approved",
+      "added_at": "2026-05-31",
+      "key_figure": {
+        "type": "Figure",
+        "name": "1",
+        "page": 2,
+        "path": "assets/paper_images/supergen-training-data-language-models-2202-04538-figure-1.png",
+        "caption": "Figure 1: Overview of SuperGen for zero-shot learning of NLU tasks. A unidirectional PLM generates training data guided by label-descriptive prompts. Quality training samples are selected based on average log generation probability. A bidirectional PLM is fine-tuned on the selected training set with label smoothing and temporal ensembling as regularization to perform the classification task.",
+        "caption_cn": "图 1：SuperGen 的零样本 NLU 流程。单向生成式 PLM 根据标签描述 prompt 生成类别条件样本，按平均生成概率筛选高质量训练样本，再用这些合成数据微调双向 PLM 分类器，并通过 label smoothing 和 temporal ensembling 做正则化。",
+        "bbox": {
+          "x1": 108.0,
+          "x2": 502.56,
+          "y1": 72.48,
+          "y2": 183.12
+        },
+        "caption_bbox": {
+          "x1": 107.64099884033203,
+          "x2": 504.00146484375,
+          "y1": 191.21853637695312,
+          "y2": 229.947998046875
+        },
+        "source": "pdffigures2-local-jar",
+        "confidence": 0.95,
+        "needs_manual_review": false,
+        "contexts": [
+          {
+            "page": 3,
+            "text": "wdFvPpvvPlv3LY5aOuDgcd7M8zMCxIpDLrut1NYWV1b3yhulra2d3b3yvsHTROnmvEGi2Ws2wE1XArFGyhQ8naiOY0CyVvB6Gbqt564NiJWDzhOuB/RgRKhYBSt9Hjby7o45EgnvXLFrbozkGXi5aQCOeq98le3H7M04gqZpMZ0PDdBP6MaBZN8UuqmhieUjeiAdyxVNOLGz2YXT8iJVfokjLUthWSm/p7IaGTMOApsZ0RxaBa9qfif10kxvPIzoZIUuWLzRWEqCcZk+j7pC80ZyrEllGlhbyVsSDVlaEMq2RC8xZeXSfOs6l1Uz+/PK7XrPI4iHMExnIIHl1CDO6hDAxgoeIZXeHOM8+K8Ox/z1oKTzxzCHzifP7cskO8=</latexit> G ✓ Regularize Regularize Figure 1: Overview of SuperGen for zero-shot learning of NLU tasks."
+          },
+          {
+            "page": 3,
+            "text": "Fig. 1 shows an overview of our proposed SuperGen method. Text Generation with Unidirectional PLMs. A unidirectional PLMGθ is pretrained to maximize the generation probability of each token in a sequence x = [x1,x 2,...,x n] conditioned on previous tokens: max θ n∏ i=1 pθ(xi|x<i), where pθ(xi|x<i) = exp(e⊤ i hi) ∑|V | j=1 exp(e⊤ j hi) . Here,pθ(·) is usually parameterized using token embeddings e and contextualized embeddi"
+          }
+        ]
+      }
+    },
+    {
+      "id": "model-collapse-recursive-data-2024-nature",
+      "title": "AI Models Collapse When Trained on Recursively Generated Data",
+      "paper_url": "https://www.nature.com/articles/s41586-024-07566-y",
+      "pdf_url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC11269175/pdf/41586_2024_Article_7566.pdf",
+      "authors": [
+        "Ilia Shumailov",
+        "Zakhar Shumaylov",
+        "Yiren Zhao",
+        "Nicolas Papernot",
+        "Ross Anderson",
+        "Yarin Gal"
+      ],
+      "venue": "Nature",
+      "year": 2024,
+      "primary_area": "基础/前沿模型 (含LLM)",
+      "category": "训练数据构造与合成",
+      "keywords": [
+        "model collapse",
+        "synthetic data",
+        "recursively generated data",
+        "data pollution",
+        "distribution shift",
+        "long-tail risk",
+        "generative models",
+        "LLM fine-tuning",
+        "OPT-125M",
+        "WikiText-2",
+        "GMM",
+        "VAE",
+        "data provenance"
+      ],
+      "labels": [
+        "Synthetic Data",
+        "Model Collapse",
+        "Data Quality",
+        "Distribution Shift",
+        "Long-tail Risk",
+        "Nature"
+      ],
+      "code_url": "https://doi.org/10.5281/zenodo.10866595",
+      "note": "合成数据方向必须细读的风险论文。它不是说所有 synthetic data 都不能用，而是证明如果无差别地把模型生成内容递归混入下一代训练数据，误差会逐代累积，先丢失真实分布的长尾，再走向低方差、单调甚至错误的分布。对 synthetic QA、RAG evaluation 数据生成、Self-Instruct/Alpaca 式 instruction synthesis、RLAIF 和数据飞轮都很重要：合成数据必须有真实数据锚点、来源标记、质量过滤、去重和分布覆盖控制，不能只靠模型自我复制。",
+      "tldr": "这篇 Nature 论文提出并实证展示 model collapse：当生成模型递归地训练在上一代模型生成的数据上时，会逐代偏离真实数据分布，先遗忘长尾/低概率事件，后期输出方差收缩、质量退化。它是 synthetic data 路线的重要警示，而不是对合成数据本身的否定。",
+      "abstract": "This paper studies what happens when generative models are recursively trained on data produced by previous generations of models. Across theoretical examples and empirical settings including GMMs, VAEs, and OPT-125M fine-tuning on WikiText-2, the authors show that indiscriminate use of model-generated data causes model collapse: a degenerative process in which models forget the true underlying distribution, lose tail events, and eventually converge toward low-diversity distorted outputs. Preserving access to real data and controlling synthetic-data pollution are central mitigation requirements.",
+      "summary_cn": {
+        "研究动机": "随着互联网上 AI 生成内容越来越多，未来模型训练语料不可避免会混入大量上一代模型生成的文本、图片或代码。作者关心的是：如果新模型在这些递归生成的数据上继续训练，会不会逐代偏离真实人类数据分布。",
+        "解决问题": "论文要解决的是 model-generated data pollution 的长期统计后果。它不是讨论单次使用高质量合成数据是否有效，而是研究递归闭环：模型生成数据，下一代模型再用这些数据训练，再继续生成更多数据。关键风险是训练集不再是原始真实分布的独立样本，而是上一代模型对真实世界的有偏投影。",
+        "现象分析": "作者将 model collapse 定义为一种跨代退化过程：模型生成的数据污染下一代训练集，下一代模型因此误感知真实分布。早期 collapse 先表现为低概率事件和长尾模式消失；晚期 collapse 表现为分布方差收缩，输出越来越单一，并可能收敛到与原始分布差异很大的点估计或错误模式。这对少数群体、罕见事实、边缘 case 和复杂系统尤其危险。",
+        "主要方法": "论文从理论和实验两方面分析。理论上，作者用离散分布、多维 Gaussian 近似和更一般的密度估计直觉说明：有限采样误差、模型表达误差和优化/近似误差会在递归训练中累积。实验上，作者在 GMM、VAE 和语言模型上展示 collapse；LLM 实验使用 OPT-125M，在 WikiText-2 上 fine-tune 后，让每一代模型生成下一代训练数据，再重复 fine-tuning，观察 perplexity 分布、文本质量和低概率序列的变化。",
+        "数据集与实验": "语言模型实验中，第一代模型在真实 WikiText-2 上 fine-tune；随后用当前模型对原始训练块续写，生成等规模人工数据集，下一代模型继续训练。作者比较了完全不保留原始数据，以及每代保留 10% 原始数据等设置。结果显示，递归生成数据会导致样本 perplexity 分布逐代向高概率/低多样性区域聚集，文本出现重复和退化；保留真实数据能缓解退化，但不支持无筛选递归合成数据是安全的结论。",
+        "主要贡献": "主要贡献是把 synthetic data 的长期风险形式化为 model collapse，并说明问题根源不是某个具体模型坏，而是递归采样、有限数据、函数近似和优化偏差共同导致的分布漂移。对今天的 LLM 数据构造来说，它提供了一个硬约束：合成数据可以用，但必须被标记、审计、过滤，并持续锚定真实人类/环境数据，否则数据飞轮可能变成自我污染循环。"
+      },
+      "status": "approved",
+      "added_at": "2026-05-31",
+      "key_figure": {
+        "type": "Figure",
+        "name": "Recursive synthetic-data collapse loop",
+        "page": 1,
+        "path": "assets/paper_images/model-collapse-recursive-data-2024-nature-loop.png",
+        "caption": "Model collapse arises when each generation is trained on data generated by previous models: tail events are under-sampled, errors compound, and the learned distribution drifts toward lower diversity unless anchored by real data and curation.",
+        "caption_cn": "当每一代模型都训练在上一代模型生成的数据上时，长尾事件会被低采样，误差逐代累积，学习到的分布会向低多样性方向漂移；真实数据锚点和数据过滤是关键缓解条件。",
+        "bbox": {},
+        "caption_bbox": {},
+        "source": "manual-summary-from-nature-paper",
+        "confidence": 0.9,
+        "needs_manual_review": false,
+        "contexts": [
+          {
+            "page": 1,
+            "text": "Model collapse is a degenerative process in which model-generated data pollutes the training set of the next generation, causing models to forget the true underlying distribution."
+          },
+          {
+            "page": 1,
+            "text": "Early collapse loses tail events, while late collapse converges to low-variance distorted distributions; access to real data remains crucial."
+          }
+        ]
+      }
+    },
+    {
+      "id": "self-consuming-generative-models-go-mad-2307-01850",
+      "title": "Self-Consuming Generative Models Go MAD",
+      "paper_url": "https://openreview.net/forum?id=ShjMHfmPs0",
+      "pdf_url": "https://arxiv.org/pdf/2307.01850",
+      "authors": [
+        "Sina Alemohammad",
+        "Josue Casco-Rodriguez",
+        "Lorenzo Luzi",
+        "Ahmed Imtiaz Humayun",
+        "Hossein Babaei",
+        "Daniel LeJeune",
+        "Ali Siahkoohi",
+        "Richard G. Baraniuk"
+      ],
+      "venue": "ICLR",
+      "year": 2024,
+      "primary_area": "基础/前沿模型 (含LLM)",
+      "category": "训练数据构造与合成",
+      "keywords": [
+        "Self-Consuming Generative Models",
+        "Model Autophagy Disorder",
+        "MAD",
+        "synthetic data",
+        "autophagous loops",
+        "model collapse",
+        "generative models",
+        "sampling bias",
+        "precision",
+        "recall",
+        "FID",
+        "StyleGAN2",
+        "DDPM",
+        "FFHQ",
+        "MNIST"
+      ],
+      "labels": [
+        "Synthetic Data",
+        "Model Collapse",
+        "Model Autophagy Disorder",
+        "Generative Models",
+        "Data Quality",
+        "ICLR"
+      ],
+      "code_url": "",
+      "note": "和 Nature model collapse 一起看的 synthetic-data 风险论文。Go MAD 更偏图像生成模型和实际训练 loop：它系统比较 fully synthetic loop、synthetic augmentation loop、fresh data loop，并用 FID、precision、recall 衡量质量与多样性退化。核心提醒是：合成数据闭环不只是会整体变差，还会在“质量”和“多样性”之间形成危险 trade-off；用筛选偏向高质量样本可能暂时保住 precision，却会更快损失 recall。要避免 MAD，关键仍是每代有足够 fresh real data 和严格数据治理。",
+      "tldr": "Go MAD 研究生成模型的自吞噬训练闭环：如果下一代模型不断训练在前代模型生成的数据上，且缺少足够新的真实数据，模型会出现 Model Autophagy Disorder，表现为样本质量 precision 或覆盖多样性 recall 逐代下降。",
+      "abstract": "Self-Consuming Generative Models Go MAD studies autophagous training loops in which synthetic data generated by previous model generations is used to train future generative models. Using state-of-the-art image generative models and three loop families that vary fixed versus fresh real data and sampling bias, the paper shows that without enough fresh real data in each generation, future models progressively lose either quality, measured by precision, or diversity, measured by recall. The authors call this failure mode Model Autophagy Disorder (MAD).",
+      "summary_cn": {
+        "研究动机": "生成式 AI 让合成图像、文本和其他数据迅速增加，也诱发一个现实问题：能不能用当前模型生成的数据训练下一代模型。如果这个过程不断重复，就会形成 autophagous/self-consuming loop。作者希望理解这种闭环在生成模型中会如何影响质量和多样性。",
+        "解决问题": "论文要解决的是合成数据自吞噬训练中的退化机制：当训练集逐代混入越来越多前代模型生成的数据时，模型是稳定、提升，还是会逐代损失分布覆盖。它尤其关注两个维度：样本是否看起来真实，也就是 precision；生成分布是否覆盖真实分布的多样性，也就是 recall。",
+        "现象分析": "Go MAD 的关键观察是， synthetic data loop 的风险不只是一句“质量变差”。如果训练数据偏向筛选高质量样本，模型可能短期保持甚至提升 precision，但会更快丢失长尾和多样性；如果追求覆盖更多样本，又可能把低质量样本引入下一代，拉低 precision。因此自吞噬闭环会把数据质量和分布覆盖推向不稳定的 trade-off。",
+        "主要方法": "作者分析三类 autophagous loop。第一是 fully synthetic loop，每一代主要用上一代生成数据训练，退化最快。第二是 synthetic augmentation loop，每一代使用固定真实数据加前代合成数据，真实锚点能减缓但不一定阻止退化。第三是 fresh data loop，每代持续加入新的真实数据，只有 fresh real data 足够时才可能避免 MAD。论文还研究 sampling bias，即对前代生成样本做偏好筛选以在质量和多样性之间取舍。",
+        "数据集与实验": "实验主要基于图像生成模型和标准图像数据集，包括 StyleGAN2 on FFHQ，以及 DDPM on MNIST 等设置。评估指标包括 FID、precision 和 recall。结果显示，在缺少足够新真实数据的闭环里，生成分布会逐代偏离真实分布：FID 变差，precision 或 recall 至少一项持续下降，并且可视化样本中会出现明显 artifact 放大和多样性收缩。",
+        "主要贡献": "主要贡献是把 self-consuming generative training loop 系统化，并提出 Model Autophagy Disorder 这一概念来描述生成模型在递归合成数据上训练时的质量/多样性退化。它补足了 model collapse 文献的图像生成和 precision/recall 视角，也为后续 synthetic data governance 提供了具体约束：需要 fresh real data、来源标记、采样偏差控制和质量-覆盖同时监控。"
+      },
+      "status": "approved",
+      "added_at": "2026-05-31",
+      "key_figure": {
+        "type": "Figure",
+        "name": "Autophagous loop families and MAD trade-off",
+        "page": 1,
+        "path": "assets/paper_images/self-consuming-generative-models-go-mad-2307-01850-loop.png",
+        "caption": "Go MAD compares self-consuming generative training loops and shows that without enough fresh real data, recursive synthetic-data training progressively damages sample quality (precision) or diversity coverage (recall).",
+        "caption_cn": "Go MAD 比较多类自吞噬生成模型训练闭环，说明如果缺少足够新的真实数据，递归合成数据训练会逐代损害样本质量 precision 或分布覆盖 diversity/recall。",
+        "bbox": {},
+        "caption_bbox": {},
+        "source": "manual-summary-from-paper-method-and-openreview-abstract",
+        "confidence": 0.9,
+        "needs_manual_review": false,
+        "contexts": [
+          {
+            "page": 1,
+            "text": "The paper analyzes fully synthetic, synthetic augmentation, and fresh data autophagous loops for generative models."
+          },
+          {
+            "page": 1,
+            "text": "Without enough fresh real data in each generation, future generative models are doomed to have their quality (precision) or diversity (recall) progressively decrease."
+          }
+        ]
+      }
+    },
+    {
+      "id": "alpagasus-training-better-alpaca-fewer-data-2307-08701",
+      "title": "AlpaGasus: Training A Better Alpaca with Fewer Data",
+      "paper_url": "https://arxiv.org/abs/2307.08701",
+      "pdf_url": "https://arxiv.org/pdf/2307.08701",
+      "authors": [
+        "Lichang Chen",
+        "Shengnan Wang",
+        "Yao Fu",
+        "Hao Chen",
+        "Huaxiu Yao",
+        "Liangming Pan",
+        "Philip S. Yu",
+        "Kai-Wei Chang"
+      ],
+      "venue": "ICLR Poster",
+      "year": 2024,
+      "primary_area": "自然语言处理",
+      "category": "训练数据构造与合成",
+      "keywords": [
+        "AlpaGasus",
+        "instruction tuning",
+        "instruction data selection",
+        "data quality",
+        "data filtering",
+        "LLM-as-a-judge",
+        "LLM-as-data-filter",
+        "Alpaca",
+        "ChatGPT evaluation",
+        "quality scoring",
+        "data pruning",
+        "supervised fine-tuning",
+        "SFT",
+        "data-centric AI"
+      ],
+      "labels": [
+        "AlpaGasus",
+        "Instruction Tuning",
+        "Data Selection",
+        "Data Filtering",
+        "LLM-as-a-Judge",
+        "Alpaca",
+        "SFT",
+        "ICLR"
+      ],
+      "code_url": "https://github.com/gpt4life/alpagasus",
+      "note": "这篇是 instruction tuning 数据筛选的早期代表，核心不是生成新数据，而是用强 LLM 给已有 instruction-response pair 逐条打质量分，只保留高分样本。它的价值在于把 Alpaca / Self-Instruct 之后的讨论从“低成本造更多指令数据”推进到“数据质量比数量更关键”：AlpaGasus 只用约 9k 条从 Alpaca 52k 中筛出的高质量样本，就能训练出优于原始 Alpaca 的模型。今天看，它是 LLM-as-data-filter / LLM-as-a-judge for data curation 的重要早期工作，和后来的 instruction data pruning、quality scoring、Deita、LESS、Instruction Mining 等路线相邻。局限是筛选强依赖 ChatGPT/GPT-4 这类 judge，judge 偏好会被蒸馏进学生模型；单条质量分也不能完全保证任务覆盖、多样性、安全性和长尾能力。",
+      "tldr": "AlpaGasus 用 ChatGPT 类强 LLM 对 Alpaca 52k 指令数据逐条评分，过滤掉低质量 instruction-response pair，只保留约 9k 高质量样本做 supervised fine-tuning。结果显示，更少但更干净的数据可以训练出比原始 Alpaca 更好的模型，并显著降低训练成本。",
+      "abstract": "AlpaGasus studies whether instruction-tuning data quality matters more than raw data quantity. The method uses a strong LLM evaluator to score each Alpaca instruction-response example, filters out low-quality examples, and fine-tunes LLaMA models on the retained high-quality subset. Despite using only a small fraction of the original 52K Alpaca data, AlpaGasus achieves better performance than the original Alpaca in automatic and human evaluations, while reducing training time substantially. The paper highlights the importance of data-centric instruction tuning and demonstrates that LLM-based quality filtering can improve supervised fine-tuning efficiency.",
+      "summary_cn": {
+        "研究动机": "Alpaca 证明了用 Self-Instruct 生成的 52k 指令数据可以低成本微调出可用的指令模型，但自动生成数据不可避免包含答非所问、事实错误、格式不符、空泛重复等低质量样本。指令微调不是简单的数据越多越好，低质量样本会把错误行为教给学生模型。作者希望验证：如果先过滤数据，只用少量高质量样本，是否能训练出更好的 Alpaca。",
+        "解决问题": "论文解决的是 instruction tuning data selection：在已有大规模指令数据的情况下，如何自动识别并删除低质量 instruction-response pair，从而用更少数据完成更有效的 SFT。它不是合成新任务，也不是训练 judge，而是把强 LLM 当作数据质量评估器。",
+        "现象分析": "作者观察到 Alpaca 52k 中存在大量质量不均的样本。由于 SFT 会把每条 response 都当成目标答案学习，错误、无关或低信息量回答会直接污染训练信号。相比盲目增加样本数，更干净的训练集可能带来更好的泛化和更低训练成本。强 LLM 已经具备一定的指令遵循和答案评价能力，因此可以作为自动数据过滤器。",
+        "主要方法": "AlpaGasus 对 Alpaca 中每条样本构造评审 prompt，把 instruction、input 和 output 交给 ChatGPT 类强 LLM，让它按指定维度给 response 质量打 0 到 5 分，分数越高表示该维度质量越好。随后按阈值过滤，只保留高分 instruction-response pair，得到约 9k 条高质量训练数据。最后用这些筛选后的数据对 LLaMA 7B/13B 做 supervised fine-tuning，训练流程本身与 Alpaca 类似，但训练集更小、更干净。",
+        "数据集与实验": "实验以 Alpaca 52k 为原始数据源，筛选后保留约 9k 样本。作者训练 AlpaGasus-7B 和 AlpaGasus-13B，并通过 GPT-4/ChatGPT 自动评测和人工评测与 Alpaca、Text-Davinci-003 等系统比较。结果显示 AlpaGasus 用约 17% 的数据超过原始 Alpaca；13B 版本在多项评测中达到 teacher model Text-Davinci-003 超过 90% 的表现，同时 7B 训练时间从 Alpaca 的约 80 分钟降到约 14 分钟。",
+        "主要贡献": "主要贡献是系统展示了 instruction tuning 中数据质量的重要性，并把 LLM-as-a-judge 用到训练数据筛选环节。它说明强 LLM 不只能生成 instruction data，也能作为 data curator，把已有数据中的坏样本剔除。今天看，这篇是数据中心 SFT、LLM 质量打分、自动数据过滤和高效指令微调路线的早期关键背景。"
+      },
+      "status": "approved",
+      "added_at": "2026-05-31",
+      "key_figure": {
+        "type": "Figure",
+        "name": "3",
+        "page": 2,
+        "path": "assets/paper_images/alpagasus-training-better-alpaca-fewer-data-2307-08701-figure-3.png",
+        "caption": "Figure 3: Prompt pG to ChatGPT for rating and filtering training data in Eq. (1).",
+        "caption_cn": "图 3：AlpaGasus 用于让 ChatGPT 评分和过滤训练数据的 prompt。系统提示中填入 instruction、input 和 response，用户提示要求模型按指定质量维度给 0 到 5 分，并输出评分解释；随后只保留超过阈值的高分样本用于指令微调。",
+        "bbox": {
+          "x1": 108.0,
+          "x2": 504.0,
+          "y1": 350.64,
+          "y2": 507.12
+        },
+        "caption_bbox": {
+          "x1": 146.26199340820312,
+          "x2": 465.7390441894531,
+          "y1": 521.0345458984375,
+          "y2": 528.531982421875
+        },
+        "source": "pdffigures2-local-jar",
+        "confidence": 0.95,
+        "needs_manual_review": false,
+        "contexts": [
+          {
+            "page": 2,
+            "text": "The prompt is given in Fig. 3, where “dimension” denotes a 2"
+          },
+          {
+            "page": 3,
+            "text": "Figure 3: Prompt pG to ChatGPT for rating and filtering training data in Eq. (1). user-preferred property such as helpfulness and accuracy. We then only select the triplets with scores higher than a certain threshold to fine-tune a LLaMA-series model following an existing IFT pipeline. Fig. 2 illustrates the data selection and training pipeline. 2.2 D ATA RATING AND FILTERING Given an IFT dataset V of triplets x =(instructio"
+          },
+          {
+            "page": 3,
+            "text": "In order to select S from V , we prompt an API LLM G(·) (e.g., ChatGPT3) as an auto-grader rating each sample x ∈ V by a score G(x, pG) wherein pG is the rating prompt in Fig. 3. We then select xi whose score is above a certain threshold τ, i.e., S ≜ {x ∈ V : G(x, pG) ≥ τ }. (1) We achieve θS by finetuning θ on S using an existing IFT framework. 3We also use claude-2 as our response quality evaluator, which can be found in"
+          }
+        ]
+      }
+    },
+    {
       "id": "progen-progressive-zero-shot-dataset-generation-2210-12329",
       "title": "ProGen: Progressive Zero-shot Dataset Generation via In-context Feedback",
       "paper_url": "https://aclanthology.org/2022.findings-emnlp.269/",
@@ -10943,6 +13135,192 @@
       },
       "status": "approved",
       "added_at": "2026-05-31"
+    },
+    {
+      "id": "orpo-monolithic-preference-optimization-2403-07691",
+      "title": "ORPO: Monolithic Preference Optimization without Reference Model",
+      "paper_url": "https://arxiv.org/abs/2403.07691",
+      "pdf_url": "https://arxiv.org/pdf/2403.07691",
+      "authors": [
+        "Jiwoo Hong",
+        "Noah Lee",
+        "James Thorne"
+      ],
+      "venue": "EMNLP",
+      "year": 2024,
+      "primary_area": "自然语言处理",
+      "category": "基于偏好/反馈的 RL",
+      "keywords": [
+        "ORPO",
+        "odds ratio preference optimization",
+        "preference optimization",
+        "reference-free alignment",
+        "reference model free",
+        "monolithic preference optimization",
+        "instruction tuning",
+        "SFT",
+        "DPO",
+        "RLHF",
+        "preference data",
+        "chosen rejected pairs",
+        "alignment",
+        "LLM post-training"
+      ],
+      "labels": [
+        "ORPO",
+        "Preference Optimization",
+        "Reference-Free Alignment",
+        "SFT",
+        "DPO Alternative",
+        "RLHF",
+        "Post-Training",
+        "EMNLP"
+      ],
+      "code_url": "https://github.com/xfactlab/orpo",
+      "note": "ORPO 是 reference-free preference optimization 的代表方法之一。它的核心价值不是把偏好学习做得最复杂，而是把原本常见的 SFT -> DPO/RLHF 两阶段流程压成一个 monolithic objective：在 SFT loss 之外加入 odds-ratio preference penalty，同时提高 chosen response、压低 rejected response，而且不需要 frozen reference model。工程上这很重要：少一个 reference model，显存和训练流程更轻，也更容易接入普通 SFT 框架。今天看，它应该放在 DPO 之后、SimPO/KTO/IPO/CPO 等轻量偏好优化方法附近理解；局限是仍依赖高质量 chosen/rejected 偏好数据，去掉 reference model 后训练稳定性和偏好强度更依赖 loss 系数、数据质量和模型初始状态。",
+      "tldr": "ORPO 将 supervised fine-tuning 和偏好优化合并为一个训练目标：用普通 negative log-likelihood 学 chosen response，同时用 odds-ratio penalty 拉开 chosen 与 rejected 的概率差距。它不需要 reference model，因此比 DPO/RLHF 流程更轻量。",
+      "abstract": "ORPO proposes a monolithic preference optimization objective for aligning language models without a reference model. Instead of first supervised fine-tuning a model and then applying a separate preference optimization stage such as DPO or RLHF, ORPO combines the standard negative log-likelihood objective with an odds-ratio preference loss over chosen and rejected responses. The odds-ratio term penalizes the model when rejected responses remain relatively likely compared with chosen responses. Experiments across instruction-following benchmarks show that ORPO can improve alignment while reducing the memory and engineering overhead associated with maintaining a frozen reference model.",
+      "summary_cn": {
+        "研究动机": "主流 LLM 对齐流程通常先做 SFT，让模型学会指令格式和回答风格，再用 RLHF 或 DPO 这类偏好优化进一步区分好回答和坏回答。这个流程有效但比较重：DPO 需要 frozen reference model，RLHF 还需要 reward model 和 RL 更新。作者希望把 SFT 和偏好优化合并到一个简单目标里，同时去掉 reference model。",
+        "解决问题": "论文解决的是 reference-free preference alignment：在已有 chosen/rejected 偏好对的情况下，如何不额外维护 reference model，也不分成 SFT 与偏好优化两个阶段，就让模型学会提高 chosen response 的概率并压低 rejected response 的相对概率。",
+        "现象分析": "作者指出，普通 SFT 只最大化目标回答的似然，通常只看 chosen response。它能教会模型模仿高质量回答，但不会显式降低 rejected response 的概率；在某些情况下，模型可能同时提高好回答和坏回答的概率。偏好学习的关键是拉开 chosen 与 rejected 的相对差距，而不是只把 chosen 往上推。",
+        "主要方法": "ORPO 的训练样本是 prompt、chosen response 和 rejected response。目标函数由两部分组成：第一部分是标准 SFT / negative log-likelihood loss，用 chosen response 做监督学习；第二部分是 odds-ratio preference loss，比较当前模型下 chosen 与 rejected 的 odds ratio，并惩罚 rejected 相对 chosen 仍然过高的情况。最终 loss 可理解为 L_ORPO = L_SFT + λ L_OR，其中 λ 控制偏好惩罚强度。整个过程只需要当前 policy model，不需要 frozen reference model。",
+        "数据集与实验": "论文在多个开源 LLM 和 instruction-following / chat benchmark 上评估 ORPO，并与 SFT、DPO 等后训练方法比较。结果显示，ORPO 在 AlpacaEval、MT-Bench 等评测中能显著提升指令遵循和偏好对齐效果，同时因为不需要 reference model，训练显存和实现复杂度低于 DPO 类方法。",
+        "主要贡献": "主要贡献是提出一种 reference-model-free 的单阶段偏好优化目标，把 SFT 和 chosen/rejected 偏好学习统一起来。它为后续更轻量的 alignment 方法提供了重要基线，也推动 ORPO 进入 TRL、Axolotl、LLaMA-Factory 等训练生态。对本文而言，它适合作为 DPO 之后的简化偏好优化代表。"
+      },
+      "status": "approved",
+      "added_at": "2026-05-31",
+      "key_figure": {
+        "type": "Figure",
+        "name": "2",
+        "page": 1,
+        "path": "assets/paper_images/orpo-monolithic-preference-optimization-2403-07691-figure-2.png",
+        "caption": "Figure 2: Comparison of model alignment techniques. ORPO aligns the language model without a reference model in a single-step manner by assigning a weak penalty to the rejected responses and a strong adaptation signal to the chosen responses with a simple log odds ratio term appended to the negative log-likelihood loss.",
+        "caption_cn": "图 2：RLHF、DPO 与 ORPO 的对齐流程对比。ORPO 不需要 reward model 或 frozen reference model，而是在单阶段训练中把负对数似然与 log odds ratio 偏好项结合，对 chosen response 给强适配信号、对 rejected response 施加较弱惩罚。",
+        "bbox": {
+          "x1": 69.84,
+          "x2": 515.04,
+          "y1": 69.84,
+          "y2": 205.92
+        },
+        "caption_bbox": {
+          "x1": 70.86599731445312,
+          "x2": 524.4100341796875,
+          "y1": 219.31356811523438,
+          "y2": 249.22698974609375
+        },
+        "source": "pdffigures2-local-jar",
+        "confidence": 0.95,
+        "needs_manual_review": false,
+        "contexts": [
+          {
+            "page": 2,
+            "text": "Policy DPO ORPO Odds Ratio Preference Optimization Figure 2: Comparison of model alignment techniques. ORPO aligns the language model without a reference model in a single-step manner by assigning a weak penalty to the reje"
+          },
+          {
+            "page": 2,
+            "text": "However, existing preference alignment methods normally consist of a multi-stage process, as shown in Figure 2, typically requiring a second refer- ence model and a separate warm-up phase with supervised fine-tuning (SFT) (Ziegler et al., 2020; Rafailov et al., 2023; Wu et al., 2023). In this paper, we study the role and impact of SFT in pairwise preference datasets for model alignment in Section 3 and propose a simple and novel monolithic alignment method, odds ratio preference optimization (ORPO), which efficiently penaliz"
+          },
+          {
+            "page": 9,
+            "text": "7.3 Computational Efficiency As depicted in Figure 2, ORPO does not require a reference model, unlike RLHF and DPO. In that sense, ORPO is computationally more efficient than RLHF and DPO in two perspectives: 1) memory allocation and 2) fewer FLOPs per batch. The reference model ( πSF T ) in the context of RLHF and DPO denotes the model trained with su- pervised fine-tuning (SFT), which will be the base- line model for updating the parameters with RLHF or DPO (Ziegler"
+          }
+        ]
+      }
+    },
+    {
+      "id": "less-selecting-influential-data-targeted-instruction-tuning-2402-04333",
+      "title": "LESS: Selecting Influential Data for Targeted Instruction Tuning",
+      "paper_url": "https://arxiv.org/abs/2402.04333",
+      "pdf_url": "https://arxiv.org/pdf/2402.04333",
+      "authors": [
+        "Mengzhou Xia",
+        "Sadhika Malladi",
+        "Suchin Gururangan",
+        "Sanjeev Arora",
+        "Danqi Chen"
+      ],
+      "venue": "ICML",
+      "year": 2024,
+      "primary_area": "自然语言处理",
+      "category": "训练数据构造与合成",
+      "keywords": [
+        "LESS",
+        "Low-rank gradiEnt Similarity Search",
+        "instruction data selection",
+        "targeted instruction tuning",
+        "influence functions",
+        "gradient similarity",
+        "data influence",
+        "data selection",
+        "synthetic data filtering",
+        "LoRA gradients",
+        "Adam optimizer",
+        "gradient datastore",
+        "data-centric AI",
+        "efficient fine-tuning"
+      ],
+      "labels": [
+        "LESS",
+        "Data Selection",
+        "Instruction Tuning",
+        "Influence Estimation",
+        "Gradient Similarity",
+        "Targeted Tuning",
+        "Synthetic Data Filtering",
+        "ICML"
+      ],
+      "code_url": "https://github.com/princeton-nlp/LESS",
+      "note": "LESS 的价值不是直接做数据扩展，而是在已有大规模候选数据池，尤其是 LLM 扩展出的合成候选池之后，判断哪些样本真正值得拿来训练。它把 instruction data selection 从 AlpaGasus 式“这条数据质量高不高”推进到“这条数据是否能提升我的目标能力”：用少量目标任务 examples 的梯度，与候选训练样本的梯度做相似度/影响估计，选择最可能降低目标 loss 的数据。这个思路对 RAG、tool-use、math、coding、domain adaptation 都很有启发，因为很多场景不是缺候选数据，而是不知道哪些数据对目标能力有正贡献。局限是工程复杂度明显高于 LLM 打分，需要 warmup、梯度计算和 datastore；它依赖目标 examples 的代表性，也不直接保证安全性、多样性或偏好质量。引用上，Scopus 口径约 31 次，Liner/Scholar 类聚合显示约 279 次，说明它在数据选择/高效指令微调子方向里已经是常用基线。",
+      "tldr": "LESS 是面向 targeted instruction tuning 的影响力数据选择方法。它先为候选 instruction 数据构建低维梯度 datastore，再用少量目标任务样本的梯度去检索最相似、最可能降低目标 loss 的训练样本。论文显示，只用 LESS 选出的 5% 数据，常常可以超过使用完整数据池训练。",
+      "abstract": "LESS proposes an optimizer-aware and efficient algorithm for selecting influential instruction data for targeted instruction tuning. Given a large pool of candidate instruction data and a few examples representing a target capability, LESS estimates how much each candidate training example would reduce the target validation loss. It adapts influence estimation to Adam optimization and variable-length instruction data, uses LoRA warmup training and low-rank gradient projection to build a reusable gradient datastore, and selects examples via Low-rank gradiEnt Similarity Search. Experiments show that training on a LESS-selected 5% subset can often outperform training on the full instruction dataset, and that selected data can transfer across model sizes and model families.",
+      "summary_cn": {
+        "研究动机": "Instruction tuning 常把 FLAN、CoT、Dolly、OpenAssistant 等多源数据混在一起训练通用助手，但真实应用往往需要某种目标能力，例如数学推理、阅读理解、多语言 QA 或领域任务。全量数据不一定最好，很多无关数据会稀释甚至干扰目标能力。作者希望解决 targeted instruction tuning 中的数据选择问题：只给少量目标任务样本，如何从大候选池中选出最能提升该能力的训练数据。",
+        "解决问题": "论文解决的是目标能力定向的数据筛选，而不是数据生成。给定候选 instruction 数据池和少量目标 examples，LESS 要估计每条候选数据对目标任务 loss 的影响，并选择 top-k influential data 用于微调。它特别适合放在数据扩展之后：先生成或收集大量候选样本，再用 LESS 筛出对目标任务最有用的一小部分。",
+        "现象分析": "传统 BM25、n-gram reweighting 或 embedding similarity 更容易捕捉表面相似性，例如语言、词汇、主题相近；但目标能力可能来自更深的任务结构和推理过程。LESS 的核心判断是：如果训练样本和目标样本在模型参数空间中的梯度方向相近，那么训练该样本更可能降低目标 loss。这样可以选出表面不一定相似、但训练影响相近的数据。",
+        "主要方法": "LESS 先用候选数据的一小部分做 warmup LoRA training，并在多个 checkpoint 上收集候选样本的 Adam/LoRA 梯度；然后把高维梯度投影到低维，构建可复用的 gradient datastore。对于目标任务，用户提供少量 examples，LESS 计算它们的压缩梯度，并与候选样本梯度做 cosine similarity / influence scoring。最后选择 influence score 最高的 top-k 数据，用这些数据对目标模型做 LoRA 或全参数 instruction tuning。论文还提出 LESS-T：用较小模型选择数据，再把选出的数据迁移给更大模型或不同模型家族训练。",
+        "数据集与实验": "候选训练池主要由 FLAN v2、CoT、Dolly、OpenAssistant 等 instruction 数据组成，目标评测覆盖 MMLU、TydiQA、BBH 等任务。实验表明，LESS 选择的 5% 数据经常能超过全量数据训练，并优于 Random、BM25、DSIR、RDS 等基线。LESS-T 进一步显示，小模型如 LLaMA-2-7B 选择出的数据也能有效迁移到 LLaMA-2-13B 或 Mistral-7B。",
+        "主要贡献": "主要贡献是把 influence estimation 做成可用于大模型 instruction tuning 的实用数据选择算法，处理了 Adam optimizer、变长 instruction 序列和大规模梯度存储的工程问题。它强调数据选择应围绕目标能力，而不是只看全局质量或表面相似度。对本文而言，LESS 是合成数据扩展后的关键筛选方法：先扩展候选池，再选择真正对目标任务有正贡献的数据。"
+      },
+      "status": "approved",
+      "added_at": "2026-05-31",
+      "key_figure": {
+        "type": "Figure",
+        "name": "1",
+        "page": 3,
+        "path": "assets/paper_images/less-selecting-influential-data-targeted-instruction-tuning-2402-04333-figure-1.png",
+        "caption": "Figure 1: Illustration of LESS. In step 1, we train a selection model MS with LoRA for a warmup period with a small subset of data Dwarmup ⊂ D. In step 2, we compute the Adam LoRA gradient features Γ ∈ R|D|×P for each candidate datapoint and save them in a gradient datastore. In step 3, for any task with few-shot examples Dval (comprising of m subtasks), we compute the gradient features for each validation subtask and select the subset Dtrain with the top 5% training examples ranked by InfAdam. Step 4 is the final training stage with the selected data on a target model MT , which can be trained with either LoRA or full finetuning. Steps 1 and 2 are offline and only need to be computed once per candidate training set D.",
+        "caption_cn": "图 1：LESS 的四步流程。先用候选数据子集做 warmup LoRA 训练；再计算候选样本的 Adam LoRA 梯度并投影成低维 gradient datastore；给定少量目标任务 examples 后计算其梯度特征并按 Inf_Adam 从 datastore 中选出高影响样本；最后用选中的数据训练目标模型。",
+        "bbox": {
+          "x1": 54.96,
+          "x2": 542.16,
+          "y1": 66.96,
+          "y2": 137.04
+        },
+        "caption_bbox": {
+          "x1": 55.439998626708984,
+          "x2": 541.44482421875,
+          "y1": 148.48654174804688,
+          "y2": 214.2650146484375
+        },
+        "source": "pdffigures2-local-jar",
+        "confidence": 0.95,
+        "needs_manual_review": true,
+        "contexts": [
+          {
+            "page": 3,
+            "text": "In this section, we describe the design choices that make LESS computationally efficient, and illustrate the computing steps in Figure 1. We use LoRA (Hu et al., 2021) to efficiently perform the warmup training. Then, we construct a gradient datastore of projected low-dimensional gradient features (Johnson & Lindenstrauss, 1984; Park et al., 2023) that can be reused for different target tasks. Finally, we detail how our data"
+          },
+          {
+            "page": 4,
+            "text": "Gradient Datast or e St ep 4: T r aining Select ed Data T raining Final Model Dataset s LoRA Model f or Selection St ep 1: W armup LoRA T r aining LoRA T raining St ep 3: Select Data Comput e Gradient F eatur es F ew-shot V alidation Examples V alidation F eatur es Select fr om Datast or e Comput e Figure 1: Illustration of LESS. In step 1, we train a selection model MS with LoRA for a warmup period with a small subset of data Dwarmup ⊂ D. In ste"
+          },
+          {
+            "page": 4,
+            "text": "Data Selection Algorithm The data selection strategy (see step 3 in Figure 1) adapts the approach in Section 2 to efficiently operate on subtasks of the validation set (e.g., individual tasks within BBH). For each subtask D(j) val , we compute its average gradient feature for every model checkpoint θ1, ..., θN : ¯∇ℓ(D(j) val ; θi) = 1 |D(j) val | X z′∈D(j) val ˜∇ℓ(z′; θi). As in Definition 3.1, we then aggregate the scores of how close the given datapoint is to each validation subtask throug"
+          }
+        ]
+      }
     }
   ]
 }
