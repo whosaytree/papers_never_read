@@ -8289,6 +8289,91 @@
       }
     },
     {
+      "id": "ar-med-2512-03737",
+      "title": "AR-Med: Automated Relevance Enhancement in Medical Search via LLM-Driven Information Augmentation",
+      "paper_url": "https://arxiv.org/abs/2512.03737",
+      "pdf_url": "https://arxiv.org/pdf/2512.03737",
+      "authors": [
+        "Chuyue Wang",
+        "Jie Feng",
+        "Yuxi Wu",
+        "Hang Zhang",
+        "Zhiguo Fan",
+        "Bing Cheng",
+        "Wei Lin"
+      ],
+      "venue": "arXiv",
+      "year": 2025,
+      "primary_area": "其他 ML 主题",
+      "category": "检索与索引",
+      "keywords": [
+        "AR-Med",
+        "medical search",
+        "relevance assessment",
+        "retrieval augmentation",
+        "knowledge distillation",
+        "cross-modal matching",
+        "expert rules",
+        "LocalQSMed",
+        "pharmaceutical recommendation",
+        "industrial deployment"
+      ],
+      "labels": [
+        "Medical Search",
+        "Industrial Practice",
+        "RAG",
+        "Knowledge Distillation",
+        "Multimodal Retrieval"
+      ],
+      "code_url": "",
+      "note": "这是一个很值得借鉴的工业界最佳实践案例。它的价值不只在某个单点模型或指标，而在于展示了如何把知识检索、专家规则、多模态商品核验、教师—学生蒸馏、离线专家评测和线上 A/B 测试串成完整闭环。对于高风险、高流量且有严格延迟约束的业务，AR-Med 提供了一套从大模型离线能力到轻量线上服务的系统化落地范式。",
+      "tldr": "AR-Med 面向真实医药商品搜索，把网页知识检索、专家规则、商品图文一致性检查和大模型相关性判断组合成工业流水线，再将大模型能力蒸馏到 0.6B 小模型以满足线上延迟要求；其核心价值不在提出新模型结构，而在给出一套经过线上 A/B 验证的医疗搜索落地方案。",
+      "abstract": "Accurate and reliable search on online healthcare platforms is critical for user safety and service efficacy. Traditional methods, however, often fail to comprehend complex and nuanced user queries, limiting their effectiveness. Large language models (LLMs) present a promising solution, offering powerful semantic understanding to bridge this gap. Despite their potential, deploying LLMs in this high-stakes domain is fraught with challenges, including factual hallucinations, specialized knowledge gaps, and high operational costs. To overcome these barriers, we introduce AR-Med, a novel framework for Automated Relevance assessment for Medical search that has been successfully deployed at scale on the Online Medical Delivery Platforms. AR-Med grounds LLM reasoning in verified medical knowledge through a retrieval-augmented approach, ensuring high accuracy and reliability. To enable efficient online service, we design a practical knowledge distillation scheme that compresses large teacher models into compact yet powerful student models. We also introduce LocalQSMed, a multi-expert annotated benchmark developed to guide model iteration and ensure strong alignment between offline and online performance. Extensive experiments show AR-Med achieves an offline accuracy of over 93%, a 24% absolute improvement over the original online system, and delivers significant gains in online relevance and user satisfaction. Our work presents a practical and scalable blueprint for developing trustworthy, LLM-powered systems in real-world healthcare applications.",
+      "summary_cn": {
+        "研究动机": "医药搜索中的相关性错误可能直接影响用户安全。传统关键词或 BERT 系统难以理解简称、口语、同音词和产品代号等复杂查询，也容易被商家在商品标题中堆砌品牌与功效词所欺骗。通用大模型虽然语义理解更强，但又存在医疗知识不足、事实幻觉、推理成本高和线上延迟过大的问题。",
+        "解决问题": "论文要解决用户查询与医药商品 SPU 之间的自动相关性判定问题：既要正确区分高度相关、较低相关和不相关商品，又要应对查询歧义、专业医疗知识缺口、商家标题作弊、商品图文不一致，以及海量线上请求下的成本与延迟约束。",
+        "现象分析": "作者总结了三类主要失效来源。第一，极短或模糊查询经过普通网页搜索后容易召回汽车、音乐等无关信息；第二，大模型缺少可靠上下文时可能过度思考，给出看似合理但医学上错误的判断；第三，只依赖商品文本容易被品牌蹭词或夸大功效欺骗，必须结合包装图片核验品牌、规格、适用人群和功效。此外，大模型离线效果虽好，但线上服务要求数十毫秒级响应，直接部署 32B 或 70B 模型并不现实。",
+        "主要方法": "AR-Med 首先对用户查询做类别感知改写和网页知识增强，并用相关性打分与轻量模型进行两阶段噪声过滤；随后抽取品牌、剂型、成分、功效和适用人群等实体，动态召回医疗专家规则；在商品侧使用视觉语言模型读取包装图片，与商家提交的 SPU 文本交叉核验，识别品牌蹭词和虚假描述；最后利用 Qwen3-32B 等教师模型通过多提示投票产生高置信标签，并将领域知识蒸馏到 Qwen3-0.6B 学生模型，以支持低成本在线推理。",
+        "数据集与实验": "论文构建 LocalQSMed，包含 4,400 个真实 query-SPU 对，由 20 名经过训练的医疗专家标注，并混合高频样本和历史错误样本。原生产系统准确率为 69.28%，消融实验中的最佳模块组合达到 93.76%。蒸馏后的 0.6B 领域模型所在方案达到 91.19%，明显高于对照 Llama-3.3-70B 方案的 71.49%。图文联合扩展在跨模态一致性任务上达到 0.7759 Precision 和 0.9138 Recall。线上 A/B 实验向测试组分配 25% 流量，医疗主搜索的 UV_CXR、UV_CTR 和 UV_CVR 分别提升 0.35%、0.16% 和 0.19%。",
+        "主要贡献": "主要贡献是一套完整的工业化医疗搜索相关性方案：用外部知识和专家规则约束大模型，用多模态信息抵抗商品文本作弊，用知识蒸馏满足线上成本要求，再用专家标注 benchmark、线上坏案例监控和 A/B 实验形成持续迭代闭环。它更接近经过真实业务验证的系统最佳实践，而不是单点算法创新，对高风险、高吞吐、强延迟约束场景的大模型落地很有参考价值。"
+      },
+      "status": "approved",
+      "added_at": "2026-07-11",
+      "key_figure": {
+        "type": "Figure",
+        "name": "1",
+        "page": 1,
+        "path": "assets/paper_images/ar-med-2512-03737-figure-1.png",
+        "caption": "Figure 1: An illustration of the proposed framework, encompassing three key components: Knowledge Retrieval, Expert Rule Guidance, and Cross-modal Information Matching.",
+        "caption_cn": "图 1：AR-Med 总体框架。系统分别从用户查询和商品 SPU 两侧进行信息增强，并结合精确知识检索、专家规则召回和商品图文一致性匹配，为大模型提供可验证的医疗上下文，最终完成医药搜索相关性判定。",
+        "bbox": {
+          "x1": 52.8,
+          "x2": 559.1999999999999,
+          "y1": 82.8,
+          "y2": 262.08
+        },
+        "caption_bbox": {
+          "x1": 53.79800033569336,
+          "x2": 558.2058715820312,
+          "y1": 265.6365661621094,
+          "y2": 282.61199951171875
+        },
+        "source": "pdffigures2-local-jar",
+        "confidence": 0.95,
+        "needs_manual_review": false,
+        "contexts": [
+          {
+            "page": 2,
+            "text": "Figure 1: An illustration of the proposed framework, encompassing three key components: Knowledge Retrieval, Expert Rule Guidance, and Cross-modal Information Matching. highlighting risks in"
+          },
+          {
+            "page": 2,
+            "text": "2 METHODS Our AR-Med approach comprises three primary components, as illustrated in Figure 1. First, we introduce a retrieval-augmented generation framework that integrates LLMs’ reasoning capabilities with external medical knowledge, expert rules, and multimodal ver- ification to enhance accuracy and mitigate hallucinations. Second, we implement a knowledge distillation scheme leveraging accu- mulated real-world data to tra"
+          }
+        ]
+      }
+    },
+    {
       "id": "coral-2403-06447",
       "title": "CoRAL: Collaborative Retrieval-Augmented Large Language Models Improve Long-tail Recommendation",
       "paper_url": "https://arxiv.org/abs/2403.06447",
