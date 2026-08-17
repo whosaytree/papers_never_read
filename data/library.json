@@ -13406,6 +13406,105 @@
           }
         ]
       }
+    },
+    {
+      "id": "mechanist-2608-12036",
+      "title": "Mechanist: AI as a Scientific Instrument for Discovering the Mechanisms of Intelligence",
+      "paper_url": "https://arxiv.org/abs/2608.12036",
+      "pdf_url": "https://arxiv.org/pdf/2608.12036",
+      "authors": [
+        "Mengru Wang",
+        "Junfeng Fang",
+        "Shuofei Qiao",
+        "Zhenqian Xu",
+        "Haoming Xu",
+        "Haoxiong Wang",
+        "Shumin Deng",
+        "Linyi Yang",
+        "Zhixiang Cui",
+        "Xin Xu",
+        "Yunzhi Yao",
+        "Buqiang Xu",
+        "Fei Shen",
+        "Haozhe Luo",
+        "Yunxiang Wei",
+        "Ningyu Zhang",
+        "Julian McAuley",
+        "Tat Seng Chua",
+        "Huajun Chen"
+      ],
+      "venue": "arXiv",
+      "year": 2026,
+      "primary_area": "基础/前沿模型 (含LLM)",
+      "category": "Agent 与工具使用",
+      "keywords": [
+        "Mechanist",
+        "AI scientist",
+        "agentic system",
+        "automated scientific discovery",
+        "mechanistic interpretability",
+        "mechanism discovery",
+        "hypothesis generation",
+        "experiment execution",
+        "causal intervention",
+        "knowledge graph",
+        "belief-state reasoning",
+        "subliminal learning",
+        "scientific foundation models",
+        "multi-agent framework"
+      ],
+      "labels": [
+        "AI Scientist",
+        "Research Agent",
+        "Mechanistic Interpretability",
+        "Automated Experimentation",
+        "Causal Intervention",
+        "Knowledge Graph",
+        "Multi-Agent"
+      ],
+      "code_url": "https://github.com/zjunlp/Mechanist",
+      "note": "",
+      "tldr": "Mechanist 是一个面向 AI 机制研究的多智能体科研系统，把跨学科文献检索、机制假设生成、实验执行、结果验证与失败迭代串成闭环；它在 16 篇论文复现实验中比 Claude Code 和 AI Scientist 更可靠，并用自主发现的机制解释和干预跨模态隐性特征传递、信念状态推理与蛋白质序列生成。",
+      "abstract": "AI models have achieved remarkable success across diverse domains, yet the mechanisms underlying their capabilities and the risks they may pose remain poorly understood. As AI development becomes faster and increasingly automated, mechanistic exploration remains largely manual, widening the gap between what models can do and our ability to understand and control them. To bridge this gap, we introduce Mechanist, an agentic system that uses AI as a scientific instrument for the autonomous discovery of mechanisms underlying AI intelligence. To support autonomous mechanistic discovery, we construct an interpretability-focused knowledge graph of approximately 13,000 papers and integrate it with a multidisciplinary database of 43 million papers spanning 26 fields. We further curate a library of 32 foundational methods for mechanism analysis, causal intervention, and validation. Compared with Claude Code and existing AI-scientist systems, Mechanist generates more valuable mechanism hypotheses and executes experiments more reliably. Mechanist also demonstrates a progression from discovering model behaviors to explaining and controlling AI models. Specifically, Mechanist first uncovers a counterintuitive safety risk in scientific laboratories, showing that unsafe traits can transfer across modalities through apparently safe training data. Mechanist then develops a mechanism theory of belief, revealing how models represent world knowledge, form beliefs, infer the beliefs of others, and how these mechanisms emerge during pretraining. Finally, Mechanist translates these mechanistic insights into practical interventions that improve model performance across diverse scenarios and steer scientific foundation models toward generating DNA sequences with specified properties.",
+      "summary_cn": {
+        "研究动机": "AI 模型能力和自动化研发速度快速增长，但解释这些能力、失效与潜在风险的机制研究仍高度依赖人工：研究者要手动查文献、提出假设、选择可解释性方法、搭建实验并核验因果证据。作者希望缩小“模型会做什么”与“人类能否理解和控制它”之间不断扩大的差距。",
+        "解决问题": "论文要把机制研究从零散的自动神经元描述推进为端到端、可迭代的自主科学发现：系统不仅生成解释，还要围绕一个研究目标提出可证伪假设，选择合适的机制分析方法，真正执行带对照和因果干预的实验，审计证据可靠性，并在失败时返回上游修正假设或实验设计。",
+        "现象分析": "作者认为现有 AI Scientist 多聚焦训练或领域任务的预定目标，自动可解释性系统也常停留在描述单个 neuron/feature；真正的机制理论需要跨文献形成假设，并贯通行为发现、机制定位、因果验证和干预控制。论文用四个案例展示这条路径：从发现安全数据也能传递不安全倾向，到定位个人信念与归因信念对应的不同 attention heads，再把机制用于推理增强和 DNA 生成控制。",
+        "主要方法": "Mechanist 采用中心 orchestrator 加四个阶段智能体：Hypothesis Agent 基于约 1.3 万篇可解释性文献知识图谱和覆盖 26 个领域、4300 万篇论文的跨学科图谱生成原子化假设；Experiment Agent 从 32 种机制方法中选择 probing、ablation、patching、steering、SAE 等工具并执行实验；Verification Agent 检查数据泄漏、指标、实验产物可追溯性与跨模型/数据/方法稳健性；Iteration Agent 根据独立审查把问题路由回假设或实验阶段。各阶段通过结构化文件交接，并用追加式审查记忆支持恢复与多轮迭代。",
+        "数据集与实验": "系统评测包含两部分：假设按新颖性、影响力和可检验性评价；实验执行则要求 Mechanist、Claude Code 和 AI Scientist 在不可访问原论文与代码的条件下复现 16 篇、覆盖 9 类机制可解释性主题的主张。人工评审下 Mechanist 在数据使用、实验设计、实验执行、结果分析四维分别达到 87.2%、83.3%、92.2%、86.5%，比 Claude Code 高约 9–13 个百分点。案例中，安全过滤后的实验室数据仍使学生模型多模态不安全回答率升至 48.6%；机制引导的 belief-head 干预在 Pythia-410M/1B/2.8B 上带来 +15.3%/+8.8%/+3.5% 净提升；Evo2-7B 特征 steering 将 900 条序列的平均预测 α-helix 含量从 43.8% 提至 56.6%。",
+        "主要贡献": "主要贡献是把 AI 机制研究产品化为一个有领域知识、实验工具、证据审计和失败迭代的科研智能体闭环，并给出从新行为发现到机制理论、能力干预和跨学科设计的完整案例。它同时开放代码、机制方法库和数据资源。不过论文仍建议把系统作为 human-AI co-scientist 使用；16 篇复现和几个重点案例尚不足以证明对所有模型、机制问题与科学领域的普适自主发现能力。"
+      },
+      "status": "approved",
+      "added_at": "2026-08-17",
+      "key_figure": {
+        "type": "Figure",
+        "name": "2",
+        "page": 2,
+        "path": "assets/paper_images/mechanist-2608-12036-figure-2.png",
+        "caption": "Fig. 2: Overview and evaluation of Mechanist. a, The Mechanist framework consists of four stages: hypothesis generation, experiment execution, verification, and iteration. Specifically, hypothesis generation is inspired by interdisciplinary knowledge from the existing knowledge library, to which new discoveries validated by Mechanist are subsequently added. b, Benchmark design for comparing Claude Code, AI-Scientist and Mechanist. The benchmark evaluates the reliability of experimental execution by reproducing the paper and assesses generated hypotheses for novelty, impact, and testability. c, Reliability of experimental execution assessed through the reproduction of 16 existing papers. Experimental outcomes are independently evaluated by human experts and by an LLM judge, Claude Opus 5. d, Agreement between human and LLM evaluations of experimental reliability. Each point represents one reproduced experiment; the dashed line indicates perfect agreement. e, Overall quality of hypotheses generated for tasks in science, language, reasoning, and safety. f, Evaluation of hypotheses generated by Claude Code, AI-Scientist, and Mechanist across three dimensions: novelty, impact, and testability. g, Joint novelty and testability space of the hypotheses generated by CC.",
+        "caption_cn": "图 2：Mechanist 的总体框架与评测。a，系统在跨学科知识库和机制分析工具支持下，依次执行假设生成、实验、验证与迭代，并保留人工介入，最终输出风险行为发现、行为机制理论、智能增强和跨学科机制设计。b，Claude Code、AI-Scientist 与 Mechanist 的假设质量及论文复现实验评测设计。c–d，16 篇论文复现实验的可靠性及人工评审与 LLM 评审的一致性。e–g，三套系统在知识、语言、安全、科学任务上的假设质量，以及新颖性、影响力和可检验性对比。",
+        "bbox": {
+          "x1": 72.0,
+          "x2": 536.16,
+          "y1": 74.88,
+          "y2": 577.1999999999999
+        },
+        "caption_bbox": {
+          "x1": 46.79999923706055,
+          "x2": 566.9879760742188,
+          "y1": 588.237548828125,
+          "y2": 715.06298828125
+        },
+        "source": "pdffigures2-local-jar",
+        "confidence": 0.95,
+        "needs_manual_review": false,
+        "contexts": [
+          {
+            "page": 3,
+            "text": "r merely mimic patterns?… •Mechanism Method: SAE, casual tracing, logits lens …•Experimental Tips … Interdisciplinary Inspiration a •Discover new phenomenon •Explore mechanism•Control Model behaviors Human in Loop 2 Experiment No 1Hypothesis3 Verification Experiment is reliable, and results are robust4 IterationYes Claude CodeAI-ScientistMechanist Claude CodeAI-ScientistMechanistd g Claude CodeAI-ScientistMechanistf Fig. 2: Overview and evaluation of Mechanist."
+          }
+        ]
+      }
     }
   ]
 }
