@@ -2556,6 +2556,39 @@
         "confidence": 0.43,
         "needs_manual_review": true
       }
+    },
+    {
+      "id": "shengyu-feng-beyond-rl-part1-sampling",
+      "title": "A Gallery of Methods Beyond RL — Part I: Sampling Methods",
+      "url": "https://shengyu-feng.github.io/blog/2026/08/27/beyond-RL/",
+      "source": "Shengyu Feng 个人博客",
+      "published_at": "2026-08-27",
+      "added_at": "2026-09-13",
+      "tags": [
+        "LLM 推理",
+        "推理时计算",
+        "目标分布",
+        "重要性采样",
+        "TSMC",
+        "MCMC"
+      ],
+      "summary": "这是一篇以“目标分布”为主线的方法教程。作者从 KL 正则化优化出发，串联重要性采样、TSMC 与 MCMC，解释如何通过采样获得更符合目标的解。文章的价值在于统一视角和方法联系；“采样与优化”是结尾的归纳与展望。",
+      "key_points": [
+        "目标分布连接优化与采样：KL 正则化目标对应 p(x)∝p₀(x)e^{-g(x)/β}。",
+        "重要性采样：对完整候选加权、重采样；提议分布偏离目标时容易权重退化。",
+        "TSMC：根据部分轨迹的未来价值逐步重采样，把计算分配给有希望的路径。",
+        "MCMC：保留前缀、重新生成后缀，再按概率接受或拒绝候选，使输出逐渐逼近 p₀(x)^α 的序列级锐化分布。模型只负责生成和计算概率，参数保持不变；高概率也不保证正确。",
+        "训练展望：从目标分布获得样本后，可以进一步监督训练模型模仿；本文未提出新的完整训练算法。"
+      ],
+      "quotes": [
+        {
+          "text": "How do we actually sample from the target distribution?",
+          "note": "理解：明确目标分布后，怎样有效获得它的样本，是全文比较不同方法的核心问题。"
+        }
+      ],
+      "my_note": "",
+      "related_papers": [],
+      "status": "approved"
     }
   ]
 }
