@@ -13505,6 +13505,73 @@
           }
         ]
       }
+    },
+    {
+      "id": "seed-2607-14777",
+      "title": "SEED: Self-Evolving On-Policy Distillation for Agentic Reinforcement Learning",
+      "paper_url": "https://arxiv.org/abs/2607.14777",
+      "pdf_url": "https://arxiv.org/pdf/2607.14777",
+      "authors": [
+        "Jinyang Wu",
+        "Shuo Yang",
+        "Zhengxi Lu",
+        "Fan Zhang",
+        "Yuhao Shen",
+        "Lang Feng",
+        "Haoran Luo",
+        "Zheng Lian",
+        "Shuai Zhang",
+        "Zhengqi Wen",
+        "Jianhua Tao"
+      ],
+      "venue": "arXiv 预印本；会议录用信息暂未核实",
+      "year": 2026,
+      "primary_area": "基础/前沿模型 (含LLM)",
+      "category": "Agent 与工具使用",
+      "labels": [
+        "Agent 强化学习",
+        "自蒸馏",
+        "技能学习"
+      ],
+      "keywords": [
+        "SEED",
+        "hindsight skills",
+        "on-policy distillation",
+        "GRPO",
+        "细粒度监督"
+      ],
+      "code_url": "https://github.com/jinyangwu/SEED",
+      "note": "",
+      "tldr": "SEED 让 Agent 做完任务后总结经验，再利用这些经验调整对原有动作的学习力度，与任务奖励一起训练模型。推理时无需额外提供经验文本。",
+      "summary_cn": {
+        "研究动机": "一次任务失败，过程中也可能有值得保留的正确动作。只看最终奖励，难以区分这些动作的价值。",
+        "解决问题": "利用完整任务经历中的信息，为中间动作提供更具体的学习指导。",
+        "现象分析": "论文将复盘得到的简短行动规则称为 skill。成功经历可总结有效步骤，失败经历可总结应避免的错误。这些规则由模型生成，仍可能出错。",
+        "主要方法": "先教模型根据任务经历总结规则。训练时，模型先正常执行任务，再生成对应规则。随后，分别让模型在“只看原有历史”和“额外看到规则”时，计算原先动作中各 token 的概率。如果规则让某个 token 的概率提高，训练就更强地强化它；反之，强化力度较弱。这项辅助训练与奖励驱动的 GRPO 共同更新参数。下一轮使用更新后的模型继续执行和复盘。",
+        "数据集与实验": "主实验覆盖 ALFWorld、搜索问答和 WebShop。Qwen2.5-3B 的结果如下（%，GRPO → SEED）：ALFWorld 宏平均成功率 75.0 → 91.8；搜索问答宏平均准确率 36.4 → 45.7；WebShop 成功率 63.3 → 78.9。部分设置仍低于其他方法，例如 7B 的搜索问答准确率和 WebShop 成功率低于 SDAR。",
+        "主要贡献": "将任务复盘接入强化学习，使模型持续从自身经历中学习。经验通过参数更新保留下来，部署时无需检索技能库或附加技能提示。"
+      },
+      "abstract": "原文摘要：https://arxiv.org/abs/2607.14777（此处未全文转载）",
+      "status": "approved",
+      "added_at": "2026-09-13",
+      "key_figure": {
+        "type": "Figure",
+        "name": "2",
+        "page": 4,
+        "path": "assets/paper_images/seed-2607-14777-figure-2.png",
+        "caption": "Overview of SEED.",
+        "caption_cn": "展示“执行任务 → 总结规则 → 辅助训练 → 更新模型”的完整流程。",
+        "bbox": {
+          "x1": 108,
+          "y1": 80,
+          "x2": 504,
+          "y2": 364
+        },
+        "source": "pdfplumber-manual-crop",
+        "confidence": 1.0,
+        "needs_manual_review": false,
+        "contexts": []
+      }
     }
   ]
 }
