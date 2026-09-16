@@ -15020,6 +15020,78 @@
         "source": "docs/paper_notes/radar-2608-01810.md",
         "url": "paper_notes/radar-2608-01810.html"
       }
+    },
+    {
+      "id": "trca-2608-16156",
+      "title": "TRCA: Transition-wise Rubric Credit Assignment for Long-horizon LLM Agents",
+      "paper_url": "https://arxiv.org/abs/2608.16156v1",
+      "pdf_url": "https://arxiv.org/pdf/2608.16156v1",
+      "authors": [
+        "Huan Zhang",
+        "Mingju Chen",
+        "Dongxu Zhou",
+        "Can Lv",
+        "Heng Chang",
+        "Sen Cui",
+        "Faguo Wu",
+        "Shiji Zhou"
+      ],
+      "venue": "arXiv 预印本；会议或期刊录用信息未核实",
+      "year": 2026,
+      "primary_area": "强化学习",
+      "category": "探索与奖励设计",
+      "labels": [
+        "Rubric 奖励",
+        "长程 Agent",
+        "信用分配",
+        "失败轨迹利用"
+      ],
+      "keywords": [
+        "TRCA",
+        "transition-wise credit assignment",
+        "reward shaping",
+        "ALFWorld",
+        "WebShop",
+        "search-augmented QA"
+      ],
+      "code_url": "",
+      "note": "",
+      "tldr": "TRCA 用固定的 Rubric 规则检查每次动作引起的环境变化，将局部表现与首次达成的进展转为逐步奖励，使长程 Agent 在成功轨迹稀少时也能从失败交互中学习。",
+      "abstract": "Long-horizon large language model (LLM) agents are typically optimized with sparse terminal outcomes, making fine-grained credit assignment across multi-step interactions difficult. Existing approaches either rely on process evaluators, which incur annotation and inference costs, or derive step-level credit from successful trajectories. However, successful trajectories are extremely scarce during early-stage reinforcement learning, substantially weakening anchor-based methods.\n\nWe propose Transition-wise Rubric Credit Assignment (TRCA), which derives step-level supervision directly from action-induced transitions without learned evaluators or successful anchors. TRCA evaluates each transition using Evidence, Execution, and Invalidity rubrics to capture task-relevant information acquisition, valid task execution, and invalid or regressive behavior.\n\nFrom these judgments, Foundational Rubric Reward measures local transition quality, while Breakthrough Rubric Reward tracks newly covered Evidence and Execution conditions to reward incremental task progress. Combined with terminal outcomes, these signals produce fine-grained step-level advantages for policy optimization. Experiments on ALFWorld, WebShop, and seven search-augmented question-answering benchmarks show consistent improvements over the evaluated baselines.\n\nWith Qwen2.5-7B-Instruct, TRCA improves the WebShop score by 6.0%-12.6%; with Qwen2.5-3B-Instruct, it improves the average SearchQA score by 1.9%-18.3%. These results demonstrate the effectiveness of transition-wise rubric credit assignment for long-horizon tasks with sparse successful anchors.",
+      "summary_cn": {
+        "研究动机": "长程 Agent 通常只在任务结束时获得成功或失败反馈，难以判断中间哪些动作有帮助。过程奖励模型会增加标注或推理成本；依赖成功轨迹提供参照的方法，在训练初期又可能缺少有效参照。因此，作者希望直接从环境反馈中提取细粒度监督。",
+        "解决问题": "在没有成功轨迹参照、训练中不调用额外 Judge 的条件下，为每一步动作分配信用。具体需要区分：获取了相关信息、完成了有效操作、发生了无效行为，以及是否首次达成新的任务条件。",
+        "现象分析": "作者在 ALFWorld、WebShop 上对 Qwen2.5-1.5B-Instruct 的早期训练轨迹做诊断：96.5% 的轨迹失败，85.6% 的任务采样组没有成功轨迹，但失败轨迹中 72.2% 的动作仍具有可诊断的转移信号。\n\n这些比例是多个诊断批次的汇总；“可诊断信号”包括动作能够合法执行，不能直接解释为 72.2% 的动作都推进了任务。该诊断使用人工和 GPT-4o 辅助标注，与后续训练采用的规则判定需要区分。",
+        "主要方法": "TRCA 先让 LLM 为每类环境生成一次固定 Rubric 库，检查动作是否获取相关信息、完成有效操作或产生无效行为。对具体任务，程序把目标、属性等要求填入规则；训练时根据动作前后的环境反馈判定各条是否满足，无需逐步调用 Judge。\n\n每一步得到两种奖励：基础奖励汇总当前触发的正负条目；突破奖励只奖励这条轨迹首次满足的正向条目，避免重复覆盖持续获得同一份突破奖励。两者按预设权重混合，规则和权重在训练中保持固定。\n\n随后，算法累计当前步骤之后的奖励，并在相近情境的动作之间比较回报，再结合整条轨迹的最终成败，决定鼓励或抑制哪些动作。模型更新后，更可能选择带来较好回报的动作；失败轨迹中的有效步骤也因此可以用于学习。",
+        "数据集与实验": "实验覆盖 ALFWorld 家务操作、WebShop 商品购买，以及 NQ、TriviaQA、PopQA、HotpotQA、2Wiki、MuSiQue、Bamboogle 七个检索增强问答数据集。问答采用严格归一化 Exact Match；NQ、HotpotQA 为域内，其余为域外测试。\n\n7B，ALFWorld 总成功率：TRCA 94.5%，GraphGPO 93.3%，增加 1.2 个百分点；7B，WebShop 平均分：TRCA 92.9，GraphGPO 86.9，增加 6.0 分；7B，WebShop 成功率：TRCA 83.8%，GraphGPO 80.3%，增加 3.5 个百分点；3B，七项问答平均 EM：TRCA 45.4%，HCAPO 43.5%，增加 1.9 个百分点；7B，七项问答平均 EM：TRCA 48.4%，HCAPO 47.3%，增加 1.1 个百分点。\n\nALFWorld、WebShop 报告三个随机种子的均值与标准差；问答表未报告同等误差统计。消融中，去掉任一奖励分量都会降低表现，去掉突破奖励的影响更大。整体均值领先也不代表所有子任务都领先，例如 7B 的 PopQA、MuSiQue 仍有更高的基线结果。",
+        "主要贡献": "将 Rubric 从回答质量评价扩展到交互中的状态转移评价，并组合“当前步骤质量”和“首次覆盖进展”两种训练信号；实验显示，这种设计能够改善成功反馈稀少时的学习效果。\n\n适用边界是环境需要提供足够明确的可观测反馈，并具备任务解析器和规则适配器。迁移到开放环境仍涉及这些组件的设计与可靠性验证。理论分析也没有证明奖励塑形必然保持最优策略不变，或完整训练估计量必然降低方差。"
+      },
+      "status": "approved",
+      "added_at": "2026-09-16",
+      "key_figure": {
+        "type": "Table",
+        "name": "1",
+        "page": 5,
+        "path": "assets/paper_images/trca-2608-16156-table-1.png",
+        "caption": "Table 1: Performance on ALFWorld and WebShop. Results are averaged over 3 random seeds. For ALFWorld, we report the average success rate (%) for each subtask as well as the overall result. For WebShop, we report both the average score and the average success rate (%). We compare TRCA with other representative baselines. Best results are bolded.",
+        "caption_cn": "TRCA 与其他方法在 ALFWorld 和 WebShop 上的表现。强化学习结果为三个随机种子的均值，括号内为标准差；ALFWorld 报告任务成功率，WebShop 同时报告平均得分与成功率。",
+        "bbox": [
+          52,
+          51,
+          560,
+          447
+        ],
+        "caption_bbox": {},
+        "source": "pdf-render-crop-reviewed",
+        "confidence": 1.0,
+        "needs_manual_review": false,
+        "contexts": []
+      },
+      "analysis_note": {
+        "title": "方法图与实验对照",
+        "source": "docs/paper_notes/trca-2608-16156.md",
+        "url": "paper_notes/trca-2608-16156.html"
+      }
     }
   ]
 }
