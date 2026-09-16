@@ -203,7 +203,7 @@ GitHub Pages 部署：
 - 一级分类 / 二级分类
 - 作者 / venue / 年份
 - TL;DR
-- 六维中文总结
+- 六维中文总结；“主要方法”默认用 2–3 个自然段、约 200–350 字讲清核心流程，比一句话摘要稍详细即可，不拆成长步骤清单或教程。沿用用户已熟悉的概念，新术语简短解释，只保留影响理解的公式或参数，区分固定规则与学习参数。
 - 标签
 - 关键词
 - 代码仓库
@@ -212,6 +212,8 @@ GitHub Pages 部署：
 - 直接展示拟入库的关键图/表图片，并附原文编号、来源页码、中文图注和选择理由；不能只给文字说明或图片链接。
 
 预审图片保存在独立草稿或临时目录，展示前检查清晰度、裁切完整性及图文对应关系，不写入 `assets/paper_images/`。若原文无法访问或图片无法可靠提取，明确说明原因，不伪造替代图。审核通过后沿用草稿展示的图片与图注；需要更换时，先展示新版供审核。
+
+主要方法尽可能配一张简洁的图，优先采用原文方法图；缺少合适原图时，可依据已核实内容绘制通常含 4–6 个节点的流程或关系示意，标明“依据论文整理的示意图”、来源章节与简化范围，不冒充原图或编造结果。自绘图同样展示并纳入审核，可作为拟入库关键图，不编造原文编号和页码。图文互补，理解难度按当前对话体现的背景知识调整。参见 `prompts/method_diagram.txt`。
 
 ### 入库发布阶段
 
@@ -373,6 +375,7 @@ python3 scripts/backfill_key_figures.py --limit 10
 
 - `prompts/summary_system.txt`
 - `prompts/summary_user_template.txt`
+- `prompts/method_diagram.txt`
 - `prompts/category_system.txt`
 - `prompts/category_user_template.txt`
 - `prompts/key_figure_selector.txt`
