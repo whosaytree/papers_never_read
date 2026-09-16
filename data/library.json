@@ -14886,6 +14886,80 @@
         "source": "docs/paper_notes/rubricrag-2603-20882.md",
         "url": "paper_notes/rubricrag-2603-20882.html"
       }
+    },
+    {
+      "id": "calibratedrubric-2607-29252",
+      "title": "CalibratedRubric: Task-Adaptive Rubric Banks for Open-Ended LLM Evaluation",
+      "paper_url": "https://arxiv.org/abs/2607.29252v1",
+      "pdf_url": "https://arxiv.org/pdf/2607.29252v1",
+      "authors": [
+        "Mengting Chen",
+        "Yanshu Sun",
+        "Wanting Liang",
+        "Beidi Luan",
+        "Rui Sun",
+        "Dezhi Chen",
+        "Jing Li",
+        "Zuo Bai"
+      ],
+      "venue": "arXiv 预印本；未核实会议录用信息",
+      "year": 2026,
+      "primary_area": "数据集与基准",
+      "category": "LLM 评测与 Rubrics",
+      "labels": [
+        "Rubric 筛选",
+        "任务自适应评测",
+        "人机一致性",
+        "评测成本"
+      ],
+      "keywords": [
+        "CalibratedRubric",
+        "LLM-as-a-Judge",
+        "Beta–Bernoulli",
+        "IRT",
+        "信息覆盖",
+        "能力分层"
+      ],
+      "code_url": "",
+      "note": "",
+      "tldr": "利用任务类型决定评分规则，以多 Judge 一致性筛选可稳定判分的 Rubric，再通过 IRT 信息覆盖选取紧凑评测集合，在减少评测条目数的同时保留模型排序并报告不确定性。",
+      "abstract": "中文概述（非原文逐字转载）：作者提出结合任务评分、贝叶斯可测性筛选和 IRT 集合组装的开放式评测框架。实验报告了人类金标一致性改善，以及在多个响应数据块上用较少 Rubric 保留排序的效果；校准收益取决于 Judge 冗余。英文摘要见论文来源链接。",
+      "summary_cn": {
+        "研究动机": "开放式回答需要细粒度 Rubric，但专家编写和全量评测成本较高。自动流程常要求所有 Judge 完全一致，再删除所有模型得分相同的条目；这种筛选容易损失候选标准，也无法衡量剩余标准各自提供多少区分信息。",
+        "解决问题": "给定候选 Rubric、模型回答和多 Judge 判分，在预算内选择可稳定执行、能够区分当前模型能力的评测集合，并确定权重及能力分层。方法依赖已有候选池，无法补回其中遗漏的评价维度。",
+        "现象分析": "一致判分与评价有效性存在距离：Judge 可能共同偏离人类标准；有得分差异的 Rubric，也未必适合区分当前能力范围。严格一致规则还会随着参与模型数量增加而丢弃更多条目。因此，需要分别检查判分稳定性、信息量和人类认可程度。",
+        "主要方法": "输入是题目、候选 Rubric 和多 Judge 判分。系统先将任务分为证据推理、决策支持、高风险约束或创造任务，套用预设评分规则；例如决策任务强调可执行性。随后统计每条 Rubric 在多少实例上获得全体 Judge 一致，以固定 Beta(1,1) 先验更新一致性概率，按后验均值筛选，保留项用多数票聚合。\n\n再用项目反应理论（IRT，将模型能力与条目难度关联的统计模型）拟合判分数据，估计 Rubric 在不同能力位置的信息量。贪心选择每次补充信息覆盖最多的条目，降低重复覆盖的收益，直到达到预算。评分规则、先验与预算属于预设配置；IRT 参数从数据估计，最终按信息量加权，并用重采样报告能力区间与分层。",
+        "数据集与实验": "涉及 FinResearchBench-v2、HealthBench、HelloBench 和 JudgmentBench。任务自适应实验实际使用 534 个任务、7,959 条 Rubric，最终保留 2,813 条；不能将全部收集规模当作实际实验覆盖。\n\n可测性筛选：JudgmentBench 对人类金标的 κ 从 0.604 提升至 0.743。筛选改变覆盖范围；该表未报告此数据集的保留数量。\n\n排序压缩：FinResearch 决策支持达到目标相关性时，贪心选择需 49 条，随机选择需 131 条。目标主要是保留完整集合的排序。\n\n交叉拟合验证：六个响应数据块中，贪心选择的排序保真 AUC 均高于随机选择。相比普通 IIF，额外收益仅在两个 FinResearch 数据块显著。\n\n任务类型扰动：扰乱 30% 类型标签，首尾系统分差从 94.86 降至 83.95 个百分点。说明类型影响区分程度；不能单凭分差证明更符合人类偏好。",
+        "主要贡献": "将任务评分规则、Rubric 可测性筛选、预算内信息覆盖和能力不确定性整合为评测流程。最稳定的收益来自信息驱动的 Rubric 压缩；可测性筛选的收益依赖足够的 Judge 冗余。\n\n需要保留的限制包括：两个 Judge 的配置未显示额外校准收益；六个数据块中五个的模型选择指标偏好更简单的 1PL；Judge 一致性仍可能偏离人类标准。论文结果适合支持紧凑评测集合的构造，尚不足以证明普遍准确的条目区分度估计或无偏评分。"
+      },
+      "status": "approved",
+      "added_at": "2026-09-16",
+      "key_figure": {
+        "type": "Figure",
+        "name": "1",
+        "page": 4,
+        "path": "assets/paper_images/calibratedrubric-2607-29252-figure-1.png",
+        "caption": "CalibratedRubric framework (Figure 1).",
+        "caption_cn": "CalibratedRubric 总体框架：任务类型决定评分规则，多 Judge 判分用于估计 Rubric 可测性，IRT 提供条目信息量，预算约束下组装紧凑 Rubric 集合并输出能力估计和分层。",
+        "bbox": [
+          50,
+          58,
+          560,
+          273
+        ],
+        "caption_bbox": [],
+        "source": "pdfplumber-render-crop-reviewed",
+        "confidence": 1.0,
+        "needs_manual_review": false,
+        "contexts": [
+          "原图包含利用人工样本估计 Judge 偏差与可靠性的扩展设计；§3.3 明确实验采用无需人类标签的 Beta–Bernoulli 一致性后验，未实现 Judge 个体校准扩展。"
+        ]
+      },
+      "analysis_note": {
+        "title": "精读：信息量如何计算，贪心选择如何选 Rubric",
+        "source": "docs/paper_notes/calibratedrubric-2607-29252.md",
+        "url": "paper_notes/calibratedrubric-2607-29252.html"
+      }
     }
   ]
 }
