@@ -86,6 +86,70 @@
   ],
   "papers": [
     {
+      "id": "gsr-2608-12097",
+      "paper_url": "https://arxiv.org/abs/2608.12097v1",
+      "title": "Graph-Structured Rubrics: Compiling Rubrics into Typed Evaluation Graphs for LLM Judges",
+      "authors": [
+        "Xi Chen",
+        "Jie Mu",
+        "Mo Xuan",
+        "Qun Shao"
+      ],
+      "venue": "arXiv preprint",
+      "year": 2026,
+      "primary_area": "数据集与基准",
+      "category": "LLM 评测与 Rubrics",
+      "labels": [
+        "Rubrics",
+        "LLM-as-a-Judge",
+        "可执行评测"
+      ],
+      "keywords": [
+        "GSR",
+        "typed evaluation graph",
+        "deterministic aggregation",
+        "gating",
+        "audit trace"
+      ],
+      "code_url": "",
+      "note": "",
+      "tldr": "将已有 Rubric 翻译成可执行的评价图，由程序完成汇总、封顶和否决，减少规则执行错误；不训练 Rubric 生成器或 Judge，收益依赖任务与模型。",
+      "abstract": "摘要简述：GSR 在观察答案前，将 Rubric 编译为带类型的评价图，以确定性算子组合逐项判断，输出分数或偏好。英文原文摘要见论文链接。",
+      "summary_cn": {
+        "研究动机": "自然语言 Rubric 即使写明规则，模型也可能遗漏条件、执行错顺序或算错总分。论文希望把逐项判断之后的组合过程交给程序，让汇总、封顶与否决按固定规则执行。",
+        "解决问题": "将已有 Rubric 的标准及组合关系转成可检查、可回放的执行结构，统一支持单答评分和成对比较。改进对象是整个判分流程；原始 Rubric 作为输入，没有训练 Rubric 生成器，也没有更新 Judge 模型参数。",
+        "现象分析": "完全一致率改善不等于所有误差指标改善；结构合法也不能证明生成的图忠实表达了 Rubric 原意。同一份图和同一批逐项判断可以确定性回放，但重新编译仍可能生成不同的图。\n\n跨模型结果不支持“Judge 越弱，收益越大”：HelpSteer2 上，GSR 相对 Prometheus-style 在 GPT-OSS-120B、Qwen3.5-35B-A3B、GLM-4.7 上的完全一致率变化分别为 +4.78、+0.25、−1.04 个百分点。模型的语义判断错误仍会传入最终结果。",
+        "主要方法": "输入是题目、已有 Rubric 和可选参考材料。首先让 LLM 在不看候选答案的情况下，把 Rubric 翻译成一套执行规则：哪些标准分别判断，哪些分数加权汇总，什么条件触发封顶或否决。论文用“评价图”保存这些关系，程序检查连接和数据类型是否合规；不合规时，将错误交回模型修复。实验中每个评测实例单独编译，检查通过后规则固定，由共用引擎执行。\n\n随后，Judge 阅读答案并给出逐项判断，程序按照固定规则计算最终分数或比较两个答案。例如，先汇总正确性和完整性，再根据严重错误判断执行封顶。全过程没有训练 Rubric 生成器或更新 Judge 参数，主要变化是把规则组合与计算交给程序。它仍依赖模型正确理解 Rubric、正确判断答案，结构检查无法保证这两点。",
+        "数据集与实验": "主实验使用 GPT-OSS-120B，结果为六次运行均值；Prometheus-style、G-Eval-style、FLASK-style 是同骨干下的评测流程基线。UF–TruthfulQA、HelpSteer2、SummEval Relevance、BiGGen 的完全一致率分别为 50.05%、43.75%、33.32%、44.51%，相对各自最强基线提升 5.44、4.78、0.62、0.99 个百分点。\n\n同一批逐项判断下，GSR 相比加权汇总提升 0.36–5.79 个百分点，但部分次要指标下降。成对比较相对 OpenRubric，MT-Bench 从 79.86% 提升到 80.63%，RubricBench 从 83.35% 提升到 83.62%（论文按未四舍五入值标注 +0.28 个百分点）。平局及无效输出计为错误，需结合覆盖率理解结果。数值领先不能直接视为统计显著。",
+        "主要贡献": "将自然语言 Rubric 的组合关系形式化为可验证、可回放的评价程序，并用固定逐项判断轨迹的消融检验组合机制的价值。工程启发主要在于将规则执行从模型推断中分离出来，明确依赖、条件与最终输出。\n\n这是一项切入点较窄的评测流程改进。现有实验支持部分任务收益，尚未充分证明完整评价图相对简单结构化输出加脚本汇总在各种任务中都必要，也未证明弱 Judge 更受益。对于已经用程序完成加权、封顶和否决的系统，需要进一步验证自动编译的额外价值。"
+      },
+      "key_figure": {
+        "type": "Figure",
+        "name": "2",
+        "page": 3,
+        "path": "assets/paper_images/gsr-2608-12097-figure-2.png",
+        "caption": "GSR procedure (caption paraphrase): compile a fixed graph, execute judgments and operators, then map the output to the task decision.",
+        "caption_cn": "GSR 先编译并固定评价图，再执行逐项判断与算子，最后映射为任务输出。",
+        "bbox": [
+          70,
+          386,
+          542,
+          595
+        ],
+        "caption_bbox": [],
+        "source": "pdfplumber-crop-manually-reviewed",
+        "confidence": 1.0,
+        "needs_manual_review": false,
+        "contexts": [
+          {
+            "text": "完整展示方法的三个阶段，清楚区分模型判断与程序执行。"
+          }
+        ]
+      },
+      "status": "approved",
+      "added_at": "2026-09-16"
+    },
+    {
       "id": "arco-2606-21262",
       "paper_url": "https://arxiv.org/abs/2606.21262v2",
       "title": "ARCO: Adaptive Rubrics with Co-Evolution for Multi-Step LLM-Based Agents",
