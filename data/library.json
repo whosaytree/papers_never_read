@@ -86,6 +86,78 @@
   ],
   "papers": [
     {
+      "id": "evorubrics-2606-23038",
+      "paper_url": "https://arxiv.org/abs/2606.23038v1",
+      "title": "EvoRubrics: Dynamic Rubrics as Rewards via Adversarial Co-Evolution for LLM Reinforcement Learning",
+      "authors": [
+        "Hongxin Ding",
+        "Baixiang Huang",
+        "Yue Fang",
+        "Weibin Liao",
+        "Zheng Li",
+        "Jinyang Zhang",
+        "Zhijing Wu",
+        "Junfeng Zhao",
+        "Yasha Wang"
+      ],
+      "venue": "arXiv 预印本；正式会议或期刊接收情况暂未核实",
+      "year": 2026,
+      "primary_area": "强化学习",
+      "category": "探索与奖励设计",
+      "labels": [
+        "动态 Rubric",
+        "Rubrics as Rewards",
+        "协同进化",
+        "GRPO",
+        "奖励建模"
+      ],
+      "keywords": [
+        "EvoRubrics",
+        "adversarial co-evolution",
+        "dual LoRA",
+        "reward discrimination",
+        "HealthBench",
+        "RubricBench"
+      ],
+      "code_url": "https://anonymous.4open.science/r/EvoRubrics-2155/",
+      "note": "",
+      "tldr": "通过双 LoRA 联合训练回答模型与 Rubric 生成器，用区分度、多样性、参考标准对齐及改写收益驱动 Rubric 随策略演化，改善医疗开放问答的强化学习效果，并探索生成器的评估迁移能力。",
+      "abstract": "Rubric-based rewards offer interpretable and fine-grained optimization signals for reinforcement learning in open-ended tasks where verifiable answers are unavailable. However, pre-constructed rubrics remain static throughout training, creating a fundamental mismatch with the evolving policy: fixed criteria gradually lose discriminative power as the model improves, leading to reward saturation and potential hacking.\n\nRecent dynamic rubric methods partially address this but rely on external frontier models or ground-truth answers, and update rubrics only at coarse granularity. We propose EvoRubrics, a co-evolutionary RL framework where a Policy LLM and a Rubric Generator jointly improve through adversarial interaction within each training step.\n\nAs the policy improves under the rubric generator’s guidance, the rubric generator adapts its criteria to remain discriminative and informative, enabling evaluation to track the policy in real time and naturally inducing an automatic curriculum. Experiments show that EvoRubrics consistently outperforms static and dynamic rubric baselines across benchmarks. The learned Rubric Generator further generalizes as a transferable reward model.\n\nNotably, even a fully self-supervised variant without any external supervision achieves meaningful gains, suggesting that co-evolution between generation and evaluation alone can provide sufficiently rich learning signals. Our code is publicly available at https://anonymous.4open.science/r/EvoRubrics-2155/.",
+      "summary_cn": {
+        "研究动机": "开放式问答通常缺少可直接验证的标准答案，Rubric 可以把回答质量拆成细粒度奖励。但固定 Rubric 与持续变化的模型能力容易失配：早期标准过难，回答普遍低分；后期标准被普遍满足，又难以区分进一步改进。作者希望让评价标准随训练更新，持续提供有效反馈。",
+        "解决问题": "如何在每个训练步同时优化回答模型和 Rubric 生成器，使后者既能区分当前回答，又保持合理的评价方向，并提供可用于改进回答的指导？论文还考察学到的生成器能否迁移到偏好判断和推理时指导，以及去掉人工参考 Rubric 后能否继续学习。",
+        "现象分析": "实验中，固定 Rubric 和部分动态基线在医疗任务训练后出现域外能力退步，EvoRubrics 在多项指标上有所缓解。消融显示，去掉任一生成器奖励都会降低所列指标，冻结生成器也弱于完整方法。\n\n但评分标准差只直接衡量“能否拉开分数”，不能单独证明排序正确。主方法因此增加参考标准对齐与改写收益约束。自监督变体在医疗测试集提升、在其他任务下降，也说明内部奖励改善与泛化能力改善需要分别检验。",
+        "主要方法": "同一底座挂载两个 LoRA 适配器，即分别学习少量增量参数，承担回答生成和 Rubric 生成。每道题采样多份回答与多套带权 Rubric，由固定 Judge 逐条判定是否满足，按权重汇总并归一化，形成交叉评分矩阵。回答模型以跨 Rubric 的平均得分为奖励。\n\n生成器获得四类奖励：回答得分的标准差、条目语义多样性、与参考 Rubric 的相似度，以及依据生成 Rubric 改写后在参考标准下的增分。两套适配器每步依次用 GRPO 更新，以同组候选的相对奖励指导学习。四项奖励系数固定为 0.25；条目及分值由生成器输出，学习参数属于适配器。\n\n自监督变体移除参考标准对齐，改用生成 Rubric 本身衡量改写收益；仍保留 Judge。训练后的生成器可用于新题偏好评估或回答指导。",
+        "数据集与实验": "采用 Qwen3-4B、Qwen3-8B 为底座，先用 DeepSeek-R1 生成的回答进行 SFT，再开展 RL；训练和评估 Judge 均为 DeepSeek-V3.2。作者报告使用 HealthBench 的 4,000 条标准难度样本训练、1,000 条 Hard 样本测试，并在 RaR-Medicine、MT-Bench、FollowBench 上评估迁移。\n\n关键结果如下；Ratio 为逐题归一化得分的均值，下列差值按表中百分数计算：\n\n- 4B：EvoRubrics vs GoldenRubrics。HealthBench Ratio：36.64 vs 27.75，提升 8.89 个百分点。\n- 8B：EvoRubrics vs GoldenRubrics。HealthBench Ratio：42.27 vs 38.33，提升 3.94 个百分点。\n- 8B：EvoRubrics vs SFT。MT-Bench R1 / R2：7.48 / 7.05 vs 7.96 / 7.43，两轮均有下降。\n- 8B：生成器迁移至 RubricBench。总体准确率：52.40%，SFT 为 50.83%，提升 1.57 个百分点。\n- 4B：自监督变体 vs 基座。HealthBench Ratio：34.00 vs 22.48；RaR-Medicine：41.70 vs 56.04。域内主测试集提升，另一医疗测试集退步。\n\n作者注明每个实验仅运行一次，未提供多次运行的不确定性估计。附录报告，8B、500 步训练耗时为 60.5 小时，GoldenRubrics 为 33.9 小时，约增加 78%。目前证据主要覆盖医疗训练、4B/8B 模型，以及同一 Judge 下的评价。",
+        "主要贡献": "提出训练步级的回答模型—Rubric 生成器联合优化框架，将 Rubric 的区分度、多样性、参考标准对齐和指导改写能力组合成学习信号；通过共享底座、双 LoRA 实现两种角色的训练，并展示生成器用于偏好评估和推理指导的可能性。\n\n自监督实验提供了无需人工参考 Rubric 也能产生部分有效学习信号的证据，但尚不足以支持全面提升、消除奖励投机或摆脱外部模型依赖的结论。"
+      },
+      "key_figure": {
+        "type": "Figure",
+        "name": "2",
+        "page": 4,
+        "path": "assets/paper_images/evorubrics-2606-23038-figure-2.png",
+        "caption": "EvoRubrics framework overview. At each step, the Policy LLM and Rubric Generator generate M candidate answers and N rubric sets via dual LoRA adapters; a judge model scores all answer-rubric pairs to form an M × N matrix; policy and rubric rewards are computed from this matrix; and both adapters are updated with GRPO, enabling real-time co-evolution.",
+        "caption_cn": "EvoRubrics 框架。每个训练步中，回答模型与 Rubric 生成器通过两个 LoRA 适配器分别生成候选回答和评价标准；Judge 对全部回答—Rubric 组合评分，形成矩阵；系统计算两类模型的奖励，再分别用 GRPO 更新适配器，实现逐步共同演化。",
+        "bbox": [
+          68,
+          68,
+          527,
+          307
+        ],
+        "caption_bbox": [],
+        "source": "pdfplumber-page-crop-user-approved-v1",
+        "confidence": 1.0,
+        "needs_manual_review": false,
+        "contexts": [
+          {
+            "text": "这张图完整连接了输入、交叉评分、两种奖励和训练反馈，最能解释论文的核心机制。图中 Alignment 和 Constructiveness 包含参考 Rubric R*，对应有参考标准的主方法。"
+          }
+        ]
+      },
+      "status": "approved",
+      "added_at": "2026-09-16"
+    },
+    {
       "id": "mrrg-2607-01830",
       "title": "Many Voices, One Reward: Multi-Role Rubric Generation for LLM Judging and Reward Modeling",
       "paper_url": "https://arxiv.org/abs/2607.01830v1",
