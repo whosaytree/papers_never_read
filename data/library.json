@@ -86,6 +86,87 @@
   ],
   "papers": [
     {
+      "id": "cahl-safer-llms-2512-03720",
+      "title": "Context-Aware Hierarchical Learning: A Two-Step Paradigm towards Safer LLMs",
+      "paper_url": "https://arxiv.org/abs/2512.03720",
+      "pdf_url": "https://arxiv.org/pdf/2512.03720",
+      "authors": [
+        "Tengyun Ma",
+        "Jiaqi Yao",
+        "Daojing He",
+        "Shihao Peng",
+        "Yu Li",
+        "Shaohui Liu",
+        "Zhuotao Tian"
+      ],
+      "venue": "NeurIPS",
+      "year": 2025,
+      "primary_area": "对齐/安全/公平性/隐私",
+      "category": "安全对齐",
+      "keywords": [
+        "Context-Aware Hierarchical Learning",
+        "CAHL",
+        "Tool-Completion Attack",
+        "indirect prompt injection",
+        "instruction hierarchy",
+        "tool-augmented LLM",
+        "segment query embedding",
+        "adversarial robustness",
+        "Tool-Completion benchmark"
+      ],
+      "labels": [
+        "LLM Safety",
+        "Prompt Injection",
+        "Tool Security",
+        "Instruction Hierarchy",
+        "Architectural Defense",
+        "NeurIPS"
+      ],
+      "code_url": "https://github.com/S2AILab/CAHL",
+      "note": "这篇论文对我的价值在于：以后如果再遇到模型无法稳定区分外部工具返回与高优先级指令、进而遭受恶意提示注入的问题，我知道可以回到这篇论文及其相关工作进行定位。",
+      "tldr": "工具返回进入模型上下文后，模型可能理解其中的文字，却无法稳定判断这些文字是否拥有改变任务的权限。论文提出 Tool-Completion Attack，通过伪造任务完成状态和自然的语义过渡，将恶意指令隐藏在工具返回中；CAHL 则通过段内摘要和跨段上下文传播，训练模型显式区分指令、外部数据与响应的语义及优先级。",
+      "abstract": "Large Language Models (LLMs) have emerged as powerful tools for diverse applications. However, their uniform token processing paradigm introduces critical vulnerabilities in instruction handling, particularly when exposed to adversarial scenarios. In this work, we identify and propose a novel class of vulnerabilities, termed Tool-Completion Attack (TCA), which exploits function-calling mechanisms to subvert model behavior. To evaluate LLM robustness against such threats, we introduce the Tool-Completion benchmark, a comprehensive security assessment framework, which reveals that even state-of-the-art models remain susceptible to TCA, with surprisingly high attack success rates. To address these vulnerabilities, we introduce Context-Aware Hierarchical Learning (CAHL), a sophisticated mechanism that dynamically balances semantic comprehension with role-specific instruction constraints. CAHL leverages the contextual correlations between different instruction segments to establish a robust, context-aware instruction hierarchy. Extensive experiments demonstrate that CAHL significantly enhances LLM robustness against both conventional attacks and the proposed TCA, exhibiting strong generalization capabilities in zero-shot evaluations while still preserving model performance on generic tasks. Our code is available at https://github.com/S2AILab/CAHL.",
+      "summary_cn": {
+        "研究动机": "大模型应用通常在接口层区分 system、user、tool/data 和 assistant 等角色，但模型内部仍然主要通过连续 token 表示处理这些内容。工具调用次数增加、上下文变长以后，原始用户指令受到的关注可能减弱，外部工具返回却占据越来越多的上下文。攻击者一旦能够控制搜索结果、网页内容或工具响应，就可能把恶意指令包装成普通数据，诱导模型偏离原始任务。",
+        "解决问题": "论文研究如何让模型可靠地区分内容表达的语义和内容拥有的指令权限。具体包含三个问题：如何构造具有上下文连贯性的工具返回注入攻击；如何评估工具型大模型面对这类攻击时的脆弱性；如何在尽量保留通用指令执行能力的前提下，让模型建立稳定、可泛化的指令层级。",
+        "现象分析": "作者提出 Tool-Completion Attack（TCA）。攻击者先在工具返回中伪造一段任务完成描述，让模型认为用户原来的请求已经解决；接着构造与前后场景都有语义联系的过渡内容；最后附上恶意指令。由于整段文本在语言上连贯，传统提示注入检测器可能将其判断为低风险内容，模型也容易把工具数据中的指令当作合理的后续任务。TCA 对 o3-mini、DeepSeek-R1 和 GPT-4o 的攻击成功率分别达到 99.4%、99.3% 和 91.4%。这表明更强的推理能力并不会自动形成可靠的信任边界。模型可能知道某段内容来自工具，却仍然无法稳定执行“工具内容只能提供数据，不能覆盖高优先级任务”这一权限规则。",
+        "主要方法": "CAHL 在 Instructional Segment Embedding（ISE）基础上，为 system/user instruction、tool/data 和 assistant response 等片段增加可学习的 Segment Query Embedding。第一阶段 Segment Summarization 使用带片段掩码的交叉注意力，只在每个片段内部提取语义摘要。这样可以保持各片段的语义边界，减少工具注入内容与合法指令在早期表示阶段发生混合。\n\n第二阶段 Contextual Propagation 使用全局自注意力，在各片段摘要之间传播上下文，使模型同时考虑角色来源、局部语义和跨片段关系。最终表示由原始 token embedding、ISE 的角色层级偏移和 CAHL 生成的动态上下文偏移共同组成。模型因此能够学习：工具返回提供了什么信息、它来自哪个权限层级，以及其中的文本能否被当作指令执行。",
+        "数据集与实验": "作者从包含 8,000 条长工具交互对话的 BUTTON 数据集中随机抽取 1,000 条，使用 GPT-4o 构造 TCA 样本并进行人工检查，最终得到包含 388 条正常数据和 372 条攻击数据的 Tool-Completion benchmark。主要实验以预训练 Llama-3.1-8B 为基础，进行三轮全参数 SFT。仅使用干净数据训练时，CAHL 在 StruQ 上将平均攻击成功率从 ISE 的 33.41% 降至 26.32%，最坏攻击成功率从 61.54% 降至 37.98%；正常能力相对基础模型只下降 1.27 分。在训练阶段没有见过 TCA 的情况下，CAHL 将 Tool-Completion benchmark 的攻击成功率从 56.72% 降至 44.89%。加入对抗样本训练后，攻击成功率进一步降至 1.34%，注入忽略率达到 95.16%。CAHL 相对 Llama-3.1-8B 增加 1.67% 参数和 3.90% 推理延迟。",
+        "主要贡献": "论文揭示了工具型大模型中的一个关键安全缺口：模型对外部信息的语义理解能力，无法自然保证它具备可靠的来源识别、信任边界和指令权限控制。TCA 为这一缺口提供了具体攻击方式和评测集；CAHL 则尝试把指令层级直接编码进模型表示和训练过程。这项工作的长期价值还在于提供了问题定位线索。以后遇到模型服从搜索结果、网页内容、RAG 文档或工具返回中的越权指令时，可以沿着 TCA、instruction hierarchy、indirect prompt injection、tool-output security 和 context-aware defense 等方向继续检索相关研究。"
+      },
+      "status": "approved",
+      "added_at": "2026-09-16",
+      "key_figure": {
+        "type": "Figure",
+        "name": "3",
+        "page": 5,
+        "path": "assets/paper_images/cahl-safer-llms-2512-03720-figure-3.png",
+        "caption": "Figure 3: Overview of Context-Aware Hierarchical Learning (CAHL).",
+        "caption_cn": "图 3：CAHL 总体架构。输入被划分为系统或用户指令、工具或数据内容以及模型响应。模型首先利用带片段掩码的交叉注意力分别生成段内语义摘要，避免外部数据与合法指令过早混合；随后通过全局自注意力传播跨片段上下文，结合角色层级与具体语义形成动态指令层级表示。",
+        "bbox": {
+          "x1": 126.96,
+          "x2": 485.04,
+          "y1": 396.0,
+          "y2": 550.08
+        },
+        "caption_bbox": {
+          "x1": 165.66200256347656,
+          "x2": 446.33819580078125,
+          "y1": 558.840576171875,
+          "y2": 564.843017578125
+        },
+        "source": "pdffigures2-local-jar",
+        "confidence": 0.95,
+        "needs_manual_review": false,
+        "contexts": [
+          {
+            "page": 6,
+            "text": "CAHL contains two core steps: Segment Summarization and Contextual Propagation."
+          }
+        ]
+      }
+    },
+    {
       "id": "rubric-arrow-2605-29156",
       "title": "RUBRIC-ARROW: Alternating Pointwise Rubric Reward Modeling for LLM Post-training in Non-verifiable Domains",
       "paper_url": "https://arxiv.org/abs/2605.29156v1",
