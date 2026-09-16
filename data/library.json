@@ -14464,6 +14464,71 @@
         "source": "docs/paper_notes/openrubrics-2510-07743.md",
         "url": "paper_notes/openrubrics-2510-07743.html"
       }
+    },
+    {
+      "id": "arxiv-2606.08625",
+      "title": "From Holistic Evaluation to Structured Criteria: Rubrics Across the Evolving LLM Landscape",
+      "paper_url": "https://arxiv.org/abs/2606.08625v2",
+      "pdf_url": "https://arxiv.org/pdf/2606.08625v2",
+      "authors": [
+        "Hao Chen",
+        "Ziyu Han",
+        "Yukun Yan",
+        "Qingfu Zhu",
+        "Maosong Sun",
+        "Wanxiang Che"
+      ],
+      "venue": "arXiv 预印本",
+      "year": 2026,
+      "primary_area": "数据集与基准",
+      "category": "LLM 评测与 Rubrics",
+      "keywords": [
+        "structured criteria",
+        "rubric generation",
+        "rubric optimization",
+        "process-level reward",
+        "co-evolution"
+      ],
+      "labels": [
+        "综述",
+        "Rubric",
+        "LLM-as-a-Judge",
+        "奖励建模",
+        "可靠性"
+      ],
+      "code_url": "https://github.com/AI9Stars/LLM-Rubrics-Survey",
+      "note": "",
+      "tldr": "以 Rubric 与 LLM 能力共同演进为主线，串联标准构建、评测、训练和自我改进，并系统讨论标准质量、执行偏差及适用边界。",
+      "abstract": "中文概述：论文把 Rubric 视为将复杂质量判断转化为明确标准的统一框架，回顾其设计、优化、评测与训练用途，并讨论可靠性、领域应用和未来发展。英文原摘要：https://arxiv.org/abs/2606.08625v2",
+      "summary_cn": {
+        "研究动机": "开放式回答与长程 Agent 任务很难仅靠答案正确性或单一总分评价。结构化标准能够提供更细的反馈，但相关研究分散于评测、强化学习和安全对齐，缺少统一的整理框架。",
+        "解决问题": "梳理 Rubric 的定义、分类、构建与优化方式，以及它如何参与推理和训练；同时区分“标准是否合理”和“标准是否被正确执行”，明确可靠性检查应覆盖的不同环节。",
+        "现象分析": "标准写得更细，并不自动带来更可靠的评价：生成标准可能遗漏隐含需求，Judge 可能受到顺序和措辞影响，固定标准也可能随模型进步失去区分力。作者进一步讨论，高评分一致性未必意味着评分能预测真正关心的下游效果。",
+        "主要方法": "本文采用文献综述与分类归纳。首先从两个方向整理 Rubric：结构上区分最终输出与中间过程，以及整体、分维度和原子化粒度；内容上区分依据任务要求、模型行为或外部知识制定的标准，用于解释不同工作之间的设计差异。\n\n随后沿构建、优化、使用和验证组织研究。构建包括专家编写、模型生成与人机协作；优化既可以借助人评分歧和错误反馈修订条目，也可以让标准随模型训练动态演化。使用端覆盖逐项评测、回答修订、候选筛选，以及在线强化学习和离线训练。全文用生成质量、执行忠实度、理论约束与安全威胁检查这些路径；它提供的是研究框架，没有统一的新训练算法或待学习参数。",
+        "数据集与实验": "本文未提出新的数据集或统一对照实验。Table 2 汇总通用、专业领域、深度研究、多模态及学术任务中的代表性基准，包括 RubricBench、RubricEval、HealthBench、PRBench 和 PaperBench。文中性能数字来自被引用研究，不应视为本综述在统一条件下复现的结果。作者仓库说明 v2 覆盖截至 2026-06-30 的文献。",
+        "主要贡献": "提供跨评测与训练的研究地图，以“评价工具—监督信号—参与自我改进的机制”概括 Rubric 的角色演变，并把可靠性与适用边界纳入同一框架，便于定位相关方法和后续研究问题。"
+      },
+      "status": "approved",
+      "added_at": "2026-09-16",
+      "key_figure": {
+        "type": "Figure",
+        "name": "1",
+        "page": 5,
+        "path": "assets/paper_images/arxiv-2606.08625-figure-1.png",
+        "caption": "Conceptual Organization of This Survey.",
+        "caption_cn": "综述以 Rubric 的定义、分类和演进为基础，将构建与优化、评测、训练及可靠性组织为核心框架，并延伸到基准、应用和未来方向。",
+        "bbox": {},
+        "caption_bbox": {},
+        "source": "arxiv-html-original-reviewed-against-v2-pdf",
+        "confidence": 1.0,
+        "needs_manual_review": false,
+        "contexts": []
+      },
+      "analysis_note": {
+        "title": "精读笔记（待审核）",
+        "source": "docs/paper_notes/arxiv-2606.08625.md",
+        "url": "paper_notes/arxiv-2606.08625.html"
+      }
     }
   ]
 }
