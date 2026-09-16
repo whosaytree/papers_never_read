@@ -14960,6 +14960,66 @@
         "source": "docs/paper_notes/calibratedrubric-2607-29252.md",
         "url": "paper_notes/calibratedrubric-2607-29252.html"
       }
+    },
+    {
+      "id": "radar-2608-01810",
+      "title": "RADAR: Rubric-Aware Dependency and Redundancy Analysis for LLM-as-Judge Evaluation",
+      "paper_url": "https://arxiv.org/abs/2608.01810v1",
+      "pdf_url": "https://arxiv.org/pdf/2608.01810v1",
+      "authors": [
+        "Divyansh Singh",
+        "Reza Davari",
+        "Afra Mashhadi"
+      ],
+      "venue": "arXiv preprint（会议或期刊发表信息未核实）",
+      "year": 2026,
+      "primary_area": "数据集与基准",
+      "category": "LLM 评测与 Rubrics",
+      "keywords": [
+        "criterion dependency",
+        "behavioral coupling",
+        "redundancy",
+        "directional leakage",
+        "synthetic probes"
+      ],
+      "labels": [
+        "Rubrics",
+        "LLM-as-a-Judge",
+        "评测可靠性"
+      ],
+      "code_url": "",
+      "note": "这个思路我觉得挺好的，只不过还没有继续做下去。",
+      "tldr": "通过定向生成某条评价标准的高分、低分回答，再观察其他标准的评分变化，RADAR 诊断同一套 Rubric 内条目在实际评分中的不独立性。它为重复计分和层级依赖提供线索，尚未进一步完成自动修正及修正后的下游效果验证。",
+      "abstract": "Rubric-based LLM-as-judge pipelines often assume that evaluation criteria provide independent signals. In practice, however, criteria can be behaviorally coupled: improving one criterion may systematically change scores on another, distorting aggregate scores used in model-release or product-update decisions. We introduce RADAR, a lightweight preflight diagnostic framework for estimating such coupling before large-scale evaluation. Given a rubric, RADAR generates targeted synthetic probes, scores each probe on all criteria, and produces a directional coupling matrix that shows which criteria co-score and how. We validate RADAR on three industry-relevant evaluation settings: NVIDIA HelpSteer2, SumPubMed, and the Yale-Salesforce SummEval benchmark. Using only a small number of probes per criterion, RADAR recovers human inter-criterion correlation structure (Pearson r ≥ 0.84) and provides practitioners with concrete audit signals about redundancy, hierarchy, and aggregation sensitivity before committing to large-scale judging.",
+      "summary_cn": {
+        "研究动机": "多维 Rubric 常将各条标准分别打分后汇总，但语义不同的标准也可能随着同一种回答特征共同涨跌，使同一优点被重复奖励。仅检查条目措辞是否重复，容易遗漏这种评分行为上的重叠。",
+        "解决问题": "给定 Rubric 和目标领域任务，在没有人工标签的情况下，判断哪些条目会共同变化、依赖是否双向，以及哪些条目的高低分干预本身不够可靠。可以将其理解为对 Rubric 条目“不正交”的行为诊断：检验各条目是否提供相互独立的评分信号。人工标注仅用于论文的外部验证。",
+        "现象分析": "双向耦合可能提示重复计分；明显不对称的耦合可能提示层级关系。例如，HelpSteer2 的 helpfulness 与 correctness 呈较强双向耦合。但耦合也可能符合业务期望，不能自动等同于 Rubric 缺陷。其强弱取决于生成模型、Judge 和任务分布，并非 Rubric 文本本身的固定属性。",
+        "主要方法": "输入包括 Rubric 各条定义和少量领域任务。生成模型每次只看到一个目标条目，分别生成满足与违反它的回答；对于长度等描述性维度，则生成高、低两个端点。随后 Judge 对每个回答按全部条目分别调用评分，得到各维度的分数。\n\nRADAR 先检查目标条目自身的分差，再用“其他条目的分差÷目标条目的分差”计算方向性泄漏，表示改变目标条目时其他评分跟随变化的程度。自身分差低于固定阈值 0.40 的方向标为不可靠；双向泄漏的均值和差异用于识别共同变化与不对称依赖。过程不训练模型，也不学习权重；结果交给人工审查，修改 Rubric 后可重新诊断。",
+        "数据集与实验": "使用 HelpSteer2、SummEval、SumPubMed，每个基准手工准备 5 个任务；4 个模型轮流担任生成器和 Judge，排除同模型配对，每个基准得到 12 种组合。\n\n主表采用 GPT-5.5 Reasoning → Claude Sonnet 4.6，RADAR 与人类条目间相关结构的 Pearson 分别为 0.957、0.842、0.872。这些数字衡量条目对之间的结构吻合程度，不能解释为逐题人机一致率。\n\n模型敏感性明显：附录 Table 9 中，SumPubMed 的某些组合 Pearson 低至 −0.04，不能概括为所有组合都达到 0.84。小样本实验和生成温度的报告存在内部不一致，详见配套笔记。",
+        "主要贡献": "提供了无需人工标签的 Rubric 行为诊断流程，用方向性信息补充普通相关性分析，并探索较小探针预算下的诊断成本。\n\n工作推进到识别与量化条目依赖；如何据此合并条目、调整权重或保留合理层级，仍由人判断。论文尚未形成自动修正闭环，也未直接验证修正后能否提升下游人机一致率或模型排名质量。定向生成可能同时改变多个回答属性，因此方向性泄漏只能提供行为证据，人类评分相关性也不是依赖关系的金标准。"
+      },
+      "status": "approved",
+      "added_at": "2026-09-16",
+      "key_figure": {
+        "type": "Figure",
+        "name": "2",
+        "page": 4,
+        "path": "assets/paper_images/radar-2608-01810-figure-2.png",
+        "caption": "RADAR generates high- and low-scoring probes for one criterion and scores them on the full rubric; shifts in untargeted criteria reveal behavioral coupling; even a few probes per criterion recover the human inter-criterion structure (Pearson ≥ 0.84).",
+        "caption_cn": "针对一个 Rubric 条目生成高、低两组回答，再逐条评分；观察未被指定的条目是否随之变化，以识别潜在行为耦合。",
+        "bbox": {},
+        "caption_bbox": {},
+        "source": "pdf-render-crop-reviewed",
+        "confidence": 1.0,
+        "needs_manual_review": false,
+        "contexts": []
+      },
+      "analysis_note": {
+        "title": "评分不独立性与实验限制",
+        "source": "docs/paper_notes/radar-2608-01810.md",
+        "url": "paper_notes/radar-2608-01810.html"
+      }
     }
   ]
 }
