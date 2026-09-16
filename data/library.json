@@ -37,6 +37,7 @@
     {
       "primary_area": "数据集与基准",
       "subcategories": [
+        "LLM 评测与 Rubrics",
         "Agent / 工具使用评测",
         "代码与领域基准",
         "其他"
