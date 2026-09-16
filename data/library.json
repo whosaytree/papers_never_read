@@ -85,6 +85,87 @@
   ],
   "papers": [
     {
+      "id": "srar-step-wise-rubric-rewards-2605-17291",
+      "title": "Step-wise Rubric Rewards for LLM Reasoning",
+      "paper_url": "https://arxiv.org/abs/2605.17291",
+      "pdf_url": "https://arxiv.org/pdf/2605.17291",
+      "authors": [
+        "Weichu Xie",
+        "Haozhe Zhao",
+        "Wenpu Liu",
+        "Yongfu Zhu",
+        "Liang Chen",
+        "Minghao Ye",
+        "Zirong Chen",
+        "Yuqi Xu",
+        "Shuai Dong",
+        "Ziyue Wang",
+        "Xinbo Xu",
+        "Kean Shi",
+        "Ruoyu Wu",
+        "Xiaoying Zhang",
+        "Wenqi Shao",
+        "Baobao Chang",
+        "Nan Duan",
+        "Jiaqi Wang"
+      ],
+      "venue": "arXiv 预印本（暂未核实会议录用信息）",
+      "year": 2026,
+      "primary_area": "强化学习",
+      "category": "探索与奖励设计",
+      "labels": [
+        "Rubric",
+        "过程奖励",
+        "数学推理",
+        "适用性边界"
+      ],
+      "keywords": [
+        "SRaR",
+        "RLVR",
+        "GRPO",
+        "步骤级信用分配",
+        "对比式 Rubric 蒸馏"
+      ],
+      "code_url": "https://github.com/akarinmoe/SRaR",
+      "note": "整体比较认可这篇工作。它围绕有明确步骤、最终得到一个答案的解题场景设计，与我的直接问答场景存在差异。我的场景更强调“问什么、答什么”，未必有必要拆成推理步骤，因此它的步骤级奖励方法可能没有那么适用。",
+      "tldr": "面向具有明确推理步骤和可验证答案的任务，将 Rubric 奖惩分配到具体步骤，改善强化学习中的过程监督；其步骤级奖励机制在普通直接问答中的适用性尚待验证。",
+      "abstract": "中文概述：本文提出 SRaR，将结构化评分标准转化为步骤级训练信号，报告数学准确率、过程正确性与重复纠正行为的改善。",
+      "summary_cn": {
+        "研究动机": "整段回答共享一个奖励时，答对过程中的错误步骤也可能被强化，答错过程中的正确步骤也可能被惩罚。将 Rubric 汇总为整段总分，仍会丢失步骤差异。",
+        "解决问题": "将评分标准的判定结果归因到具体推理步骤，使训练信号能够区分同一回答中不同步骤的质量。",
+        "现象分析": "作者对 1,000 条解答的诊断发现：答对轨迹中的错误步骤占 18.2%，答错轨迹中的正确步骤占 49.9%，说明最终答案正确性与过程质量并不完全一致。",
+        "主要方法": "对比正确与错误解题轨迹，提炼 SUGGEST、PITFALL、BONUS 三类 Rubric；由 Judge 判断条目是否触发及其对应步骤。步骤奖励跨回答归一化后作用于该步骤的 token，再与独立计算的结果优势相加。",
+        "数据集与实验": "构造约 16K 道数学题的 Rubric 数据，在 Qwen3-8B、32B 上评测六个数学基准。相对 RaR，平均准确率分别提升 3.57、2.75 个百分点。",
+        "主要贡献": "提供从题目专属 Rubric 到步骤级训练奖励的完整流程。实验支持其数学推理效果；对缺少明确步骤的直接问答，如何划分评价单元、是否仍有收益，尚无验证。"
+      },
+      "status": "approved",
+      "added_at": "2026-09-16",
+      "key_figure": {
+        "type": "Figure",
+        "name": "1",
+        "page": 2,
+        "path": "assets/paper_images/srar-step-wise-rubric-rewards-2605-17291-figure-1.png",
+        "caption": "Overview of SRaR.",
+        "caption_cn": "上半部分展示 Rubric 评分如何归因到推理步骤，并与结果奖励结合；下半部分展示从正确、错误解题轨迹中蒸馏题目专属 Rubric 的流程。",
+        "bbox": [
+          70,
+          78,
+          541,
+          400
+        ],
+        "caption_bbox": {},
+        "source": "pdfplumber-pdf-crop",
+        "confidence": 1.0,
+        "needs_manual_review": false,
+        "contexts": []
+      },
+      "analysis_note": {
+        "title": "证据备注与关键图选择说明",
+        "source": "docs/paper_notes/srar-step-wise-rubric-rewards-2605-17291.md",
+        "url": "paper_notes/srar-step-wise-rubric-rewards-2605-17291.html"
+      }
+    },
+    {
       "id": "generating-refining-dynamic-rubrics-2605-30568",
       "paper_url": "https://arxiv.org/abs/2605.30568v1",
       "pdf_url": "https://arxiv.org/pdf/2605.30568v1",
