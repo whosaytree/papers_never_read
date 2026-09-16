@@ -86,6 +86,70 @@
   ],
   "papers": [
     {
+      "id": "premise-2605-30803",
+      "paper_url": "https://arxiv.org/abs/2605.30803v1",
+      "title": "PReMISE: Policy Rubrics as Measurement Specifications for LLM Judges",
+      "authors": [
+        "Swastik Roy",
+        "Rajkumar Pujari",
+        "Tharindu Kumarage",
+        "Charith Peris",
+        "Rahul Gupta",
+        "Anna Rumshisky",
+        "Pradeep Natarajan",
+        "Venkatesh Saligrama"
+      ],
+      "venue": "arXiv 预印本；未核实正式录用信息",
+      "year": 2026,
+      "primary_area": "数据集与基准",
+      "category": "LLM 评测与 Rubrics",
+      "labels": [
+        "LLM-as-a-Judge",
+        "Rubric 发现与修订",
+        "评测可靠性",
+        "对抗鲁棒性"
+      ],
+      "keywords": [
+        "policy-level rubrics",
+        "measurement specifications",
+        "preference alignment",
+        "repair operators",
+        "Verified Fool Rate"
+      ],
+      "code_url": "",
+      "note": "倾向于将文中的七类修复模式理解为一种经验性的分类。",
+      "tldr": "将跨题复用的 Rubric 视为 Judge 的测量规范，通过多维审计定位缺陷，并在预先确定的经验性修复操作库内搜索改法，用实际复测检查收益与代价。",
+      "abstract": "英文原摘要：https://arxiv.org/abs/2605.30803v1 。摘要核心内容已融入 TL;DR 与六维总结，此处不重复全文。",
+      "summary_cn": {
+        "研究动机": "同一个 Judge 在不同 Rubric 下可能形成不同的质量判断。宽泛标准容易奖励措辞流畅、形式合规却违背实际要求的回答；被反复使用的标准还会将这些偏差传播到更多题目。因此，Rubric 的质量需要结合它实际诱导出的评分行为来检查。",
+        "解决问题": "研究如何从成对偏好数据中提炼跨题复用的行为标准，评估这些标准在固定 Judge 下的表现，并针对发现的缺陷修订。审计覆盖结构充分性、评分可靠性、偏好拟合与对抗鲁棒性，避免仅凭某一项指标判断 Rubric 是否有效。",
+        "现象分析": "不同 Rubric 来源各有优势，没有一种在全部审计维度上领先。Judge 之间高度一致，仍可能共同接受有缺陷的回答；经常区分两个回答的条目，也不一定支持人类偏好的一方。标准越具体，还可能给攻击者提供越明确的钻空子目标，需要进一步检查其评分边界。",
+        "主要方法": "输入为问题、成对回答及偏好标签。模型提取有区分度的候选标准，经向量聚类、语义分组和描述合并，形成可复用的 Rubric 集合，再从结构、可靠性、偏好拟合和抗攻击能力四方面审计。偏好修复通过筛选条目，让保留的标准更常支持优选回答。\n\n文本修复以失败案例包为依据，在固定的七类操作中搜索改法，包括适用条件、不奖励条款、得分上限、拆分、行为具体化、误判反例和禁止补偿。作者称这些操作来自对 LLM 失败解释的聚类归纳，可理解为经验性分类；其形成细节未充分公开。模型生成并预筛候选后，实际重跑评测，只接受攻击成功率下降、且偏好拟合与可靠性退化不超过阈值的版本。全过程保持 Judge 参数固定。",
+        "数据集与实验": "使用 HH-RLHF、UltraFeedback、Arena-Expert-5K 和 HelpSteer3，与五种 Rubric 方法比较。每个来源使用 1,000 对发现样本和 500 对审计池；测试集主设定为 3,000 对，部分逐条评分实验单元实际使用 1,000 对。\n\n偏好预测准确率（越高越好）/ 经验证的攻击成功率 VFR（越低越好）/ Judge 间一致性 α（越高越好）：初始发现为 65.0% / 46.4% / 0.531；偏好筛选修复为 68.6% / 43.2% / 0.499；可靠性约束下的鲁棒性修复为 64.9% / 36.0% / 0.519。\n\n偏好筛选与鲁棒性修复改善了不同指标，以上是不同版本的结果。VFR 统计攻击尝试中同时获得高分、又被验证为钻标准空子的比例，其数值依赖具体攻击者、Judge 和验证模型。",
+        "主要贡献": "提供“发现—审计—修复”的完整框架，将 Rubric 的失败表现与可执行的修改方式连接起来，并通过复测控制修改带来的退化。\n\n修复部分的贡献在于将经验性操作组织成受约束的搜索流程。论文尚未证明七类操作具有完备性或最优性，也未充分公开从失败解释到操作库的构建过程及完整修复 prompt。实验支持这套流程在所测条件下有效；较小 Judge 上的收益及下游强化学习效果仍有待验证。"
+      },
+      "key_figure": {
+        "type": "Figure",
+        "name": "2",
+        "page": 3,
+        "path": "assets/paper_images/premise-2605-30803-figure-2.png",
+        "caption": "PReMISE framework.",
+        "caption_cn": "从成对偏好样本提炼可复用标准，审计其诱导的 Judge 行为，再利用失败案例、在固定修复操作库内生成修改方案并重新测试。图中以鲁棒性、可靠性和相关性组织展示；正文正式审计分为结构充分性、可靠性、偏好拟合和对抗鲁棒性四个维度。",
+        "bbox": [],
+        "caption_bbox": [],
+        "source": "pdf-page-render-crop-user-approved-v2",
+        "confidence": 1.0,
+        "needs_manual_review": false,
+        "contexts": [
+          {
+            "text": "直观呈现偏好数据、Rubric、失败反馈与重新评测之间的关系，有助于理解修复闭环。"
+          }
+        ]
+      },
+      "status": "approved",
+      "added_at": "2026-09-16"
+    },
+    {
       "id": "ares-2605-23454",
       "title": "ARES: Automated Rubric Synthesis for Scalable LLM Reinforcement Learning",
       "paper_url": "https://arxiv.org/abs/2605.23454v2",
