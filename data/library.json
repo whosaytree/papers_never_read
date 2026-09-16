@@ -86,6 +86,81 @@
   ],
   "papers": [
     {
+      "id": "ares-2605-23454",
+      "title": "ARES: Automated Rubric Synthesis for Scalable LLM Reinforcement Learning",
+      "paper_url": "https://arxiv.org/abs/2605.23454v2",
+      "pdf_url": "https://arxiv.org/pdf/2605.23454v2",
+      "authors": [
+        "Xiaoyuan Li",
+        "Keqin Bao",
+        "Moxin Li",
+        "Yubo Ma",
+        "Yichang Zhang",
+        "Wenjie Wang",
+        "Fuli Feng",
+        "Dayiheng Liu"
+      ],
+      "venue": "arXiv 预印本；页面标注 Under Review，暂未核实正式录用信息",
+      "year": 2026,
+      "primary_area": "基础/前沿模型 (含LLM)",
+      "category": "训练数据构造与合成",
+      "labels": [
+        "Rubrics",
+        "自动化数据构造",
+        "合成反馈",
+        "强化学习"
+      ],
+      "keywords": [
+        "QA-rubric co-generation",
+        "document-grounded synthesis",
+        "weighted rewards",
+        "LLM-as-a-Judge",
+        "GRPO"
+      ],
+      "code_url": "",
+      "note": "这篇工作展示了通过自动化链路构造 Rubric 并训练模型的探索。但我对其在工程场景和实际应用中的可靠性持怀疑态度，尤其关注缺少人类评判监督时，如何验证生成标准的正确性。",
+      "tldr": "用现成大模型和 Prompt，将原始文档批量转换为问题、参考答案及带权 Rubric，再以自动判分训练回答模型；实验显示下游收益，但 Rubric 的人类一致性和实际工程可用性仍缺少充分验证。",
+      "abstract": "Rubric-based rewards offer a promising way to extend reinforcement learning (RL) for large language models beyond tasks with automatically verifiable answers. However, scaling rubric-based RL remains challenging: existing approaches often rely on expert-written rubrics and manually constructed question sets, while fixed task-level rubrics may fail to capture the evaluation requirements of individual questions.\n\nWe propose ARES (Automated Rubric synthEsis for Scalable RL), a framework for automatically constructing rubric-based RL data at scale. Starting from raw pretraining documents, ARES converts source knowledge into self-contained question-answer pairs and co-generates question-specific weighted rubrics, enabling instance-level reward supervision for open-ended responses.\n\nTo improve diversity and quality, ARES conditions generation on domain labels and persona information, and applies validation filters for question self-containment, answer faithfulness, and rubric validity. Using ARES, we construct 100K rubric-annotated instances across ten domains.\n\nExperiments on seven benchmarks show that rubric-based RL trained with ARES, outperforms continual pretraining, supervised fine-tuning, and binary-reward RL, with the largest gains on multi-dimensional open-ended tasks such as healthcare and instruction following.",
+      "summary_cn": {
+        "研究动机": "开放式任务难以仅凭最终答案对错提供训练奖励。Rubric 可以把回答质量拆成多个评分维度，但人工构造问题、答案和标准成本较高。论文探索一条从预训练文档自动生成训练实例的流程，以减少新增人工标注的需求，扩大 Rubric 奖励的应用范围。",
+        "解决问题": "将原始文档加工为“自包含问题—参考答案—逐题带权 Rubric”，再接入强化学习。重点是数据构造的完整性与规模化：让问答和标准共享来源依据，经过自动检查后成为可用于训练的奖励监督。",
+        "现象分析": "实验支持自动合成 Rubric 具有训练价值，但收益随任务变化。相比通用 Rubric，逐题 Rubric 的七项平均成绩提高 0.90 分，IFEval 提高 9.22 分；HealthBench 和 WritingBench 则分别降低 4.52、0.95 分。因此，逐题定制的优势主要体现在要求随题目变化的任务，不能推广为所有领域都更有效。\n\n联合生成让问题、答案和标准更容易保持内容一致，也可能让它们共享同一处误解。下游分数提高，不能单独证明标准正确、权重合理，或判分符合人类判断。",
+        "主要方法": "ARES 先筛选原始文档，并标注领域和目标受众。随后用 Gemini-3.1-Pro-Preview，通过一次 Prompt 调用联合生成问题、参考答案和带权 Rubric。Prompt 要求问答仅依据材料、问题脱离原文也能理解，并按复杂度生成不同数量的标准；每条检查一个具体方面，正权重奖励应有内容，负权重惩罚错误或遗漏。具体标准和权重由模型生成，没有专门训练 Rubric 生成器。\n\n生成后，用 Claude-Sonnet-4.5 和结构检查过滤问答及标准。训练阶段固定 Rubric、权重和 Qwen3-32B Judge，对 Qwen3-4B-Base 的候选答案逐项二元判分，加权求和得到奖励，再用 GRPO 更新回答模型。论文未引入人类偏好监督来校准标准，也未根据训练反馈持续修订 Rubric。",
+        "数据集与实验": "从 DCLM、FineWeb-Edu 和 FinePDFs 的约 0.1B tokens 文档池构造出 101,847 条实例，覆盖十个领域，共含 1,108,163 条标准，平均每题 10.88 条。\n\n实验基于 Qwen3-4B-Base，在知识推理、数学、代码、医疗、写作和指令遵循的七项基准上评测。七项平均 / HealthBench / IFEval：继续预训练 CPT 为 47.36 / 35.04 / 39.39；Webscale 二元奖励 RL 为 48.30 / 36.08 / 35.61；ARES-SFT 为 49.71 / 35.78 / 46.41；ARES-RL 为 52.69 / 41.45 / 54.88。\n\nARES-RL 比同数据的 ARES-SFT 平均高 2.98 分，比 Webscale 高 4.39 分。这些结果说明合成标准能够提供有效的训练信号；实验范围仍限于一个基座模型与固定 Judge，未报告真实业务部署效果。",
+        "主要贡献": "展示了一条可规模化执行的文档到 Rubric 训练数据流程，并通过下游训练验证其潜在价值。它为减少逐题人工编写标准的工作量提供了参考。\n\n可靠性验证仍有明显边界：没有系统报告生成标准的人工审核正确率、人机一致率或权重校准结果；公开的验证 Prompt 也未完整展示逐条标准的语义核验过程。工程使用仍需补充独立人工评测、业务数据验证及成本核算。"
+      },
+      "key_figure": {
+        "type": "Figure",
+        "name": "1",
+        "page": 3,
+        "path": "assets/paper_images/ares-2605-23454-figure-1.png",
+        "caption": "Overview of the six-stage ARES pipeline. Starting from raw pretraining documents, ARES performs document filtering, domain and persona conditioning, rubric-augmented QA generation, quality verification, rubric validation, and format conversion to produce training instances.",
+        "caption_cn": "ARES 从预训练文档出发，经文档筛选、领域与受众设定、问答及 Rubric 联合生成、问答质量验证、Rubric 验证和格式转换，形成 GRPO 训练实例。训练奖励由 Judge 的逐项二元判断与对应权重加权求和得到。",
+        "bbox": [
+          145,
+          70,
+          466,
+          307
+        ],
+        "caption_bbox": [],
+        "source": "pdfplumber-crop-user-approved-v2",
+        "confidence": 1.0,
+        "needs_manual_review": false,
+        "contexts": [
+          {
+            "text": "该图完整呈现论文的主要贡献——从原始材料到训练奖励的数据流程，同时明确区分数据生成、质量检查与模型训练。"
+          }
+        ]
+      },
+      "analysis_note": {
+        "title": "ARES：实验结果与影响力、复现状态",
+        "source": "docs/paper_notes/ares-2605-23454.md",
+        "url": "paper_notes/ares-2605-23454.html"
+      },
+      "status": "approved",
+      "added_at": "2026-09-16"
+    },
+    {
       "id": "cahl-safer-llms-2512-03720",
       "title": "Context-Aware Hierarchical Learning: A Two-Step Paradigm towards Safer LLMs",
       "paper_url": "https://arxiv.org/abs/2512.03720",
