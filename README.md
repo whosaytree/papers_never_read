@@ -107,6 +107,8 @@
 
 长笔记只写入 Markdown，不塞进 `summary_cn`、`tldr` 或 `note`。线上卡片保留短总结，详细推导、实验细节、复现状态和个人判断写入 `docs/paper_notes/`。
 
+笔记支持 Markdown 表格、独立图片和加粗。需要参考文献清单等配套页面时，可在 `analysis_note.related_notes` 中列出采用同样 `title`、`source`、`url` 字段的子页面；构建时一并生成。在正文中使用相对 HTML 链接连接这些页面，图片使用相对站点资源路径。
+
 ### 技术分享
 
 主文件：`data/blogs.json`

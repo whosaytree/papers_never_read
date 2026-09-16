@@ -14593,9 +14593,21 @@
         "contexts": []
       },
       "analysis_note": {
-        "title": "精读笔记（待审核）",
+        "title": "精读：Rubric 方法地图",
         "source": "docs/paper_notes/arxiv-2606.08625.md",
-        "url": "paper_notes/arxiv-2606.08625.html"
+        "url": "paper_notes/arxiv-2606.08625.html",
+        "related_notes": [
+          {
+            "title": "阅读清单一：精读中提到的论文",
+            "source": "docs/paper_notes/arxiv-2606.08625-references-mentioned.md",
+            "url": "paper_notes/arxiv-2606.08625-references-mentioned.html"
+          },
+          {
+            "title": "阅读清单二：综述的其余参考文献",
+            "source": "docs/paper_notes/arxiv-2606.08625-references-remaining.md",
+            "url": "paper_notes/arxiv-2606.08625-references-remaining.html"
+          }
+        ]
       }
     },
     {

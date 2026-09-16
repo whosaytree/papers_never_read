@@ -604,6 +604,11 @@ li{margin:6px 0}
 code{background:#eef3f8;border-radius:5px;padding:1px 5px}
 pre{background:#17212b;color:#eef6f6;border-radius:8px;padding:14px;overflow:auto}
 pre code{background:transparent;color:inherit;padding:0}
+article img{display:block;max-width:100%;height:auto;margin:18px auto}
+.note-table-wrap{overflow-x:auto;margin:16px 0}
+.note-table{width:100%;border-collapse:collapse;font-size:14px}
+.note-table th,.note-table td{border:1px solid var(--line);padding:9px 12px;text-align:left;vertical-align:top;min-width:120px}
+.note-table th{background:#eef3f8}
 blockquote{
   margin:14px 0;
   padding:10px 14px;
@@ -771,6 +776,7 @@ def safe_text(value: str | None, default: str = "未提供") -> str:
 def inline_markdown(text: str) -> str:
     escaped = escape(text)
     escaped = re.sub(r"`([^`]+)`", r"<code>\1</code>", escaped)
+    escaped = re.sub(r"\*\*([^*]+)\*\*", r"<strong>\1</strong>", escaped)
     return re.sub(
         r"\[([^\]]+)\]\(([^)]+)\)",
         lambda match: f'<a href="{escape(match.group(2))}" target="_blank" rel="noreferrer">{escape(match.group(1))}</a>',
@@ -784,6 +790,19 @@ def markdown_to_html(markdown: str) -> str:
     in_list = False
     in_code = False
     code_lines: list[str] = []
+    table_rows: list[str] = []
+
+    def flush_table() -> None:
+        if not table_rows:
+            return
+        rows = [[cell.strip() for cell in row.strip("|").split("|")] for row in table_rows]
+        if len(rows) >= 2 and all(re.fullmatch(r":?-{3,}:?", cell) for cell in rows[1]):
+            header = "".join(f"<th>{inline_markdown(cell)}</th>" for cell in rows[0])
+            body = "".join("<tr>" + "".join(f"<td>{inline_markdown(cell)}</td>" for cell in row) + "</tr>" for row in rows[2:])
+            html.append(f'<div class="note-table-wrap"><table class="note-table"><thead><tr>{header}</tr></thead><tbody>{body}</tbody></table></div>')
+        else:
+            html.append(f"<p>{inline_markdown(' '.join(table_rows))}</p>")
+        table_rows.clear()
 
     def flush_paragraph() -> None:
         nonlocal paragraph
@@ -800,6 +819,12 @@ def markdown_to_html(markdown: str) -> str:
     for raw_line in markdown.splitlines():
         line = raw_line.rstrip()
         stripped = line.strip()
+        if not in_code and stripped.startswith("|") and stripped.endswith("|"):
+            flush_paragraph()
+            close_list()
+            table_rows.append(stripped)
+            continue
+        flush_table()
         if stripped.startswith("```"):
             if in_code:
                 html.append(f"<pre><code>{escape(chr(10).join(code_lines))}</code></pre>")
@@ -816,6 +841,12 @@ def markdown_to_html(markdown: str) -> str:
         if not stripped:
             flush_paragraph()
             close_list()
+            continue
+        image_match = re.fullmatch(r"!\[([^\]]*)\]\(([^)]+)\)", stripped)
+        if image_match:
+            flush_paragraph()
+            close_list()
+            html.append(f'<img src="{escape(image_match.group(2), quote=True)}" alt="{escape(image_match.group(1), quote=True)}" loading="lazy">')
             continue
         if stripped.startswith("# "):
             flush_paragraph()
@@ -849,6 +880,7 @@ def markdown_to_html(markdown: str) -> str:
     if in_code:
         html.append(f"<pre><code>{escape(chr(10).join(code_lines))}</code></pre>")
     flush_paragraph()
+    flush_table()
     close_list()
     return "\n".join(html)
 
@@ -886,6 +918,11 @@ def build_note_pages(items: list[dict], default_title: str = "论文笔记", bac
 </html>
 """,
             encoding="utf-8",
+        )
+        build_note_pages(
+            [{"analysis_note": child} for child in note.get("related_notes", [])],
+            default_title=default_title,
+            back_label=back_label,
         )
 
 
