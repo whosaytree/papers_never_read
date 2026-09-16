@@ -14820,6 +14820,72 @@
           }
         ]
       }
+    },
+    {
+      "id": "rubricrag-2603-20882",
+      "title": "RubricRAG: Towards Interpretable and Reliable LLM Evaluation via Domain Knowledge Retrieval for Rubric Generation",
+      "authors": [
+        "Kaustubh D. Dhole",
+        "Eugene Agichtein"
+      ],
+      "venue": "SIGIR 2026, pp. 3681–3687",
+      "year": 2026,
+      "paper_url": "https://doi.org/10.1145/3805712.3809940",
+      "pdf_url": "https://arxiv.org/pdf/2603.20882v1",
+      "primary_area": "数据集与基准",
+      "category": "LLM 评测与 Rubrics",
+      "labels": [
+        "Rubric 自动生成",
+        "检索增强",
+        "LLM-as-a-Judge",
+        "评估指标"
+      ],
+      "keywords": [
+        "RubricRAG",
+        "query-specific rubrics",
+        "HealthBench",
+        "ResearchRubrics",
+        "semantic similarity",
+        "rubric redundancy"
+      ],
+      "code_url": "",
+      "tldr": "RubricRAG 在推理时检索相似问题及其人工 Rubric，为新问题生成评分标准，在作者的下游实验中优于若干基线；但论文没有验证其提出的 Rubric 相似度 F1 能否预测真实人评一致性，不能将“更像人工标准”直接等同于“判分更准确”。",
+      "note": "通过与人工标准的语义相似度评价生成 Rubric，思路有一定合理性。但需要验证这种相似度及其 F1 汇总是否能预测判分准确性。本文没有证明 F1 越高，所得评分就越接近真实人评；因此不宜仅据此判断 Rubric 优劣。",
+      "abstract": "Large language models (LLMs) are increasingly evaluated and sometimes trained using automated graders such as LLM-as-judges that output scalar scores or preferences. While convenient, these approaches are often opaque: a single score rarely explains why an answer is good or bad, which requirements were missed, or how a system should be improved. This lack of interpretability limits their usefulness for model development, dataset curation, and high-stakes deployment. Query-specific rubric-based evaluation offers a more transparent alternative by decomposing quality into explicit, checkable criteria. However, manually designing high-quality, query-specific rubrics is labor-intensive and cognitively demanding and not feasible for deployment. While previous approaches have focused on generating intermediate rubrics for automated downstream evaluation, it is unclear if these rubrics are both interpretable and effective for human users. In this work, we investigate whether LLMs can generate useful, instance-specific rubrics as compared to human-authored rubrics, while also improving effectiveness for identifying good responses. Through our systematic study on two rubric benchmarks, and on multiple few-shot and post-training strategies, we find that off-the-shelf LLMs produce rubrics that are poorly aligned with human-authored ones. We introduce a simple strategy, RubricRAG, which retrieves domain knowledge via rubrics at inference time from related queries. We demonstrate that RubricRAG can generate more interpretable rubrics both for similarity to human-authored rubrics, and for improved downstream evaluation effectiveness. Our results highlight both the challenges and a promising approach of scalable, interpretable evaluation through automated rubric generation.",
+      "summary_cn": {
+        "研究动机": "针对具体问题编写 Rubric，可以明确回答应满足的要求和应避免的错误，帮助解释评分依据。但人工编写成本较高，直接让 LLM 生成又容易得到通用、空泛的标准。论文尝试利用已有的人工 Rubric，为新问题自动生成更具体的评价要求。",
+        "解决问题": "论文分别研究生成标准与人工标准的相似程度，以及生成标准用于下游判分的效果。前者通过条目之间的词面和语义匹配衡量，后者通过评分相关性及好坏回答区分能力衡量。\n\n这两类实验评价不同属性。论文没有直接建立“Rubric 相似度 F1 越高，判分就越接近真实人评”的关系，因此相似度在文中应被理解为一个辅助评价维度。",
+        "现象分析": "零样本生成通常能抓住安全、完整等总体方向，但容易遗漏问题特有的要求。检索相似案例后，生成条目更具体，与人工条目的匹配程度提高；同时可能产生重叠要求，对同一概念重复计分。\n\n相似度提高也未必带来下游改善。例如在 OSS EVAL-300 上，GRPO 的语义相似度 F1 为 0.551，高于 zero-shot 的 0.521，但其下游评分 Spearman 相关系数为 0.331，低于 zero-shot 的 0.426。这说明两者不能直接互相替代。",
+        "主要方法": "输入是待评回答对应的问题或对话。RubricRAG 用 Qwen3-Embedding-4B 检索相似问题，将这些问题及其人工 Rubric 作为上下文示例，交给 Qwen3-14B 生成新问题的评分条目和正负整数权重。HealthBench 检索 20 个示例，ResearchRubrics 检索 5 个；领域知识主要由已有 Rubric 提供。\n\n这套流程在推理时运行，不在线更新模型参数。示例数、提示词和输出格式由实验预设，条目及权重由模型生成；SFT 与 GRPO 是单独训练的对照方法。生成后，固定 Judge 逐条判断回答是否满足标准，将命中条目的分值相加，再除以全部正分条目的权重总和。作者据此检验生成 Rubric 的下游评分效果。",
+        "数据集与实验": "使用 HealthBench 的 OSS EVAL 随机 300 题及 Hard 子集全部题目进行评价，剩余 OSS EVAL 问题用于训练。ResearchRubrics 共 101 题，留出 5 题作为随机 few-shot 示例，其余用于评价；RubricRAG 则允许检索除当前题外的其他问题及其 Rubric，需注意这一检索范围与固定训练库设置的区别。\n\nRubric 生成器为 Qwen3-14B，语义相似度评估和主要下游判分使用 Qwen3-4B-Instruct-2507。OSS EVAL-300 的部分结果如下：\n\n| 方法 | Rubric 语义相似度 F1 ↑ | 下游评分 Spearman ρ ↑ | 下游评分 Pearson r ↑ |\n|---|---:|---:|---:|\n| Zero-shot | 0.521 | 0.426 | 0.330 |\n| Few-shot | 0.548 | 0.466 | 0.368 |\n| GRPO | 0.551 | 0.331 | 0.223 |\n| SFT | 0.481 | 0.457 | 0.309 |\n| RubricRAG（think） | 0.558 | 0.495 | 0.415 |\n| RubricRAG（nothink） | **0.567** | **0.545** | **0.478** |\n\n结果的解释边界：\n\n- 相似度 F1：将生成条目与人工条目进行双向最佳匹配，再汇总成 F1。语义版本允许部分匹配，不要求措辞完全相同；但没有直接衡量分值权重是否合理。\n- 下游评分相关性：比较同一个 Judge 分别使用生成 Rubric 和人工 Rubric 得到的评分，参照分数并非独立的人类直接评分；相关性也不等于逐题分值误差。\n- 指标效度：未报告逐题检验“Rubric 相似度越高，判分误差是否越小”，也未证明该 F1 能预测真实人评一致性。\n- 好坏回答区分：正例来自医生撰写的回答，负例由模型在其他随机问题的 Rubric 引导下生成。结果支持该构造任务上的区分能力，对真实模型回答间细微差异的适用性仍需验证。\n\n此外，Table 2 中相似度阈值为 0.2 时，RubricRAG 的遗漏率由 0.564 降至 0.412，冗余率由 0.126 升至 0.170。作者所称的“幻觉率”指生成条目与人工参考条目匹配不足，不能直接解释为经专家确认的错误率。",
+        "主要贡献": "提出利用相似问题的人工 Rubric 进行检索增强生成，并通过条目匹配和下游评价两类实验展示方法收益。研究揭示：相关示例能够帮助生成更具体的标准，但也可能增加重复要求；生成标准的相似程度与实际判分效果需要分别检验。\n\n论文对 RubricRAG 的有效性提供了下游实验支持，但对所提相似度指标的验证仍不充分。该指标有覆盖与贴合的设计依据，适合作为辅助诊断；其作为“判分准确性代理指标”的可靠性尚待验证。"
+      },
+      "status": "approved",
+      "added_at": "2026-09-16",
+      "key_figure": {
+        "type": "Table",
+        "name": "3",
+        "page": 5,
+        "path": "assets/paper_images/rubricrag-2603-20882-table-3.png",
+        "caption": "Correlation between query-wise LLM Judgements obtained using model-generated and human-authored rubrics (gold) on OSS EVAL-300. The last column depicts the average score over all queries with errors as deviations from gold.",
+        "caption_cn": "在 OSS EVAL-300 上，比较固定 LLM Judge 分别使用模型生成 Rubric 和人工 Rubric 时所得的逐题评分。RubricRAG（nothink）的 Spearman 与 Pearson 相关系数最高，分别为 0.545 和 0.478；最后一列显示平均分及其相对人工 Rubric 评分的偏差。",
+        "bbox": [
+          314,
+          291,
+          562,
+          415
+        ],
+        "caption_bbox": {},
+        "source": "arxiv-v1-pdf-render-crop-reviewed",
+        "confidence": 1.0,
+        "needs_manual_review": false,
+        "contexts": []
+      },
+      "analysis_note": {
+        "title": "方法示意与实验解读（审核版 v2）",
+        "source": "docs/paper_notes/rubricrag-2603-20882.md",
+        "url": "paper_notes/rubricrag-2603-20882.html"
+      }
     }
   ]
 }
