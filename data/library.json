@@ -86,6 +86,74 @@
   ],
   "papers": [
     {
+      "id": "mrrg-2607-01830",
+      "title": "Many Voices, One Reward: Multi-Role Rubric Generation for LLM Judging and Reward Modeling",
+      "paper_url": "https://arxiv.org/abs/2607.01830v1",
+      "pdf_url": "https://arxiv.org/pdf/2607.01830v1",
+      "authors": [
+        "Dazhi Fu",
+        "Jiuding Yang",
+        "Yiwen Guo",
+        "Jicong Fan"
+      ],
+      "institutions": [
+        "香港中文大学（深圳）数据科学学院",
+        "LIGHTSPEED",
+        "独立研究者"
+      ],
+      "venue": "arXiv 预印本；尚未核实会议录用信息",
+      "year": 2026,
+      "primary_area": "数据集与基准",
+      "category": "LLM 评测与 Rubrics",
+      "labels": [
+        "Rubric 生成",
+        "多角色提示",
+        "LLM-as-a-Judge",
+        "奖励建模"
+      ],
+      "keywords": [
+        "MRRG",
+        "dimensional blind spots",
+        "preference validation",
+        "GRPO"
+      ],
+      "code_url": "https://github.com/fudazhiaka/Many-Voices-One-Reward-Multi-Role-Rubric-Generation-for-LLM-Judging-and-Reward-Modeling",
+      "note": "",
+      "tldr": "MRRG 通过五种固定角色分别生成评价标准，汇总为加权 Rubric，用于答案偏好判断和强化学习奖励；论文实验显示，该方法优于所比较的单视角生成方案。",
+      "abstract": "中文概述：论文提出 MRRG，通过多个互补角色生成并汇总评价标准，缓解单一视角的维度遗漏。该框架无需额外训练 Rubric 生成器，可用于答案评判和强化学习奖励；作者在两类实验中报告了相对所选基线的提升。",
+      "summary_cn": {
+        "研究动机": "开放式回答的质量涉及正确性、需求满足、表达等多个方面。作者认为，单一通用评价者生成 Rubric 时容易遗漏部分维度，形成“维度盲区”，使存在缺陷的回答仍能通过评分。",
+        "解决问题": "在不依赖人工参考答案、无需专门训练 Rubric 生成器的条件下，利用不同角色的关注点扩展候选标准，并将逐条判断汇总为统一的评价与奖励信号。",
+        "现象分析": "作者观察到单视角方法在不同领域表现不均衡，也可能被利用未覆盖维度的回答钻空子。角色消融和重复生成对照支持多角色设计在所测设置中的价值，但尚不足以证明新增维度都符合目标人群的评价偏好。",
+        "主要方法": "给定问题，先由模型生成一份样例回答，再将二者交给用户、领域专家、教育者、AI 研究者和语言学家五种角色。各角色独立生成约 3–7 条二元评价标准，同时赋予 1–3 的重要性权重。角色集合与权重范围固定，具体条目和权重由模型生成，不通过人评数据学习。\n\n随后将标准拼接，只删除文字完全相同的重复项，保留首次出现的权重；语义相近或可能冲突的条目仍保留。Judge 对候选回答逐条判定是否满足标准，以加权平均得到总分，用于比较回答或作为 GRPO 奖励。训练时每题 Rubric 生成一次并缓存，更新回答模型。这里的“无需参考答案”仍使用模型样例，评分也依赖 LLM 判断。",
+        "数据集与实验": "偏好评判使用 RewardBench-2、JudgeBench 和 PPE，覆盖 Qwen2.5 的三个规模及 GPT-OSS 的两个规模。以 Qwen2.5-3B 为例，单视角生成（使用样例回答）在 RewardBench-2 / JudgeBench 上为 40.3 / 40.9，重复五次单视角生成（使用样例回答）为 43.9 / 45.1，MRRG 为 51.2 / 55.1。\n\n强化学习实验使用 2,000 条 WildChat 问题训练 Qwen2.5-3B，由 GPT-4o 生成 Rubric、GPT-OSS-120B 逐条评分。MRRG 在 BiGGen Bench 和 HealthBench-Hard 上分别取得 63.7、32.1，比表中最强对照高 1.7、3.4 分。以上为论文报告结果，未独立复现。",
+        "主要贡献": "主要贡献是将多角色提示用于 Rubric 生成，并验证同一评分机制可以服务偏好评判和策略优化。方法简单，便于作为工程基线。\n\n局限包括角色集合固定、权重未经人评校准，以及语义重复和冲突标准仍可能影响评分。实验支持其在所测基准上的效果，但角色组合与具体目标评价标准之间的对应关系仍需验证。"
+      },
+      "key_figure": {
+        "type": "Figure",
+        "name": "2",
+        "page": 4,
+        "path": "assets/paper_images/mrrg-2607-01830-figure-2.png",
+        "caption": "Framework of MRRG.",
+        "caption_cn": "MRRG 基于问题和模型样例回答，通过五种角色分别生成评价标准及权重，汇总去重后逐条评判候选回答，将评分用于偏好判断或强化学习奖励。",
+        "bbox": [
+          85,
+          64,
+          510,
+          255
+        ],
+        "caption_bbox": [],
+        "source": "pdfplumber-rendered-crop",
+        "confidence": 1.0,
+        "needs_manual_review": false,
+        "contexts": [
+          "该图完整呈现了角色生成、标准汇总、逐条判断及两种下游用途，与主要方法直接对应。"
+        ]
+      },
+      "status": "approved",
+      "added_at": "2026-09-16"
+    },
+    {
       "id": "premise-2605-30803",
       "paper_url": "https://arxiv.org/abs/2605.30803v1",
       "title": "PReMISE: Policy Rubrics as Measurement Specifications for LLM Judges",
