@@ -85,6 +85,70 @@
   ],
   "papers": [
     {
+      "id": "generating-refining-dynamic-rubrics-2605-30568",
+      "paper_url": "https://arxiv.org/abs/2605.30568v1",
+      "pdf_url": "https://arxiv.org/pdf/2605.30568v1",
+      "title": "Generating and Refining Dynamic Evaluation Rubrics for LLM-as-a-Judge",
+      "authors": [
+        "Zijie Wang",
+        "Eduardo Blanco"
+      ],
+      "venue": "arXiv 预印本；尚未核实正式录用信息",
+      "year": 2026,
+      "primary_area": "数据集与基准",
+      "category": "LLM 评测与 Rubrics",
+      "labels": [
+        "Rubrics",
+        "LLM-as-a-Judge",
+        "元评审",
+        "偏好学习"
+      ],
+      "keywords": [
+        "dynamic rubrics",
+        "rubric generation",
+        "meta-judge",
+        "DPO",
+        "human alignment"
+      ],
+      "code_url": "https://github.com/wang-zijie/generating_dynamic_rubric",
+      "tldr": "用 Claude 的 Rubric 偏好训练独立生成器，改善部分下游评测指标；元评审偏好的正确性、权重执行机制及训练成本收益仍缺少充分验证。",
+      "summary_cn": {
+        "研究动机": "人工编写细粒度 Rubric 成本高，参考答案也未必可得。论文希望自动生成评价标准，并通过训练改善生成质量。",
+        "解决问题": "在不使用人工 Rubric、参考答案或人工评分作为训练监督的条件下，为成对比较与单答评分生成任务相关标准。",
+        "现象分析": "微调后，标准数量变化较小，表述方式发生变化，下游效果总体改善但并非所有指标均提升。元评审偏好与实际判分准确性的对应关系没有被直接验证。",
+        "主要方法": "为同一输入生成多份 Rubric，Claude 按具体性、覆盖度、区分能力和领域适切性比较候选；经 Bradley–Terry 排序构造偏好对，用 DPO 迭代训练 Qwen3 14B。最终评审读取生成标准，整体输出分数或优胜答案。",
+        "数据集与实验": "使用 AlpacaEval、MT-Bench、HelpSteer2 和 BiGGen。以 Claude 为评审时，MT-Bench 一致率由最优免训练基线的 81.72% 提升至 83.69%。训练使用评测基准输入，尚未验证跨域泛化。",
+        "主要贡献": "展示了独立训练 Rubric 生成器的可行性。候选标准包含重要性标签，但未明确其数值加权执行方式；也未通过推理时多候选择优对照，充分证明训练的成本收益。"
+      },
+      "note": "整体评价一般。最关心的是 Rubric 的优劣是否有可靠依据，但本文主要依赖 Claude 的主观比较，训练时没有直接以人机一致率检验候选标准的有效性。对于标准内容、权重和最终评分如何共同优化，论文也没有交代得足够清楚。反复采样、比较和训练，本质上是在拟合元评审偏好；在这个偏好本身尚未充分验证的情况下，我对额外算力投入的必要性和性价比持保留态度。",
+      "abstract": "【中文概述】论文研究无需人工标注的细粒度评价标准生成，分别提出免训练生成与元评审反馈驱动的迭代微调方法，并在四个基准上检验其效果。英文摘要原文：https://arxiv.org/abs/2605.30568v1",
+      "key_figure": {
+        "type": "Table",
+        "name": "3",
+        "page": 7,
+        "path": "assets/paper_images/generating-refining-dynamic-rubrics-2605-30568-table-3.png",
+        "caption": "Results with fine-tuned rubric generator (Qwen3 14B).",
+        "caption_cn": "Qwen3 14B Rubric 生成器经过两轮偏好微调后的评测结果。左侧为成对评测的人工偏好一致率，右侧为单答评分的 Spearman/Pearson 相关系数。星号表示相对对应最优免训练基线的显著提升；基线不包含人工实例级 Rubric。",
+        "bbox": [
+          45,
+          65,
+          550,
+          332
+        ],
+        "caption_bbox": [],
+        "source": "pdfplumber-rendered-original-table-user-approved-v3",
+        "confidence": 1.0,
+        "needs_manual_review": false,
+        "contexts": [
+          {
+            "text": "同时呈现提升、未提升及第二轮回落的结果，便于判断迭代训练的实际收益与边界。"
+          }
+        ]
+      },
+      "status": "approved",
+      "added_at": "2026-09-16"
+    },
+    {
       "id": "too-correct-to-learn-2604-18493",
       "title": "Too Correct to Learn: Reinforcement Learning on Saturated Reasoning Data",
       "paper_url": "https://arxiv.org/abs/2604.18493",
