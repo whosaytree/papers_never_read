@@ -14529,6 +14529,77 @@
         "source": "docs/paper_notes/arxiv-2606.08625.md",
         "url": "paper_notes/arxiv-2606.08625.html"
       }
+    },
+    {
+      "id": "eclipse-finance-hallucination-2512-03107",
+      "title": "Detecting AI Hallucinations in Finance: An Information-Theoretic Method Cuts Hallucination Rate by 92%",
+      "paper_url": "https://arxiv.org/abs/2512.03107",
+      "pdf_url": "https://arxiv.org/pdf/2512.03107",
+      "authors": [
+        "Mainak Singha"
+      ],
+      "venue": "arXiv preprint",
+      "year": 2025,
+      "primary_area": "对齐/安全/公平性/隐私",
+      "category": "红队与评估",
+      "keywords": [
+        "ECLIPSE",
+        "hallucination detection",
+        "financial QA",
+        "RAG evaluation",
+        "selective prediction",
+        "semantic entropy",
+        "evidence capacity",
+        "entropy-capacity mismatch",
+        "perplexity decomposition",
+        "log probabilities",
+        "evidence utilization"
+      ],
+      "labels": [
+        "幻觉检测",
+        "金融 QA",
+        "证据利用",
+        "语义熵",
+        "选择性预测",
+        "RAG 评估"
+      ],
+      "code_url": "",
+      "note": "",
+      "tldr": "ECLIPSE 把金融 QA 幻觉检测建模为“模型语义熵”和“证据容量”的匹配问题：模型答案稳定还不够，关键是这种稳定是否真的来自证据。作者把语义熵、证据前后 log likelihood 变化、perplexity 分解等特征训练成检测器，在受控金融 QA 数据集上达到 AUC 0.891，并通过 selective prediction 在 30% coverage 下把放行答案的幻觉率降到 3.3%。",
+      "abstract": "Large language models (LLMs) produce fluent but unsupported answers - hallucinations - limiting safe deployment in high-stakes domains. We propose ECLIPSE, a framework that treats hallucination as a mismatch between a model's semantic entropy and the capacity of available evidence. We combine entropy estimation via multi-sample clustering with a novel perplexity decomposition that measures how models use retrieved evidence. We prove that under mild conditions, the resulting entropy-capacity objective is strictly convex with a unique stable optimum. We evaluate on a controlled financial question answering dataset with GPT-3.5-turbo (n=200 balanced samples with synthetic hallucinations), where ECLIPSE achieves ROC AUC of 0.89 and average precision of 0.90, substantially outperforming a semantic entropy-only baseline (AUC 0.50). A controlled ablation with Claude-3-Haiku, which lacks token-level log probabilities, shows AUC dropping to 0.59 with coefficient magnitudes decreasing by 95% - demonstrating that ECLIPSE is a logprob-native mechanism whose effectiveness depends on calibrated token-level uncertainties. The perplexity decomposition features exhibit the largest learned coefficients, confirming that evidence utilization is central to hallucination detection. We position this work as a controlled mechanism study; broader validation across domains and naturally occurring hallucinations remains future work.",
+      "summary_cn": {
+        "研究动机": "金融场景里，LLM 的回答可能语言流畅、数值具体、置信度很高，但并没有被财报、公告或检索材料支撑。传统置信度指标容易把“自信生成”误当成可靠回答，因此需要一个能判断模型是否真正利用证据的检测信号。",
+        "解决问题": "论文要判断给定问题 Q、证据 E 和回答 A 时，回答是否 unsupported 或 contradicted by evidence。它关注的是答案是否被证据约束，而不只是答案看起来是否稳定。",
+        "现象分析": "作者把风险拆成两类信号。第一类是语义熵 H：同一个问题多次采样后，答案语义是否分散。第二类是证据容量 C：加入证据后，模型对某个答案的 log likelihood 是否明显提升。如果证据弱、冲突或被忽略，模型却仍然稳定自信地输出答案，这就是高风险错配。",
+        "主要方法": "ECLIPSE 先对同一金融问题进行多次采样，把回答按事实语义聚类，估计 semantic entropy。低语义熵表示模型在多个采样中反复给出相近含义，高语义熵表示模型在不同事实答案之间摇摆。接着，方法比较 log p(A | Q) 和 log p(A | Q, E)：前者表示没有证据时模型多想说这个答案，后者表示加入证据后模型多想说这个答案。两者差值越大，说明证据越可能真正支撑了答案；差值接近 0，说明模型可能没有用上证据；差值为负时，证据可能在反驳答案。\n\n在检测层，论文没有直接训练模型生成更好的答案，而是把这些量转成特征：H、C_eff、L_Q、L_QE、ΔL、ratio、p_max 等，再训练 logistic regression 输出幻觉概率。这个分数可用于 selective prediction：只放行低风险答案，高风险答案拒答、转人工或触发重新检索。也就是说，论文的核心落点是检测与筛选，而非自动修复幻觉。",
+        "数据集与实验": "作者构造了 100 个金融 QA 问题，并形成 200 个平衡样本，其中一半为 clean，一半为 hallucinated。GPT-3.5-turbo 实验中，ECLIPSE 的 ROC AUC 为 0.891，Average Precision 为 0.892。消融结果显示，只用语义熵效果接近随机；加入证据容量和 logprob/perplexity 分解后，AUC 明显提升。Claude-3-Haiku 实验因缺少真实 token-level logprob，只能估计概率，AUC 降到 0.593，说明该方法高度依赖真实 logprob 信号。",
+        "主要贡献": "论文贡献在于把模型是否用上证据形式化为可测量特征，并证明证据利用特征比单独语义熵更关键。它也展示了检测器如何用于拒答策略：在 30% coverage 下，ECLIPSE 放行答案的幻觉率为 3.3%，entropy-only baseline 为 43.3%，相对下降 92%。这个数字应理解为筛选后的输出风险下降，而非底层模型本身减少了 92% 幻觉。"
+      },
+      "status": "approved",
+      "added_at": "2026-09-16",
+      "key_figure": {
+        "type": "Figure",
+        "name": "4",
+        "page": 8,
+        "path": "assets/paper_images/eclipse-finance-hallucination-2512-03107-figure-4.png",
+        "caption": "Figure 4: Coverage vs hallucination rate for ECLIPSE and entropy-only baseline. At any given coverage level, ECLIPSE achieves substantially lower hallucination rates. At 30% coverage, ECLIPSE reduces hallucination rate by 92% relative to entropy-only detection (3.3% vs 43.3%).",
+        "caption_cn": "ECLIPSE 和 entropy-only baseline 在不同 coverage 下的幻觉率对比。coverage 表示系统放行多少比例的预测；在 30% coverage 下，ECLIPSE 放行答案的幻觉率为 3.3%，明显低于 entropy-only baseline 的 43.3%。",
+        "bbox": {},
+        "caption_bbox": {},
+        "source": "pdf-render-crop-reviewed",
+        "confidence": 1,
+        "needs_manual_review": false,
+        "contexts": [
+          {
+            "page": 3,
+            "text": "Semantic entropy estimates the model uncertainty over semantically distinct answers; evidence capacity measures how informative the evidence is about the answer."
+          },
+          {
+            "page": 8,
+            "text": "At 30% coverage, ECLIPSE reduces hallucination rate by 92% relative to entropy-only detection (3.3% vs 43.3%)."
+          }
+        ]
+      }
     }
   ]
 }
