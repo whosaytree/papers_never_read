@@ -963,7 +963,7 @@ def summary_html(summary: dict) -> str:
         content = safe_text(summary.get(key), "待补充")
         rows.append(
             f'<div class="dim"><div class="dim-label">{escape(label)}</div>'
-            f'<div class="dim-content">{escape(content)}</div></div>'
+            f'<div class="dim-content">{escape(content).replace(chr(10), "<br>")}</div></div>'
         )
     return "".join(rows)
 

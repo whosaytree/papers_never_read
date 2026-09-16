@@ -20,6 +20,7 @@
         "指令微调与对齐",
         "训练数据构造与合成",
         "推理与思维链",
+        "可解释性 / 语言表征",
         "长上下文",
         "Agent 与工具使用",
         "模型架构",
@@ -84,6 +85,70 @@
     }
   ],
   "papers": [
+    {
+      "id": "rubric-arrow-2605-29156",
+      "title": "RUBRIC-ARROW: Alternating Pointwise Rubric Reward Modeling for LLM Post-training in Non-verifiable Domains",
+      "paper_url": "https://arxiv.org/abs/2605.29156v1",
+      "pdf_url": "https://arxiv.org/pdf/2605.29156v1",
+      "authors": [
+        "Haoxiang Jiang",
+        "Zihan Dong",
+        "Tianci Liu",
+        "Wanying Wang",
+        "Ran Xu",
+        "Tony Yu",
+        "Linjun Zhang",
+        "Haoyu Wang"
+      ],
+      "venue": "arXiv 预印本；未核实正式录用信息",
+      "year": 2026,
+      "primary_area": "强化学习",
+      "category": "基于偏好/反馈的 RL",
+      "labels": [
+        "Rubrics",
+        "奖励建模",
+        "LLM-as-a-Judge",
+        "交替优化"
+      ],
+      "keywords": [
+        "pointwise reward",
+        "pairwise preference",
+        "GRPO",
+        "probability-based scoring"
+      ],
+      "code_url": "https://github.com/Haoxiang03/RUBRIC-ARROW",
+      "note": "整体比较认可这种方法；同时关注生成 Prompt 的约束与生成器训练各自起到多大作用。",
+      "tldr": "以“能否排对已有偏好答案”为训练反馈，交替优化 Rubric 生成器和 Judge，并通过逐项概率加权得到更细粒度的奖励分数。",
+      "summary_cn": {
+        "研究动机": "非可验证任务缺少确定性判分器。Rubric 评测同时依赖标准质量和 Judge 的执行能力，简单汇总 true/false 又容易让不同质量的答案得到相同分数。",
+        "解决问题": "利用成对答案偏好，训练能够给单个答案独立评分的 Rubric 奖励模型，并将它用于后续模型训练。",
+        "主要方法": "先用现成 Rubric 和 GPT-5-mini 的逐项判分标签，对两个 Qwen3-8B 模型做监督热身：一个负责生成标准，一个负责执行判分。之后以“问题＋两个答案＋已有偏好”为训练数据，轮流固定一方、训练另一方。\n\n训练 Judge 时，固定 Rubric，奖励符合已有偏好的评分结果；训练生成器时，固定 Judge，尝试多份 Rubric，奖励能帮助 Judge 排对答案、且较精简的标准。两方都使用 GRPO，根据多次采样的相对奖励更新模型。\n\n最终评分时，Judge 对每项标准计算 P(true)−P(false)，再加权平均。Hard Rule 权重固定为 3，Principle 固定为 1；训练改变标准和判分能力，权重规则保持固定。所得总分可用于筛选答案或训练下游模型。",
+        "现象分析": "概率评分可以区分硬布尔判分下的同分答案，交替训练进一步改善平均表现。但答案排序正确，仍不能保证每条 Rubric、判断理由或概率都可靠。",
+        "数据集与实验": "训练使用 OpenRubrics 偏好数据，在 RewardBench、指令遵循及其他奖励模型基准上评测。表 1 平均成绩从仅 SFT 的 69.3 提升至 73.1，五次投票达到 75.6；另验证了下游 DPO、GRPO 训练效果。",
+        "主要贡献": "把标准生成、逐项判分和答案偏好反馈连接为可训练系统。其边界是：热身阶段仍依赖大模型标注，固定权重没有单独优化，偏好排序目标也不直接保证绝对分数校准。"
+      },
+      "abstract": "【中文概述】论文提出交替训练的逐点评分框架，以概率评分缓解硬布尔汇总造成的同分，并用成对偏好训练生成器和评审模型，服务于非可验证领域的后训练。英文摘要：https://arxiv.org/abs/2605.29156v1",
+      "key_figure": {
+        "type": "示意图",
+        "name": "方法概览",
+        "page": "",
+        "path": "assets/paper_images/rubric-arrow-2605-29156-method-overview.png",
+        "caption": "Method overview synthesized from Sections 3–4 and Appendices A.1/A.4; not an original figure from the paper.",
+        "caption_cn": "RUBRIC-ARROW 的监督热身、交替训练与最终评分流程。依据论文 §3–4、附录 A.1/A.4 整理，简化省略多次采样和奖励公式；此图为辅助理解的自绘示意。",
+        "bbox": [],
+        "caption_bbox": [],
+        "source": "assistant-drawn-from-paper-method-user-approved-v3",
+        "confidence": 1.0,
+        "needs_manual_review": false,
+        "contexts": [
+          {
+            "text": "用一张简图呈现固定一方、训练另一方的交替过程，以及最终固定权重评分。"
+          }
+        ]
+      },
+      "status": "approved",
+      "added_at": "2026-09-16"
+    },
     {
       "id": "generating-refining-dynamic-rubrics-2605-30568",
       "paper_url": "https://arxiv.org/abs/2605.30568v1",
@@ -216,6 +281,322 @@
           {
             "page": 3,
             "text": "2.3 The Mixed-CUTS Training Framework To balance exploration with policy stability, we introduce theMixed-CUTSframework within the GRPO paradigm in Figure 1. For each query q, we generate a hybrid group ofG responses, partitioned into two subsets with equal size: • Exploitation Batch ( Gstd):Trajectories gener- ated via standard sampling, which anchor the baseline to the policy’s current bias. • Exploration Batch (GCUTS):Tra"
+          }
+        ]
+      }
+    },
+    {
+      "id": "syntactic-agreement-shared-units-2512-03676",
+      "title": "Different types of syntactic agreement recruit the same units within large language models",
+      "paper_url": "https://arxiv.org/abs/2512.03676",
+      "pdf_url": "https://arxiv.org/pdf/2512.03676",
+      "authors": [
+        "Daria Kryvosheieva",
+        "Andrea de Varda",
+        "Evelina Fedorenko",
+        "Greta Tuckute"
+      ],
+      "venue": "arXiv",
+      "year": 2026,
+      "primary_area": "基础/前沿模型 (含LLM)",
+      "category": "可解释性 / 语言表征",
+      "keywords": [
+        "syntactic agreement",
+        "functional localization",
+        "mechanistic interpretability",
+        "LLM units",
+        "syntax-responsive units",
+        "BLiMP",
+        "minimal pairs",
+        "causal ablation",
+        "subject-verb agreement",
+        "anaphor agreement",
+        "determiner-noun agreement",
+        "cross-lingual syntax",
+        "MultiBLiMP",
+        "RuBLiMP",
+        "SLING",
+        "language similarity",
+        "residual stream"
+      ],
+      "labels": [
+        "Mechanistic Interpretability",
+        "Syntax",
+        "Agreement",
+        "Functional Localization",
+        "BLiMP",
+        "Causal Ablation",
+        "Cross-lingual",
+        "LLM Units"
+      ],
+      "code_url": "https://github.com/dariakryvosheieva/syntax-units",
+      "note": "这个问题很有意思：LLM 是否只是行为上会判断语法，还是内部真的有一批 units 在做“一致性检查”。这篇把 agreement 当成一个功能类别来找内部单元：subject-verb、determiner-noun、anaphor 表面不同，但共享部分 units。它适合记录在可解释性/语言表征方向，不是训练方法，也不是 benchmark。局限是 top-n% unit localization 可能漏掉分布式表征，因果分析主要是 ablation，不是完整 circuit。",
+      "tldr": "作者用 functional localization 在 7 个开源 LLM 中定位 67 个 BLiMP 语法现象的 syntax-responsive units，发现多数语法现象各自使用不同 units，但不同 syntactic agreement 类型（主谓一致、限定词-名词一致、反身代词一致）共享更多 units；ablation 说明这些 units 对语法判断有因果作用，跨语言相似性越高共享越多。",
+      "abstract": "Large language models can reliably distinguish grammatical from ungrammatical sentences, but it remains unclear how grammatical knowledge is represented internally. This paper uses a functional localization approach to identify units most responsive to 67 English syntactic phenomena in seven open-weight LLMs. The localized units are consistent across sentence instances and causally support syntactic performance under ablation. Different types of syntactic agreement, including subject-verb, anaphor, and determiner-noun agreement, recruit overlapping sets of units. The pattern also appears in English, Russian, and Chinese, and across 57 languages syntactically more similar languages share more subject-verb agreement units.",
+      "summary_cn": {
+        "研究动机": "LLM 已经能在行为上区分合语法和不合语法句子，但这不等于我们知道语法知识在模型内部如何表示。作者关心的问题是：模型是不是有某些稳定 units 在支持特定语法规则，不同语法规则之间是否共享 units，以及这种共享是否跨语言成立。",
+        "解决问题": "论文试图从行为评测和 probing 往前推进一步，直接定位与不同 syntactic phenomena 相关的内部 units，并验证这些 units 是否稳定、是否对 grammaticality judgment 有因果作用。更具体地，它想判断 agreement 是否是 LLM 内部一个有意义的功能类别，而不只是语言学理论里的分类。",
+        "现象分析": "一个直观例子是：The dogs run / The dogs runs 是主谓一致，these books / this books 是限定词-名词一致，The girl blamed herself / himself 是反身代词一致。三者表面形式不同，但都需要在两个词或短语之间匹配 number、gender、person 等特征。论文发现多数语法现象没有共享的通用 syntax units，但 agreement 类现象是明显例外。",
+        "主要方法": "作者借鉴认知神经科学里的 functional localization。对每个 BLiMP 语法现象，收集 1,000 个 grammatical / ungrammatical minimal pairs，读取最后一个 token 的 residual stream activations，对 activation magnitude 做 Welch t-test，取 t-statistic 最大的 top 1% units 作为该现象的 syntax-responsive units。随后用 2-fold cross-validation 测稳定性，用 zero ablation / mean ablation 测因果作用，并计算不同现象之间 localized unit sets 的 overlap。",
+        "数据集与实验": "实验覆盖 GPT2-XL、Llama-3.2-3B、Falcon3-3B-Base、Phi-4-mini-instruct、Gemma-3-4B-PT、DeepSeek-LLM-7B-Base、Mistral-7B-v0.3 等 7 个模型。英文部分使用 BLiMP 的 67 个现象；跨语言部分使用 RuBLiMP、SLING 和 MultiBLiMP。2-fold unit overlap 在 62.99% 到 95.45% 之间；top-unit zero ablation 平均使表现下降 7.61%，random unit ablation 为 1.68%；agreement categories 之间的 overlap 为 15.26% 到 23.17%，明显高于 agreement 与 non-agreement 的 5.72% 到 8.23%。跨 57 种语言的分析显示，句法越相似，共享 subject-verb agreement units 越多。",
+        "主要贡献": "主要贡献是给出 unit-level、部分因果的证据：LLM 内部不是只有一个泛化的 syntax 模块，不同语法现象大多有各自的 units；但 syntactic agreement 形成了一个相对共享的功能类别。它把机制可解释性、语言学中的 agreement 概念和跨语言类型学联系起来，适合作为研究“模型内部是否有可定位语言功能单元”的代表性工作。"
+      },
+      "status": "approved",
+      "added_at": "2026-07-11",
+      "key_figure": {
+        "type": "Figure",
+        "name": "Functional localization of agreement units",
+        "page": 1,
+        "path": "assets/paper_images/syntactic-agreement-units-2512-03676-functional-localization.png",
+        "caption": "Manual summary figure: grammatical/ungrammatical minimal pairs are used to localize syntax-responsive units; different agreement types recruit overlapping unit sets, and ablation plus cross-lingual analyses support the functional role of these units.",
+        "caption_cn": "手工总结图：论文用合语法/不合语法 minimal pairs 定位 syntax-responsive units；主谓一致、限定词-名词一致、反身代词一致共享部分 units，并通过 ablation 与跨语言分析支持这些 units 的功能作用。",
+        "bbox": {},
+        "caption_bbox": {},
+        "source": "manual-summary-from-arxiv-html",
+        "confidence": 0.9,
+        "needs_manual_review": false,
+        "contexts": [
+          {
+            "page": 1,
+            "text": "Using functional localization over BLiMP minimal pairs, the paper identifies top-1% residual-stream units that differentiate grammatical and ungrammatical versions of each syntactic phenomenon."
+          },
+          {
+            "page": 5,
+            "text": "Different types of syntactic agreement, including subject-verb, determiner-noun, and anaphor agreement, show higher unit overlap with one another than with non-agreement phenomena."
+          }
+        ]
+      }
+    },
+    {
+      "id": "in-context-representation-hijacking-doublespeak-2512-03771",
+      "title": "In-Context Representation Hijacking",
+      "paper_url": "https://arxiv.org/abs/2512.03771",
+      "pdf_url": "https://arxiv.org/pdf/2512.03771",
+      "authors": [
+        "Itay Yona",
+        "Amir Sarid",
+        "Michael Karasik",
+        "Yossi Gandelsman"
+      ],
+      "venue": "arXiv",
+      "year": 2025,
+      "primary_area": "对齐/安全/公平性/隐私",
+      "category": "红队与评估",
+      "keywords": [
+        "in-context representation hijacking",
+        "Doublespeak",
+        "representation-level jailbreak",
+        "LLM safety",
+        "euphemism attack",
+        "latent space attack surface",
+        "semantic overwrite",
+        "in-context learning",
+        "refusal direction",
+        "time-of-check time-of-use",
+        "logit lens",
+        "Patchscopes",
+        "StrongReject",
+        "AdvBench",
+        "representation-aware safety"
+      ],
+      "labels": [
+        "LLM Safety",
+        "Jailbreak",
+        "Representation Hijacking",
+        "In-Context Learning",
+        "Mechanistic Interpretability",
+        "Red Teaming",
+        "Refusal",
+        "Doublespeak"
+      ],
+      "code_url": "https://github.com/1tux/doublespeak",
+      "note": "这篇很有意义，尤其适合和“规避词/替代词”问题一起看。它不只是说某个新词长期被社区用成不文明词后应该被加入黑名单，而是指出模型在一次上下文里就可能把一个表层无害 token 的内部表示重映射到被禁止概念。对内容审核来说，它提示我们不能只看 token form；对 LLM 安全来说，它提出了更深的问题：拒答机制到底监控的是输入表层、早层 refusal direction，还是模型后层逐渐形成的真实语义表示？这篇的局限是主要证明攻击面，防御还只是方向性讨论；logit lens / Patchscopes 也不是完整 causal circuit。",
+      "tldr": "论文提出 Doublespeak，一种 optimization-free 的 in-context representation hijacking 攻击：通过在上下文中反复把危险概念替换成普通词，模型会在中后层把普通词的表示逐渐推向危险语义，从而让表面无害的请求绕过拒答。作者用 logit lens 和 Patchscopes 观察语义重映射，并在 AdvBench、StrongReject 和多种开源/闭源模型上验证其迁移性。",
+      "abstract": "The paper introduces Doublespeak, an in-context representation hijacking attack against large language models. The attack establishes a temporary euphemistic mapping in the prompt, so a benign surface token is internally represented more like a disallowed concept in later layers. Using logit lens and Patchscopes, the authors show that the semantic overwrite emerges layer by layer: early representations preserve the benign meaning, while later representations converge toward the substituted harmful concept. Experiments on AdvBench with StrongReject evaluation show that this representation-level manipulation transfers across open-source and production models, exposing a latent-space attack surface and motivating representation-aware safety mechanisms.",
+      "summary_cn": {
+        "研究动机": "现有 LLM 安全机制通常关注输入 token、关键词、早层 refusal direction 或静态语义特征，但 transformer 的 token representation 会随上下文动态变化。作者的问题是：如果用户在上下文里临时重定义一个普通词，模型内部是否会真的把这个词当成危险概念处理？如果会，表层无害的 prompt 就可能绕过安全机制。",
+        "解决问题": "论文提出并验证 representation-level jailbreak：攻击不依赖乱码 token、角色扮演或对目标模型做梯度优化，而是利用 in-context learning 把普通 token 的内部语义劫持成被禁止概念。它要说明安全风险不只发生在输入层，也发生在模型前向传播过程中逐层演化的 latent representation 里。",
+        "现象分析": "这和你提到的 motherfucker -> motherlover 类似，但时间尺度不同。长期社区用语导致的新规避词，可以通过语义漂移和黑名单扩展处理；这篇关注的是单次对话里的临时重映射。表层上系统看到的是一个普通词 B，早层表示也仍偏普通含义，但中后层 representation 可能逐渐靠近被替换的危险概念 H，形成 time-of-check vs time-of-use 式盲区。",
+        "主要方法": "攻击方法叫 Doublespeak：先把有害请求简化到一个核心概念，再选择一个无害替代词，在上下文例句和最终查询中都用替代词代替原概念。分析上使用 logit lens 把中间层 hidden states 投到词表作为粗粒度诊断；再用 Patchscopes 把目标 token 的中间表示 patch 到解释模板中，让模型用自然语言解释该表示，从而观察普通语义到危险语义的层间转变。",
+        "数据集与实验": "实验使用 AdvBench 的 520 个 harmful prompts，评估模型包括 Llama-3.1-8B-Instruct、Llama-3.3-70B-Instruct、Gemma-3 系列以及 GPT-4o、o1、Claude-3.5-Sonnet 等生产模型。评价采用 StrongReject，以是否拒答、回答具体性和说服力来估计 ASR。论文报告 Doublespeak 在 Llama-3-8B-Instruct 上达到 88% ASR，在 Llama-3.3-70B-Instruct 上单句 context override 约 74-75% ASR；对 LLaMA-Guard-3-8B 也有高绕过率。规模分析显示大模型更容易用较短上下文完成语义重映射，小模型有时反而不能理解这种隐式映射。",
+        "主要贡献": "主要贡献是把 jailbreak 从表层 prompt 工程推进到 representation-level attack surface：普通词的语义可以在上下文中被动态、局部、逐层地改写。它给安全研究的启发是，防御不能只依赖关键词、早层 refusal direction 或静态过滤，而需要监控语义表示在 forward pass 中如何演化；对内容审核和规避词检测也有启发，即应关注 token 的上下文语义轨迹，而不只是词形本身。"
+      },
+      "status": "approved",
+      "added_at": "2026-07-11",
+      "key_figure": {
+        "type": "Figure",
+        "name": "Representation hijacking mechanism",
+        "page": 1,
+        "path": "assets/paper_images/in-context-representation-hijacking-2512-03771.png",
+        "caption": "Manual summary figure: in-context examples establish a temporary mapping from a benign surface token to a blocked concept; early layers still look benign, while later layers increasingly carry the blocked semantics, exposing a time-of-check vs time-of-use safety gap.",
+        "caption_cn": "手工总结图：上下文例句建立普通 token 到被禁止概念的临时映射；早层表示仍偏无害，但后层逐渐携带被禁止语义，从而暴露表层检查与后层使用之间的安全盲区。",
+        "bbox": {},
+        "caption_bbox": {},
+        "source": "manual-summary-from-arxiv-html",
+        "confidence": 0.9,
+        "needs_manual_review": false,
+        "contexts": [
+          {
+            "page": 1,
+            "text": "The paper introduces Doublespeak as an in-context representation hijacking attack that maps a benign substitute token toward a disallowed concept through repeated contextual examples."
+          },
+          {
+            "page": 4,
+            "text": "Logit lens and Patchscopes show that the target token remains benign in early layers but shifts toward the substituted concept in later layers, creating a time-of-check vs time-of-use gap."
+          }
+        ]
+      }
+    },
+    {
+      "id": "hblr-selective-symbolic-backward-reasoning-2512-03360",
+      "title": "From Hypothesis to Premises: LLM-based Backward Logical Reasoning with Selective Symbolic Translation",
+      "paper_url": "https://arxiv.org/abs/2512.03360",
+      "pdf_url": "https://arxiv.org/pdf/2512.03360",
+      "authors": [
+        "Fei Wu",
+        "Hailong Zhang",
+        "Jing Zhang"
+      ],
+      "venue": "AAAI",
+      "year": 2026,
+      "primary_area": "基础/前沿模型 (含LLM)",
+      "category": "推理与思维链",
+      "keywords": [
+        "backward logical reasoning",
+        "hypothesis-driven reasoning",
+        "selective symbolic translation",
+        "neuro-symbolic reasoning",
+        "LLM reasoning",
+        "logical reasoning",
+        "hybrid natural language and logic",
+        "semantic verification",
+        "reflection",
+        "ProntoQA",
+        "ProofWriter",
+        "FOLIO",
+        "LogicalDeduction",
+        "AR-LSAT",
+        "HBLR"
+      ],
+      "labels": [
+        "Logical Reasoning",
+        "Neuro-symbolic",
+        "Backward Reasoning",
+        "Selective Translation",
+        "Reasoning Module",
+        "AAAI"
+      ],
+      "code_url": "https://github.com/wufeiwuwoshihua/HBLR",
+      "note": "这篇适合记录为一种“逻辑推理模块”的思路，而不是普通数学推理的默认方案。它的价值在于提醒我们：面对规则明确、结论明确、需要证明链的问题，可以尝试只把高置信、结构稳定的部分符号化，再从 hypothesis 反向查找 premises。以后如果遇到法律/合规、企业流程、权限判断、LSAT 式逻辑题、科学假设验证这类任务，可以考虑 HBLR 这种 hybrid natural language + symbolic representation + backward reasoning 的流程。对数学推理而言，它更接近证明/逻辑判断，不是 PAL/Python/CAS 那类计算型符号化。",
+      "tldr": "HBLR 不是把所有文本都翻成形式逻辑，而是选择性地把高置信规则和事实符号化，不确定内容保留自然语言；然后从 hypothesis 出发反向寻找支持它的 premises，并用反思/验证检查翻译和推理步骤。实验显示它在 ProntoQA、ProofWriter、FOLIO、LogicalDeduction、AR-LSAT 等逻辑推理任务上优于纯自然语言推理、全量 FOL 翻译和 forward variant。",
+      "abstract": "This paper proposes Hypothesis-driven Backward Logical Reasoning (HBLR), a framework for logical reasoning with large language models. Instead of fully translating natural language inputs into formal logic, HBLR selectively translates only high-confidence, structurally stable spans into symbolic form while preserving ambiguous content in natural language. It then reasons backward from the target hypothesis to identify the premises needed to support or refute it, with reflection and verification steps to detect semantic loss and unsupported inferences. Experiments on multiple logical reasoning benchmarks show that selective symbolic translation and backward reasoning improve over all-natural-language reasoning, all-FOL translation, and forward reasoning variants.",
+      "summary_cn": {
+        "研究动机": "LLM 在逻辑推理中容易受无关 premises 干扰，也容易在长链推理中生成看似合理但没有支撑的步骤。另一方面，把所有自然语言都强行翻译成形式逻辑又会带来语义损失，尤其是含有模糊量词、例外、语境条件或自然语言常识的句子。作者希望找到一种折中方式：只在可靠处符号化，并围绕目标结论做有方向的证明搜索。",
+        "解决问题": "论文要解决的是自然语言逻辑任务中的两个痛点：第一，全自然语言 CoT 缺少严格的结构约束，容易把无关信息编进推理链；第二，全量符号翻译在复杂自然语言上容易假精确。HBLR 通过 selective symbolic translation 和 hypothesis-driven backward reasoning，把可符号化的规则结构与 LLM 的自然语言理解结合起来。",
+        "现象分析": "这类方法的应用场景不是普通聊天或所有数学题，而是规则明确、结论明确、需要可审计证明链的任务。例如合规判断、权限审批、流程规则、LSAT 类逻辑题、科学假设验证等。Backward reasoning 的优势在于先问“要证明这个 hypothesis 需要哪些 premises”，再回到输入里找证据；相比从所有 premises 往前推，它更目标导向，也更容易过滤无关信息。",
+        "主要方法": "HBLR 包含三步：首先进行 Selective Symbolic Translation，只把模型和 verifier 判断为结构清楚、语义稳定的句子翻译为形式规则或事实，不确定内容保留自然语言；然后从 hypothesis 开始做 backward reasoning，递归寻找能支持目标结论的规则和中间子目标；最后通过 reflection / verification 检查符号翻译是否丢失语义、推理步骤是否 unsupported、自然语言和符号部分是否一致。",
+        "数据集与实验": "论文在 ProntoQA、ProofWriter、FOLIO、LogicalDeduction、AR-LSAT 五个逻辑推理数据集上评估，模型包括 GPT-3.5-Turbo、GPT-4、DeepSeek-V3、DeepSeek-R1 等。与 Direct、CoT、Logic-LM、SymbCoT 及若干 ablation 相比，HBLR 整体表现更好。消融结果显示 selective translation 平均比 all-natural-language variant 高约 7.2%，比 all-FOL variant 高约 4.7%；backward reasoning 相比 forward variant 平均高约 5.69%。",
+        "主要贡献": "主要贡献不是提出一个通用数学求解器，而是提出一种适合逻辑推理的模块化原则：符号化不是越多越好，应只在语义清楚、结构稳定的位置使用；当任务有明确 hypothesis 时，反向查找支持 premises 往往比无目标 forward 推理更稳。它为以后构建规则推理、合规判断、流程验证或可审计 agent reasoning 模块提供了一个可借鉴模板。"
+      },
+      "status": "approved",
+      "added_at": "2026-07-11",
+      "key_figure": {
+        "type": "Figure",
+        "name": "HBLR workflow",
+        "page": 1,
+        "path": "assets/paper_images/hblr-2512-03360-selective-symbolic-backward-reasoning.png",
+        "caption": "Manual summary figure: HBLR selectively translates reliable rule-like spans into symbolic form, keeps uncertain text in natural language, and reasons backward from a target hypothesis to the premises needed to support it.",
+        "caption_cn": "手工总结图：HBLR 只把可靠的规则型片段符号化，不确定内容保留自然语言；随后从目标 hypothesis 出发，反向查找支持结论所需的 premises。",
+        "bbox": {},
+        "caption_bbox": {},
+        "source": "manual-summary-from-arxiv-html",
+        "confidence": 0.9,
+        "needs_manual_review": false,
+        "contexts": [
+          {
+            "page": 1,
+            "text": "HBLR combines selective symbolic translation with hypothesis-driven backward logical reasoning for natural-language logical reasoning tasks."
+          },
+          {
+            "page": 4,
+            "text": "The framework avoids full formalization by translating high-confidence spans while preserving uncertain content in natural language, then validates reasoning through reflection and verification."
+          }
+        ]
+      }
+    },
+    {
+      "id": "idea-gated-transformers-vocabulary-pruning-2512-03343",
+      "title": "Idea-Gated Transformers: Enforcing Semantic Coherence via Differentiable Vocabulary Pruning",
+      "paper_url": "https://arxiv.org/abs/2512.03343",
+      "pdf_url": "https://arxiv.org/pdf/2512.03343",
+      "authors": [
+        "Darshan Fofadiya"
+      ],
+      "venue": "arXiv",
+      "year": 2025,
+      "primary_area": "基础/前沿模型 (含LLM)",
+      "category": "模型架构",
+      "keywords": [
+        "Idea-Gated Transformer",
+        "semantic coherence",
+        "differentiable vocabulary pruning",
+        "Idea Head",
+        "future bag-of-words prediction",
+        "latent planning",
+        "concept vector",
+        "associative drift",
+        "topic drift",
+        "logit gating",
+        "controllable generation",
+        "multi-token prediction",
+        "QLoRA",
+        "Mistral-7B",
+        "FineWeb-Edu",
+        "WikiText-103"
+      ],
+      "labels": [
+        "Model Architecture",
+        "Latent Planning",
+        "Vocabulary Gating",
+        "Controllable Generation",
+        "Semantic Coherence",
+        "Topic Drift",
+        "Early Idea"
+      ],
+      "code_url": "https://github.com/DarshanFofadiya/idea-gated-transformers/tree/main",
+      "note": "这篇可以作为一个早期结构性 idea 写入：它不是在解决“怎么不用那么长的上文”，而是把当前/过去上下文已经形成的 hidden state 再显式投影成未来 K 个 token 的概念范围，用这个短期语义计划去 gate 下一步 token 分布，减少局部词语联想导致的 topic drift。也就是说，它把“过去语义意图”压回未来生成分布里。证据目前偏 prototype：arXiv 摘要和 GitHub README 强调 WikiText-103 / GPT-2 风格复现，HTML v2 正文则写 Mistral-7B + QLoRA + FineWeb-Edu；长文生成、摘要、一致性和真实 instruction-following 场景还缺少系统验证。",
+      "tldr": "Idea-Gated Transformer 在普通 Token Head 之外加一个 Idea Head，预测未来 K=20 个 token 的 bag-of-words / concept set，再用这个概念概率对 token logits 做可微 soft pruning。它的目标不是压缩长上下文，而是给每一步生成加一个短期语义计划器：让当前 hidden state 预测未来概念范围，并抑制语义上不属于该范围的 token，从而减少 associative/topic drift。",
+      "abstract": "This paper introduces the Idea-Gated Transformer, an architecture that separates short-horizon semantic planning from immediate token generation. In addition to the standard token head, the model trains an auxiliary Idea Head to predict a bag-of-words distribution over a future context window, forming a latent concept vector. During generation, this concept distribution gates the main vocabulary by adding a differentiable semantic penalty to token logits, suppressing tokens that are unlikely to belong to the predicted future concept set. The paper reports improved semantic coherence and resistance to associative drift, with v2 experiments using Mistral-7B with QLoRA on FineWeb-Edu and the repository/abstract also describing WikiText-103 style experiments.",
+      "summary_cn": {
+        "研究动机": "普通自回归语言模型用 next-token prediction 训练，容易把“下一词最可能”误当成“未来语义最一致”。当某个局部词有强关联词时，生成可能通过 semantic bridge 漂移到别的主题，例如 bat 从洞穴/动物语境跳到 Batman。作者希望把宏观语义计划和微观 token 生成拆开，让模型在选下一个词之前先形成一个短期概念范围。",
+        "解决问题": "论文要解决的是 topic drift / associative drift，而不是长上下文压缩。Idea Head 仍然看 Transformer 当前 hidden state，这个 hidden state 已经包含过去上下文；关键区别是它把当前语义状态显式转成未来 K 个 token 的概念 bag，并用这个概念 bag 约束下一步 token 分布。这样过去上下文形成的语义意图会更直接地作用到未来生成。",
+        "现象分析": "可以把它理解成给解码过程加了一个短期语义计划器。普通 LM 只问“下一个 token 是什么”；Idea-Gated 额外问“未来这一小段应该围绕哪些概念”。如果 prompt 是 The bat flew out of the cave，Idea Head 可能预测 cave、wing、mammal、night 等概念，从而压低 Batman、Gotham、superhero 这类局部高关联但语义跑偏的 token。",
+        "主要方法": "模型在标准 Token Head 之外增加一个轻量 Idea Head，预测未来窗口 W={x_{t+1},...,x_{t+K}} 中会出现哪些 token，训练目标是 multi-hot bag-of-words 的 BCE loss，论文使用 K=20。推理时把 Idea Head 的 sigmoid 概率转成 log-space gating term，加到 Token Head logits 上；低 idea 概率的词会被软惩罚。为了避免 Idea Head 错杀合理词，论文还使用 lower-bound clamp，并通过 alpha 调节 fluency 与 semantic stickiness 的权衡。",
+        "数据集与实验": "HTML v2 正文报告在 Mistral-7B-v0.1 上用 QLoRA 训练，数据为 FineWeb-Edu，训练 5,000 steps、context window 512，并与标准 LoRA baseline 对比；最终 PPL 约为 7.78 vs 8.08。定性实验使用 adversarial trap prompts，例如 bat / Batman、bank / current flow 等，显示 gated model 更能保持原语境。需要注意的是，arXiv 摘要和 GitHub README 仍强调 WikiText-103 / GPT-2 风格实验和 domain retention，因此版本信息存在不完全一致。",
+        "主要贡献": "主要贡献是提出一个可微的 vocabulary gating 结构：先预测未来概念集合，再用它约束当前 token 选择。它把 latent planning、multi-token prediction 和 controllable generation 结合起来，提供了一个控制语义漂移的结构性想法。局限是实验还偏小、评估较定性，尚未在长文生成、摘要一致性、instruction following 或更大规模模型上形成强证据。"
+      },
+      "status": "approved",
+      "added_at": "2026-07-14",
+      "key_figure": {
+        "type": "Figure",
+        "name": "Idea-gated vocabulary pruning",
+        "page": 1,
+        "path": "assets/paper_images/idea-gated-transformers-2512-03343-vocabulary-pruning.png",
+        "caption": "Manual summary figure: the Idea Head predicts a short-horizon future concept bag from the current hidden state, then softly gates token logits so next-token choices stay inside the planned semantic range instead of drifting through local associations.",
+        "caption_cn": "手工总结图：Idea Head 从当前 hidden state 预测短期未来概念集合，再用该集合软约束 token logits，使下一词选择尽量落在计划语义范围内，而不是被局部联想带偏。",
+        "bbox": {},
+        "caption_bbox": {},
+        "source": "manual-summary-from-arxiv-html-and-github",
+        "confidence": 0.85,
+        "needs_manual_review": false,
+        "contexts": [
+          {
+            "page": 1,
+            "text": "The Idea Head predicts a bag-of-words distribution over the next 20 tokens and uses it as a differentiable gate over the vocabulary."
+          },
+          {
+            "page": 4,
+            "text": "The model adds a semantic gating term to token logits, suppressing words that are unlikely under the predicted future concept set."
           }
         ]
       }
@@ -8434,6 +8815,82 @@
           {
             "page": 2,
             "text": "2 METHODS Our AR-Med approach comprises three primary components, as illustrated in Figure 1. First, we introduce a retrieval-augmented generation framework that integrates LLMs’ reasoning capabilities with external medical knowledge, expert rules, and multimodal ver- ification to enhance accuracy and mitigate hallucinations. Second, we implement a knowledge distillation scheme leveraging accu- mulated real-world data to tra"
+          }
+        ]
+      }
+    },
+    {
+      "id": "asympuzl-multi-agent-cooperation-2512-03466",
+      "title": "AsymPuzl: An Asymmetric Puzzle for multi-agent cooperation",
+      "paper_url": "https://arxiv.org/abs/2512.03466",
+      "pdf_url": "https://arxiv.org/pdf/2512.03466",
+      "authors": [
+        "Xavier Cadet",
+        "Edward Koh",
+        "Peter Chin"
+      ],
+      "venue": "NeurIPS MTI-LLM Workshop",
+      "year": 2025,
+      "primary_area": "数据集与基准",
+      "category": "Agent / 多智能体协作评测",
+      "keywords": [
+        "AsymPuzl",
+        "multi-agent cooperation",
+        "multi-turn agents",
+        "information asymmetry",
+        "communication protocol",
+        "coordination",
+        "symbolic puzzle",
+        "partial observability",
+        "feedback granularity",
+        "working hypothesis",
+        "agent evaluation",
+        "diagnostic benchmark",
+        "NeurIPS MTI-LLM"
+      ],
+      "labels": [
+        "Multi-agent",
+        "Cooperation",
+        "Information Asymmetry",
+        "Communication",
+        "Diagnostic Benchmark",
+        "Feedback Design",
+        "Workshop"
+      ],
+      "code_url": "",
+      "note": "这篇很有趣，适合作为轻量诊断型 multi-agent benchmark 写入。它不是复杂真实任务，也不是强基准，而是把问题切得很干净：两个 agent 各自只有互补的半边信息，必须通过多轮沟通把完整 puzzle 拼出来。它的价值在于隔离“信息不对称下的 communication protocol”：强模型会直接分享完整信息，两轮内收敛；弱模型会忽略对方消息、一次只传一个事实，或在反馈下过度修正。局限也要记住：这是 workshop/toy benchmark，环境每轮会重新注入完整 instructions、initial cues、working hypothesis 和 feedback，因此更像诊断仪表盘，不应当等同于真实多智能体协作能力。",
+      "tldr": "AsymPuzl 是一个受控的两智能体合作 puzzle：Alice 看到 position+shape 但不知道 color，Bob 看到 shape+color 但不知道 position，两者必须交流互补信息并更新 working hypothesis 才能恢复 ground truth。它用很小的符号任务隔离 multi-agent communication under information asymmetry，并显示反馈粒度会显著影响协作表现。",
+      "abstract": "AsymPuzl introduces a minimal two-agent puzzle environment for evaluating multi-turn cooperation under information asymmetry. Each agent receives a complementary partial view of a position-shape-color matching puzzle, exchanges messages, and applies structured actions to a working hypothesis until both hypotheses match the hidden ground truth. Experiments across current-generation and open-source LLMs show that strong models such as GPT-5 and Claude-4.0 can solve puzzles by sharing complete information in two turns, while weaker models often ignore partner messages, miscommunicate, or over-correct. The benchmark also shows that feedback granularity matters: simple self-feedback can improve success rates, while detailed joint feedback may hurt performance.",
+      "summary_cn": {
+        "研究动机": "多智能体 LLM 研究常使用开放式 role-play 或复杂协作任务，但这类设置里很难判断失败到底来自推理、记忆、任务理解、工具使用，还是沟通策略。作者希望构造一个足够小、足够可控的环境，只观察一个核心问题：当两个 agent 各自拥有互补但不完整的信息时，它们是否会主动、有效、稳定地沟通。",
+        "解决问题": "论文要解决的是 multi-agent cooperation 的受控评测问题，尤其是 information asymmetry 下的 communication protocol 评测。它不关心单个 agent 是否会解完整 puzzle，而是关心两个 agent 在没有任何一方拥有完整信息时，能否通过消息交换恢复全局状态。",
+        "现象分析": "最优策略其实很简单：Alice 和 Bob 各自把自己知道的完整映射发给对方，理论上任意 puzzle size 都可在两轮内解决。但实验显示很多模型不会自然采用这种策略。较弱模型常见 failure mode 包括忽略 partner message、重复自己的旧消息、一次只交换一个事实、误以为对方能看到自己的视图，以及在 feedback 出现后反复覆盖 working hypothesis。",
+        "主要方法": "AsymPuzl 构造 position-shape-color matching puzzle。Alice 看到正确的 position+shape，但 color 未知；Bob 看到正确的 shape+color，但 position 未知。每轮环境把 instruction、initial cues、当前 working hypothesis、message history、上一轮 feedback 和固定 JSON 输出格式注入 prompt。Alice 和 Bob 各自输出给对方的 message 以及对自己 working hypothesis 的 actions。环境应用 actions 后与 ground truth 比较，直到双方 hypothesis 匹配 ground truth 或达到最大轮数。难度通过 puzzle size 调节，N 个位置、两个属性的搜索空间为 (N!)^2，但在完整信息共享下可线性解决。",
+        "数据集与实验": "实验比较 GPT-5、Claude-4.0、OSS-120B、GPT-4o、Claude-3.5、GPT-3.5-turbo、Llama 3.2-11B 等模型，temperature=0，30 seeds，最大轮数设为 2N。5-piece puzzle 上，GPT-5 和 Claude-4.0 在所有 feedback 设置下均为 100%；OSS-120B 从无反馈 53.3% 提升到 Own Detailed 100%；GPT-4o 从无反馈 43.3% 到 Both feedback 80.0%，但 Both Detailed 降到 56.7%；Claude-3.5 的 Own Detailed 为 86.7%，Both Detailed 只有 36.7%；GPT-3.5-turbo 和 Llama 3.2-11B 基本为 0%。随着 puzzle size 增大到 20，GPT-4o 和 Claude-3.5 明显下降，而 GPT-5 和 Claude-4.0 保持 100%。",
+        "主要贡献": "主要贡献是提供一个轻量但可控的多智能体协作诊断环境，把评测焦点从开放式对话收窄到信息不对称下的互补信息交换。它和 τ-bench、ToolLoad-Bench 形成互补：τ-bench 看真实任务的最终状态，ToolLoad-Bench 看工具负载能力边界，AsymPuzl 看两个 agent 能否形成有效 communication protocol。局限是任务偏 toy，且每轮重新注入完整状态，所以更适合作为诊断型基准，而不是完整衡量真实 multi-agent autonomy。"
+      },
+      "status": "approved",
+      "added_at": "2026-07-11",
+      "key_figure": {
+        "type": "Figure",
+        "name": "Asymmetric communication loop",
+        "page": 1,
+        "path": "assets/paper_images/asympuzl-2512-03466-asymmetric-communication.png",
+        "caption": "AsymPuzl evaluates two-agent cooperation under information asymmetry: Alice knows positions and shapes, Bob knows shapes and colors, and both must exchange messages and update working hypotheses until their partial views jointly recover the hidden ground truth.",
+        "caption_cn": "AsymPuzl 评估信息不对称下的双智能体协作：Alice 知道 position+shape，Bob 知道 shape+color，双方必须交换消息并更新 working hypothesis，直到互补视角共同恢复隐藏的 ground truth。",
+        "bbox": {},
+        "caption_bbox": {},
+        "source": "manual-summary-from-arxiv-html",
+        "confidence": 0.9,
+        "needs_manual_review": false,
+        "contexts": [
+          {
+            "page": 1,
+            "text": "Alice observes correct positions and shapes with unknown colors, while Bob observes correct shapes and colors with unknown positions."
+          },
+          {
+            "page": 1,
+            "text": "The environment isolates multi-turn communication under information asymmetry and compares feedback modes."
           }
         ]
       }
