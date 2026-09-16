@@ -14256,6 +14256,75 @@
           }
         ]
       }
+    },
+    {
+      "id": "openrubrics-2510-07743",
+      "title": "OpenRubrics: Towards Scalable Synthetic Rubric Generation for Reward Modeling and LLM Alignment",
+      "paper_url": "https://aclanthology.org/2026.acl-long.791/",
+      "pdf_url": "https://aclanthology.org/2026.acl-long.791.pdf",
+      "authors": [
+        "Tianci Liu",
+        "Ran Xu",
+        "Tony Yu",
+        "Ilgee Hong",
+        "Carl Yang",
+        "Tuo Zhao",
+        "Haoyu Wang"
+      ],
+      "venue": "ACL 2026 (Long Papers)",
+      "year": 2026,
+      "primary_area": "数据集与基准",
+      "category": "LLM 评测与 Rubrics",
+      "keywords": [
+        "OpenRubrics",
+        "Contrastive Rubric Generation",
+        "Hard Rules",
+        "Principles",
+        "Preference-label Consistency",
+        "Rubric-RM",
+        "SFT",
+        "DPO"
+      ],
+      "labels": [
+        "Rubric 生成",
+        "合成数据",
+        "奖励模型",
+        "知识蒸馏",
+        "偏好对齐"
+      ],
+      "code_url": "https://github.com/wanghaoyu0408/OpenRubrics",
+      "note": "",
+      "tldr": "利用教师模型从优劣回答中提炼 Rubric，保留能复现已有偏好标签的样本，再分别监督微调 Rubric 生成器和 Judge。整个流程通过筛选合成数据、蒸馏教师能力提升偏好判断，并将产生的偏好用于下游 DPO；没有交替优化 Rubric、Judge 或条目权重的训练循环。",
+      "abstract": "Reward modeling lies at the core of reinforcement learning from human feedback (RLHF), yet most existing reward models rely on scalar or pairwise judgments that fail to capture the multifaceted nature of human preferences. Recent studies have explored rubrics-as-rewards (RaR) that uses structured criteria to capture multiple dimensions of response quality. However, producing rubrics that are both reliable and scalable remains a key challenge. In this work, we introduce OpenRubrics, a diverse, large-scale collection of (prompt, rubric) pairs for training rubric-generation and rubric-based reward models. To elicit discriminative and comprehensive evaluation signals, we introduce Contrastive Rubric Generation (CRG), which derives both hard rules (explicit constraints) and principles (implicit qualities) by contrasting preferred and rejected responses. We further remove noisy rubrics via preserving preference–label consistency. Across multiple reward-modeling benchmarks, our rubric-based reward model, Rubric-RM, surpasses strong size-matched baselines by 8.4%. These gains transfer to policy models on instruction-following and biomedical benchmarks. The model weights and datasets are publicly available at https://huggingface.co/OpenRubrics.",
+      "summary_cn": {
+        "研究动机": "Rubric 能将回答质量拆成明确的要求和判断依据，但人工编写成本高，直接调用大模型生成又难以保证质量。论文希望利用已有偏好数据批量构造 Rubric，并训练规模较小的生成器和 Judge，使结构化评判能够低成本复用。",
+        "解决问题": "如何从“哪个回答更好”的偏好关系中提炼可泛化的评价标准，并将这些标准用于奖励模型训练。论文同时处理两个任务：让生成器仅根据问题产出 Rubric，让 Judge 结合 Rubric 比较两个回答，最终为策略模型提供偏好训练数据。",
+        "现象分析": "作者的案例显示，Judge 可能偏好篇幅更长、表达更丰富的回答，却漏掉“少于两段”等明确限制。将硬性要求显式列入 Rubric，有助于让这些约束进入判断过程。\n\n从训练机制看，筛选合成数据的作用是改变学习目标的分布：模型原本生成的内容质量不一，保留符合筛选条件的部分，再通过监督微调提高这类输出的生成概率。因此，即使没有增加人工编写的 Rubric，也可能改善模型表现。\n\n但“通过筛选”的含义需要收紧：它表示 Rubric 配合当前 Judge 能够复现已有偏好标签。Judge 可能独立判断正确，Rubric 也可能只适用于当前回答对，所以判断一致不能直接证明标准完整、正确或可泛化。",
+        "主要方法": "首先离线准备问题、候选回答及优劣标签。教师生成器通过对比回答，提取题目明确规定的硬性要求，并将回答间的质量差异抽象为一般原则。教师 Judge 根据整套 Rubric 输出分析和胜负判断，再按与已有标签的一致性筛选：同题回答对的一致率至少为 0.5，且只保留其中判断正确的回答对。\n\n随后在固定数据集上分别进行监督微调。Rubric 生成器以问题为输入，学习输出筛选后的 Rubric；Judge 以问题、回答对和该 Rubric 为输入，学习教师的分析与胜负判断。两者均使用 token 交叉熵，没有 Judge 奖励反传给生成器的循环，也没有单独学习条目权重。\n\n推理时，生成器仅根据问题生成可缓存的 Rubric，Judge 再据此比较回答。生成的偏好对用于 DPO，更新回答问题的策略模型；论文未描述这一阶段同步更新生成器和 Judge。",
+        "数据集与实验": "正式版报告约 3.57 万条指令、8.56 万个回答对，数据来源包括 UltraFeedback、Magpie、Skywork-Preference、Synthetic-IF、MegaScience 和 Medical-o1。已有偏好信号包含数据集标注、验证函数及奖励模型排序，不能统一视为人工金标准。\n\n奖励模型主表平均分：最强 7B 基线 61.7，Rubric-RM-8B 70.1；未微调与微调后的 Rubric＋Judge：Qwen3-8B 57.7，微调后 70.1；Judge 多数投票：单次判断 70.1，voting@5 73.0；DPO 后策略模型 IFEval 平均分：原模型 77.3，DPO 后 79.5；DPO 后策略模型 HealthBench 分数：原模型 21.6，DPO 后 23.8。\n\n摘要所称“提升 8.4%”，对应主表平均分增加 8.4 个百分点。其中 Rubric-RM-8B 使用一个 8B 生成器和一个 8B Judge，成本比较需要考虑两个组件。\n\n实验支持整套流程的有效性，但尚不足以分别归因于对比生成、一致性筛选或某个模型的微调。进一步判断 Rubric 本身是否改善，需要控制数据量比较筛选前后效果、固定 Judge 比较不同生成器，并在新回答及独立评估者上检验泛化。论文主要验证成对判断与离线 DPO，未证明持续循环训练或绝对打分的效果。",
+        "主要贡献": "提供了可用于训练 Rubric 生成器和 Judge 的合成数据集，并形成“对比生成—偏好一致性筛选—分组件监督微调”的完整流程。实验展示了经过筛选的教师数据能够提升结构化偏好判断，并将收益传递到下游策略对齐。\n\n其贡献重点在于数据构造与训练流程，以及端到端效果验证。对 Rubric 质量的独立验证、各环节的增量贡献，仍有进一步研究空间。"
+      },
+      "status": "approved",
+      "added_at": "2026-09-16",
+      "key_figure": {
+        "type": "Figure",
+        "name": "1",
+        "page": 3,
+        "path": "assets/paper_images/openrubrics-2510-07743-figure-1.png",
+        "caption": "Figure 1: Overall Framework for Synthetic Rubric Generation in OpenRubrics.",
+        "caption_cn": "OpenRubrics 的合成 Rubric 流程。先构造带优劣标签的回答对，再通过对比提炼硬性要求与质量原则，最后利用 Rubric 判断与已有偏好标签的一致性筛选训练数据。",
+        "bbox": {},
+        "caption_bbox": {},
+        "source": "pdf-render-crop-reviewed",
+        "confidence": 1.0,
+        "needs_manual_review": false,
+        "contexts": []
+      },
+      "analysis_note": {
+        "title": "训练监督与实验对照",
+        "source": "docs/paper_notes/openrubrics-2510-07743.md",
+        "url": "paper_notes/openrubrics-2510-07743.html"
+      }
     }
   ]
 }
