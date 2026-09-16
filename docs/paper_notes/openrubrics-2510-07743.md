@@ -4,24 +4,20 @@
 
 ## 各阶段的监督关系
 
-| 阶段 | 输入与目标 | 监督信号 / 更新对象 |
-|---|---|---|
-| 数据生成与筛选 | 从问题和优劣回答生成 Rubric、分析与判断 | 已有偏好标签用于筛选；不更新教师参数 |
-| Rubric 生成器 SFT | 问题 → Rubric | 筛选后的教师 Rubric 文本；更新生成器参数 |
-| Judge SFT | 问题＋Rubric＋回答对 → 分析与胜负 | 教师分析与通过筛选的偏好判断；更新 Judge 参数 |
-| 策略模型 DPO | 问题＋chosen/rejected 回答 | Rubric-RM 产生的偏好关系；更新策略模型参数 |
+- 数据生成与筛选：输入与目标：从问题和优劣回答生成 Rubric、分析与判断；监督信号 / 更新对象：已有偏好标签用于筛选；不更新教师参数
+- Rubric 生成器 SFT：输入与目标：问题 → Rubric；监督信号 / 更新对象：筛选后的教师 Rubric 文本；更新生成器参数
+- Judge SFT：输入与目标：问题＋Rubric＋回答对 → 分析与胜负；监督信号 / 更新对象：教师分析与通过筛选的偏好判断；更新 Judge 参数
+- 策略模型 DPO：输入与目标：问题＋chosen/rejected 回答；监督信号 / 更新对象：Rubric-RM 产生的偏好关系；更新策略模型参数
 
 教师数据生成使用 GPT-4.1-Mini 和 Gemini-2.5-Flash-Lite；学生生成器与 Judge 基于 Qwen3。Rubric 条目没有显式的可学习数值权重，其优先级和综合判断通过提示词及 Judge 学到的行为体现。
 
 ## 实验对照
 
-| 实验 | 对照 | 结果 |
-|---|---:|---:|
-| 奖励模型主表平均分 | 最强 7B 基线 61.7 | Rubric-RM-8B 70.1 |
-| 未微调与微调后的 Rubric＋Judge | Qwen3-8B：57.7 | 70.1 |
-| Judge 多数投票 | 单次判断 70.1 | voting@5：73.0 |
-| DPO 后策略模型 IFEval 平均分 | 原模型 77.3 | 79.5 |
-| DPO 后策略模型 HealthBench 分数 | 原模型 21.6 | 23.8 |
+- 奖励模型主表平均分：对照：最强 7B 基线 61.7；结果：Rubric-RM-8B 70.1
+- 未微调与微调后的 Rubric＋Judge：对照：Qwen3-8B：57.7；结果：70.1
+- Judge 多数投票：对照：单次判断 70.1；结果：voting@5：73.0
+- DPO 后策略模型 IFEval 平均分：对照：原模型 77.3；结果：79.5
+- DPO 后策略模型 HealthBench 分数：对照：原模型 21.6；结果：23.8
 
 摘要所称“提升 8.4%”，对应主表平均分增加 8.4 个百分点。其中 Rubric-RM-8B 使用一个 8B 生成器和一个 8B Judge，成本比较需要考虑两个组件。
 
@@ -29,7 +25,7 @@
 
 ## 关键图
 
-![OpenRubrics 原文 Figure 1](../assets/paper_images/openrubrics-2510-07743-figure-1.png)
+[OpenRubrics 原文 Figure 1](../assets/paper_images/openrubrics-2510-07743-figure-1.png)
 
 原文编号与页码：Figure 1；PDF 第 3 页，论文页码 17419。
 
