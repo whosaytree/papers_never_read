@@ -2589,6 +2589,41 @@
       "my_note": "",
       "related_papers": [],
       "status": "approved"
+    },
+    {
+      "id": "openai-harness-engineering",
+      "title": "工程技术：在智能体优先的世界中利用 Codex",
+      "url": "https://openai.com/zh-Hans-CN/index/harness-engineering/",
+      "source": "OpenAI Engineering / Ryan Lopopolo",
+      "published_at": "2026-02-11",
+      "added_at": "2026-11-17",
+      "tags": [
+        "Harness Engineering",
+        "Codex",
+        "编码智能体",
+        "上下文管理",
+        "工程反馈闭环"
+      ],
+      "summary": "文章复盘了团队使用 Codex 构建内部产品的经历。Harness engineering 可以理解为：围绕智能体建设工具、知识、约束和反馈机制，让它能够持续完成工程任务。人的工作集中在明确目标、设计环境和验证结果。\n\n实践重点包括仓库内知识管理、可访问的运行环境、自动执行的架构规则，以及持续清理技术债务。作者估计开发耗时约为手工编写的十分之一；这一数字来自团队经验，文中未提供受控对照，推广效果仍待验证。",
+      "key_points": [
+        "上下文分层组织：简短的 AGENTS.md 提供入口，详细知识放入可维护的仓库文档。",
+        "验证能力交给智能体：开放 UI、日志和指标，使其能够复现问题并检查修复。",
+        "约束自动执行：通过 lint 和结构测试约束依赖关系、边界与代码规范。",
+        "反馈沉淀为规则：将评审意见和故障经验转成文档、工具与检查。",
+        "持续治理代码漂移：定期扫描和小规模重构，减少不良模式扩散。"
+      ],
+      "standards": [],
+      "quotes": [
+        {
+          "text": "人类掌舵。智能体执行。",
+          "note": "人负责目标、优先级与判断，智能体承担实施工作；运行环境需要支持可靠的验证和纠错。"
+        }
+      ],
+      "my_note": "",
+      "related_papers": [
+        "swe-bench-2310-06770"
+      ],
+      "status": "approved"
     }
   ]
 }
