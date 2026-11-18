@@ -2624,6 +2624,61 @@
         "swe-bench-2310-06770"
       ],
       "status": "approved"
+    },
+    {
+      "id": "anthropic-multi-agent-research-system",
+      "title": "How we built our multi-agent research system",
+      "url": "https://www.anthropic.com/research/multi-agent-research-system",
+      "source": "Anthropic Engineering",
+      "published_at": "2025-06-13",
+      "added_at": "2026-11-18",
+      "tags": [
+        "多智能体",
+        "Deep Research",
+        "任务编排",
+        "上下文管理",
+        "Agent 评估",
+        "生产可靠性"
+      ],
+      "summary": "文章复盘 Claude Research 的多智能体架构与生产经验。主智能体规划研究并分派任务，子智能体在独立上下文中并行搜索、筛选信息，再返回发现。主智能体判断是否需要补查，最终由引用智能体补齐来源定位。\n\n这一架构适合可拆分、需要广泛探索的研究任务。可靠性依赖清晰的分工、合理的资源预算、评估反馈和故障恢复；高度依赖共享上下文的任务则较难受益。",
+      "key_points": [
+        "委派任务需要明确边界：说明目标、输出格式、工具与来源，减少重复和遗漏。",
+        "投入随复杂度调整：控制子智能体数量和工具调用，避免简单问题过度搜索。",
+        "评估同时关注结果与过程：结合 Rubric 机评、人工测试及运行轨迹诊断。",
+        "生产运行需要可恢复性：通过检查点、重试和状态持久化支持中断续跑。",
+        "收益与成本需一起看：作者报告内部研究评估表现提升 90.2%；多智能体 token 用量约为聊天的 15 倍。两者参照分别是单智能体 Opus 4 和普通聊天，不能直接拼成性价比结论。"
+      ],
+      "standards": [
+        {
+          "name": "事实准确性",
+          "description": "结论是否符合来源"
+        },
+        {
+          "name": "引用准确性",
+          "description": "引用是否支持对应说法"
+        },
+        {
+          "name": "完整性",
+          "description": "是否覆盖用户要求"
+        },
+        {
+          "name": "来源质量",
+          "description": "是否优先采用可靠的一手来源"
+        },
+        {
+          "name": "工具效率",
+          "description": "工具选择和调用次数是否合理"
+        }
+      ],
+      "quotes": [
+        {
+          "text": "The essence of search is compression.",
+          "note": "子智能体需要把检索结果提炼成对任务有用的信息，降低主智能体的处理负担。"
+        }
+      ],
+      "my_note": "2025 年中的 multi-agent：实质是上下文工程。这个时候的 agent 是有 workflow 的，比如 MA 大致要怎么组织。",
+      "related_papers": [],
+      "status": "approved"
     }
   ]
 }
