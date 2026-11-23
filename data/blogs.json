@@ -2725,6 +2725,52 @@
       "my_note": "",
       "related_papers": [],
       "status": "approved"
+    },
+    {
+      "id": "anthropic-effective-context-engineering",
+      "title": "Effective context engineering for AI agents",
+      "url": "https://www.anthropic.com/research/effective-context-engineering-for-ai-agents",
+      "source": "Anthropic Applied AI 团队",
+      "published_at": "2025-09-29",
+      "added_at": "2026-11-23",
+      "tags": [
+        "上下文工程",
+        "Agent Memory",
+        "按需检索",
+        "上下文压缩",
+        "多智能体"
+      ],
+      "summary": "文章将上下文工程定义为：在智能体运行过程中，持续选择和维护每轮推理所需的信息，包括指令、工具、外部资料与消息历史。随着上下文增长，信息利用效果可能下降，因此需要控制冗余、保留高价值信息。\n\n实践上，智能体可以先保存文件路径等轻量引用，再按需读取内容；长任务则结合历史压缩、外部笔记和子智能体隔离，保持目标与进度的连续性。",
+      "key_points": [
+        "上下文需要逐轮维护：随着任务推进，重新判断哪些信息仍然有用。",
+        "指令保留适当自由度：既提供明确指导，也避免堆积脆弱的细节规则。",
+        "工具设计影响上下文质量：减少功能重叠，返回精炼、易理解的结果。",
+        "按需检索可以渐进获取信息：运行时探索较慢，可与预先加载结合。",
+        "压缩需要防止关键事实丢失：先保证重要信息保留，再减少冗余。"
+      ],
+      "standards": [
+        {
+          "name": "上下文压缩",
+          "description": "用摘要承接历史，延续对话"
+        },
+        {
+          "name": "结构化笔记",
+          "description": "在窗口之外保存进度，后续读取"
+        },
+        {
+          "name": "子智能体",
+          "description": "隔离探索细节，向主智能体返回提炼结果"
+        }
+      ],
+      "quotes": [
+        {
+          "text": "find the smallest set of high-signal tokens",
+          "note": "尽量用精炼的信息支撑任务，同时保留理解目标和约束所必需的内容。"
+        }
+      ],
+      "my_note": "很好 这篇重点看",
+      "related_papers": [],
+      "status": "approved"
     }
   ]
 }
