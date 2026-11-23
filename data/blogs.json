@@ -2679,6 +2679,52 @@
       "my_note": "2025 年中的 multi-agent：实质是上下文工程。这个时候的 agent 是有 workflow 的，比如 MA 大致要怎么组织。",
       "related_papers": [],
       "status": "approved"
+    },
+    {
+      "id": "anthropic-building-agents-claude-agent-sdk",
+      "title": "Building agents with the Claude Agent SDK",
+      "url": "https://claude.com/resources/articles/building-agents-with-the-claude-agent-sdk",
+      "source": "Anthropic / Thariq Shihipar",
+      "published_at": "2025-09-29",
+      "added_at": "2026-11-23",
+      "tags": [
+        "Claude Agent SDK",
+        "Agent Harness",
+        "上下文工程",
+        "工具使用",
+        "反馈闭环"
+      ],
+      "summary": "文章介绍将 Claude Code 的运行框架推广到通用任务的思路：让智能体使用文件、终端和外部工具，围绕“获取上下文—执行行动—验证结果”循环工作。Claude Code SDK 也因此更名为 Claude Agent SDK。\n\n文中以邮件助手为例，串联主动检索、子智能体、上下文压缩、脚本执行和结果验证。开发者需要提供适合任务的工具与反馈，并通过失败案例持续改进系统。",
+      "key_points": [
+        "文件系统参与上下文管理：智能体按需搜索和读取资料，目录组织也影响信息获取。",
+        "子智能体兼顾并行与隔离：在独立上下文中处理任务，只向主智能体返回相关信息。",
+        "长任务需要压缩上下文：接近窗口限制时总结历史消息，支持继续执行。",
+        "代码扩展行动能力：通过脚本处理数据、生成文件，并用 MCP 接入外部服务。",
+        "验证需要具体反馈：提供可执行规则或可观察结果，让智能体据此修正输出。"
+      ],
+      "standards": [
+        {
+          "name": "明确规则",
+          "description": "类型、格式或业务约束检查"
+        },
+        {
+          "name": "视觉反馈",
+          "description": "通过截图检查布局与呈现"
+        },
+        {
+          "name": "LLM Judge",
+          "description": "判断语气等模糊要求；需考虑稳定性与延迟"
+        }
+      ],
+      "quotes": [
+        {
+          "text": "gather context -> take action -> verify work -> repeat",
+          "note": "把检查结果接回下一轮行动，形成可纠错的执行过程。"
+        }
+      ],
+      "my_note": "",
+      "related_papers": [],
+      "status": "approved"
     }
   ]
 }
